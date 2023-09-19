@@ -7,7 +7,9 @@
 
 #pragma once
 #include <iostream>
+#include <vector>
 #include "System.hpp"
+#include "Entity.hpp"
 
 
 namespace Haze {
@@ -15,10 +17,13 @@ namespace Haze {
         public:
             Engine();
             ~Engine();
-            void run();
+            void init();
             void update();
+            void addEntity(Entity entity);
 
         protected:
         private:
+            std::vector<Entity> _entities;
+
     };
 }

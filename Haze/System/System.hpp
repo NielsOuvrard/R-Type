@@ -6,14 +6,9 @@
 */
 
 #pragma once
+#include "Entity.hpp"
+#include <vector>
 
 namespace Haze {
-    class System {
-        public:
-            System();
-            ~System();
-
-        protected:
-        private:
-    };
+    void MoveSystem(std::vector<Entity> &entities);
 }

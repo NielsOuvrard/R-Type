@@ -8,11 +8,15 @@
 #include "System.hpp"
 
 namespace Haze {
-    System::System()
+    void MoveSystem(std::vector<Entity> &entities)
     {
-    }
-
-    System::~System()
-    {
+        for (auto &entity : entities) {
+            if (entity.hasComponent("Position") && entity.hasComponent("Velocity")) {
+                auto *position = dynamic_cast<Position *>(entity.GetComponent("Position"));
+                auto *velocity = dynamic_cast<Velocity *>(entity.GetComponent("Velocity"));
+                position->x += velocity->x;
+                position->y += velocity->y;
+            }
+        }
     }
 }

@@ -16,13 +16,18 @@ namespace Haze {
     {
     }
 
-    void Engine::run()
+    void Engine::init()
     {
         std::cout << "Engine is running" << std::endl;
     }
 
     void Engine::update()
     {
-        std::cout << "Engine is updating" << std::endl;
+        MoveSystem(_entities);
+    }
+
+    void Engine::addEntity(Entity entity)
+    {
+        _entities.push_back(entity);
     }
 }
