@@ -17,7 +17,7 @@ namespace Haze {
         public:
             Entity();
             ~Entity();
-            void AddComponent(std::unique_ptr<Component> component);
+            void AddComponent(Component *component);
             void RemoveComponent(std::string type);
             Component *GetComponent(std::string type);
             bool hasComponent(std::string type);

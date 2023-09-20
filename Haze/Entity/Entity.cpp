@@ -16,9 +16,9 @@ namespace Haze {
     {
     }
 
-    void Entity::AddComponent(std::unique_ptr<Component> component)
+    void Entity::AddComponent(Component *component)
     {
-        _components.push_back(std::move(component));
+        _components.push_back(std::unique_ptr<Component>(component));
     }
 
     void Entity::RemoveComponent(std::string type)

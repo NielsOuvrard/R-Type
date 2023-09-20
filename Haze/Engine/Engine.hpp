@@ -11,7 +11,6 @@
 #include "System.hpp"
 #include "Entity.hpp"
 
-
 namespace Haze {
     class Engine {
         public:
@@ -19,7 +18,7 @@ namespace Haze {
             ~Engine();
             void init();
             void update();
-            void addEntity(std::unique_ptr<Entity> entity);
+            void addEntity(Entity *entity);
 
         protected:
         private:

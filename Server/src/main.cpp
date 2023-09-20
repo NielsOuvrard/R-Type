@@ -14,6 +14,10 @@ int main()
     std::cout << "Calling the engine!" << std::endl;
     Haze::Engine engine;
     engine.init();
+    Haze::Entity *entity = new Haze::Entity();
+    entity->AddComponent(new Haze::Position(0, 0));
+    entity->AddComponent(new Haze::Velocity(1, 1));
+    engine.addEntity(entity);
     engine.update();
     return 0;
 }

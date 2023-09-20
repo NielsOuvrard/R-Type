@@ -26,8 +26,8 @@ namespace Haze {
         MoveSystem(_entities);
     }
 
-    void Engine::addEntity(std::unique_ptr<Entity> entity)
+    void Engine::addEntity(Entity *entity)
     {
-        _entities.push_back(std::move(entity));
+        _entities.push_back(std::unique_ptr<Entity>(entity));
     }
 }
