@@ -19,11 +19,11 @@ namespace Haze {
             ~Engine();
             void init();
             void update();
-            void addEntity(Entity entity);
+            void addEntity(std::unique_ptr<Entity> entity);
 
         protected:
         private:
-            std::vector<Entity> _entities;
+            std::vector<std::unique_ptr<Entity>> _entities;
 
     };
 }
