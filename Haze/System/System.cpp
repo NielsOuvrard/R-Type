@@ -26,7 +26,7 @@ namespace Haze {
             if (entity->hasComponent("Window")) {
                 auto window = static_cast<Window *>(entity->GetComponent("Window"));
                 for (auto &entity : entities) {
-                    if (entity->hasComponent("Position") && entity->hasComponent("Sprite") && entity->hasComponent("Window")) {
+                    if (entity->hasComponent("Position") && entity->hasComponent("Sprite")) {
                         auto position = static_cast<Position *>(entity->GetComponent("Position"));
                         auto sprite = static_cast<Sprite *>(entity->GetComponent("Sprite"));
                         sprite->sprite.setPosition(position->x, position->y);
