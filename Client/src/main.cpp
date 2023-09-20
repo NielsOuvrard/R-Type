@@ -20,8 +20,6 @@
 #include "../includes/SpriteElement.hpp"
 #include "../includes/ButtonElement.hpp"
 
-#include "Button.hpp"
-
 int main()
 {
     std::vector<std::unique_ptr<InetrfaceElement>> elements;
