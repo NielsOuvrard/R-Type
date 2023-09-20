@@ -50,4 +50,11 @@ namespace Haze {
         }
         return false;
     }
+
+    void Entity::showComponents()
+    {
+        for (auto it = _components.begin(); it != _components.end(); it++) {
+            (*it)->show();
+        }
+    }
 }

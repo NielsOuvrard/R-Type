@@ -21,6 +21,7 @@ namespace Haze {
             void RemoveComponent(std::string type);
             Component *GetComponent(std::string type);
             bool hasComponent(std::string type);
+            void showComponents();
 
         private:
             std::vector<std::unique_ptr<Component>> _components;

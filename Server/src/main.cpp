@@ -19,5 +19,6 @@ int main()
     entity->AddComponent(new Haze::Velocity(1, 1));
     engine.addEntity(entity);
     engine.update();
+    entity->showComponents();
     return 0;
 }
