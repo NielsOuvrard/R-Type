@@ -24,6 +24,9 @@ namespace Haze {
     void Engine::update()
     {
         MoveSystem(_entities);
+        ClearSystem(_entities);
+        RenderSystem(_entities);
+        DisplaySystem(_entities);
     }
 
     void Engine::addEntity(Entity *entity)

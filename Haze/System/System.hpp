@@ -11,4 +11,7 @@
 
 namespace Haze {
     void MoveSystem(std::vector<std::unique_ptr<Entity>> &entities);
+    void RenderSystem(std::vector<std::unique_ptr<Entity>> &entities);
+    void DisplaySystem(std::vector<std::unique_ptr<Entity>> &entities);
+    void ClearSystem(std::vector<std::unique_ptr<Entity>> &entities);
 }

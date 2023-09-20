@@ -6,11 +6,12 @@
 */
 
 #pragma once
-#include <string>
+#include <iostream>
 #include <string>
 #include <vector>
 #include <memory>
 #include <unordered_map>
+#include <SFML/Graphics.hpp>
 
 namespace Haze {
     class Component {
@@ -37,12 +38,27 @@ namespace Haze {
     };
 
     struct Sprite : public Component {
-        Sprite(std::string path, int width, int height) : path(path), width(width), height(height) {}
+        Sprite(std::string path) : path(path) {
+            texture.loadFromFile(path);
+            sprite.setTexture(texture);
+        }
         std::string path;
+        sf::Sprite sprite;
+        sf::Texture texture;
+        std::string getType() const override { return "Sprite"; }
+        void show() const override { std::cout << "Sprite: " << path << std::endl; }
+    };
+
+
+    struct Window : public Component {
+        Window(int width, int height) : width(width), height(height) {
+            window.create(sf::VideoMode(width, height), "R-Type");
+        }
         int width;
         int height;
-        std::string getType() const override { return "Sprite"; }
-        void show() const override { std::cout << "Sprite: " << path << ", " << width << ", " << height << std::endl; }
+        sf::RenderWindow window;
+        std::string getType() const override { return "Window"; }
+        void show() const override { std::cout << "Window: " << width << ", " << height << std::endl; }
     };
 
     struct Health : public Component {
