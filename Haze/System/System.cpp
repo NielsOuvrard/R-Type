@@ -23,12 +23,16 @@ namespace Haze {
     void RenderSystem(std::vector<std::unique_ptr<Entity>> &entities)
     {
         for (auto &entity : entities) {
-            if (entity->hasComponent("Position") && entity->hasComponent("Sprite") && entity->hasComponent("Window")) {
-                auto position = static_cast<Position *>(entity->GetComponent("Position"));
-                auto sprite = static_cast<Sprite *>(entity->GetComponent("Sprite"));
+            if (entity->hasComponent("Window")) {
                 auto window = static_cast<Window *>(entity->GetComponent("Window"));
-                sprite->sprite.setPosition(position->x, position->y);
-                window->window.draw(sprite->sprite);
+                for (auto &entity : entities) {
+                    if (entity->hasComponent("Position") && entity->hasComponent("Sprite") && entity->hasComponent("Window")) {
+                        auto position = static_cast<Position *>(entity->GetComponent("Position"));
+                        auto sprite = static_cast<Sprite *>(entity->GetComponent("Sprite"));
+                        sprite->sprite.setPosition(position->x, position->y);
+                        window->window.draw(sprite->sprite);
+                    }
+                }
             }
         }
     }
@@ -49,6 +53,19 @@ namespace Haze {
             if (entity->hasComponent("Window")) {
                 auto window = static_cast<Window *>(entity->GetComponent("Window"));
                 window->window.clear();
+            }
+        }
+    }
+
+    void ColisionSystem(std::vector<std::unique_ptr<Entity>> &entities)
+    {
+        for (auto &entity : entities) {
+            if (entity->hasComponent("Position") && entity->hasComponent("Sprite") && entity->hasComponent("Window")) {
+                auto position = static_cast<Position *>(entity->GetComponent("Position"));
+                auto sprite = static_cast<Sprite *>(entity->GetComponent("Sprite"));
+                auto window = static_cast<Window *>(entity->GetComponent("Window"));
+                sprite->sprite.setPosition(position->x, position->y);
+                window->window.draw(sprite->sprite);
             }
         }
     }

@@ -14,4 +14,4 @@ target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Sy
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Entity)
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Engine)
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Component)
-target_link_libraries(${PROJECT_NAME} PUBLIC sfml-graphics)
+target_link_libraries(${PROJECT_NAME} PUBLIC sfml-graphics sfml-window sfml-system)
