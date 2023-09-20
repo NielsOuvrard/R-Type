@@ -35,6 +35,6 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(sfml)
 
-add_subdirectory(Engine)
+add_subdirectory(Haze)
 add_subdirectory(Server)
 add_subdirectory(Client)
