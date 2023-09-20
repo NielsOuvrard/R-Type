@@ -12,80 +12,36 @@
 ** main
 */
 
-#include "../includes/InetrfaceElement.hpp"
-#include "../includes/TextElement.hpp"
-#include "../includes/FontElement.hpp"
-#include "../includes/SoundElement.hpp"
-#include "../includes/TextureElement.hpp"
-#include "../includes/SpriteElement.hpp"
-#include "../includes/ButtonElement.hpp"
+#include "GraphicClient.hpp"
 
 int main()
 {
-    std::vector<std::unique_ptr<InetrfaceElement>> elements;
-
+    GraphicClient graphicClient;
     // Clovis's data :
 
     // Texture
     TextureElement textureElement(1, "Client/assets/owl.png");
-    elements.push_back(std::make_unique<TextureElement>(textureElement));
+    graphicClient.addElement(std::make_unique<TextureElement>(textureElement));
 
     // Sprite
     SpriteElement spriteElement(2, 200, 200, 0.3, 0.3, 0);
     spriteElement.setTexture(textureElement.getTexture());
-    elements.push_back(std::make_unique<SpriteElement>(spriteElement));
+    graphicClient.addElement(std::make_unique<SpriteElement>(spriteElement));
 
     // Font
     FontElement fontElement(3, "Client/assets/font.ttf");
-    elements.push_back(std::make_unique<FontElement>(fontElement));
+    graphicClient.addElement(std::make_unique<FontElement>(fontElement));
 
     // Text
     TextElement textElement(4, "hello world");
     textElement.setFont(fontElement.getFont());
-    elements.push_back(std::make_unique<TextElement>(textElement));
+    graphicClient.addElement(std::make_unique<TextElement>(textElement));
 
     // Button
     ButtonElement buttonElement(5, 300, 300);
     buttonElement.setFont(fontElement.getFont());
-    elements.push_back(std::make_unique<ButtonElement>(buttonElement));
+    graphicClient.addElement(std::make_unique<ButtonElement>(buttonElement));
 
-    // create window
-    sf::RenderWindow window(sf::VideoMode(1280, 720), "Monitor");
-
-    while (window.isOpen())
-    {
-        window.clear();
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-            {
-                window.close();
-            }
-            for (const auto &elementPtr : elements)
-            {
-                if (auto buttonElementPtr = dynamic_cast<ButtonElement *>(elementPtr.get()))
-                {
-                    buttonElementPtr->handleEvent(event, window);
-                }
-            }
-        }
-        for (const auto &elementPtr : elements)
-        {
-            if (auto spriteElementPtr = dynamic_cast<SpriteElement *>(elementPtr.get()))
-            {
-                spriteElementPtr->render(window);
-            }
-            else if (auto textElementPtr = dynamic_cast<TextElement *>(elementPtr.get()))
-            {
-                textElementPtr->render(window);
-            }
-            else if (auto buttonElementPtr = dynamic_cast<ButtonElement *>(elementPtr.get()))
-            {
-                buttonElementPtr->render(window);
-            }
-        }
-        window.display();
-    }
+    graphicClient.run();
     return 0;
 }
