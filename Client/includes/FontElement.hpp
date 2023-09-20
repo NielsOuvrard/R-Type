@@ -35,6 +35,8 @@ public:
         return _font;
     }
 
+    void handleEvent(sf::Event event, sf::RenderWindow &window) override{};
+
     // data
     sf::Font _font;
 };

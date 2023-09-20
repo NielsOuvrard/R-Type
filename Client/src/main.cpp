@@ -18,33 +18,38 @@
 #include "../includes/SoundElement.hpp"
 #include "../includes/TextureElement.hpp"
 #include "../includes/SpriteElement.hpp"
+#include "../includes/ButtonElement.hpp"
 
-#include <iostream>
+#include "Button.hpp"
 
 int main()
 {
     std::vector<std::unique_ptr<InetrfaceElement>> elements;
 
     // Clovis's data :
+
+    // Texture
     TextureElement textureElement(1, "Client/assets/owl.png");
     elements.push_back(std::make_unique<TextureElement>(textureElement));
 
-    SpriteElement spriteElement(2, 200, 200, 50, 50, 0);
+    // Sprite
+    SpriteElement spriteElement(2, 200, 200, 0.3, 0.3, 0);
     spriteElement.setTexture(textureElement.getTexture());
-
     elements.push_back(std::make_unique<SpriteElement>(spriteElement));
 
-    // sf::Font font;
-    // if (!font.loadFromFile("./Client/assets/font.ttf"))
-    // {
-    //     std::cout << "Error loading font\n";
-    // }
+    // Font
     FontElement fontElement(3, "Client/assets/font.ttf");
     elements.push_back(std::make_unique<FontElement>(fontElement));
 
+    // Text
     TextElement textElement(4, "hello world");
     textElement.setFont(fontElement.getFont());
     elements.push_back(std::make_unique<TextElement>(textElement));
+
+    // Button
+    ButtonElement buttonElement(5, 300, 300);
+    buttonElement.setFont(fontElement.getFont());
+    elements.push_back(std::make_unique<ButtonElement>(buttonElement));
 
     // create window
     sf::RenderWindow window(sf::VideoMode(1280, 720), "Monitor");
@@ -56,7 +61,16 @@ int main()
         while (window.pollEvent(event))
         {
             if (event.type == sf::Event::Closed)
+            {
                 window.close();
+            }
+            for (const auto &elementPtr : elements)
+            {
+                if (auto buttonElementPtr = dynamic_cast<ButtonElement *>(elementPtr.get()))
+                {
+                    buttonElementPtr->handleEvent(event, window);
+                }
+            }
         }
         for (const auto &elementPtr : elements)
         {
@@ -68,9 +82,12 @@ int main()
             {
                 textElementPtr->render(window);
             }
+            else if (auto buttonElementPtr = dynamic_cast<ButtonElement *>(elementPtr.get()))
+            {
+                buttonElementPtr->render(window);
+            }
         }
         window.display();
     }
-    std::cout << "Graphic Client !" << std::endl;
     return 0;
 }

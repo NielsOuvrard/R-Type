@@ -21,8 +21,8 @@ public:
         size_t id,
         int x = 0,
         int y = 0,
-        int height = 0,
-        int width = 0,
+        double height = 0,
+        double width = 0,
         int rotation = 0,
         int originX = 0,
         int originY = 0)
@@ -47,6 +47,8 @@ public:
     {
         _sprite.setTexture(texture);
     }
+
+    void handleEvent(sf::Event event, sf::RenderWindow &window) override{};
 
     // data
     sf::Sprite _sprite;

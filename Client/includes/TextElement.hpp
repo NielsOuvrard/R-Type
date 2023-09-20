@@ -45,6 +45,8 @@ public:
         _isFontLoaded = true;
     }
 
+    void handleEvent(sf::Event event, sf::RenderWindow &window) override{};
+
     // data
     sf::Text _text;
     bool _isFontLoaded = false;

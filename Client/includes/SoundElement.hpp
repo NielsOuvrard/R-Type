@@ -25,10 +25,13 @@ public:
         // _sound.setLoop(true);
         _id = id;
     }
+
     void render(sf::RenderWindow &window) override
     {
         // _sound.play();
     }
+
+    void handleEvent(sf::Event event, sf::RenderWindow &window) override{};
 
     // data
     sf::Sound _sound;

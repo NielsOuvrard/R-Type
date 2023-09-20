@@ -26,8 +26,9 @@
 class InetrfaceElement
 {
 public:
-    virtual void render(sf::RenderWindow &window) = 0;
     virtual ~InetrfaceElement() = default;
+    virtual void render(sf::RenderWindow &window) = 0;
+    virtual void handleEvent(sf::Event event, sf::RenderWindow &window) = 0;
 
     // data
     size_t _id;

@@ -38,6 +38,8 @@ public:
         return _texture;
     }
 
+    void handleEvent(sf::Event event, sf::RenderWindow &window) override{};
+
     // data
     sf::Texture _texture;
 };
