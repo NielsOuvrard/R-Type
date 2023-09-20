@@ -11,7 +11,7 @@ int main()
 {
     // load font for the button
     sf::Font font;
-    if (!font.loadFromFile("../Client/assets/font.ttf"))
+    if (!font.loadFromFile("./Client/assets/font.ttf"))
     {
         std::cout << "Error loading font\n";
     }
