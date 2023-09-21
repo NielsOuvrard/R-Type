@@ -5,7 +5,6 @@ set(
     SOURCES
     src/main.cpp
 )
-
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(SFML_ROOT "/opt/homebrew/Cellar/sfml/2.6.0")
@@ -23,6 +22,7 @@ target_link_libraries(${PROJECT_NAME}
     sfml-graphics
     sfml-system
     sfml-audio
+    haze
 )
 
 # Include the SFML headers
