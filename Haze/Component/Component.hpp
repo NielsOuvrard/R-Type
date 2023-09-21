@@ -38,9 +38,9 @@ namespace Haze {
     };
 
     struct VelocityOnClick : public Component {
-        // std::vector<std::vector<std::string>> [1] = touche, [2] = velocity x, [3] velocity y
-        VelocityOnClick(std::vector<std::vector<std::string>> directions) : diretionTop(directions[1]), diretionBot(directions[2]),
-        diretionRight(directions[3]),diretionLeft(directions[4]) { }
+        // std::vector<std::vector<std::string>> [0] = touche, [1] = velocity x, [2] velocity y
+        VelocityOnClick(std::vector<std::vector<std::string>> directions) : diretionTop(directions[0]), diretionBot(directions[1]),
+        diretionRight(directions[2]),diretionLeft(directions[3]) { }
         std::vector<std::string> diretionTop;
         std::vector<std::string> diretionBot;
         std::vector<std::string> diretionRight;

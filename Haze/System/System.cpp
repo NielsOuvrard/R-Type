@@ -67,41 +67,29 @@ namespace Haze {
     //     }
     // }
 
-    void VelocityOnClickSystem(std::vector<std::unique_ptr<Entity>> &entities, std::string input)
+    void VelocityOnClickSystem(ComponentList *componentList, std::string input)
     {
-        for (auto &entity : entities) {
-            if (entity->hasComponent("VelocityOnClick")) {
-                auto velocityOnClick = static_cast<VelocityOnClick *>(entity->GetComponent("VelocityOnClick"));
-                auto position = static_cast<Position *>(entity->GetComponent("Position"));
-                if (input == velocityOnClick->diretionBot[1]) {
-                    position->x += std::stof(velocityOnClick->diretionBot[2]);
-                    position->y += std::stof(velocityOnClick->diretionBot[3]);
+        for (int i = 0; i < componentList->getSize(); i++) {
+            if (componentList->getComponent("VelocityOnClick", i) != nullptr && componentList->getComponent("Position", i) != nullptr) {
+                std::cout << "test" << std::endl;
+                auto velocityOnClick = static_cast<VelocityOnClick *>(componentList->getComponent("VelocityOnClick", i));
+                auto position = static_cast<Position *>(componentList->getComponent("Position", i));
+                if (input == velocityOnClick->diretionBot[0]) {
+                    position->x += std::stof(velocityOnClick->diretionBot[1]);
+                    position->y += std::stof(velocityOnClick->diretionBot[2]);
                 }
-                if (input == velocityOnClick->diretionTop[1]) {
-                    position->x += std::stof(velocityOnClick->diretionTop[2]);
-                    position->y += std::stof(velocityOnClick->diretionTop[3]);
+                if (input == velocityOnClick->diretionTop[0]) {
+                    position->x += std::stof(velocityOnClick->diretionTop[1]);
+                    position->y += std::stof(velocityOnClick->diretionTop[2]);
                 }
-                if (input == velocityOnClick->diretionLeft[1]) {
-                    position->x += std::stof(velocityOnClick->diretionLeft[2]);
-                    position->y += std::stof(velocityOnClick->diretionLeft[3]);
+                if (input == velocityOnClick->diretionLeft[0]) {
+                    position->x += std::stof(velocityOnClick->diretionLeft[1]);
+                    position->y += std::stof(velocityOnClick->diretionLeft[2]);
                 }
-                if (input == velocityOnClick->diretionRight[1]) {
-                    position->x += std::stof(velocityOnClick->diretionRight[2]);
-                    position->y += std::stof(velocityOnClick->diretionRight[3]);
+                if (input == velocityOnClick->diretionRight[0]) {
+                    position->x += std::stof(velocityOnClick->diretionRight[1]);
+                    position->y += std::stof(velocityOnClick->diretionRight[2]);
                 }
-            }
-        }
-    }
-
-    void ColisionSystem(std::vector<std::unique_ptr<Entity>> &entities)
-    {
-        for (auto &entity : entities) {
-            if (entity->hasComponent("Position") && entity->hasComponent("Sprite") && entity->hasComponent("Window")) {
-                auto position = static_cast<Position *>(entity->GetComponent("Position"));
-                auto sprite = static_cast<Sprite *>(entity->GetComponent("Sprite"));
-                auto window = static_cast<Window *>(entity->GetComponent("Window"));
-                sprite->sprite.setPosition(position->x, position->y);
-                window->window.draw(sprite->sprite);
             }
         }
     }

@@ -16,4 +16,5 @@ namespace Haze {
     void ColisionSystem(ComponentList *componentList);
     void DisplaySystem(ComponentList *componentList);
     void ClearSystem(ComponentList *componentList);
+    void VelocityOnClickSystem(ComponentList *componentList, std::string input);
 }

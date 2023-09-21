@@ -23,6 +23,7 @@ namespace Haze {
         _componentList->addList("Velocity");
         _componentList->addList("Sprite");
         _componentList->addList("Window");
+        _componentList->addList("VelocityOnClick");
     }
 
     void Engine::update()
@@ -31,6 +32,7 @@ namespace Haze {
         ClearSystem(_componentList);
         RenderSystem(_componentList);
         DisplaySystem(_componentList);
+        VelocityOnClickSystem(_componentList, "d");
     }
 
     Entity *Engine::createEntity()
