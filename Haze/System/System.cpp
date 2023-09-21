@@ -68,6 +68,49 @@ namespace Haze
         }
     }
 
+    // void InputsSystem(std::vector<std::unique_ptr<Entity>> &entities, std::string input)
+    // {
+    //     for (auto &entity : entities) {
+    //         if (entity->hasComponent("Inputs")) {
+    //             auto window = static_cast<Window *>(entity->GetComponent("Window"));
+    //             window->window.display();
+    //         }
+    //     }
+    // }
+
+    void VelocityOnClickSystem(ComponentList *componentList, std::string input)
+    {
+        for (int i = 0; i < componentList->getSize(); i++)
+        {
+            if (componentList->getComponent("VelocityOnClick", i) != nullptr && componentList->getComponent("Position", i) != nullptr)
+            {
+                std::cout << "test" << std::endl;
+                auto velocityOnClick = static_cast<VelocityOnClick *>(componentList->getComponent("VelocityOnClick", i));
+                auto position = static_cast<Position *>(componentList->getComponent("Position", i));
+                if (input == velocityOnClick->diretionBot[0])
+                {
+                    position->x += std::stof(velocityOnClick->diretionBot[1]);
+                    position->y += std::stof(velocityOnClick->diretionBot[2]);
+                }
+                if (input == velocityOnClick->diretionTop[0])
+                {
+                    position->x += std::stof(velocityOnClick->diretionTop[1]);
+                    position->y += std::stof(velocityOnClick->diretionTop[2]);
+                }
+                if (input == velocityOnClick->diretionLeft[0])
+                {
+                    position->x += std::stof(velocityOnClick->diretionLeft[1]);
+                    position->y += std::stof(velocityOnClick->diretionLeft[2]);
+                }
+                if (input == velocityOnClick->diretionRight[0])
+                {
+                    position->x += std::stof(velocityOnClick->diretionRight[1]);
+                    position->y += std::stof(velocityOnClick->diretionRight[2]);
+                }
+            }
+        }
+    }
+
     // only according to the position, no velocity, speed neither
     void ColisionSystem(ComponentList *componentList)
     {
@@ -96,8 +139,8 @@ namespace Haze
                             position1->y + size1->height > position2->y)
                         {
                             std::cout << "COLISION" << std::endl;
-                            colision1->colision = j;
-                            colision2->colision = i;
+                            colision1->collision = j;
+                            colision2->collision = i;
                         }
                     }
                 }

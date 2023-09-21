@@ -41,6 +41,19 @@ namespace Haze
         void show() const override { std::cout << "Velocity: " << x << ", " << y << std::endl; }
     };
 
+    struct VelocityOnClick : public Component
+    {
+        // std::vector<std::vector<std::string>> [0] = touche, [1] = velocity x, [2] velocity y
+        VelocityOnClick(std::vector<std::vector<std::string>> directions) : diretionTop(directions[0]), diretionBot(directions[1]),
+                                                                            diretionRight(directions[2]), diretionLeft(directions[3]) {}
+        std::vector<std::string> diretionTop;
+        std::vector<std::string> diretionBot;
+        std::vector<std::string> diretionRight;
+        std::vector<std::string> diretionLeft;
+        std::string getType() const override { return "VelocityOnClick"; }
+        void show() const override { std::cout << "VelocityOnClick: flm de tout marquer mdr" << std::endl; }
+    };
+
     struct Sprite : public Component
     {
         Sprite(std::string path) : path(path)
@@ -52,7 +65,7 @@ namespace Haze
         sf::Sprite sprite;
         sf::Texture texture;
         std::string getType() const override { return "Sprite"; }
-        void show() const override { std::cout << "Sprite: " << path << std::endl; }
+        void show() const override { std::cout << "flm" << path << std::endl; }
     };
 
     struct Window : public Component
@@ -100,9 +113,19 @@ namespace Haze
         void show() const override { std::cout << "Shoot: " << shoot << std::endl; }
     };
 
+    struct Inputs : public Component
+    {
+        Inputs(int inputs) : inputs(inputs) {}
+        int inputs;
+        std::string getType() const override { return "Inputs"; }
+        void show() const override { std::cout << "Inputs: " << inputs << std::endl; }
+    };
+
     struct Enemy : public Component
     {
-        Enemy(int enemy) : enemy(enemy) {}
+        Enemy(int enemy) : enemy(enemy)
+        {
+        }
         int enemy;
         std::string getType() const override { return "Enemy"; }
         void show() const override { std::cout << "Enemy: " << enemy << std::endl; }
