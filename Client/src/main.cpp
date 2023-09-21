@@ -17,30 +17,28 @@
 int main()
 {
     GraphicClient graphicClient;
-    // Clovis's data :
+    sf::RenderWindow window(sf::VideoMode(800, 600), "SFML Graphic Client Example");
 
-    // Texture
-    TextureElement textureElement(1, "Client/assets/owl.png");
-    graphicClient.addElement(std::make_unique<TextureElement>(textureElement));
+    // add image
+    Object2D object2DSprite(20, 20, 0, 1);
+    Collider colliderSprite(200, 200);
+    Sprite sprite("Client/assets/owl.png");
+    graphicClient.addElement(&object2DSprite, nullptr, &colliderSprite, &sprite, nullptr, nullptr, nullptr, nullptr);
 
-    // Sprite
-    SpriteElement spriteElement(2, 200, 200, 0.3, 0.3, 0);
-    spriteElement.setTexture(textureElement.getTexture());
-    graphicClient.addElement(std::make_unique<SpriteElement>(spriteElement));
+    // add text
+    Object2D object2DText(20, 20, 0, 40);
+    Text text("hello world", "Client/assets/font.ttf", 28);
+    graphicClient.addElement(&object2DText, nullptr, nullptr, nullptr, &text, nullptr, nullptr, nullptr);
 
-    // Font
-    FontElement fontElement(3, "Client/assets/font.ttf");
-    graphicClient.addElement(std::make_unique<FontElement>(fontElement));
+    // add sound
+    Sound sound("Client/assets/pluck_001.ogg");
+    graphicClient.addElement(nullptr, nullptr, nullptr, nullptr, nullptr, &sound, nullptr, nullptr);
 
-    // Text
-    TextElement textElement(4, "hello world");
-    textElement.setFont(fontElement.getFont());
-    graphicClient.addElement(std::make_unique<TextElement>(textElement));
-
-    // Button
-    ButtonElement buttonElement(5, 300, 300);
-    buttonElement.setFont(fontElement.getFont());
-    graphicClient.addElement(std::make_unique<ButtonElement>(buttonElement));
+    // add animation
+    Object2D object2DAnimation(600, 100, 0, 5);
+    Transform transformAnimation(3, 0, 0, 0);
+    Animation animation("Client/assets/r-typesheet30a.gif", 1, 34, 34, 3, 1);
+    graphicClient.addElement(&object2DAnimation, &transformAnimation, nullptr, nullptr, nullptr, nullptr, nullptr, &animation);
 
     graphicClient.run();
     return 0;

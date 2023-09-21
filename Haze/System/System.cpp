@@ -8,7 +8,7 @@
 #include "System.hpp"
 
 namespace Haze {
-    void MoveSystem(std::vector<std::unique_ptr<Entity>> &entities)
+    void MoveSystem(std::vector<std::unique_ptr<Entity> > &entities)
     {
         for (auto &entity : entities) {
             if (entity->hasComponent("Position") && entity->hasComponent("Velocity")) {

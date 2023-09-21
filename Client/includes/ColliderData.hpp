@@ -9,34 +9,19 @@
 **                                    .o..P'       888
 **                                    `Y8P'       o888o
 **
-** FontElement
+** Collider
 */
 
 #include "InetrfaceElement.hpp"
 
-class FontElement : public InetrfaceElement
+class Collider
 {
 public:
-    FontElement(size_t id, std::string path)
-    {
-        _font = sf::Font();
-        _font.loadFromFile(path);
-        _id = id;
-    }
+    Collider() = default;
+    Collider(int width, int height)
+        : _width(width), _height(height) {}
 
-    void render(sf::RenderWindow &window) override
-    {
-        std::cout << "You're trying to render a font..." << std::endl;
-        std::cout << "You should think about your code skills bro..." << std::endl;
-    }
-
-    sf::Font &getFont()
-    {
-        return _font;
-    }
-
-    void handleEvent(sf::Event event, sf::RenderWindow &window) override{};
-
-    // data
-    sf::Font _font;
+private:
+    int _width;
+    int _height;
 };

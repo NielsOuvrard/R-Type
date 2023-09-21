@@ -23,13 +23,32 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Network.hpp>
 
-class InetrfaceElement
-{
-public:
-    virtual ~InetrfaceElement() = default;
-    virtual void render(sf::RenderWindow &window) = 0;
-    virtual void handleEvent(sf::Event event, sf::RenderWindow &window) = 0;
+// class InetrfaceElement
+// {
+// public:
+//     virtual ~InetrfaceElement() = default;
+//     virtual void render(sf::RenderWindow &window) = 0;
+//     virtual void handleEvent(sf::Event event, sf::RenderWindow &window) = 0;
 
-    // data
-    size_t _id;
-};
+//     // liste des positions
+//     //
+
+//     // data
+//     size_t _id;
+// };;
+
+// class Scene
+// {
+//     std::vector<Transform *> _Transforms;
+//     std::vector<Collider *> _Colliders;
+//     std::vector<Sprite *> _Sprites;
+//     std::vector<Text *> _Texts;
+//     std::vector<Sound *> _Sounds;
+//     std::vector<Music *> _Musics;
+//     std::vector<Animation *> _Animations;
+// };
+
+// class Button
+// {
+
+// };

@@ -10,5 +10,5 @@
 #include <vector>
 
 namespace Haze {
-    void MoveSystem(std::vector<std::unique_ptr<Entity>> &entities);
+    void MoveSystem(std::vector<std::unique_ptr<Entity> > &entities);
 }

@@ -24,6 +24,6 @@ namespace Haze {
             void showComponents();
 
         private:
-            std::vector<std::unique_ptr<Component>> _components;
+            std::vector<std::unique_ptr<Component> > _components;
     };
 }
