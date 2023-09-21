@@ -22,7 +22,7 @@ namespace Haze {
             return;
         }
         _componentName.push_back(component->getType());
-        _componentList[component->getType()][id] = component;
+        _componentList[component->getType()][id] = std::unique_ptr<Component>(component);
     }
 
     void ComponentList::removeComponent(std::string type, size_t id)
@@ -38,12 +38,12 @@ namespace Haze {
 
     Component *ComponentList::getComponent(std::string type, size_t id)
     {
-        return _componentList[type][id];
+        return std::move(_componentList[type][id].get());
     }
 
     void ComponentList::addList(std::string type)
     {
-        _componentList[type] = std::vector<Component *>(_size, nullptr);
+        _componentList[type] = std::vector<std::unique_ptr<Component>>(_size);
     }
 
     void ComponentList::addRow()

@@ -30,7 +30,7 @@ namespace Haze {
             std::vector<std::string> getComponentName() const {return _componentName;};
 
         private:
-            std::map<std::string, std::vector<Component *>> _componentList;
+            std::map<std::string, std::vector<std::unique_ptr<Component>>> _componentList;
             std::vector<std::string> _componentName;
             size_t _size;
     };
