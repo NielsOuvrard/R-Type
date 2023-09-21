@@ -13,15 +13,18 @@
 #include <unordered_map>
 #include <SFML/Graphics.hpp>
 
-namespace Haze {
-    class Component {
-        public:
-            virtual ~Component() {}
-            virtual std::string getType() const = 0;
-            virtual void show() const = 0;
+namespace Haze
+{
+    class Component
+    {
+    public:
+        virtual ~Component() {}
+        virtual std::string getType() const = 0;
+        virtual void show() const = 0;
     };
 
-    struct Position : public Component {
+    struct Position : public Component
+    {
         Position(float x, float y) : x(x), y(y) {}
         float x;
         float y;
@@ -29,7 +32,8 @@ namespace Haze {
         void show() const override { std::cout << "Position: " << x << ", " << y << std::endl; }
     };
 
-    struct Velocity : public Component {
+    struct Velocity : public Component
+    {
         Velocity(float x, float y) : x(x), y(y) {}
         float x;
         float y;
@@ -37,8 +41,10 @@ namespace Haze {
         void show() const override { std::cout << "Velocity: " << x << ", " << y << std::endl; }
     };
 
-    struct Sprite : public Component {
-        Sprite(std::string path) : path(path) {
+    struct Sprite : public Component
+    {
+        Sprite(std::string path) : path(path)
+        {
             texture.loadFromFile(path);
             sprite.setTexture(texture);
         }
@@ -49,8 +55,10 @@ namespace Haze {
         void show() const override { std::cout << "Sprite: " << path << std::endl; }
     };
 
-    struct Window : public Component {
-        Window(int width, int height) : width(width), height(height) {
+    struct Window : public Component
+    {
+        Window(int width, int height) : width(width), height(height)
+        {
             window.create(sf::VideoMode(width, height), "R-Type");
         }
         int width;
@@ -60,66 +68,84 @@ namespace Haze {
         void show() const override { std::cout << "Window: " << width << ", " << height << std::endl; }
     };
 
-    struct Health : public Component {
+    struct Health : public Component
+    {
         Health(int health) : health(health) {}
         int health;
         std::string getType() const override { return "Health"; }
         void show() const override { std::cout << "Health: " << health << std::endl; }
     };
 
-    struct Damage : public Component {
+    struct Damage : public Component
+    {
         Damage(int damage) : damage(damage) {}
         int damage;
         std::string getType() const override { return "Damage"; }
         void show() const override { std::cout << "Damage: " << damage << std::endl; }
     };
 
-    struct Speed : public Component {
+    struct Speed : public Component
+    {
         Speed(int speed) : speed(speed) {}
         int speed;
         std::string getType() const override { return "Speed"; }
         void show() const override { std::cout << "Speed: " << speed << std::endl; }
     };
 
-    struct Shoot : public Component {
+    struct Shoot : public Component
+    {
         Shoot(int shoot) : shoot(shoot) {}
         int shoot;
         std::string getType() const override { return "Shoot"; }
         void show() const override { std::cout << "Shoot: " << shoot << std::endl; }
     };
 
-    struct Enemy : public Component {
+    struct Enemy : public Component
+    {
         Enemy(int enemy) : enemy(enemy) {}
         int enemy;
         std::string getType() const override { return "Enemy"; }
         void show() const override { std::cout << "Enemy: " << enemy << std::endl; }
     };
 
-    struct Player : public Component {
+    struct Player : public Component
+    {
         Player(int player) : player(player) {}
         int player;
         std::string getType() const override { return "Player"; }
         void show() const override { std::cout << "Player: " << player << std::endl; }
     };
 
-    struct Boss : public Component {
+    struct Boss : public Component
+    {
         Boss(int boss) : boss(boss) {}
         int boss;
         std::string getType() const override { return "Boss"; }
         void show() const override { std::cout << "Boss: " << boss << std::endl; }
     };
 
-    struct Projectile : public Component {
+    struct Projectile : public Component
+    {
         Projectile(int projectile) : projectile(projectile) {}
         int projectile;
         std::string getType() const override { return "Projectile"; }
         void show() const override { std::cout << "Projectile: " << projectile << std::endl; }
     };
 
-    struct Collision : public Component {
+    struct Collision : public Component
+    {
         Collision(int collision) : collision(collision) {}
         int collision;
         std::string getType() const override { return "Collision"; }
         void show() const override { std::cout << "Collision: " << collision << std::endl; }
+    };
+
+    struct Size : public Component
+    {
+        Size(float height, float width) : height(height), width(width) {}
+        float height;
+        float width;
+        std::string getType() const override { return "Size"; }
+        void show() const override { std::cout << "Size: " << height << ", " << width << std::endl; }
     };
 }
