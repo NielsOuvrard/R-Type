@@ -7,12 +7,13 @@
 
 #pragma once
 #include "Entity.hpp"
+#include "ComponentList.hpp"
 #include <vector>
 
 namespace Haze {
-    void MoveSystem(std::vector<std::unique_ptr<Entity>> &entities);
-    void RenderSystem(std::vector<std::unique_ptr<Entity>> &entities);
-    void ColisionSystem(std::vector<std::unique_ptr<Entity>> &entities);
-    void DisplaySystem(std::vector<std::unique_ptr<Entity>> &entities);
-    void ClearSystem(std::vector<std::unique_ptr<Entity>> &entities);
+    void MoveSystem(ComponentList *componentList);
+    void RenderSystem(ComponentList *componentList);
+    void ColisionSystem(ComponentList *componentList);
+    void DisplaySystem(ComponentList *componentList);
+    void ClearSystem(ComponentList *componentList);
 }

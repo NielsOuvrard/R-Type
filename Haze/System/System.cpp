@@ -8,27 +8,27 @@
 #include "System.hpp"
 
 namespace Haze {
-    void MoveSystem(std::vector<std::unique_ptr<Entity>> &entities)
+    void MoveSystem(ComponentList *componentList)
     {
-        for (auto &entity : entities) {
-            if (entity->hasComponent("Position") && entity->hasComponent("Velocity")) {
-                auto position = static_cast<Position *>(entity->GetComponent("Position"));
-                auto velocity = static_cast<Velocity *>(entity->GetComponent("Velocity"));
+        for (int i = 0; i < componentList->getSize(); i++) {
+            if (componentList->getComponent("Position", i) != nullptr && componentList->getComponent("Velocity", i) != nullptr) {
+                auto position = static_cast<Position *>(componentList->getComponent("Position", i));
+                auto velocity = static_cast<Velocity *>(componentList->getComponent("Velocity", i));
                 position->x += velocity->x;
                 position->y += velocity->y;
             }
         }
     }
 
-    void RenderSystem(std::vector<std::unique_ptr<Entity>> &entities)
+    void RenderSystem(ComponentList *componentList)
     {
-        for (auto &entity : entities) {
-            if (entity->hasComponent("Window")) {
-                auto window = static_cast<Window *>(entity->GetComponent("Window"));
-                for (auto &entity : entities) {
-                    if (entity->hasComponent("Position") && entity->hasComponent("Sprite")) {
-                        auto position = static_cast<Position *>(entity->GetComponent("Position"));
-                        auto sprite = static_cast<Sprite *>(entity->GetComponent("Sprite"));
+        for (int i = 0; i < componentList->getSize(); i++) {
+            if (componentList->getComponent("Window", i) != nullptr) {
+                auto window = static_cast<Window *>(componentList->getComponent("Window", i));
+                for (int j = 0; j < componentList->getSize(); j++) {
+                    if (componentList->getComponent("Position", j) != nullptr && componentList->getComponent("Sprite", j) != nullptr) {
+                        auto position = static_cast<Position *>(componentList->getComponent("Position", j));
+                        auto sprite = static_cast<Sprite *>(componentList->getComponent("Sprite", j));
                         sprite->sprite.setPosition(position->x, position->y);
                         window->window.draw(sprite->sprite);
                     }
@@ -37,36 +37,27 @@ namespace Haze {
         }
     }
 
-    void DisplaySystem(std::vector<std::unique_ptr<Entity>> &entities)
+    void DisplaySystem(ComponentList *componentList)
     {
-        for (auto &entity : entities) {
-            if (entity->hasComponent("Window")) {
-                auto window = static_cast<Window *>(entity->GetComponent("Window"));
+        for (int i = 0; i < componentList->getSize(); i++) {
+            if (componentList->getComponent("Window", i) != nullptr) {
+                auto window = static_cast<Window *>(componentList->getComponent("Window", i));
                 window->window.display();
             }
         }
     }
 
-    void ClearSystem(std::vector<std::unique_ptr<Entity>> &entities)
+    void ClearSystem(ComponentList *componentList)
     {
-        for (auto &entity : entities) {
-            if (entity->hasComponent("Window")) {
-                auto window = static_cast<Window *>(entity->GetComponent("Window"));
+        for (int i = 0; i < componentList->getSize(); i++) {
+            if (componentList->getComponent("Window", i) != nullptr) {
+                auto window = static_cast<Window *>(componentList->getComponent("Window", i));
                 window->window.clear();
             }
         }
     }
 
-    void ColisionSystem(std::vector<std::unique_ptr<Entity>> &entities)
+    void ColisionSystem(ComponentList *componentList)
     {
-        for (auto &entity : entities) {
-            if (entity->hasComponent("Position") && entity->hasComponent("Sprite") && entity->hasComponent("Window")) {
-                auto position = static_cast<Position *>(entity->GetComponent("Position"));
-                auto sprite = static_cast<Sprite *>(entity->GetComponent("Sprite"));
-                auto window = static_cast<Window *>(entity->GetComponent("Window"));
-                sprite->sprite.setPosition(position->x, position->y);
-                window->window.draw(sprite->sprite);
-            }
-        }
     }
 }

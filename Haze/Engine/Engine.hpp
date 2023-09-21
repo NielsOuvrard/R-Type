@@ -11,6 +11,7 @@
 #include <map>
 #include "System.hpp"
 #include "Entity.hpp"
+#include "ComponentList.hpp"
 
 namespace Haze {
     class Engine {
@@ -19,11 +20,13 @@ namespace Haze {
             ~Engine();
             void init();
             void update();
-            void addEntity(Entity *entity);
+            Entity *createEntity();
+            void removeEntity(size_t id);
+            void removeEntity(Entity *entity);
 
         protected:
         private:
             std::vector<std::unique_ptr<Entity>> _entities;
-            std::map<std::string, std::vector<std::unique_ptr<Component>>> _components;
+            ComponentList *_componentList;
     };
 }

@@ -9,21 +9,27 @@
 #include <iostream>
 #include <string>
 #include <vector>
-
-#include "Component.hpp"
+#include "ComponentList.hpp"
 
 namespace Haze {
     class Entity {
         public:
             Entity();
             ~Entity();
-            void AddComponent(Component *component);
-            void RemoveComponent(std::string type);
-            Component *GetComponent(std::string type);
-            bool hasComponent(std::string type);
+            void setComponentList(ComponentList *componentList);
+            void setId(size_t id);
+            void setUniqueId(size_t id);
+            void addComponent(Component *component);
+            void removeComponent(std::string type);
+            Component *getComponent(std::string type);
             void showComponents();
+            size_t getId() const {return _id;};
 
         private:
-            std::vector<std::unique_ptr<Component>> _components;
+            std::vector<Component *> _components;
+            size_t _id;
+            size_t uniqueId;
+
+            ComponentList *_componentList;
     };
 }
