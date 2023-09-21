@@ -19,13 +19,16 @@ int main()
     std::cout << "Calling the engine!" << std::endl;
     Haze::Engine engine;
     engine.init();
-    Haze::Entity *entity = new Haze::Entity();
-    entity->AddComponent(new Haze::Position(0, 0));
-    entity->AddComponent(new Haze::Velocity(1, 1));
-    entity->AddComponent(new Haze::Window(800, 600));
-    entity->AddComponent(new Haze::Sprite("assets/ship.png"));
-    engine.addEntity(entity);
+    Haze::Entity *entity1 = new Haze::Entity();
+    entity1->AddComponent(new Haze::Position(0, 0));
+    entity1->AddComponent(new Haze::Velocity(1, 0));
+    entity1->AddComponent(new Haze::Sprite("assets/ship.png"));
+    // entity1->AddComponent(new Haze::Window(800, 600));
+    engine.addEntity(entity1);
 
+    Haze::Entity *entity2 = new Haze::Entity();
+    entity2->AddComponent(new Haze::Window(800, 600));
+    engine.addEntity(entity2);
 
     std::chrono::time_point<std::chrono::high_resolution_clock> currentTime, lastTime;
     double lag = 0.0;
@@ -40,6 +43,6 @@ int main()
             std::this_thread::sleep_for(std::chrono::duration<double>(sleepTime));
         }
     }
-    entity->showComponents();
+    entity1->showComponents();
     return 0;
 }

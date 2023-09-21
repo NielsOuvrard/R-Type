@@ -49,7 +49,6 @@ namespace Haze {
         void show() const override { std::cout << "Sprite: " << path << std::endl; }
     };
 
-
     struct Window : public Component {
         Window(int width, int height) : width(width), height(height) {
             window.create(sf::VideoMode(width, height), "R-Type");
@@ -117,31 +116,10 @@ namespace Haze {
         void show() const override { std::cout << "Projectile: " << projectile << std::endl; }
     };
 
-    struct Spawner : public Component {
-        Spawner(int spawner) : spawner(spawner) {}
-        int spawner;
-        std::string getType() const override { return "Spawner"; }
-        void show() const override { std::cout << "Spawner: " << spawner << std::endl; }
-    };
-
     struct Collision : public Component {
         Collision(int collision) : collision(collision) {}
         int collision;
         std::string getType() const override { return "Collision"; }
         void show() const override { std::cout << "Collision: " << collision << std::endl; }
-    };
-
-    struct Score : public Component {
-        Score(int score) : score(score) {}
-        int score;
-        std::string getType() const override { return "Score"; }
-        void show() const override { std::cout << "Score: " << score << std::endl; }
-    };
-
-    struct Sound : public Component {
-        Sound(int sound) : sound(sound) {}
-        int sound;
-        std::string getType() const override { return "Sound"; }
-        void show() const override { std::cout << "Sound: " << sound << std::endl; }
     };
 }

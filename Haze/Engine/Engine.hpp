@@ -8,6 +8,7 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include <map>
 #include "System.hpp"
 #include "Entity.hpp"
 
@@ -23,6 +24,6 @@ namespace Haze {
         protected:
         private:
             std::vector<std::unique_ptr<Entity>> _entities;
-
+            std::map<std::string, std::vector<std::unique_ptr<Component>>> _components;
     };
 }
