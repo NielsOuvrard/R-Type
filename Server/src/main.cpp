@@ -19,6 +19,14 @@ int main()
     std::cout << "Calling the engine!" << std::endl;
     Haze::Engine engine;
     engine.init();
+    Haze::Entity *entity1 = new Haze::Entity();
+    entity1->AddComponent(new Haze::Position(0, 0));
+    // entity1->AddComponent(new Haze::Velocity(1, 0));
+    entity1->AddComponent(new Haze::Sprite("assets/ship.png"));
+    std::vector<std::vector<std::string>> params = {{"z", "1","0"}, {"s", "-1","0"}, {"d", "0","1"}, {"q", "0","-1"}};
+    entity1->AddComponent(new Haze::VelocityOnClick(params));
+    // entity1->AddComponent(new Haze::Window(800, 600));
+    engine.addEntity(entity1);
     Haze::Entity *entity1 = engine.createEntity();
     Haze::Entity *entity2 = engine.createEntity();
 

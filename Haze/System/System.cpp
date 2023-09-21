@@ -57,6 +57,55 @@ namespace Haze {
         }
     }
 
+    // void InputsSystem(std::vector<std::unique_ptr<Entity>> &entities, std::string input)
+    // {
+    //     for (auto &entity : entities) {
+    //         if (entity->hasComponent("Inputs")) {
+    //             auto window = static_cast<Window *>(entity->GetComponent("Window"));
+    //             window->window.display();
+    //         }
+    //     }
+    // }
+
+    void VelocityOnClickSystem(std::vector<std::unique_ptr<Entity>> &entities, std::string input)
+    {
+        for (auto &entity : entities) {
+            if (entity->hasComponent("VelocityOnClick")) {
+                auto velocityOnClick = static_cast<VelocityOnClick *>(entity->GetComponent("VelocityOnClick"));
+                auto position = static_cast<Position *>(entity->GetComponent("Position"));
+                if (input == velocityOnClick->diretionBot[1]) {
+                    position->x += std::stof(velocityOnClick->diretionBot[2]);
+                    position->y += std::stof(velocityOnClick->diretionBot[3]);
+                }
+                if (input == velocityOnClick->diretionTop[1]) {
+                    position->x += std::stof(velocityOnClick->diretionTop[2]);
+                    position->y += std::stof(velocityOnClick->diretionTop[3]);
+                }
+                if (input == velocityOnClick->diretionLeft[1]) {
+                    position->x += std::stof(velocityOnClick->diretionLeft[2]);
+                    position->y += std::stof(velocityOnClick->diretionLeft[3]);
+                }
+                if (input == velocityOnClick->diretionRight[1]) {
+                    position->x += std::stof(velocityOnClick->diretionRight[2]);
+                    position->y += std::stof(velocityOnClick->diretionRight[3]);
+                }
+            }
+        }
+    }
+
+    void ColisionSystem(std::vector<std::unique_ptr<Entity>> &entities)
+    {
+        for (auto &entity : entities) {
+            if (entity->hasComponent("Position") && entity->hasComponent("Sprite") && entity->hasComponent("Window")) {
+                auto position = static_cast<Position *>(entity->GetComponent("Position"));
+                auto sprite = static_cast<Sprite *>(entity->GetComponent("Sprite"));
+                auto window = static_cast<Window *>(entity->GetComponent("Window"));
+                sprite->sprite.setPosition(position->x, position->y);
+                window->window.draw(sprite->sprite);
+            }
+        }
+    }
+
     void ColisionSystem(ComponentList *componentList)
     {
     }

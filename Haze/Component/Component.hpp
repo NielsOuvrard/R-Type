@@ -37,6 +37,18 @@ namespace Haze {
         void show() const override { std::cout << "Velocity: " << x << ", " << y << std::endl; }
     };
 
+    struct VelocityOnClick : public Component {
+        // std::vector<std::vector<std::string>> [1] = touche, [2] = velocity x, [3] velocity y
+        VelocityOnClick(std::vector<std::vector<std::string>> directions) : diretionTop(directions[1]), diretionBot(directions[2]),
+        diretionRight(directions[3]),diretionLeft(directions[4]) { }
+        std::vector<std::string> diretionTop;
+        std::vector<std::string> diretionBot;
+        std::vector<std::string> diretionRight;
+        std::vector<std::string> diretionLeft;
+        std::string getType() const override { return "VelocityOnClick"; }
+        void show() const override { std::cout << "VelocityOnClick: flm de tout marquer mdr" << std::endl; }
+    };
+
     struct Sprite : public Component {
         Sprite(std::string path) : path(path) {
             texture.loadFromFile(path);
@@ -46,7 +58,7 @@ namespace Haze {
         sf::Sprite sprite;
         sf::Texture texture;
         std::string getType() const override { return "Sprite"; }
-        void show() const override { std::cout << "Sprite: " << path << std::endl; }
+        void show() const override { std::cout << "flm" << path << std::endl; }
     };
 
     struct Window : public Component {
@@ -86,6 +98,13 @@ namespace Haze {
         int shoot;
         std::string getType() const override { return "Shoot"; }
         void show() const override { std::cout << "Shoot: " << shoot << std::endl; }
+    };
+
+    struct Inputs : public Component {
+        Inputs(int inputs) : inputs(inputs) {}
+        int inputs;
+        std::string getType() const override { return "Inputs"; }
+        void show() const override { std::cout << "Inputs: " << inputs << std::endl; }
     };
 
     struct Enemy : public Component {
