@@ -15,9 +15,6 @@
 #include "GraphicClient.hpp"
 #include <haze.hpp>
 
-const double desiredFPS = 10.0;
-const double frameDuration = 1.0 / desiredFPS;
-
 int main()
 {
     // GraphicClient graphicClient;
@@ -52,26 +49,10 @@ int main()
     entity1->addComponent(new Haze::Position(0, 0));
     entity1->addComponent(new Haze::Sprite("assets/ship.png"));
     entity2->addComponent(new Haze::Window(800, 600));
-    std::cout << "isoOpen ? " << engine.isOpen() << std::endl;
+
     while (engine.isOpen())
     {
         engine.update();
     }
-
-    // sf::RenderWindow window(sf::VideoMode(1280, 720), "Monitor");
-    // window.setFramerateLimit(60);
-    // while (window.isOpen())
-    // {
-    //     window.clear();
-    //     sf::Event event;
-    //     while (window.pollEvent(event))
-    //     {
-    //         if (event.type == sf::Event::Closed)
-    //         {
-    //             window.close();
-    //         }
-    //     }
-    //     window.display();
-    // }
     return 0;
 }

@@ -7,12 +7,6 @@ set(
 )
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(SFML_ROOT "/opt/homebrew/Cellar/sfml/2.6.0")
-set(SFML_INCLUDE_DIR "${SFML_ROOT}/include")
-set(SFML_LIBRARY_DIR "${SFML_ROOT}/lib")
-
-# Find the SFML components
-find_package(SFML 2.5 COMPONENTS window graphics system REQUIRED)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 

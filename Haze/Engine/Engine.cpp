@@ -32,6 +32,7 @@ namespace Haze
         MoveSystem(_componentList);
         ClearSystem(_componentList);
         RenderSystem(_componentList);
+        EventSystem(_componentList);
         DisplaySystem(_componentList);
         VelocityOnClickSystem(_componentList, "d");
     }
@@ -74,4 +75,5 @@ namespace Haze
         _entities[entity->getId()] = nullptr;
         _componentList->removeRow(entity->getId());
     }
+
 }
