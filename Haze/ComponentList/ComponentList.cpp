@@ -21,7 +21,6 @@ namespace Haze {
         if (_componentList[component->getType()].size() == 0) {
             return;
         }
-        _componentName.push_back(component->getType());
         _componentList[component->getType()][id] = std::unique_ptr<Component>(component);
     }
 
@@ -43,6 +42,7 @@ namespace Haze {
 
     void ComponentList::addList(std::string type)
     {
+        _componentName.push_back(type);
         _componentList[type] = std::vector<std::unique_ptr<Component>>(_size);
     }
 

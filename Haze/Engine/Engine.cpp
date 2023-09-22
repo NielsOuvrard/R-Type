@@ -43,7 +43,8 @@ namespace Haze {
         _entities.push_back(std::unique_ptr<Entity>(entity));
         _componentList->addRow();
         for (auto &it : _componentList->getComponentName()) {
-            _componentList->addComponent(entity->getComponent(it), entity->getId());
+            if (entity->getComponent(it) != nullptr)
+                _componentList->addComponent(entity->getComponent(it), entity->getId());
         }
         return entity;
     }
