@@ -59,7 +59,8 @@ namespace Haze
         _componentList->addRow();
         for (auto &it : _componentList->getComponentName())
         {
-            _componentList->addComponent(entity->getComponent(it), entity->getId());
+            if (entity->getComponent(it) != nullptr)
+                _componentList->addComponent(entity->getComponent(it), entity->getId());
         }
         return entity;
     }

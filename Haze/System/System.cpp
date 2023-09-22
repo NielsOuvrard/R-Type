@@ -103,7 +103,6 @@ namespace Haze
         {
             if (componentList->getComponent("VelocityOnClick", i) != nullptr && componentList->getComponent("Position", i) != nullptr)
             {
-                std::cout << "test" << std::endl;
                 auto velocityOnClick = static_cast<VelocityOnClick *>(componentList->getComponent("VelocityOnClick", i));
                 auto position = static_cast<Position *>(componentList->getComponent("Position", i));
                 if (input == velocityOnClick->diretionBot[0])
