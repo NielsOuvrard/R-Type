@@ -28,8 +28,19 @@ namespace Haze
         Position(float x, float y) : x(x), y(y) {}
         float x;
         float y;
+        float oldX = x;
+        float oldY = y;
         std::string getType() const override { return "Position"; }
         void show() const override { std::cout << "Position: " << x << ", " << y << std::endl; }
+    };
+
+    struct Scale : public Component
+    {
+        Scale(float x, float y) : x(x), y(y) {}
+        float x;
+        float y;
+        std::string getType() const override { return "Scale"; }
+        void show() const override { std::cout << "Scale: " << x << ", " << y << std::endl; }
     };
 
     struct Velocity : public Component
@@ -179,10 +190,18 @@ namespace Haze
 
     struct Collision : public Component
     {
-        Collision(int collision) : collision(collision) {}
-        int collision;
+        enum CollisionType {
+            DAMAGE,
+            WALL,
+            DESTROY,
+            NONE
+        };
+        Collision(std::string scene, std::map<std::string, CollisionType> behavior, int weight) : scene(scene), behavior(behavior), weight(weight) {}
+        std::string scene;
+        std::map<std::string, CollisionType> behavior;
+        int weight;
         std::string getType() const override { return "Collision"; }
-        void show() const override { std::cout << "Collision: " << collision << std::endl; }
+        void show() const override { std::cout << "Collision: " << scene << std::endl; }
     };
 
     struct Size : public Component
@@ -192,5 +211,14 @@ namespace Haze
         float width;
         std::string getType() const override { return "Size"; }
         void show() const override { std::cout << "Size: " << height << ", " << width << std::endl; }
+    };
+
+    struct Acceleration : public Component
+    {
+        Acceleration(float x, float y) : x(x), y(y) {}
+        float x;
+        float y;
+        std::string getType() const override { return "Acceleration"; }
+        void show() const override { std::cout << "Acceleration: " << x << ", " << y << std::endl; }
     };
 }

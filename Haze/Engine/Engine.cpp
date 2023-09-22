@@ -20,19 +20,27 @@ namespace Haze
     void Engine::init()
     {
         _componentList = new ComponentList();
+        _componentList->addList("Scale");
+        _componentList->addList("Size");
         _componentList->addList("Position");
         _componentList->addList("Velocity");
+        _componentList->addList("Acceleration");
         _componentList->addList("Sprite");
         _componentList->addList("Window");
         _componentList->addList("VelocityOnClick");
         _componentList->addList("Animation");
+        _componentList->addList("Collision");
     }
 
     void Engine::update()
     {
+        SizeSystem(_componentList);
+        ScaleSystem(_componentList);
         MoveSystem(_componentList);
+        AccelerationSystem(_componentList);
         ClearSystem(_componentList);
         AnimationSystem(_componentList);
+        CollisionSystem(_componentList);
         RenderSystem(_componentList);
         EventSystem(_componentList);
         DisplaySystem(_componentList);

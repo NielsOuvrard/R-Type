@@ -11,7 +11,7 @@
 #include "Engine.hpp"
 #include <thread>
 
-const double desiredFPS = 10.0;
+const double desiredFPS = 60.0;
 const double frameDuration = 1.0 / desiredFPS;
 
 int main()
@@ -21,13 +21,39 @@ int main()
     engine.init();
     Haze::Entity *entity1 = engine.createEntity();
     Haze::Entity *entity2 = engine.createEntity();
+    Haze::Entity *entity3 = engine.createEntity();
     entity1->addComponent(new Haze::Position(0, 0));
     entity1->addComponent(new Haze::Sprite("assets/ship.png"));
-    // entity1->AddComponent(new Haze::Velocity(1, 0));
-    entity1->addComponent(new Haze::Sprite("assets/ship.png"));
-    std::vector<std::vector<std::string>> params = {{"z", "0","1"}, {"s", "0","-1"}, {"d", "1","0"}, {"q", "-1","0"}};
-    entity1->addComponent(new Haze::VelocityOnClick(params));
-    // entity1->AddComponent(new Haze::Window(800, 600));
+    entity1->addComponent(new Haze::Velocity(1, 0));
+    entity1->addComponent(new Haze::Scale(0.5, 0.5));
+    entity1->addComponent(new Haze::Size(400, 400));
+    //    Collision(std::string scene, std::map<std::string, CollisionType> behavior) : scene(scene), behavior(behavior) {}
+    entity1->addComponent(new Haze::Collision(
+        "player",
+        std::map<std::string, Haze::Collision::CollisionType>{
+            {"player", Haze::Collision::CollisionType::NONE},
+            {"enemy", Haze::Collision::CollisionType::WALL},
+            {"bullet", Haze::Collision::CollisionType::DAMAGE},
+            {"default", Haze::Collision::CollisionType::NONE},
+        },
+        1
+    ));
+
+    entity3->addComponent(new Haze::Position(500, 0));
+    entity3->addComponent(new Haze::Sprite("assets/ship.png"));
+    entity3->addComponent(new Haze::Velocity(-1, 0));
+    entity3->addComponent(new Haze::Scale(0.5, 0.5));
+    entity3->addComponent(new Haze::Size(400, 400));
+    entity3->addComponent(new Haze::Collision(
+        "enemy",
+        std::map<std::string, Haze::Collision::CollisionType>{
+            {"player", Haze::Collision::CollisionType::NONE},
+            {"enemy", Haze::Collision::CollisionType::NONE},
+            {"bullet", Haze::Collision::CollisionType::NONE},
+            {"default", Haze::Collision::CollisionType::DESTROY},
+        },
+        1
+    ));
 
     entity2->addComponent(new Haze::Window(800, 600));
     std::chrono::time_point<std::chrono::high_resolution_clock> currentTime, lastTime;
