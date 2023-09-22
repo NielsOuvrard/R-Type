@@ -12,6 +12,8 @@
 #include "System.hpp"
 #include "Entity.hpp"
 #include "ComponentList.hpp"
+// SFML clock
+#include <SFML/System.hpp>
 
 namespace Haze
 {

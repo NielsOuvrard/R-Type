@@ -51,20 +51,19 @@ namespace Haze
             if (componentList->getComponent("Animation", i) != nullptr)
             {
                 auto animation = static_cast<Animation *>(componentList->getComponent("Animation", i));
-                // if (animation->clock.getElapsedTime().asSeconds() > animation->speed)
-                // {
-                if (animation->currentFrame == animation->nbFramesX - 1)
+                if (animation->clock.getElapsedTime().asSeconds() > 0.16)
                 {
-                    animation->currentFrame = 0;
+                    if (animation->currentFrame == animation->nbFramesX - 1)
+                    {
+                        animation->currentFrame = 0;
+                    }
+                    else
+                    {
+                        animation->currentFrame++;
+                    }
+                    animation->sprite.setTextureRect(sf::IntRect(animation->x + (animation->currentFrame * animation->width), animation->y, animation->width, animation->height));
+                    animation->clock.restart();
                 }
-                else
-                {
-                    animation->currentFrame++;
-                }
-                animation->sprite.setTextureRect(sf::IntRect(animation->currentFrame * animation->width, 0, animation->width, animation->height));
-                // sprite->sprite.setTextureRect(sf::IntRect(animation->currentFrame * animation->width, 0, animation->width, animation->height));
-                // animation->clock.restart();
-                // }
             }
         }
     }
@@ -85,9 +84,11 @@ namespace Haze
                         sprite->sprite.setPosition(position->x, position->y);
                         window->window.draw(sprite->sprite);
                     }
-                    if (componentList->getComponent("Animation", j) != nullptr)
+                    if (componentList->getComponent("Animation", j) != nullptr && componentList->getComponent("Position", j) != nullptr)
                     {
+                        auto position = static_cast<Position *>(componentList->getComponent("Position", j));
                         auto animation = static_cast<Animation *>(componentList->getComponent("Animation", j));
+                        animation->sprite.setPosition(position->x, position->y);
                         window->window.draw(animation->sprite);
                     }
                 }
@@ -162,7 +163,7 @@ namespace Haze
     }
 
     // only according to the position, no velocity, speed neither
-    void ColisionSystem(ComponentList *componentList)
+    void ColisionSystem(ComponentList *componentList) // TODO : link and test
     {
         for (int i = 0; i < componentList->getSize(); i++)
         {

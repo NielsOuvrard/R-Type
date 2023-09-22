@@ -70,16 +70,19 @@ namespace Haze
 
     struct Animation : public Component
     {
-        Animation(std::string path, size_t width, size_t height, size_t nbFramesX, size_t nbFramesY)
+        Animation(std::string path, size_t x, size_t y, size_t width, size_t height, size_t nbFramesX, size_t nbFramesY)
             : path(path), width(width), height(height), nbFramesX(nbFramesX), nbFramesY(nbFramesY), currentFrame(0)
         {
             texture.loadFromFile(path);
             sprite.setTexture(texture);
-            sprite.setTextureRect(sf::IntRect(0, 0, width, height));
+            sprite.setTextureRect(sf::IntRect(x, y, width, height));
         }
         std::string path;
         sf::Sprite sprite;
         sf::Texture texture;
+        sf::Clock clock;
+        size_t x;
+        size_t y;
         size_t width;
         size_t height;
         size_t nbFramesX;
