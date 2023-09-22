@@ -16,45 +16,55 @@ namespace Haze {
     {
     }
 
-    void Entity::AddComponent(Component *component)
+    void Entity::addComponent(Component *component)
     {
-        _components.push_back(std::unique_ptr<Component>(component));
+        _components.push_back(component);
+        if (_componentList != nullptr) {
+            _componentList->addComponent(component, _id);
+        }
     }
 
-    void Entity::RemoveComponent(std::string type)
+    void Entity::removeComponent(std::string type)
     {
-        for (auto it = _components.begin(); it != _components.end(); it++) {
-            if ((*it)->getType() == type) {
-                _components.erase(it);
-                return;
+        for (auto *component : _components) {
+            if (component->getType() == type) {
+                delete component;
+                _components.erase(std::remove(_components.begin(), _components.end(), component), _components.end());
+                _componentList->removeComponent(type, _id);
+                break;
             }
         }
     }
 
-    Component *Entity::GetComponent(std::string type)
+    Component *Entity::getComponent(std::string type)
     {
-        for (auto it = _components.begin(); it != _components.end(); it++) {
-            if ((*it)->getType() == type) {
-                return (*it).get();
+        for (auto *component : _components) {
+            if (component->getType() == type) {
+                return component;
             }
         }
         return nullptr;
     }
 
-    bool Entity::hasComponent(std::string type)
-    {
-        for (auto it = _components.begin(); it != _components.end(); it++) {
-            if ((*it)->getType() == type) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     void Entity::showComponents()
     {
-        for (auto it = _components.begin(); it != _components.end(); it++) {
-            (*it)->show();
+        for (auto *component : _components) {
+            std::cout << component->getType() << std::endl;
         }
+    }
+
+    void Entity::setComponentList(ComponentList *componentList)
+    {
+        _componentList = componentList;
+    }
+
+    void Entity::setId(size_t id)
+    {
+        _id = id;
+    }
+
+    void Entity::setUniqueId(size_t id)
+    {
+        uniqueId = id;
     }
 }

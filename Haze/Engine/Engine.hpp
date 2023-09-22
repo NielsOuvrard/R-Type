@@ -8,8 +8,10 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include <map>
 #include "System.hpp"
 #include "Entity.hpp"
+#include "ComponentList.hpp"
 
 namespace Haze {
     class Engine {
@@ -18,11 +20,13 @@ namespace Haze {
             ~Engine();
             void init();
             void update();
-            void addEntity(Entity *entity);
+            Entity *createEntity();
+            void removeEntity(size_t id);
+            void removeEntity(Entity *entity);
 
         protected:
         private:
             std::vector<std::unique_ptr<Entity>> _entities;
-
+            ComponentList *_componentList;
     };
 }
