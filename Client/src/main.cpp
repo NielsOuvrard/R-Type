@@ -48,6 +48,8 @@ int main()
     Haze::Entity *entity2 = engine.createEntity();
     entity1->addComponent(new Haze::Position(0, 0));
     entity1->addComponent(new Haze::Sprite("assets/ship.png"));
+    entity1->addComponent(new Haze::Animation("assets/r-typesheet30a.gif", 34, 34, 3, 1));
+    // std::string path, size_t width, size_t height, size_t nbFramesX, size_t nbFramesY)
     entity2->addComponent(new Haze::Window(800, 600));
 
     while (engine.isOpen())

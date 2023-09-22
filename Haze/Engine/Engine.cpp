@@ -25,12 +25,14 @@ namespace Haze
         _componentList->addList("Sprite");
         _componentList->addList("Window");
         _componentList->addList("VelocityOnClick");
+        _componentList->addList("Animation");
     }
 
     void Engine::update()
     {
         MoveSystem(_componentList);
         ClearSystem(_componentList);
+        AnimationSystem(_componentList);
         RenderSystem(_componentList);
         EventSystem(_componentList);
         DisplaySystem(_componentList);
@@ -76,5 +78,4 @@ namespace Haze
         _entities[entity->getId()] = nullptr;
         _componentList->removeRow(entity->getId());
     }
-
 }

@@ -13,6 +13,7 @@
 namespace Haze
 {
     void MoveSystem(ComponentList *componentList);
+    void AnimationSystem(ComponentList *componentList);
     void RenderSystem(ComponentList *componentList);
     void ColisionSystem(ComponentList *componentList);
     void DisplaySystem(ComponentList *componentList);

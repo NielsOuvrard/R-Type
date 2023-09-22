@@ -42,6 +42,33 @@ namespace Haze
         }
     }
 
+    void AnimationSystem(ComponentList *componentList)
+    {
+        for (int i = 0; i < componentList->getSize(); i++)
+        {
+            // TODO : sprite ?
+            // if (componentList->getComponent("Animation", i) != nullptr && componentList->getComponent("Sprite", i) != nullptr)
+            if (componentList->getComponent("Animation", i) != nullptr)
+            {
+                auto animation = static_cast<Animation *>(componentList->getComponent("Animation", i));
+                // if (animation->clock.getElapsedTime().asSeconds() > animation->speed)
+                // {
+                if (animation->currentFrame == animation->nbFramesX - 1)
+                {
+                    animation->currentFrame = 0;
+                }
+                else
+                {
+                    animation->currentFrame++;
+                }
+                animation->sprite.setTextureRect(sf::IntRect(animation->currentFrame * animation->width, 0, animation->width, animation->height));
+                // sprite->sprite.setTextureRect(sf::IntRect(animation->currentFrame * animation->width, 0, animation->width, animation->height));
+                // animation->clock.restart();
+                // }
+            }
+        }
+    }
+
     void RenderSystem(ComponentList *componentList)
     {
         for (int i = 0; i < componentList->getSize(); i++)
@@ -57,6 +84,11 @@ namespace Haze
                         auto sprite = static_cast<Sprite *>(componentList->getComponent("Sprite", j));
                         sprite->sprite.setPosition(position->x, position->y);
                         window->window.draw(sprite->sprite);
+                    }
+                    if (componentList->getComponent("Animation", j) != nullptr)
+                    {
+                        auto animation = static_cast<Animation *>(componentList->getComponent("Animation", j));
+                        window->window.draw(animation->sprite);
                     }
                 }
             }
