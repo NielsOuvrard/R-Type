@@ -68,6 +68,27 @@ namespace Haze
         void show() const override { std::cout << "flm" << path << std::endl; }
     };
 
+    struct Animation : public Component
+    {
+        Animation(std::string path, size_t width, size_t height, size_t nbFramesX, size_t nbFramesY)
+            : path(path), width(width), height(height), nbFramesX(nbFramesX), nbFramesY(nbFramesY), currentFrame(0)
+        {
+            texture.loadFromFile(path);
+            sprite.setTexture(texture);
+            sprite.setTextureRect(sf::IntRect(0, 0, width, height));
+        }
+        std::string path;
+        sf::Sprite sprite;
+        sf::Texture texture;
+        size_t width;
+        size_t height;
+        size_t nbFramesX;
+        size_t nbFramesY;
+        size_t currentFrame;
+        std::string getType() const override { return "Animation"; }
+        void show() const override { std::cout << "Animation: " << path << std::endl; }
+    }; // can compile
+
     struct Window : public Component
     {
         Window(int width, int height) : width(width), height(height)
