@@ -7,7 +7,8 @@
 
 #include "ComponentList.hpp"
 
-namespace Haze {
+namespace Haze
+{
     ComponentList::ComponentList()
     {
     }
@@ -18,7 +19,8 @@ namespace Haze {
 
     void ComponentList::addComponent(Component *component, size_t id)
     {
-        if (_componentList[component->getType()].size() == 0) {
+        if (_componentList[component->getType()].size() == 0)
+        {
             return;
         }
         _componentList[component->getType()][id] = std::unique_ptr<Component>(component);
@@ -27,8 +29,10 @@ namespace Haze {
     void ComponentList::removeComponent(std::string type, size_t id)
     {
         _componentList[type][id] = nullptr;
-        for (size_t i = 0; i < _componentName.size(); i++) {
-            if (_componentName[i] == type) {
+        for (size_t i = 0; i < _componentName.size(); i++)
+        {
+            if (_componentName[i] == type)
+            {
                 _componentName.erase(_componentName.begin() + i);
                 break;
             }
@@ -48,7 +52,8 @@ namespace Haze {
 
     void ComponentList::addRow()
     {
-        for (auto &it : _componentList) {
+        for (auto &it : _componentList)
+        {
             it.second.push_back(nullptr);
         }
         _size++;
@@ -56,19 +61,23 @@ namespace Haze {
 
     void ComponentList::removeRow(size_t id)
     {
-        for (auto &it : _componentList) {
+        for (auto &it : _componentList)
+        {
             it.second[id] = nullptr;
         }
     }
 
     void ComponentList::showComponents()
     {
-        for (auto &it : _componentList) {
+        for (auto &it : _componentList)
+        {
             std::cout << it.first << "   \t";
-            for (auto &it2 : it.second) {
+            for (auto &it2 : it.second)
+            {
                 if (it2 != nullptr)
                     std::cout << "\tvalue";
-                else {
+                else
+                {
                     std::cout << "\tnull";
                 }
             }

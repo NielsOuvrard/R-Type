@@ -73,6 +73,7 @@ namespace Haze
         Window(int width, int height) : width(width), height(height)
         {
             window.create(sf::VideoMode(width, height), "R-Type");
+            window.setFramerateLimit(60);
         }
         int width;
         int height;

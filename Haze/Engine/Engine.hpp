@@ -13,20 +13,23 @@
 #include "Entity.hpp"
 #include "ComponentList.hpp"
 
-namespace Haze {
-    class Engine {
-        public:
-            Engine();
-            ~Engine();
-            void init();
-            void update();
-            Entity *createEntity();
-            void removeEntity(size_t id);
-            void removeEntity(Entity *entity);
+namespace Haze
+{
+    class Engine
+    {
+    public:
+        Engine();
+        ~Engine();
+        void init();
+        void update();
+        Entity *createEntity();
+        void removeEntity(size_t id);
+        void removeEntity(Entity *entity);
+        bool isOpen();
 
-        protected:
-        private:
-            std::vector<std::unique_ptr<Entity>> _entities;
-            ComponentList *_componentList;
+    protected:
+    private:
+        std::vector<std::unique_ptr<Entity>> _entities;
+        ComponentList *_componentList;
     };
 }

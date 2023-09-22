@@ -23,6 +23,25 @@ namespace Haze
         }
     }
 
+    void EventSystem(ComponentList *componentList)
+    {
+        for (int i = 0; i < componentList->getSize(); i++)
+        {
+            if (componentList->getComponent("Window", i) != nullptr)
+            {
+                auto window = static_cast<Window *>(componentList->getComponent("Window", i));
+                sf::Event event;
+                while (window->window.pollEvent(event))
+                {
+                    if (event.type == sf::Event::Closed)
+                    {
+                        window->window.close();
+                    }
+                }
+            }
+        }
+    }
+
     void RenderSystem(ComponentList *componentList)
     {
         for (int i = 0; i < componentList->getSize(); i++)
