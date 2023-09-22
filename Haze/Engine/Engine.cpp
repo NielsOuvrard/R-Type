@@ -25,6 +25,7 @@ namespace Haze
         _componentList->addList("Sprite");
         _componentList->addList("Window");
         _componentList->addList("VelocityOnClick");
+        _componentList->addList("Size");
         _componentList->addList("Animation");
     }
 

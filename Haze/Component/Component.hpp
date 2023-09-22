@@ -70,8 +70,8 @@ namespace Haze
 
     struct Animation : public Component
     {
-        Animation(std::string path, size_t x, size_t y, size_t width, size_t height, size_t nbFramesX, size_t nbFramesY)
-            : path(path), width(width), height(height), nbFramesX(nbFramesX), nbFramesY(nbFramesY), currentFrame(0)
+        Animation(std::string path, size_t x, size_t y, size_t width, size_t height, size_t nbFramesX, size_t nbFramesY, bool boomerang = false)
+            : path(path), x(x), y(y), width(width), height(height), nbFramesX(nbFramesX), nbFramesY(nbFramesY), currentFrame(0), boomerang(boomerang), moveUp(true)
         {
             texture.loadFromFile(path);
             sprite.setTexture(texture);
@@ -88,6 +88,8 @@ namespace Haze
         size_t nbFramesX;
         size_t nbFramesY;
         size_t currentFrame;
+        bool boomerang;
+        bool moveUp;
         std::string getType() const override { return "Animation"; }
         void show() const override { std::cout << "Animation: " << path << std::endl; }
     }; // can compile
