@@ -100,26 +100,30 @@ namespace Haze
                 auto window = static_cast<Window *>(componentList->getComponent("Window", i));
                 for (int j = 0; j < componentList->getSize(); j++)
                 {
-                    if (componentList->getComponent("Position", j) != nullptr && componentList->getComponent("Sprite", j) != nullptr)
+                    if (componentList->getComponent("Position", j) != nullptr && componentList->getComponent("Sprite", j) != nullptr && componentList->getComponent("Size", j) != nullptr)
+                    {
+                        auto position = static_cast<Position *>(componentList->getComponent("Position", j));
+                        auto sprite = static_cast<Sprite *>(componentList->getComponent("Sprite", j));
+                        auto size = static_cast<Size *>(componentList->getComponent("Size", j));
+                        sprite->sprite.setPosition(position->x, position->y);
+                        sprite->sprite.setScale(size->width / sprite->texture.getSize().x, size->height / sprite->texture.getSize().y);
+                        window->window.draw(sprite->sprite);
+                    }
+                    else if (componentList->getComponent("Position", j) != nullptr && componentList->getComponent("Sprite", j) != nullptr)
                     {
                         auto position = static_cast<Position *>(componentList->getComponent("Position", j));
                         auto sprite = static_cast<Sprite *>(componentList->getComponent("Sprite", j));
                         sprite->sprite.setPosition(position->x, position->y);
                         window->window.draw(sprite->sprite);
                     }
-                    std::cout << "RenderSystem: " << std::endl;
-                    std::cout << "componentList->getComponent(\"Size\", j): " << (componentList->getComponent("Size", j) == nullptr ? "null" : "not null") << std::endl;
-
                     if (componentList->getComponent("Animation", j) != nullptr &&
                         componentList->getComponent("Position", j) != nullptr &&
                         componentList->getComponent("Size", j) != nullptr)
                     {
-                        std::cout << "11: " << std::endl;
                         auto position = static_cast<Position *>(componentList->getComponent("Position", j));
                         auto animation = static_cast<Animation *>(componentList->getComponent("Animation", j));
                         auto size = static_cast<Size *>(componentList->getComponent("Size", j));
                         animation->sprite.setPosition(position->x, position->y);
-                        std::cout << "size->width / animation->width: " << size->width / animation->width << std::endl;
                         animation->sprite.setScale(size->width / animation->width, size->height / animation->height);
                         window->window.draw(animation->sprite);
                     }
@@ -128,7 +132,6 @@ namespace Haze
                     {
                         auto position = static_cast<Position *>(componentList->getComponent("Position", j));
                         auto animation = static_cast<Animation *>(componentList->getComponent("Animation", j));
-                        std::cout << "size->width / animation->width: " << std::endl;
                         animation->sprite.setPosition(position->x, position->y);
                         window->window.draw(animation->sprite);
                     }
