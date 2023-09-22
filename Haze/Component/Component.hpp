@@ -192,7 +192,7 @@ namespace Haze
 
     struct Size : public Component
     {
-        Size(float height, float width) : height(height), width(width) {}
+        Size(float width, float height) : height(height), width(width) {}
         float height;
         float width;
         std::string getType() const override { return "Size"; }
