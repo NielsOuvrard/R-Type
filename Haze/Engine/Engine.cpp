@@ -70,6 +70,11 @@ namespace Haze
         return entity;
     }
 
+    Entity *Engine::getEntity(size_t id)
+    {
+        return _entities[id].get();
+    }
+
     void Engine::removeEntity(size_t id)
     {
         _entities[id] = nullptr;

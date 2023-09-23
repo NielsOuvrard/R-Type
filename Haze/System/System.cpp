@@ -177,27 +177,21 @@ namespace Haze
             if (collision1->behavior.find(collision2->scene) == collision1->behavior.end() ||
                 collision2->behavior.find(collision1->scene) == collision2->behavior.end())
                 return;
-            if (collision1->behavior[collision2->scene] && Collision::CollisionType::LAMBDA)
+            Collision::CollisionInfo *info1 = &(collision1->behavior[collision2->scene]);
+            Collision::CollisionInfo *info2 = &(collision2->behavior[collision1->scene]);
+            if ((info1->type & Collision::CollisionType::LAMBDA) != 0)
             {
-                if (std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - collision1->lastCollision).count() > collision1->tics) {
-                    collision1->onCollision(i, j);
-                    collision1->lastCollision = std::chrono::high_resolution_clock::now();
+                if (std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - info1->lastCollision).count() > info1->tics) {
+                    info1->lastCollision = std::chrono::high_resolution_clock::now();
+                    info1->onCollision(i, j);
                 }
             }
-            if (collision2->behavior[collision1->scene] && Collision::CollisionType::LAMBDA)
+            if ((info2->type & Collision::CollisionType::LAMBDA) != 0)
             {
-                if (std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - collision2->lastCollision).count() > collision2->tics) {
-                    collision2->onCollision(j, i);
-                    collision2->lastCollision = std::chrono::high_resolution_clock::now();
+                if (std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - info2->lastCollision).count() > info2->tics) {
+                    info2->lastCollision = std::chrono::high_resolution_clock::now();
+                    info2->onCollision(j, i);
                 }
-            }
-            if (collision1->behavior[collision2->scene] && Collision::CollisionType::DESTROY)
-            {
-                componentList->removeRow(i);
-            }
-            if (collision2->behavior[collision1->scene] && Collision::CollisionType::DESTROY)
-            {
-                componentList->removeRow(j);
             }
         }
     }

@@ -196,18 +196,18 @@ namespace Haze
             NONE = 0,
             LAMBDA = 1,
             WALL = 2,
-            DESTROY = 4,
-            LAMBDA_DESTROY = 5,
         };
-        Collision(std::string scene, std::map<std::string, CollisionType> behavior, double tics, std::function<void(int, int)> onCollision = [](int i, int j) {})
-            : scene(scene), behavior(behavior), onCollision(onCollision), tics(tics) {}
+        struct CollisionInfo {
+            CollisionType type;
+            double tics;
+            std::function<void(int, int)> onCollision = [](int i, int j) {};
+            std::chrono::_V2::system_clock::time_point lastCollision = std::chrono::high_resolution_clock::now();
+        };
+        Collision(std::string scene, std::map<std::string, CollisionInfo> behavior)
+            : scene(scene), behavior(behavior) {}
+
         std::string scene;
-        std::map<std::string, CollisionType> behavior;
-        std::function<void(int, int)> onCollision;
-
-        double tics;
-        std::chrono::_V2::system_clock::time_point lastCollision = std::chrono::high_resolution_clock::now();
-
+        std::map<std::string, CollisionInfo> behavior;
 
         std::string getType() const override { return "Collision"; }
         void show() const override { std::cout << "Collision: " << scene << std::endl; }

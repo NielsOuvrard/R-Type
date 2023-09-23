@@ -31,13 +31,25 @@ int main()
     entity1->addComponent(new Haze::Health(100));
     entity1->addComponent(new Haze::Collision(
         "player",
-        std::map<std::string, Haze::Collision::CollisionType>{
-            {"player", Haze::Collision::CollisionType::NONE},
-            {"enemy", Haze::Collision::CollisionType::NONE},
-            {"bullet", Haze::Collision::CollisionType::NONE},
-        },
-        1.0
+        std::map<std::string, Haze::Collision::CollisionInfo>{
+            {"enemy", Haze::Collision::CollisionInfo{
+                Haze::Collision::CollisionType::NONE,
+                1.0
+            }}
+        }
     ));
+
+    Haze::Collision::CollisionInfo info;
+    info.type = Haze::Collision::CollisionType::LAMBDA;
+    info.tics = 1.0;
+    info.onCollision = [&engine](int i, int j) {
+        Haze::Entity *test = engine.createEntity();
+        test->addComponent(new Haze::Position(500, 0));
+        test->addComponent(new Haze::Sprite("assets/ship.png"));
+        test->addComponent(new Haze::Velocity(-1, 0));
+        test->addComponent(new Haze::Scale(0.5, 0.5));
+        test->addComponent(new Haze::Size(400, 400));
+    };
 
     entity3->addComponent(new Haze::Position(500, 0));
     entity3->addComponent(new Haze::Sprite("assets/ship.png"));
@@ -46,29 +58,8 @@ int main()
     entity3->addComponent(new Haze::Size(400, 400));
     entity3->addComponent(new Haze::Collision(
         "enemy",
-        std::map<std::string, Haze::Collision::CollisionType>{
-            {"player", Haze::Collision::CollisionType::LAMBDA_DESTROY},
-            {"enemy", Haze::Collision::CollisionType::NONE},
-            {"bullet", Haze::Collision::CollisionType::NONE},
-        },
-        1.0,
-        [&engine, &entity3](int i, int j) {
-            Haze::Entity *test = engine.createEntity();
-            test->addComponent(new Haze::Position(500, 0));
-            test->addComponent(new Haze::Sprite("assets/ship.png"));
-            test->addComponent(new Haze::Velocity(-1, 0));
-            test->addComponent(new Haze::Scale(0.5, 0.5));
-            test->addComponent(new Haze::Size(400, 400));
-            test->addComponent(new Haze::Collision(
-                "enemy",
-                std::map<std::string, Haze::Collision::CollisionType>{
-                    {"player", Haze::Collision::CollisionType::LAMBDA},
-                    {"enemy", Haze::Collision::CollisionType::NONE},
-                    {"bullet", Haze::Collision::CollisionType::NONE},
-                },
-                1.0
-            ));
-
+        std::map<std::string, Haze::Collision::CollisionInfo>{
+            {"player", info}
         }
     ));
 

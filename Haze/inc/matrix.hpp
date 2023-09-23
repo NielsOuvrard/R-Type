@@ -11,7 +11,7 @@
 #include <stdexcept>
 #include <math.h>
 
-namespace mat {
+namespace Haze {
     template<typename T, int rows, int cols>
     class Matrix {
         public:
