@@ -22,6 +22,8 @@ namespace Haze
         _componentList = new ComponentList();
         _componentList->addList("Scale");
         _componentList->addList("Size");
+        _componentList->addList("Damage");
+        _componentList->addList("Health");
         _componentList->addList("Position");
         _componentList->addList("Velocity");
         _componentList->addList("Sprite");

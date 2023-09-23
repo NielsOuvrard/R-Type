@@ -8,8 +8,10 @@
 #pragma once
 #include <iostream>
 #include <string>
+#include <chrono>
 #include <vector>
 #include <memory>
+#include <functional>
 #include <unordered_map>
 #include <SFML/Graphics.hpp>
 
@@ -191,15 +193,22 @@ namespace Haze
     struct Collision : public Component
     {
         enum CollisionType {
-            DAMAGE,
-            WALL,
-            DESTROY,
-            NONE
+            NONE = 0,
+            LAMBDA = 1,
+            WALL = 2,
+            DESTROY = 4,
+            LAMBDA_DESTROY = 5,
         };
-        Collision(std::string scene, std::map<std::string, CollisionType> behavior, int weight) : scene(scene), behavior(behavior), weight(weight) {}
+        Collision(std::string scene, std::map<std::string, CollisionType> behavior, double tics, std::function<void(int, int)> onCollision = [](int i, int j) {})
+            : scene(scene), behavior(behavior), onCollision(onCollision), tics(tics) {}
         std::string scene;
         std::map<std::string, CollisionType> behavior;
-        int weight;
+        std::function<void(int, int)> onCollision;
+
+        double tics;
+        std::chrono::_V2::system_clock::time_point lastCollision = std::chrono::high_resolution_clock::now();
+
+
         std::string getType() const override { return "Collision"; }
         void show() const override { std::cout << "Collision: " << scene << std::endl; }
     };

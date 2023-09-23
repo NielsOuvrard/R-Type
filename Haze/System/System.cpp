@@ -5,6 +5,7 @@
 ** System
 */
 
+#include <chrono>
 #include "System.hpp"
 
 namespace Haze
@@ -173,29 +174,28 @@ namespace Haze
         {
             auto collision1 = static_cast<Collision *>(componentList->getComponent("Collision", i));
             auto collision2 = static_cast<Collision *>(componentList->getComponent("Collision", j));
-            if (!collision1->behavior[collision2->scene] || !collision2->behavior[collision1->scene])
+            if (collision1->behavior.find(collision2->scene) == collision1->behavior.end() ||
+                collision2->behavior.find(collision1->scene) == collision2->behavior.end())
                 return;
-            if (collision1->behavior[collision2->scene] == Collision::CollisionType::DAMAGE)
+            if (collision1->behavior[collision2->scene] && Collision::CollisionType::LAMBDA)
             {
-                auto damage2 = static_cast<Damage *>(componentList->getComponent("Damage", j));
-                auto health1 = static_cast<Health *>(componentList->getComponent("Health", i));
-                if (!damage2 || !health1)
-                    return;
-                health1->health -= damage2->damage;
+                if (std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - collision1->lastCollision).count() > collision1->tics) {
+                    collision1->onCollision(i, j);
+                    collision1->lastCollision = std::chrono::high_resolution_clock::now();
+                }
             }
-            if (collision2->behavior[collision1->scene] == Collision::CollisionType::DAMAGE)
+            if (collision2->behavior[collision1->scene] && Collision::CollisionType::LAMBDA)
             {
-                auto damage1 = static_cast<Damage *>(componentList->getComponent("Damage", i));
-                auto health2 = static_cast<Health *>(componentList->getComponent("Health", j));
-                if (!damage1 || !health2)
-                    return;
-                health2->health -= damage1->damage;
+                if (std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - collision2->lastCollision).count() > collision2->tics) {
+                    collision2->onCollision(j, i);
+                    collision2->lastCollision = std::chrono::high_resolution_clock::now();
+                }
             }
-            if (collision1->behavior[collision2->scene] == Collision::CollisionType::DESTROY)
+            if (collision1->behavior[collision2->scene] && Collision::CollisionType::DESTROY)
             {
                 componentList->removeRow(i);
             }
-            if (collision2->behavior[collision1->scene] == Collision::CollisionType::DESTROY)
+            if (collision2->behavior[collision1->scene] && Collision::CollisionType::DESTROY)
             {
                 componentList->removeRow(j);
             }
@@ -238,7 +238,7 @@ namespace Haze
                             position1->y < position2->y + sy2 &&
                             position1->y + sy1 > position2->y)
                         {
-                            std::cout << "collision" << std::endl;
+                            // std::cout << "collision" << std::endl;
                             CollisionHandling(componentList, i, j);
                         }
                     }
