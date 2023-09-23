@@ -212,13 +212,4 @@ namespace Haze
         std::string getType() const override { return "Size"; }
         void show() const override { std::cout << "Size: " << height << ", " << width << std::endl; }
     };
-
-    struct Acceleration : public Component
-    {
-        Acceleration(float x, float y) : x(x), y(y) {}
-        float x;
-        float y;
-        std::string getType() const override { return "Acceleration"; }
-        void show() const override { std::cout << "Acceleration: " << x << ", " << y << std::endl; }
-    };
 }

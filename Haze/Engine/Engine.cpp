@@ -24,7 +24,6 @@ namespace Haze
         _componentList->addList("Size");
         _componentList->addList("Position");
         _componentList->addList("Velocity");
-        _componentList->addList("Acceleration");
         _componentList->addList("Sprite");
         _componentList->addList("Window");
         _componentList->addList("VelocityOnClick");
@@ -37,7 +36,6 @@ namespace Haze
         SizeSystem(_componentList);
         ScaleSystem(_componentList);
         MoveSystem(_componentList);
-        AccelerationSystem(_componentList);
         ClearSystem(_componentList);
         AnimationSystem(_componentList);
         CollisionSystem(_componentList);
@@ -67,11 +65,6 @@ namespace Haze
         entity->setId(_entities.size());
         _entities.push_back(std::unique_ptr<Entity>(entity));
         _componentList->addRow();
-        for (auto &it : _componentList->getComponentName())
-        {
-            if (entity->getComponent(it) != nullptr)
-                _componentList->addComponent(entity->getComponent(it), entity->getId());
-        }
         return entity;
     }
 

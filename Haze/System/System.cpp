@@ -175,36 +175,29 @@ namespace Haze
             auto collision2 = static_cast<Collision *>(componentList->getComponent("Collision", j));
             if (!collision1->behavior[collision2->scene] || !collision2->behavior[collision1->scene])
                 return;
-            if (collision1->behavior[collision2->scene] == Collision::CollisionType::WALL)
+            if (collision1->behavior[collision2->scene] == Collision::CollisionType::DAMAGE)
             {
-                auto position1 = static_cast<Position *>(componentList->getComponent("Position", i));
-                auto position2 = static_cast<Position *>(componentList->getComponent("Position", j));
-                auto size1 = static_cast<Size *>(componentList->getComponent("Size", i));
-                auto size2 = static_cast<Size *>(componentList->getComponent("Size", j));
-                // position1 is getting out of position2
-                
+                auto damage2 = static_cast<Damage *>(componentList->getComponent("Damage", j));
+                auto health1 = static_cast<Health *>(componentList->getComponent("Health", i));
+                if (!damage2 || !health1)
+                    return;
+                health1->health -= damage2->damage;
             }
-            if (collision2->behavior[collision1->scene] == Collision::CollisionType::WALL)
+            if (collision2->behavior[collision1->scene] == Collision::CollisionType::DAMAGE)
             {
-                auto position1 = static_cast<Position *>(componentList->getComponent("Position", i));
-                auto position2 = static_cast<Position *>(componentList->getComponent("Position", j));
-                // position2 is getting out of position1
-                if (position2->oldX + 1 < position1->x)
-                {
-                    position2->x = position2->oldX;
-                }
-                if (position2->oldX - 1 > position1->x)
-                {
-                    position2->x = position2->oldX;
-                }
-                if (position2->oldY + 1 < position1->y)
-                {
-                    position2->y = position2->oldY;
-                }
-                if (position2->oldY - 1 > position1->y)
-                {
-                    position2->y = position2->oldY;
-                }
+                auto damage1 = static_cast<Damage *>(componentList->getComponent("Damage", i));
+                auto health2 = static_cast<Health *>(componentList->getComponent("Health", j));
+                if (!damage1 || !health2)
+                    return;
+                health2->health -= damage1->damage;
+            }
+            if (collision1->behavior[collision2->scene] == Collision::CollisionType::DESTROY)
+            {
+                componentList->removeRow(i);
+            }
+            if (collision2->behavior[collision1->scene] == Collision::CollisionType::DESTROY)
+            {
+                componentList->removeRow(j);
             }
         }
     }
@@ -267,22 +260,4 @@ namespace Haze
             }
         }
     }
-
-
-    void AccelerationSystem(ComponentList *componentList)
-    {
-        for (int i = 0; i < componentList->getSize(); i++)
-        {
-            if (componentList->getComponent("Acceleration", i) &&
-                componentList->getComponent("Position", i))
-            {
-                auto acceleration = static_cast<Acceleration *>(componentList->getComponent("Acceleration", i));
-                auto position = static_cast<Position *>(componentList->getComponent("Position", i));
-                position->x += acceleration->x;
-                position->y += acceleration->y;
-                componentList->removeComponent("Acceleration", i);
-            }
-        }
-    }
-
 }

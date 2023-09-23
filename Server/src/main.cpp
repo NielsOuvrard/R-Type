@@ -32,7 +32,7 @@ int main()
         "player",
         std::map<std::string, Haze::Collision::CollisionType>{
             {"player", Haze::Collision::CollisionType::NONE},
-            {"enemy", Haze::Collision::CollisionType::WALL},
+            {"enemy", Haze::Collision::CollisionType::NONE},
             {"bullet", Haze::Collision::CollisionType::DAMAGE},
             {"default", Haze::Collision::CollisionType::NONE},
         },
@@ -47,7 +47,7 @@ int main()
     entity3->addComponent(new Haze::Collision(
         "enemy",
         std::map<std::string, Haze::Collision::CollisionType>{
-            {"player", Haze::Collision::CollisionType::NONE},
+            {"player", Haze::Collision::CollisionType::DESTROY},
             {"enemy", Haze::Collision::CollisionType::NONE},
             {"bullet", Haze::Collision::CollisionType::NONE},
             {"default", Haze::Collision::CollisionType::DESTROY},

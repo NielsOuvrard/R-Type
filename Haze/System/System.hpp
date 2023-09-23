@@ -16,7 +16,6 @@ namespace Haze
     void SizeSystem(ComponentList *componentList);
     void ScaleSystem(ComponentList *componentList);
     void MoveSystem(ComponentList *componentList);
-    void AccelerationSystem(ComponentList *componentList);
     void AnimationSystem(ComponentList *componentList);
     void RenderSystem(ComponentList *componentList);
     void CollisionSystem(ComponentList *componentList);
