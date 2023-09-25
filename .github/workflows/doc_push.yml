@@ -19,7 +19,7 @@ jobs:
         env:
           DESTINATION_REPO_TOKEN: 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
         run: |
-          git config --global user.email "rabotclovis@gmail.com"
+          git config --global user.email "clovis.rabot@gmail.com"
           git config --global user.name "rclovis"
 
           # Clone the destination repository
