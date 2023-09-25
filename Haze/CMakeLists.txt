@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.25)
 project(haze)
+add_compile_options(-Wno-unused-command-line-argument)
 
 set(
     SOURCES

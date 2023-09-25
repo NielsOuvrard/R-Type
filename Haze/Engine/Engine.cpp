@@ -29,6 +29,7 @@ namespace Haze
         _componentList->addList("Sprite");
         _componentList->addList("Window");
         _componentList->addList("VelocityOnClick");
+        _componentList->addList("Size");
         _componentList->addList("Animation");
         _componentList->addList("Collision");
     }
@@ -42,7 +43,7 @@ namespace Haze
         AnimationSystem(_componentList);
         CollisionSystem(_componentList);
         RenderSystem(_componentList);
-        EventSystem(_componentList);
+        // EventSystem(_componentList);
         DisplaySystem(_componentList);
         VelocityOnClickSystem(_componentList, "d");
     }

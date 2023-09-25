@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 project(r-type-client)
+    add_compile_options(-Wno-unused-command-line-argument)
 
 set(
     SOURCES
@@ -21,3 +22,4 @@ target_link_libraries(${PROJECT_NAME}
 
 # Include the SFML headers
 target_include_directories(${PROJECT_NAME} PRIVATE ${SFML_INCLUDE_DIR})
+# ça compile pas sa mère sur macOS
