@@ -41,11 +41,11 @@ namespace Haze
         MoveSystem(_componentList);
         ClearSystem(_componentList);
         AnimationSystem(_componentList);
-        CollisionSystem(_componentList);
+        // CollisionSystem(_componentList);
         RenderSystem(_componentList);
         // EventSystem(_componentList);
         DisplaySystem(_componentList);
-        VelocityOnClickSystem(_componentList, "d");
+        // VelocityOnClickSystem(_componentList, "d");
     }
 
     bool Engine::isOpen()
