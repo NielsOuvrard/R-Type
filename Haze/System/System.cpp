@@ -23,24 +23,24 @@ namespace Haze
         }
     }
 
-    void EventSystem(ComponentList *componentList)
-    {
-        for (int i = 0; i < componentList->getSize(); i++)
-        {
-            if (componentList->getComponent("Window", i) != nullptr)
-            {
-                auto window = static_cast<Window *>(componentList->getComponent("Window", i));
-                sf::Event event;
-                while (window->window.pollEvent(event))
-                {
-                    if (event.type == sf::Event::Closed)
-                    {
-                        window->window.close();
-                    }
-                }
-            }
-        }
-    }
+    // void EventSystem(ComponentList *componentList)
+    // {
+    //     for (int i = 0; i < componentList->getSize(); i++)
+    //     {
+    //         if (componentList->getComponent("Window", i) != nullptr)
+    //         {
+    //             auto window = static_cast<Window *>(componentList->getComponent("Window", i));
+    //             sf::Event event;
+    //             while (window->window.pollEvent(event))
+    //             {
+    //                 if (event.type == sf::Event::Closed)
+    //                 {
+    //                     window->window.close();
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
 
     void AnimationSystem(ComponentList *componentList)
     {
@@ -100,22 +100,6 @@ namespace Haze
                 auto window = static_cast<Window *>(componentList->getComponent("Window", i));
                 for (int j = 0; j < componentList->getSize(); j++)
                 {
-                    if (componentList->getComponent("Position", j) != nullptr && componentList->getComponent("Sprite", j) != nullptr && componentList->getComponent("Size", j) != nullptr)
-                    {
-                        auto position = static_cast<Position *>(componentList->getComponent("Position", j));
-                        auto sprite = static_cast<Sprite *>(componentList->getComponent("Sprite", j));
-                        auto size = static_cast<Size *>(componentList->getComponent("Size", j));
-                        sprite->sprite.setPosition(position->x, position->y);
-                        sprite->sprite.setScale(size->width / sprite->texture.getSize().x, size->height / sprite->texture.getSize().y);
-                        window->window.draw(sprite->sprite);
-                    }
-                    else if (componentList->getComponent("Position", j) != nullptr && componentList->getComponent("Sprite", j) != nullptr)
-                    {
-                        auto position = static_cast<Position *>(componentList->getComponent("Position", j));
-                        auto sprite = static_cast<Sprite *>(componentList->getComponent("Sprite", j));
-                        sprite->sprite.setPosition(position->x, position->y);
-                        window->window.draw(sprite->sprite);
-                    }
                     if (componentList->getComponent("Animation", j) != nullptr &&
                         componentList->getComponent("Position", j) != nullptr &&
                         componentList->getComponent("Size", j) != nullptr)
@@ -123,17 +107,42 @@ namespace Haze
                         auto position = static_cast<Position *>(componentList->getComponent("Position", j));
                         auto animation = static_cast<Animation *>(componentList->getComponent("Animation", j));
                         auto size = static_cast<Size *>(componentList->getComponent("Size", j));
-                        animation->sprite.setPosition(position->x, position->y);
-                        animation->sprite.setScale(size->width / animation->width, size->height / animation->height);
-                        window->window.draw(animation->sprite);
+                        Haze::Sprite sprite = animation->sprite;
+                        sprite.sprite.setPosition(position->x, position->y);
+                        sprite.sprite.setScale(size->width / animation->width, size->height / animation->height);
+                        window->window.draw(sprite.sprite);
                     }
                     else if (componentList->getComponent("Animation", j) != nullptr &&
                              componentList->getComponent("Position", j) != nullptr)
                     {
                         auto position = static_cast<Position *>(componentList->getComponent("Position", j));
                         auto animation = static_cast<Animation *>(componentList->getComponent("Animation", j));
-                        animation->sprite.setPosition(position->x, position->y);
-                        window->window.draw(animation->sprite);
+                        Haze::Sprite sprite = animation->sprite;
+                        sprite.sprite.setPosition(position->x, position->y);
+                        window->window.draw(sprite.sprite);
+                    }
+                    else if (componentList->getComponent("Position", j) != nullptr &&
+                             componentList->getComponent("Sprite", j) != nullptr &&
+                             componentList->getComponent("Size", j) != nullptr)
+                    {
+                        auto sprite = static_cast<Sprite *>(componentList->getComponent("Sprite", j));
+                        // if (sprite->isAnimated == true)
+                        //     continue;
+                        auto position = static_cast<Position *>(componentList->getComponent("Position", j));
+                        auto size = static_cast<Size *>(componentList->getComponent("Size", j));
+                        sprite->sprite.setPosition(position->x, position->y);
+                        sprite->sprite.setScale(size->width / sprite->texture.getSize().x, size->height / sprite->texture.getSize().y);
+                        window->window.draw(sprite->sprite);
+                    }
+                    else if (componentList->getComponent("Position", j) != nullptr &&
+                             componentList->getComponent("Sprite", j) != nullptr)
+                    {
+                        auto sprite = static_cast<Sprite *>(componentList->getComponent("Sprite", j));
+                        // if (sprite->isAnimated == true)
+                        //     continue;
+                        auto position = static_cast<Position *>(componentList->getComponent("Position", j));
+                        sprite->sprite.setPosition(position->x, position->y);
+                        window->window.draw(sprite->sprite);
                     }
                 }
             }

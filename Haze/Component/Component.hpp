@@ -41,7 +41,7 @@ namespace Haze
         void show() const override { std::cout << "Velocity: " << x << ", " << y << std::endl; }
     };
 
-    struct VelocityOnClick : public Component
+    struct VelocityOnClick : public Component // useless ?
     {
         // std::vector<std::vector<std::string>> [0] = touche, [1] = velocity x, [2] velocity y
         VelocityOnClick(std::vector<std::vector<std::string>> directions) : diretionTop(directions[0]), diretionBot(directions[1]),
@@ -56,7 +56,7 @@ namespace Haze
 
     struct Sprite : public Component
     {
-        Sprite(std::string path) : path(path)
+        Sprite(std::string path) : path(path) //, isAnimated(false)
         {
             texture.loadFromFile(path);
             sprite.setTexture(texture);
@@ -64,23 +64,23 @@ namespace Haze
         std::string path;
         sf::Sprite sprite;
         sf::Texture texture;
+        // bool isAnimated;
         std::string getType() const override { return "Sprite"; }
         void show() const override { std::cout << "flm" << path << std::endl; }
+        void setTextureRect(sf::IntRect rect) { sprite.setTextureRect(rect); }
+        // void setAnimated(bool animated) { isAnimated = animated; }
     };
 
     struct Animation : public Component
     {
-        Animation(std::string path, size_t x, size_t y, size_t width, size_t height, size_t nbFramesX, size_t nbFramesY, bool boomerang = false)
-            : path(path), x(x), y(y), width(width), height(height), nbFramesX(nbFramesX), nbFramesY(nbFramesY), currentFrame(0), boomerang(boomerang), moveUp(true)
+        Animation(Haze::Sprite &sprite, size_t x, size_t y, size_t width, size_t height, size_t nbFramesX, size_t nbFramesY, bool boomerang = false)
+            : sprite(sprite), x(x), y(y), width(width), height(height), nbFramesX(nbFramesX), nbFramesY(nbFramesY), currentFrame(0), boomerang(boomerang), moveUp(true)
         {
-            texture.loadFromFile(path);
-            sprite.setTexture(texture);
             sprite.setTextureRect(sf::IntRect(x, y, width, height));
+            // sprite.setAnimated(true);
         }
-        std::string path;
-        sf::Sprite sprite;
-        sf::Texture texture;
-        sf::Clock clock;
+        Haze::Sprite &sprite;
+        sf::Clock clock; // will use later in another system ?
         size_t x;
         size_t y;
         size_t width;
@@ -91,7 +91,7 @@ namespace Haze
         bool boomerang;
         bool moveUp;
         std::string getType() const override { return "Animation"; }
-        void show() const override { std::cout << "Animation: " << path << std::endl; }
+        void show() const override { std::cout << "Animation: " << std::endl; }
     }; // can compile
 
     struct Window : public Component
@@ -124,6 +124,7 @@ namespace Haze
         void show() const override { std::cout << "Damage: " << damage << std::endl; }
     };
 
+    // will be use in move system
     struct Speed : public Component
     {
         Speed(int speed) : speed(speed) {}
@@ -132,15 +133,15 @@ namespace Haze
         void show() const override { std::cout << "Speed: " << speed << std::endl; }
     };
 
-    struct Shoot : public Component
-    {
-        Shoot(int shoot) : shoot(shoot) {}
-        int shoot;
-        std::string getType() const override { return "Shoot"; }
-        void show() const override { std::cout << "Shoot: " << shoot << std::endl; }
-    };
+    // struct Shoot : public Component
+    // {
+    //     Shoot(int shoot) : shoot(shoot) {}
+    //     int shoot;
+    //     std::string getType() const override { return "Shoot"; }
+    //     void show() const override { std::cout << "Shoot: " << shoot << std::endl; }
+    // };
 
-    struct Inputs : public Component
+    struct Inputs : public Component // useless ?
     {
         Inputs(int inputs) : inputs(inputs) {}
         int inputs;
@@ -148,12 +149,30 @@ namespace Haze
         void show() const override { std::cout << "Inputs: " << inputs << std::endl; }
     };
 
+    // * link to :
+    // Health
+    // Damage
+    // Speed
+    // Sprite / Animation
+    // Collision
+    // Position
+    // Size
+    // Velocity
     struct Enemy : public Component
     {
         Enemy(int enemy) : enemy(enemy)
         {
         }
-        int enemy;
+        int enemy; // type
+        bool canShoot;
+
+        // shoo()
+        //      throw projectile
+        //      drop bomb
+        // move(enemy)
+        //      can fly ?
+        //      Pattern ?
+        //      right to left ?
         std::string getType() const override { return "Enemy"; }
         void show() const override { std::cout << "Enemy: " << enemy << std::endl; }
     };
@@ -174,10 +193,18 @@ namespace Haze
         void show() const override { std::cout << "Boss: " << boss << std::endl; }
     };
 
+    // * link to :
+    // Damage
+    // Speed
+    // Sprite / Animation
+    // Collision
+    // Position
+    // Velocity
+    // Size
     struct Projectile : public Component
     {
         Projectile(int projectile) : projectile(projectile) {}
-        int projectile;
+        int projectile; // type
         std::string getType() const override { return "Projectile"; }
         void show() const override { std::cout << "Projectile: " << projectile << std::endl; }
     };

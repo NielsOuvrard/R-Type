@@ -35,7 +35,7 @@ namespace Haze
         ClearSystem(_componentList);
         AnimationSystem(_componentList);
         RenderSystem(_componentList);
-        EventSystem(_componentList);
+        // EventSystem(_componentList);
         DisplaySystem(_componentList);
         VelocityOnClickSystem(_componentList, "d");
     }
