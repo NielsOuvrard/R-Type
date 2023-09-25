@@ -275,18 +275,4 @@ namespace Haze
             }
         }
     }
-
-    void SizeSystem(ComponentList *componentList)
-    {
-        for (int i = 0; i < componentList->getSize(); i++)
-        {
-            if (componentList->getComponent("Size", i) &&
-                componentList->getComponent("Sprite", i))
-            {
-                auto size = static_cast<Size *>(componentList->getComponent("Size", i));
-                auto sprite = static_cast<Sprite *>(componentList->getComponent("Sprite", i));
-                sprite->sprite.setTextureRect(sf::IntRect(0, 0, size->width, size->height));
-            }
-        }
-    }
 }

@@ -13,7 +13,6 @@
 
 namespace Haze
 {
-    void SizeSystem(ComponentList *componentList);
     void ScaleSystem(ComponentList *componentList);
     void MoveSystem(ComponentList *componentList);
     void AnimationSystem(ComponentList *componentList);

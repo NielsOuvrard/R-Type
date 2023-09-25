@@ -3,7 +3,7 @@ name: Push to Destination Repository
 on:
   push:
     paths:
-      - 'docs' # Replace with the actual path to your directory
+      - 'docs/' # Replace with the actual path to your directory
 
 jobs:
   push:

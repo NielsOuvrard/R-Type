@@ -36,8 +36,7 @@ namespace Haze
 
     void Engine::update()
     {
-        SizeSystem(_componentList);
-        ScaleSystem(_componentList);
+        // ScaleSystem(_componentList);
         MoveSystem(_componentList);
         ClearSystem(_componentList);
         AnimationSystem(_componentList);
@@ -45,7 +44,7 @@ namespace Haze
         RenderSystem(_componentList);
         // EventSystem(_componentList);
         DisplaySystem(_componentList);
-        // VelocityOnClickSystem(_componentList, "d");
+        VelocityOnClickSystem(_componentList, "d");
     }
 
     bool Engine::isOpen()
