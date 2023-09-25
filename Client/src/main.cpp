@@ -14,6 +14,8 @@
 
 #include "GraphicClient.hpp"
 #include <haze.hpp>
+#include "Component.hpp"
+
 
 void moveUp(void *component)
 {
@@ -46,6 +48,7 @@ int main()
     Haze::Entity *entityVortex = engine.createEntity();
     Haze::Entity *entitySpaceship = engine.createEntity();
     Haze::Entity *entityWindow = engine.createEntity();
+    Haze::Entity *entityWall = engine.createEntity();
 
     entityVortex->addComponent(new Haze::Position(120, 200));
     entityVortex->addComponent(new Haze::Velocity(2, 0));
@@ -62,6 +65,13 @@ int main()
     Haze::Sprite *spaceshipSprite = new Haze::Sprite("assets/r-typesheet1.gif");
     entitySpaceship->addComponent(spaceshipSprite);
     entitySpaceship->addComponent(new Haze::Animation(*spaceshipSprite, 100, 0, 33, 18, 5, 1, true));
+
+    entityWall->addComponent(new Haze::Position(0, 0));
+    entityWall->addComponent(new Haze::Size(960, 140));
+    Haze::Sprite *wallSprite = new Haze::Sprite("assets/wall.png");
+    wallSprite->sprite.setTextureRect(sf::IntRect(0, 0, 480, 79));
+    entityWall->addComponent(wallSprite);
+    // entityWall->addComponent(new Haze::Collision(*wallSprite));
 
     Haze::Window *window = new Haze::Window(800, 600);
     entityWindow->addComponent(window);
@@ -101,7 +111,8 @@ int main()
             if (event.key.code == sf::Keyboard::Enter)
             {
                 Haze::Entity *newVortex = engine.createEntity();
-                newVortex->addComponent(new Haze::Position(120, 200)); // TODO: ship position
+                auto position = static_cast<Haze::Position *>(entitySpaceship->getComponent("Position"));
+                newVortex->addComponent(new Haze::Position(position->x, position->y));
                 newVortex->addComponent(new Haze::Velocity(2, 0));
                 newVortex->addComponent(new Haze::Size(34 * 3, 34 * 3));
                 newVortex->addComponent(vortexSprite);
