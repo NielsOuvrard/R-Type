@@ -1,12 +1,8 @@
 name: Push to Destination Repository
 on:
-  # push:
-  #   paths:
-  #     - '.' # Replace with the actual path to your directory
-  workflow_dispatch:
   push:
-    branches:
-      - main
+    paths:
+      - 'docs/*'
 jobs:
   push:
     runs-on: ubuntu-latest
@@ -15,13 +11,6 @@ jobs:
       - name: Check out source repository
         uses: actions/checkout@v2
 
-      # - name: Check out destination repository
-      #   uses: actions/checkout@v2
-      #   with:
-      #     repository: rclovis/R-Type-Documentation
-      #     token: ${{ secrets.DESTINATION_REPO_TOKEN }}
-      #     path: R-Type-Documentation
-
       - name: Push to Destination Repository
         env:
           DESTINATION_REPO_TOKEN: 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
@@ -29,15 +18,13 @@ jobs:
           git config --global user.email "clovis.rabot@epitech.eu"
           git config --global user.name "rclovis"
 
-          # Clone the destination repository
           git clone https://github.com/rclovis/R-Type-Documentation.git
 
-          # Copy the changes from source to destination directory
+          rm -rf R-Type-Documentation/r-type/docs
           cp -r docs/* R-Type-Documentation/r-type/docs
 
           cd R-Type-Documentation
 
-          # Commit and push changes to destination repository
           git add .
           git commit -m "Update from source repository"
           git push https://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@github.com/rclovis/R-Type-Documentation.git HEAD:main
