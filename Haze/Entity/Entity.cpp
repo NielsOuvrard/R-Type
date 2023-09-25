@@ -18,39 +18,24 @@ namespace Haze {
 
     void Entity::addComponent(Component *component)
     {
-        _components.push_back(component);
-        if (_componentList != nullptr) {
-            _componentList->addComponent(component, _id);
-        }
+        _componentList->addComponent(component, _id);
     }
 
     void Entity::removeComponent(std::string type)
     {
-        for (auto *component : _components) {
-            if (component->getType() == type) {
-                delete component;
-                _components.erase(std::remove(_components.begin(), _components.end(), component), _components.end());
-                _componentList->removeComponent(type, _id);
-                break;
-            }
-        }
+        _componentList->removeComponent(type, _id);
     }
 
     Component *Entity::getComponent(std::string type)
     {
-        for (auto *component : _components) {
-            if (component->getType() == type) {
-                return component;
-            }
-        }
-        return nullptr;
+        return _componentList->getComponent(type, _id);
     }
 
     void Entity::showComponents()
     {
-        for (auto *component : _components) {
-            std::cout << component->getType() << std::endl;
-        }
+        // for (auto *component : _components) {
+        //     std::cout << component->getType() << std::endl;
+        // }
     }
 
     void Entity::setComponentList(ComponentList *componentList)
@@ -63,8 +48,4 @@ namespace Haze {
         _id = id;
     }
 
-    void Entity::setUniqueId(size_t id)
-    {
-        uniqueId = id;
-    }
 }

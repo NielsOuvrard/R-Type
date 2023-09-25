@@ -25,6 +25,7 @@ namespace Haze
         void init();
         void update();
         Entity *createEntity();
+        Entity *getEntity(size_t id);
         void removeEntity(size_t id);
         void removeEntity(Entity *entity);
         bool isOpen();

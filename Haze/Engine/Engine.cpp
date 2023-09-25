@@ -20,6 +20,10 @@ namespace Haze
     void Engine::init()
     {
         _componentList = new ComponentList();
+        _componentList->addList("Scale");
+        _componentList->addList("Size");
+        _componentList->addList("Damage");
+        _componentList->addList("Health");
         _componentList->addList("Position");
         _componentList->addList("Velocity");
         _componentList->addList("Sprite");
@@ -27,13 +31,17 @@ namespace Haze
         _componentList->addList("VelocityOnClick");
         _componentList->addList("Size");
         _componentList->addList("Animation");
+        _componentList->addList("Collision");
     }
 
     void Engine::update()
     {
+        SizeSystem(_componentList);
+        ScaleSystem(_componentList);
         MoveSystem(_componentList);
         ClearSystem(_componentList);
         AnimationSystem(_componentList);
+        CollisionSystem(_componentList);
         RenderSystem(_componentList);
         // EventSystem(_componentList);
         DisplaySystem(_componentList);
@@ -60,12 +68,12 @@ namespace Haze
         entity->setId(_entities.size());
         _entities.push_back(std::unique_ptr<Entity>(entity));
         _componentList->addRow();
-        for (auto &it : _componentList->getComponentName())
-        {
-            if (entity->getComponent(it) != nullptr)
-                _componentList->addComponent(entity->getComponent(it), entity->getId());
-        }
         return entity;
+    }
+
+    Entity *Engine::getEntity(size_t id)
+    {
+        return _entities[id].get();
     }
 
     void Engine::removeEntity(size_t id)

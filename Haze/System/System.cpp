@@ -5,6 +5,7 @@
 ** System
 */
 
+#include <chrono>
 #include "System.hpp"
 
 namespace Haze
@@ -17,30 +18,26 @@ namespace Haze
             {
                 auto position = static_cast<Position *>(componentList->getComponent("Position", i));
                 auto velocity = static_cast<Velocity *>(componentList->getComponent("Velocity", i));
+                position->oldX = position->x;
+                position->oldY = position->y;
                 position->x += velocity->x;
                 position->y += velocity->y;
             }
         }
     }
 
-    // void EventSystem(ComponentList *componentList)
-    // {
-    //     for (int i = 0; i < componentList->getSize(); i++)
-    //     {
-    //         if (componentList->getComponent("Window", i) != nullptr)
-    //         {
-    //             auto window = static_cast<Window *>(componentList->getComponent("Window", i));
-    //             sf::Event event;
-    //             while (window->window.pollEvent(event))
-    //             {
-    //                 if (event.type == sf::Event::Closed)
-    //                 {
-    //                     window->window.close();
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
+    void ScaleSystem(ComponentList *componentList)
+    {
+        for (int i = 0; i < componentList->getSize(); i++)
+        {
+            if (componentList->getComponent("Scale", i) != nullptr && componentList->getComponent("Sprite", i) != nullptr)
+            {
+                auto scale = static_cast<Scale *>(componentList->getComponent("Scale", i));
+                auto sprite = static_cast<Sprite *>(componentList->getComponent("Sprite", i));
+                sprite->sprite.setScale(scale->x, scale->y);
+            }
+        }
+    }
 
     void AnimationSystem(ComponentList *componentList)
     {
@@ -173,16 +170,6 @@ namespace Haze
         }
     }
 
-    // void InputsSystem(std::vector<std::unique_ptr<Entity>> &entities, std::string input)
-    // {
-    //     for (auto &entity : entities) {
-    //         if (entity->hasComponent("Inputs")) {
-    //             auto window = static_cast<Window *>(entity->GetComponent("Window"));
-    //             window->window.display();
-    //         }
-    //     }
-    // }
-
     void VelocityOnClickSystem(ComponentList *componentList, std::string input)
     {
         for (int i = 0; i < componentList->getSize(); i++)
@@ -215,39 +202,90 @@ namespace Haze
         }
     }
 
-    // only according to the position, no velocity, speed neither
-    void ColisionSystem(ComponentList *componentList) // TODO : link and test
+    void CollisionHandling (ComponentList *componentList, int i, int j)
+    {
+        if (componentList->getComponent("Collision", i) &&
+            componentList->getComponent("Collision", j))
+        {
+            auto collision1 = static_cast<Collision *>(componentList->getComponent("Collision", i));
+            auto collision2 = static_cast<Collision *>(componentList->getComponent("Collision", j));
+            if (collision1->behavior.find(collision2->scene) == collision1->behavior.end() ||
+                collision2->behavior.find(collision1->scene) == collision2->behavior.end())
+                return;
+            Collision::CollisionInfo *info1 = &(collision1->behavior[collision2->scene]);
+            Collision::CollisionInfo *info2 = &(collision2->behavior[collision1->scene]);
+            if ((info1->type & Collision::CollisionType::LAMBDA) != 0)
+            {
+                if (std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - info1->lastCollision).count() > info1->tics) {
+                    info1->lastCollision = std::chrono::high_resolution_clock::now();
+                    info1->onCollision(i, j);
+                }
+            }
+            if ((info2->type & Collision::CollisionType::LAMBDA) != 0)
+            {
+                if (std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - info2->lastCollision).count() > info2->tics) {
+                    info2->lastCollision = std::chrono::high_resolution_clock::now();
+                    info2->onCollision(j, i);
+                }
+            }
+        }
+    }
+
+    void CollisionSystem(ComponentList *componentList)
     {
         for (int i = 0; i < componentList->getSize(); i++)
         {
-            if (componentList->getComponent("Position", i) != nullptr && componentList->getComponent("Collision", i) != nullptr && componentList->getComponent("Size", i) != nullptr)
+            if (componentList->getComponent("Position", i) &&
+                componentList->getComponent("Size", i))
             {
                 auto position1 = static_cast<Position *>(componentList->getComponent("Position", i));
                 auto size1 = static_cast<Size *>(componentList->getComponent("Size", i));
-                auto colision1 = static_cast<Collision *>(componentList->getComponent("Collision", i));
-
+                auto scale1 = static_cast<Scale *>(componentList->getComponent("Scale", i));
+                int sx1 = 1, sy1 = 1;
+                if (scale1 != nullptr)
+                {
+                    sx1 = scale1->x * size1->width;
+                    sy1 = scale1->y * size1->height;
+                }
                 for (int j = 0; j < componentList->getSize(); j++)
                 {
-                    // check the same
-                    if (i == j)
-                        continue;
-                    if (componentList->getComponent("Position", j) != nullptr && componentList->getComponent("Collision", j) != nullptr && componentList->getComponent("Size", j) != nullptr)
+                    if (i == j) continue;
+                    if (componentList->getComponent("Position", j) &&
+                        componentList->getComponent("Size", j))
                     {
                         auto position2 = static_cast<Position *>(componentList->getComponent("Position", j));
                         auto size2 = static_cast<Size *>(componentList->getComponent("Size", j));
-                        auto colision2 = static_cast<Collision *>(componentList->getComponent("Collision", j));
-
-                        if (position1->x < position2->x + size2->width &&
-                            position1->x + size1->width > position2->x &&
-                            position1->y < position2->y + size2->height &&
-                            position1->y + size1->height > position2->y)
+                        auto scale2 = static_cast<Scale *>(componentList->getComponent("Scale", j));
+                        int sx2 = 1, sy2 = 1;
+                        if (scale2 != nullptr)
                         {
-                            std::cout << "COLISION" << std::endl;
-                            colision1->collision = j;
-                            colision2->collision = i;
+                            sx2 = scale2->x * size2->width;
+                            sy2 = scale2->y * size2->height;
+                        }
+                        if (position1->x < position2->x + sx2 &&
+                            position1->x + sx1 > position2->x &&
+                            position1->y < position2->y + sy2 &&
+                            position1->y + sy1 > position2->y)
+                        {
+                            // std::cout << "collision" << std::endl;
+                            CollisionHandling(componentList, i, j);
                         }
                     }
                 }
+            }
+        }
+    }
+
+    void SizeSystem(ComponentList *componentList)
+    {
+        for (int i = 0; i < componentList->getSize(); i++)
+        {
+            if (componentList->getComponent("Size", i) &&
+                componentList->getComponent("Sprite", i))
+            {
+                auto size = static_cast<Size *>(componentList->getComponent("Size", i));
+                auto sprite = static_cast<Sprite *>(componentList->getComponent("Sprite", i));
+                sprite->sprite.setTextureRect(sf::IntRect(0, 0, size->width, size->height));
             }
         }
     }

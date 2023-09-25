@@ -8,8 +8,10 @@
 #pragma once
 #include <iostream>
 #include <string>
+#include <chrono>
 #include <vector>
 #include <memory>
+#include <functional>
 #include <unordered_map>
 #include <SFML/Graphics.hpp>
 
@@ -28,8 +30,19 @@ namespace Haze
         Position(float x, float y) : x(x), y(y) {}
         float x;
         float y;
+        float oldX = x;
+        float oldY = y;
         std::string getType() const override { return "Position"; }
         void show() const override { std::cout << "Position: " << x << ", " << y << std::endl; }
+    };
+
+    struct Scale : public Component
+    {
+        Scale(float x, float y) : x(x), y(y) {}
+        float x;
+        float y;
+        std::string getType() const override { return "Scale"; }
+        void show() const override { std::cout << "Scale: " << x << ", " << y << std::endl; }
     };
 
     struct Velocity : public Component
@@ -211,10 +224,25 @@ namespace Haze
 
     struct Collision : public Component
     {
-        Collision(int collision) : collision(collision) {}
-        int collision;
+        enum CollisionType {
+            NONE = 0,
+            LAMBDA = 1,
+            WALL = 2,
+        };
+        struct CollisionInfo {
+            CollisionType type;
+            double tics;
+            std::function<void(int, int)> onCollision = [](int i, int j) {};
+            std::chrono::_V2::system_clock::time_point lastCollision = std::chrono::high_resolution_clock::now();
+        };
+        Collision(std::string scene, std::map<std::string, CollisionInfo> behavior)
+            : scene(scene), behavior(behavior) {}
+
+        std::string scene;
+        std::map<std::string, CollisionInfo> behavior;
+
         std::string getType() const override { return "Collision"; }
-        void show() const override { std::cout << "Collision: " << collision << std::endl; }
+        void show() const override { std::cout << "Collision: " << scene << std::endl; }
     };
 
     struct Size : public Component
