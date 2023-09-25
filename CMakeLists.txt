@@ -5,6 +5,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+    add_compile_options(-Wno-unused-command-line-argument)
+
 # Fetching Asio
 # Asio is header only, so we don't need to build it
 # We can just use it as an interface library

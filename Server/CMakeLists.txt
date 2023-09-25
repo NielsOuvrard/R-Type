@@ -6,6 +6,7 @@ set(
     src/main.cpp
     ../Rtype/Rtype.cpp
 )
+    add_compile_options(-Wno-unused-command-line-argument)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 target_include_directories(${PROJECT_NAME} PUBLIC ../Rtype)
