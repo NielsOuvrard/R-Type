@@ -20,7 +20,7 @@ jobs:
 
           git clone https://github.com/rclovis/R-Type-Documentation.git
 
-          rm  R-Type-Documentation/r-type/docs/*
+          rm -rf R-Type-Documentation/r-type/docs/
           cp -r docs/* R-Type-Documentation/r-type/docs/
 
           cd R-Type-Documentation
