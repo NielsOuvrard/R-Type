@@ -20,7 +20,6 @@ namespace Haze
         ~Entity();
         void setComponentList(ComponentList *componentList);
         void setId(size_t id);
-        void setUniqueId(size_t id);
         void addComponent(Component *component);
         void removeComponent(std::string type);
         Component *getComponent(std::string type);
@@ -28,10 +27,7 @@ namespace Haze
         size_t getId() const { return _id; };
 
     private:
-        std::vector<Component *> _components;
         size_t _id;
-        size_t uniqueId;
-
         ComponentList *_componentList;
     };
 }
