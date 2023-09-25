@@ -21,3 +21,4 @@ target_link_libraries(${PROJECT_NAME}
 
 # Include the SFML headers
 target_include_directories(${PROJECT_NAME} PRIVATE ${SFML_INCLUDE_DIR})
+# ça compile pas sa mère sur macOS
