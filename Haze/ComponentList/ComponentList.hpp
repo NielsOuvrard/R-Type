@@ -33,6 +33,6 @@ namespace Haze
     private:
         std::map<std::string, std::vector<std::unique_ptr<Component>>> _componentList;
         std::vector<std::string> _componentName;
-        size_t _size;
+        size_t _size = 0;
     };
 }
