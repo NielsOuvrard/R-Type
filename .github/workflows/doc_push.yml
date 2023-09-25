@@ -1,0 +1,34 @@
+name: Push to Destination Repository
+
+on:
+  push:
+    paths:
+      - 'docs' # Replace with the actual path to your directory
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out source repository
+        uses: actions/checkout@v2
+
+      - name: Push to Destination Repository
+        env:
+          DESTINATION_REPO_TOKEN: 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
+        run: |
+          git config --global user.email "rabotclovis@gmail.com"
+          git config --global user.name "rclovis"
+
+          # Clone the destination repository
+          git clone https://github.com/rclovis/R-Type-Documentation.git
+
+          # Copy the changes from source to destination directory
+          cp -r docs/* R-Type-Documentation/r-type/docs
+
+          cd R-Type-Documentation
+
+          # Commit and push changes to destination repository
+          git add .
+          git commit -m "Update from source repository"
+          git push origin main
