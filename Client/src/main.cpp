@@ -43,7 +43,6 @@ int main()
 {
     Haze::Engine engine;
     engine.init();
-
     Haze::Entity *entityVortex = engine.createEntity();
     Haze::Entity *entitySpaceship = engine.createEntity();
     Haze::Entity *entityWindow = engine.createEntity();
