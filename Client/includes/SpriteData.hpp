@@ -12,6 +12,8 @@
 ** SpriteElement
 */
 
+#pragma once
+
 #include "InetrfaceElement.hpp"
 
 class Sprite
