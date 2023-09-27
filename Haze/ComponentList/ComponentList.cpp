@@ -50,7 +50,7 @@ namespace Haze
         _componentList[type] = std::vector<std::unique_ptr<Component>>(_size);
     }
 
-    void ComponentList::addRow()
+    void ComponentList::addEntity()
     {
         for (auto &it : _componentList)
         {
@@ -59,7 +59,7 @@ namespace Haze
         _size++;
     }
 
-    void ComponentList::removeRow(size_t id)
+    void ComponentList::removeEntity(size_t id)
     {
         for (auto &it : _componentList)
         {
