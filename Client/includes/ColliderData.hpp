@@ -12,6 +12,8 @@
 ** Collider
 */
 
+#pragma once
+
 #include "InetrfaceElement.hpp"
 
 class Collider

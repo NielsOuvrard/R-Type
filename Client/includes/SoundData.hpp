@@ -12,6 +12,8 @@
 ** SoundElement
 */
 
+#pragma once
+
 #include "InetrfaceElement.hpp"
 
 class Sound

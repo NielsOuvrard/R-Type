@@ -13,6 +13,8 @@
 **
 */
 
+#pragma once
+
 #include "../includes/InetrfaceElement.hpp"
 #include "../includes/TransformData.hpp"
 #include "../includes/ColliderData.hpp"
@@ -69,102 +71,111 @@ private:
     std::vector<Animation *> _Animations;
 };
 
-void GraphicClient::run()
-{
-    _clock.restart();
+// void GraphicClient::run()
+// {
+//     _clock.restart();
 
-    sf::RenderWindow window(sf::VideoMode(1280, 720), "Monitor");
-    window.setFramerateLimit(60);
-    while (window.isOpen())
-    {
-        window.clear();
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-            {
-                window.close();
-            }
-            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)
-            {
-                for (int i = 0; i < _Sounds.size(); i++)
-                {
-                    if (_Sounds[i] == nullptr)
-                        continue;
-                    _Sounds[i]->play();
-                }
-            }
-        }
-        update();
-        render(window);
-        window.display();
-    }
-}
+//     sf::RenderWindow window(sf::VideoMode(1280, 720), "Monitor");
+//     window.setFramerateLimit(60);
+//     while (window.isOpen())
+//     {
+//         window.clear();
+//         sf::Event event;
+//         while (window.pollEvent(event))
+//         {
+//             if (event.type == sf::Event::Closed)
+//             {
+//                 window.close();
+//             }
+//             if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)
+//             {
+//                 for (int i = 0; i < _Sounds.size(); i++)
+//                 {
+//                     if (_Sounds[i] == nullptr)
+//                         continue;
+//                     _Sounds[i]->play();
+//                 }
+//             }
+//         }
+//         update();
+//         render(window);
+//         window.display();
+//     }
+// }
 
-void GraphicClient::update()
-{
-    float deltaTime = _clock.restart().asSeconds();
-    _timeSinceLastUpdateTransform += deltaTime;
-    if (_timeSinceLastUpdateTransform >= _transformInterval)
-    {
-        for (int i = 0; i < _Transforms.size(); i++)
-        {
-            if (_Transforms[i] == nullptr || _Object2Ds[i] == nullptr)
-                continue;
-            _Object2Ds[i]->addX(_Transforms[i]->getX());
-            _Object2Ds[i]->addY(_Transforms[i]->getY());
-            _Object2Ds[i]->addRotation(_Transforms[i]->getRotation());
-            _Object2Ds[i]->addScale(_Transforms[i]->getScale());
-        }
-        _timeSinceLastUpdateTransform = 0.0f;
-    }
-    _timeSinceLastUpdateAnimation += deltaTime;
-    if (_timeSinceLastUpdateAnimation >= _animationInterval)
-    {
-        for (int i = 0; i < _Animations.size(); i++)
-        {
-            if (_Animations[i] == nullptr)
-                continue;
-            _Animations[i]->anime();
-        }
-        _timeSinceLastUpdateAnimation = 0.0f;
-    }
-}
+// void GraphicClient::update()
+// {
+//     float deltaTime = _clock.restart().asSeconds();
+//     _timeSinceLastUpdateTransform += deltaTime;
+//     if (_timeSinceLastUpdateTransform >= _transformInterval)
+//     {
+//         for (int i = 0; i < _Transforms.size(); i++)
+//         {
+//             if (_Transforms[i] == nullptr || _Object2Ds[i] == nullptr)
+//                 continue;
+//             _Object2Ds[i]->addX(_Transforms[i]->getX());
+//             _Object2Ds[i]->addY(_Transforms[i]->getY());
+//             _Object2Ds[i]->addRotation(_Transforms[i]->getRotation());
+//             _Object2Ds[i]->addScale(_Transforms[i]->getScale());
+//         }
+//         _timeSinceLastUpdateTransform = 0.0f;
+//     }
+//     _timeSinceLastUpdateAnimation += deltaTime;
+//     if (_timeSinceLastUpdateAnimation >= _animationInterval)
+//     {
+//         for (int i = 0; i < _Animations.size(); i++)
+//         {
+//             if (_Animations[i] == nullptr)
+//                 continue;
+//             _Animations[i]->anime();
+//         }
+//         _timeSinceLastUpdateAnimation = 0.0f;
+//     }
+// }
 
-void GraphicClient::render(sf::RenderWindow &window)
-{
-    // Sprite
-    for (int i = 0; i < _Sprites.size(); i++)
-    {
-        if (_Sprites[i] == nullptr || _Object2Ds[i] == nullptr)
-            continue;
-        sf::Sprite spriteLocal = _Sprites[i]->getSprite();
-        spriteLocal.setPosition(_Object2Ds[i]->getX(), _Object2Ds[i]->getY());
-        spriteLocal.setRotation(_Object2Ds[i]->getRotation());
-        spriteLocal.setScale(_Object2Ds[i]->getScale(), _Object2Ds[i]->getScale());
-        window.draw(spriteLocal);
-    }
-    // Text
-    for (int i = 0; i < _Texts.size(); i++)
-    {
-        if (_Texts[i] == nullptr || _Object2Ds[i] == nullptr)
-            continue;
-        sf::Text textLocal = _Texts[i]->getText();
-        textLocal.setPosition(_Object2Ds[i]->getX(), _Object2Ds[i]->getY());
-        textLocal.setRotation(_Object2Ds[i]->getRotation());
-        // textLocal.setCharacterSize(_Texts[i]->getCharacterSize());
-        window.draw(textLocal);
-    }
-    // Animation
-    for (int i = 0; i < _Animations.size(); i++)
-    {
-        if (_Animations[i] == nullptr || _Object2Ds[i] == nullptr)
-            continue;
-        sf::Sprite animeLocal = _Animations[i]->getSprite();
-        animeLocal.setPosition(_Object2Ds[i]->getX(), _Object2Ds[i]->getY());
-        animeLocal.setRotation(_Object2Ds[i]->getRotation());
-        animeLocal.setScale(_Object2Ds[i]->getScale(), _Object2Ds[i]->getScale());
+// void GraphicClient::render(sf::RenderWindow &window)
+// {
+//     // Sprite
+//     for (int i = 0; i < _Sprites.size(); i++)
+//     {
+//         if (_Sprites[i] == nullptr || _Object2Ds[i] == nullptr)
+//             continue;
+//         sf::Sprite spriteLocal = _Sprites[i]->getSprite();
+//         spriteLocal.setPosition(_Object2Ds[i]->getX(), _Object2Ds[i]->getY());
+//         spriteLocal.setRotation(_Object2Ds[i]->getRotation());
+//         spriteLocal.setScale(_Object2Ds[i]->getScale(), _Object2Ds[i]->getScale());
+//         window.draw(spriteLocal);
+//     }
+//     // Text
+//     for (int i = 0; i < _Texts.size(); i++)
+//     {
+//         if (_Texts[i] == nullptr || _Object2Ds[i] == nullptr)
+//             continue;
+//         sf::Text textLocal = _Texts[i]->getText();
+//         textLocal.setPosition(_Object2Ds[i]->getX(), _Object2Ds[i]->getY());
+//         textLocal.setRotation(_Object2Ds[i]->getRotation());
+//         // textLocal.setCharacterSize(_Texts[i]->getCharacterSize());
+//         window.draw(textLocal);
+//     }
+//     // Animation
+//     for (int i = 0; i < _Animations.size(); i++)
+//     {
+//         if (_Animations[i] == nullptr || _Object2Ds[i] == nullptr)
+//             continue;
+//         sf::Sprite animeLocal = _Animations[i]->getSprite();
+//         animeLocal.setPosition(_Object2Ds[i]->getX(), _Object2Ds[i]->getY());
+//         animeLocal.setRotation(_Object2Ds[i]->getRotation());
+//         animeLocal.setScale(_Object2Ds[i]->getScale(), _Object2Ds[i]->getScale());
 
-        window.draw(animeLocal);
-    }
-}
+//         window.draw(animeLocal);
+//     }
+// }
+
+
+/*
+/usr/bin/ld: CMakeFiles/r-type-client.dir/src/Rttype.cpp.o: in function `GraphicClient::run()':
+Rttype.cpp:(.text+0x0): multiple definition of `GraphicClient::run()';
+CMakeFiles/r-type-client.dir/src/main.cpp.o:main.cpp:(.text+0x0): first defined here
+/
+in function `GraphicClient::update()':
+*/

@@ -12,6 +12,8 @@
 ** TextElement
 */
 
+#pragma once
+
 #include "InetrfaceElement.hpp"
 
 class Text

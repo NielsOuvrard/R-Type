@@ -12,6 +12,8 @@
 ** Transform
 */
 
+#pragma once
+
 class Transform
 {
 public:
