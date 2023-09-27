@@ -224,16 +224,18 @@ namespace Haze
 
     struct Collision : public Component
     {
-        enum CollisionType {
+        enum CollisionType
+        {
             NONE = 0,
             LAMBDA = 1,
             WALL = 2,
         };
-        struct CollisionInfo {
+        struct CollisionInfo
+        {
             CollisionType type;
             double tics;
             std::function<void(int, int)> onCollision = [](int i, int j) {};
-            std::chrono::_V2::system_clock::time_point lastCollision = std::chrono::high_resolution_clock::now();
+            std::chrono::time_point<std::chrono::high_resolution_clock> lastCollision = std::chrono::high_resolution_clock::now();
         };
         Collision(std::string scene, std::map<std::string, CollisionInfo> behavior)
             : scene(scene), behavior(behavior) {}
