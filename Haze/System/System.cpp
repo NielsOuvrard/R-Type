@@ -170,38 +170,6 @@ namespace Haze
         }
     }
 
-    void VelocityOnClickSystem(ComponentList *componentList, std::string input)
-    {
-        for (int i = 0; i < componentList->getSize(); i++)
-        {
-            if (componentList->getComponent("VelocityOnClick", i) != nullptr && componentList->getComponent("Position", i) != nullptr)
-            {
-                auto velocityOnClick = static_cast<VelocityOnClick *>(componentList->getComponent("VelocityOnClick", i));
-                auto position = static_cast<Position *>(componentList->getComponent("Position", i));
-                if (input == velocityOnClick->diretionBot[0])
-                {
-                    position->x += std::stof(velocityOnClick->diretionBot[1]);
-                    position->y += std::stof(velocityOnClick->diretionBot[2]);
-                }
-                if (input == velocityOnClick->diretionTop[0])
-                {
-                    position->x += std::stof(velocityOnClick->diretionTop[1]);
-                    position->y += std::stof(velocityOnClick->diretionTop[2]);
-                }
-                if (input == velocityOnClick->diretionLeft[0])
-                {
-                    position->x += std::stof(velocityOnClick->diretionLeft[1]);
-                    position->y += std::stof(velocityOnClick->diretionLeft[2]);
-                }
-                if (input == velocityOnClick->diretionRight[0])
-                {
-                    position->x += std::stof(velocityOnClick->diretionRight[1]);
-                    position->y += std::stof(velocityOnClick->diretionRight[2]);
-                }
-            }
-        }
-    }
-
     void CollisionHandling (ComponentList *componentList, int i, int j)
     {
         if (componentList->getComponent("Collision", i) &&
