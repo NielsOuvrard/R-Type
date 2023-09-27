@@ -19,12 +19,11 @@ class Rttype
         Haze::Entity *entitySpaceship;
         Haze::Entity *entityWindow;
         Haze::Entity *entityWall;
+        sf::Event event;
         char isMoving = '\0';
-        Haze::Velocity *velocityPlayer = new Haze::Velocity(0, 0);
-        Haze::Sprite *vortexSprite = new Haze::Sprite("assets/r-typesheet30a.gif");
-        Haze::Sprite *spaceshipSprite = new Haze::Sprite("assets/r-typesheet1.gif");
-        Haze::Sprite *wallSprite = new Haze::Sprite("assets/wall.png");
-        Haze::Window *window = new Haze::Window(800, 600);
+        void keyPress();
+        void keyRelease();
+        void moveSpaceship();
 
     public:
         Rttype();
