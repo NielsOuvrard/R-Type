@@ -36,12 +36,15 @@ namespace Haze
 
     void Engine::update()
     {
-        MoveSystem(_componentList);
         ClearSystem(_componentList);
+        ScaleSystem(_componentList);
+        MoveSystem(_componentList);
         AnimationSystem(_componentList);
         CollisionSystem(_componentList);
         RenderSystem(_componentList);
         DisplaySystem(_componentList);
+        DestroyEntity (_componentList, _tics);
+
         _tics++;
     }
 
@@ -64,7 +67,7 @@ namespace Haze
         entity->setComponentList(_componentList);
         entity->setId(_entities.size());
         _entities.push_back(std::unique_ptr<Entity>(entity));
-        _componentList->addRow();
+        _componentList->addEntity();
         return entity;
     }
 
@@ -76,12 +79,12 @@ namespace Haze
     void Engine::removeEntity(size_t id)
     {
         _entities[id] = nullptr;
-        _componentList->removeRow(id);
+        _componentList->removeEntity(id);
     }
 
     void Engine::removeEntity(Entity *entity)
     {
         _entities[entity->getId()] = nullptr;
-        _componentList->removeRow(entity->getId());
+        _componentList->removeEntity(entity->getId());
     }
 }

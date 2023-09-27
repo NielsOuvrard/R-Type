@@ -20,5 +20,5 @@ namespace Haze
     void CollisionSystem(ComponentList *componentList);
     void DisplaySystem(ComponentList *componentList);
     void ClearSystem(ComponentList *componentList);
-    void EventSystem(ComponentList *componentList);
+    void DestroyEntity (ComponentList *componentList, int tics);
 }

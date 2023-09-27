@@ -243,4 +243,20 @@ namespace Haze
             }
         }
     }
+
+    void DestroyEntity (ComponentList *componentList, int tics)
+    {
+        for (int i = 0; i < componentList->getSize(); i++)
+        {
+            if (componentList->getComponent("LifeTime", i) != nullptr)
+            {
+                auto lifeTime = static_cast<LifeTime *>(componentList->getComponent("LifeTime", i));
+                lifeTime->tics++;
+                if (lifeTime->tics >= lifeTime->lifeTime)
+                {
+                    componentList->removeEntity(i);
+                }
+            }
+        }
+    }
 }
