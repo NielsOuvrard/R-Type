@@ -23,9 +23,7 @@
 
 int main()
 {
-    std::cout << "hello" << std::endl;
     Rttype rtype;
-    std::cout << "hello2" << std::endl;
     rtype.run();
     return 0;
 }
