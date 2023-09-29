@@ -84,7 +84,6 @@ Rttype::Rttype()
     changeSpriteBack(entityWallBottom4);
 
     entityWallBottom5->addComponent(new Haze::Position(780, 600));
-    std::cout <<"ici" << std::endl;
     // entityWallBottom5->addComponent(new Haze::Size(1920, -280));
     entityWallBottom5->addComponent(wallSprite5);
     entityWallBottom5->addComponent(new Haze::SplitSprite(*static_cast<Haze::Sprite *>(entityWallBottom5->getComponent("Sprite")), sheet["x"], sheet["y"], sheet["width"], sheet["height"]));
@@ -252,14 +251,12 @@ void Rttype::moveBackground()
 void Rttype::changeSpriteBack(Haze::Entity *E)
 {
     int randomNumber = std::rand() % 10 + 1;
-    std::cout << "Nombre aléatoire : " << randomNumber << std::endl;
     sheet = jsonData["sheet" + std::to_string(randomNumber)];
     auto splitSprite = static_cast<Haze::SplitSprite *>(E->getComponent("SplitSprite"));
     splitSprite->x = sheet["x"];
     splitSprite->y = sheet["y"];
     splitSprite->width = sheet["width"];
     splitSprite->height = sheet["height"];
-    auto sprite = static_cast<Haze::Sprite *>(E->getComponent("Sprite"));
 }
 
 void Rttype::run()
