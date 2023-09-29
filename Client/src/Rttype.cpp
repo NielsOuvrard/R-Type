@@ -22,7 +22,12 @@ Rttype::Rttype()
     Haze::Velocity *velocityPlayer = new Haze::Velocity(0, 0);
     Haze::Sprite *vortexSprite = new Haze::Sprite("assets/r-typesheet30a.gif");
     Haze::Sprite *spaceshipSprite = new Haze::Sprite("assets/r-typesheet1.gif");
-    Haze::Sprite *wallSprite = new Haze::Sprite("assets/wall.png");
+    Haze::Sprite *wallSprite1 = new Haze::Sprite("assets/wall.png");
+    Haze::Sprite *wallSprite2 = new Haze::Sprite("assets/wall.png");
+    Haze::Sprite *wallSprite3 = new Haze::Sprite("assets/wall.png");
+    Haze::Sprite *wallSprite4 = new Haze::Sprite("assets/wall.png");
+    Haze::Sprite *wallSprite5 = new Haze::Sprite("assets/wall.png");
+    Haze::Sprite *wallSprite6 = new Haze::Sprite("assets/wall.png");
     Haze::Window *window = new Haze::Window(800, 600);
 
     entityVortex = engine.createEntity();
@@ -33,6 +38,8 @@ Rttype::Rttype()
     entityWallBottom2 = engine.createEntity();
     entityWallBottom3 = engine.createEntity();
     entityWallBottom4 = engine.createEntity();
+    entityWallBottom5 = engine.createEntity();
+    entityWallBottom6 = engine.createEntity();
 
 
     entityVortex->addComponent(new Haze::Position(120, 200));
@@ -50,16 +57,46 @@ Rttype::Rttype()
 
     entityWallBottom1->addComponent(new Haze::Position(0, 600));
     entityWallBottom1->addComponent(new Haze::Size(1920, -280));
-    entityWallBottom1->addComponent(wallSprite);
+    entityWallBottom1->addComponent(wallSprite1);
     entityWallBottom1->addComponent(new Haze::SplitSprite(*static_cast<Haze::Sprite *>(entityWallBottom1->getComponent("Sprite")), sheet["x"], sheet["y"], sheet["width"], sheet["height"]));
+    entityWallBottom1->addComponent(new Haze::Velocity(-1, 0));
     changeSpriteBack(entityWallBottom1);
 
-    entityWallBottom2->addComponent(new Haze::Position(400, 600));
+    entityWallBottom2->addComponent(new Haze::Position(195, 600));
     entityWallBottom2->addComponent(new Haze::Size(1920, -280));
-    entityWallBottom2->addComponent(wallSprite);
-    entityWallBottom2->addComponent(new Haze::SplitSprite(*static_cast<Haze::Sprite *>(entityWallBottom1->getComponent("Sprite")), sheet["x"], sheet["y"], sheet["width"], sheet["height"]));
+    entityWallBottom2->addComponent(wallSprite2);
+    entityWallBottom2->addComponent(new Haze::SplitSprite(*static_cast<Haze::Sprite *>(entityWallBottom2->getComponent("Sprite")), sheet["x"], sheet["y"], sheet["width"], sheet["height"]));
+    entityWallBottom2->addComponent(new Haze::Velocity(-1, 0));
     changeSpriteBack(entityWallBottom2);
 
+    entityWallBottom3->addComponent(new Haze::Position(390, 600));
+    entityWallBottom3->addComponent(new Haze::Size(1920, -280));
+    entityWallBottom3->addComponent(wallSprite3);
+    entityWallBottom3->addComponent(new Haze::SplitSprite(*static_cast<Haze::Sprite *>(entityWallBottom3->getComponent("Sprite")), sheet["x"], sheet["y"], sheet["width"], sheet["height"]));
+    entityWallBottom3->addComponent(new Haze::Velocity(-1, 0));
+    changeSpriteBack(entityWallBottom3);
+
+    entityWallBottom4->addComponent(new Haze::Position(585, 600));
+    entityWallBottom4->addComponent(new Haze::Size(1920, -280));
+    entityWallBottom4->addComponent(wallSprite4);
+    entityWallBottom4->addComponent(new Haze::SplitSprite(*static_cast<Haze::Sprite *>(entityWallBottom4->getComponent("Sprite")), sheet["x"], sheet["y"], sheet["width"], sheet["height"]));
+    entityWallBottom4->addComponent(new Haze::Velocity(-1, 0));
+    changeSpriteBack(entityWallBottom4);
+
+    entityWallBottom5->addComponent(new Haze::Position(780, 600));
+    std::cout <<"ici" << std::endl;
+    entityWallBottom5->addComponent(new Haze::Size(1920, -280));
+    entityWallBottom5->addComponent(wallSprite5);
+    entityWallBottom5->addComponent(new Haze::SplitSprite(*static_cast<Haze::Sprite *>(entityWallBottom5->getComponent("Sprite")), sheet["x"], sheet["y"], sheet["width"], sheet["height"]));
+    entityWallBottom5->addComponent(new Haze::Velocity(-1, 0));
+    changeSpriteBack(entityWallBottom5);
+
+    entityWallBottom6->addComponent(new Haze::Position(975, 600));
+    entityWallBottom6->addComponent(new Haze::Size(1920, -280));
+    entityWallBottom6->addComponent(wallSprite6);
+    entityWallBottom6->addComponent(new Haze::SplitSprite(*static_cast<Haze::Sprite *>(entityWallBottom6->getComponent("Sprite")), sheet["x"], sheet["y"], sheet["width"], sheet["height"]));
+    entityWallBottom6->addComponent(new Haze::Velocity(-1, 0));
+    changeSpriteBack(entityWallBottom6);
 
     // entityWallBottom->addComponent(new Haze::Position(0, 600));
     // entityWallBottom->addComponent(new Haze::Size(1920, -280));
@@ -178,9 +215,38 @@ void Rttype::moveSpaceship()
     }
 }
 
-void Rttype::moveBackground(void *component)
+void Rttype::moveBackground()
 {
-    
+    Haze::Position *position1 = static_cast< Haze::Position *>(entityWallBottom1->getComponent("Position"));
+    Haze::Position *position2 = static_cast< Haze::Position *>(entityWallBottom2->getComponent("Position"));
+    Haze::Position *position3 = static_cast< Haze::Position *>(entityWallBottom3->getComponent("Position"));
+    Haze::Position *position4 = static_cast< Haze::Position *>(entityWallBottom4->getComponent("Position"));
+    Haze::Position *position5 = static_cast< Haze::Position *>(entityWallBottom5->getComponent("Position"));
+    Haze::Position *position6 = static_cast< Haze::Position *>(entityWallBottom6->getComponent("Position"));
+    if (position1->x <= -280) {
+        position1->x = 780;
+        changeSpriteBack(entityWallBottom1);
+    }
+    if (position2->x <= -280) {
+        position2->x = 780;
+        changeSpriteBack(entityWallBottom2);
+    }
+    if (position3->x <= -280) {
+        position3->x = 780;
+        changeSpriteBack(entityWallBottom3);
+    }
+    if (position4->x <= -280) {
+        position4->x = 780;
+        changeSpriteBack(entityWallBottom4);
+    }
+    if (position5->x <= -280) {
+        position5->x = 780;
+        changeSpriteBack(entityWallBottom5);
+    }
+    if (position6->x <= -280) {
+        position6->x = 780;
+        changeSpriteBack(entityWallBottom6);
+    }
 }
 
 void Rttype::changeSpriteBack(Haze::Entity *E)
@@ -194,8 +260,6 @@ void Rttype::changeSpriteBack(Haze::Entity *E)
     splitSprite->width = sheet["width"];
     splitSprite->height = sheet["height"];
     auto sprite = static_cast<Haze::Sprite *>(E->getComponent("Sprite"));
-    sprite->sprite.setTextureRect(sf::IntRect(sheet["x"], sheet["y"], sheet["width"], sheet["height"]));
-
 }
 
 void Rttype::run()
@@ -204,7 +268,6 @@ void Rttype::run()
     {
         moveSpaceship();
         while (static_cast< Haze::Window *>(entityWindow->getComponent("Window"))->window.pollEvent(event)) {
-
             if (event.type == sf::Event::Closed) {
                 static_cast< Haze::Window *>(entityWindow->getComponent("Window"))->window.close();
             }
@@ -220,6 +283,7 @@ void Rttype::run()
             Rttype::keyPress();
             Rttype::keyRelease();
         }
+        Rttype::moveBackground();
         engine.update();
     }
 }

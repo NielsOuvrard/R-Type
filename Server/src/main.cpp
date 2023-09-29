@@ -49,7 +49,6 @@
 
 int main ()
 {
-    std::srand(static_cast<unsigned int>(std::time(nullptr)));
     std::cout << std::time(nullptr) << std::endl;
     Rtype rtype;
     std::cout << "Calling the engine!" << std::endl;
