@@ -23,4 +23,5 @@ namespace Haze
     void VelocityOnClickSystem(ComponentList *componentList, std::string input);
     void EventSystem(ComponentList *componentList);
     void SplitSpriteSystem(ComponentList *componentList);
+    void DestroyEntity (ComponentList *componentList, int tics);
 }

@@ -34,5 +34,6 @@ namespace Haze
     private:
         std::vector<std::unique_ptr<Entity>> _entities;
         ComponentList *_componentList;
+        int _tics = 0;
     };
 }
