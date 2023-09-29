@@ -41,51 +41,6 @@ namespace Haze
 
     void AnimationSystem(ComponentList *componentList)
     {
-        for (int i = 0; i < componentList->getSize(); i++)
-        {
-            // TODO : sprite ?
-            // if (componentList->getComponent("Animation", i) != nullptr && componentList->getComponent("Sprite", i) != nullptr)
-            if (componentList->getComponent("Animation", i) != nullptr)
-            {
-                auto animation = static_cast<Animation *>(componentList->getComponent("Animation", i));
-                if (animation->clock.getElapsedTime().asSeconds() > 0.16)
-                {
-                    if (animation->boomerang)
-                    {
-                        if (animation->moveUp)
-                        {
-                            animation->currentFrame++;
-                        }
-                        else
-                        {
-                            animation->currentFrame--;
-                        }
-                        if (animation->currentFrame == animation->nbFramesX - 1)
-                        {
-                            animation->moveUp = false;
-                        }
-                        if (animation->currentFrame == 0)
-                        {
-                            animation->moveUp = true;
-                        }
-                    }
-                    else
-                    {
-                        if (animation->currentFrame == animation->nbFramesX - 1)
-                        {
-                            animation->currentFrame = 0;
-                        }
-                        else
-                        {
-                            animation->currentFrame++;
-                        }
-                    }
-
-                    animation->sprite.setTextureRect(sf::IntRect(animation->x + (animation->currentFrame * animation->width), animation->y, animation->width, animation->height));
-                    animation->clock.restart();
-                }
-            }
-        }
     }
 
     void RenderSystem(ComponentList *componentList)

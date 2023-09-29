@@ -15,6 +15,15 @@
 #include <unordered_map>
 #include <SFML/Graphics.hpp>
 
+#include <thread>
+
+namespace Haze
+{
+    struct Animation;
+}
+
+void animateThread(int interval_ms, int duration_sec, Haze::Animation *animation);
+
 namespace Haze
 {
     class Component
@@ -90,10 +99,17 @@ namespace Haze
             : sprite(sprite), x(x), y(y), width(width), height(height), nbFramesX(nbFramesX), nbFramesY(nbFramesY), currentFrame(0), boomerang(boomerang), moveUp(true)
         {
             sprite.setTextureRect(sf::IntRect(x, y, width, height));
-            // sprite.setAnimated(true);
+            tics = 0.5;
+            lastAnimation = std::chrono::high_resolution_clock::now();
+            int interval_ms = 100;
+            int duration_sec = 5;
+            animation_thread = std::thread(animateThread, interval_ms, duration_sec, this);
+            animation_thread.detach();
         }
+        std::thread animation_thread;
         Haze::Sprite &sprite;
-        sf::Clock clock; // will use later in another system ?
+        std::chrono::time_point<std::chrono::high_resolution_clock> lastAnimation;
+        double tics;
         size_t x;
         size_t y;
         size_t width;
@@ -170,7 +186,7 @@ namespace Haze
         std::string getType() const override { return "Inputs"; }
         void show() const override { std::cout << "Inputs: " << inputs << std::endl; }
     };
- 
+
     struct Collision : public Component
     {
         enum CollisionType
