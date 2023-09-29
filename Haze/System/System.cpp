@@ -98,7 +98,7 @@ namespace Haze
                 for (int j = 0; j < componentList->getSize(); j++)
                 {
                     if (componentList->getComponent("Position", j) != nullptr &&
-                             componentList->getComponent("Sprite", j) != nullptr)
+                        componentList->getComponent("Sprite", j) != nullptr)
                     {
                         auto sprite = static_cast<Sprite *>(componentList->getComponent("Sprite", j));
                         auto position = static_cast<Position *>(componentList->getComponent("Position", j));
@@ -137,7 +137,7 @@ namespace Haze
         }
     }
 
-    void CollisionHandling (ComponentList *componentList, int i, int j)
+    void CollisionHandling(ComponentList *componentList, int i, int j)
     {
         if (componentList->getComponent("Collision", i) &&
             componentList->getComponent("Collision", j))
@@ -151,14 +151,16 @@ namespace Haze
             Collision::CollisionInfo *info2 = &(collision2->behavior[collision1->scene]);
             if ((info1->type & Collision::CollisionType::LAMBDA) != 0)
             {
-                if (std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - info1->lastCollision).count() > info1->tics) {
+                if (std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - info1->lastCollision).count() > info1->tics)
+                {
                     info1->lastCollision = std::chrono::high_resolution_clock::now();
                     info1->onCollision(i, j);
                 }
             }
             if ((info2->type & Collision::CollisionType::LAMBDA) != 0)
             {
-                if (std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - info2->lastCollision).count() > info2->tics) {
+                if (std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - info2->lastCollision).count() > info2->tics)
+                {
                     info2->lastCollision = std::chrono::high_resolution_clock::now();
                     info2->onCollision(j, i);
                 }
@@ -184,10 +186,19 @@ namespace Haze
     {
         for (auto rect1 : hitbox1)
         {
-            Hitbox::floatRect tmp1 = {rect1.x * s1->x, rect1.y * s1->y, rect1.width * s1->x, rect1.height * s1->y};
+            Hitbox::floatRect tmp1 = {
+                static_cast<int>(rect1.x * s1->x),
+                static_cast<int>(rect1.y * s1->y),
+                static_cast<int>(rect1.width * s1->x),
+                static_cast<int>(rect1.height * s1->y)};
+
             for (auto rect2 : hitbox2)
             {
-                Hitbox::floatRect tmp2 = {rect2.x * s2->x, rect2.y * s2->y, rect2.width * s2->x, rect2.height * s2->y};
+                Hitbox::floatRect tmp2 = {
+                    static_cast<int>(rect2.x * s2->x),
+                    static_cast<int>(rect2.y * s2->y),
+                    static_cast<int>(rect2.width * s2->x),
+                    static_cast<int>(rect2.height * s2->y)};
                 if (pos1->x + tmp1.x < pos2->x + tmp2.x + tmp2.width &&
                     pos1->x + tmp1.x + tmp1.width > pos2->x + tmp2.x &&
                     pos1->y + tmp1.y < pos2->y + tmp2.y + tmp2.height &&
@@ -213,7 +224,8 @@ namespace Haze
                 auto scale1 = static_cast<Scale *>(componentList->getComponent("Scale", i));
                 for (int j = 0; j < componentList->getSize(); j++)
                 {
-                    if (i == j) continue;
+                    if (i == j)
+                        continue;
                     if (componentList->getComponent("Position", j) &&
                         componentList->getComponent("Hitbox", j) &&
                         componentList->getComponent("Scale", i))
@@ -221,7 +233,8 @@ namespace Haze
                         auto position2 = static_cast<Position *>(componentList->getComponent("Position", j));
                         auto size2 = static_cast<Hitbox *>(componentList->getComponent("Hitbox", j));
                         auto scale2 = static_cast<Scale *>(componentList->getComponent("Scale", j));
-                        if (isColiding(size1->hitbox, size2->hitbox, scale1, scale2, position1, position2)) {
+                        if (isColiding(size1->hitbox, size2->hitbox, scale1, scale2, position1, position2))
+                        {
                             CollisionHandling(componentList, i, j);
                         }
                     }
@@ -230,7 +243,7 @@ namespace Haze
         }
     }
 
-    void DestroyEntity (ComponentList *componentList, int tics)
+    void DestroyEntity(ComponentList *componentList, int tics)
     {
         for (int i = 0; i < componentList->getSize(); i++)
         {
