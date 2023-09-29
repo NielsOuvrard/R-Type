@@ -49,6 +49,7 @@
 
 int main ()
 {
+    std::cout << std::time(nullptr) << std::endl;
     Rtype rtype;
     std::cout << "Calling the engine!" << std::endl;
 

@@ -97,47 +97,14 @@ namespace Haze
                 auto window = static_cast<Window *>(componentList->getComponent("Window", i));
                 for (int j = 0; j < componentList->getSize(); j++)
                 {
-                    if (componentList->getComponent("Animation", j) != nullptr &&
-                        componentList->getComponent("Position", j) != nullptr &&
-                        componentList->getComponent("Size", j) != nullptr)
-                    {
-                        auto position = static_cast<Position *>(componentList->getComponent("Position", j));
-                        auto animation = static_cast<Animation *>(componentList->getComponent("Animation", j));
-                        auto size = static_cast<Size *>(componentList->getComponent("Size", j));
-                        Haze::Sprite sprite = animation->sprite;
-                        sprite.sprite.setPosition(position->x, position->y);
-                        sprite.sprite.setScale(size->width / animation->width, size->height / animation->height);
-                        window->window.draw(sprite.sprite);
-                    }
-                    else if (componentList->getComponent("Animation", j) != nullptr &&
-                             componentList->getComponent("Position", j) != nullptr)
-                    {
-                        auto position = static_cast<Position *>(componentList->getComponent("Position", j));
-                        auto animation = static_cast<Animation *>(componentList->getComponent("Animation", j));
-                        Haze::Sprite sprite = animation->sprite;
-                        sprite.sprite.setPosition(position->x, position->y);
-                        window->window.draw(sprite.sprite);
-                    }
-                    else if (componentList->getComponent("Position", j) != nullptr &&
-                             componentList->getComponent("Sprite", j) != nullptr &&
-                             componentList->getComponent("Size", j) != nullptr)
-                    {
-                        auto sprite = static_cast<Sprite *>(componentList->getComponent("Sprite", j));
-                        // if (sprite->isAnimated == true)
-                        //     continue;
-                        auto position = static_cast<Position *>(componentList->getComponent("Position", j));
-                        auto size = static_cast<Size *>(componentList->getComponent("Size", j));
-                        sprite->sprite.setPosition(position->x, position->y);
-                        sprite->sprite.setScale(size->width / sprite->texture.getSize().x, size->height / sprite->texture.getSize().y);
-                        window->window.draw(sprite->sprite);
-                    }
-                    else if (componentList->getComponent("Position", j) != nullptr &&
+                    if (componentList->getComponent("Position", j) != nullptr &&
                              componentList->getComponent("Sprite", j) != nullptr)
                     {
                         auto sprite = static_cast<Sprite *>(componentList->getComponent("Sprite", j));
-                        // if (sprite->isAnimated == true)
-                        //     continue;
                         auto position = static_cast<Position *>(componentList->getComponent("Position", j));
+                        auto scale = static_cast<Scale *>(componentList->getComponent("Scale", j));
+                        if (scale != nullptr)
+                            sprite->sprite.setScale(scale->x, scale->y);
                         sprite->sprite.setPosition(position->x, position->y);
                         window->window.draw(sprite->sprite);
                     }
@@ -199,43 +166,62 @@ namespace Haze
         }
     }
 
+    void SplitSpriteSystem(ComponentList *componentList)
+    {
+        for (int i = 0; i < componentList->getSize(); i++)
+        {
+            if (componentList->getComponent("SplitSprite", i) != nullptr &&
+                componentList->getComponent("Sprite", i) != nullptr)
+            {
+                auto splitSprite = static_cast<SplitSprite *>(componentList->getComponent("SplitSprite", i));
+                auto sprite = static_cast<Sprite *>(componentList->getComponent("Sprite", i));
+                sprite->sprite.setTextureRect(sf::IntRect(splitSprite->x, splitSprite->y, splitSprite->width, splitSprite->height));
+            }
+        }
+    }
+
+    bool isColiding(std::vector<Hitbox::floatRect> hitbox1, std::vector<Hitbox::floatRect> hitbox2, Scale *s1, Scale *s2, Position *pos1, Position *pos2)
+    {
+        for (auto rect1 : hitbox1)
+        {
+            Hitbox::floatRect tmp1 = {rect1.x * s1->x, rect1.y * s1->y, rect1.width * s1->x, rect1.height * s1->y};
+            for (auto rect2 : hitbox2)
+            {
+                Hitbox::floatRect tmp2 = {rect2.x * s2->x, rect2.y * s2->y, rect2.width * s2->x, rect2.height * s2->y};
+                if (pos1->x + tmp1.x < pos2->x + tmp2.x + tmp2.width &&
+                    pos1->x + tmp1.x + tmp1.width > pos2->x + tmp2.x &&
+                    pos1->y + tmp1.y < pos2->y + tmp2.y + tmp2.height &&
+                    pos1->y + tmp1.y + tmp1.height > pos2->y + tmp2.y)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     void CollisionSystem(ComponentList *componentList)
     {
         for (int i = 0; i < componentList->getSize(); i++)
         {
             if (componentList->getComponent("Position", i) &&
-                componentList->getComponent("Size", i))
+                componentList->getComponent("Hitbox", i) &&
+                componentList->getComponent("Scale", i))
             {
                 auto position1 = static_cast<Position *>(componentList->getComponent("Position", i));
-                auto size1 = static_cast<Size *>(componentList->getComponent("Size", i));
+                auto size1 = static_cast<Hitbox *>(componentList->getComponent("Hitbox", i));
                 auto scale1 = static_cast<Scale *>(componentList->getComponent("Scale", i));
-                int sx1 = 1, sy1 = 1;
-                if (scale1 != nullptr)
-                {
-                    sx1 = scale1->x * size1->width;
-                    sy1 = scale1->y * size1->height;
-                }
                 for (int j = 0; j < componentList->getSize(); j++)
                 {
                     if (i == j) continue;
                     if (componentList->getComponent("Position", j) &&
-                        componentList->getComponent("Size", j))
+                        componentList->getComponent("Hitbox", j) &&
+                        componentList->getComponent("Scale", i))
                     {
                         auto position2 = static_cast<Position *>(componentList->getComponent("Position", j));
-                        auto size2 = static_cast<Size *>(componentList->getComponent("Size", j));
+                        auto size2 = static_cast<Hitbox *>(componentList->getComponent("Hitbox", j));
                         auto scale2 = static_cast<Scale *>(componentList->getComponent("Scale", j));
-                        int sx2 = 1, sy2 = 1;
-                        if (scale2 != nullptr)
-                        {
-                            sx2 = scale2->x * size2->width;
-                            sy2 = scale2->y * size2->height;
-                        }
-                        if (position1->x < position2->x + sx2 &&
-                            position1->x + sx1 > position2->x &&
-                            position1->y < position2->y + sy2 &&
-                            position1->y + sy1 > position2->y)
-                        {
-                            // std::cout << "collision" << std::endl;
+                        if (isColiding(size1->hitbox, size2->hitbox, scale1, scale2, position1, position2)) {
                             CollisionHandling(componentList, i, j);
                         }
                     }

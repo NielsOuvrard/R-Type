@@ -107,6 +107,23 @@ namespace Haze
         void show() const override { std::cout << "Animation: " << std::endl; }
     }; // can compile
 
+    struct SplitSprite : public Component
+    {
+        SplitSprite(Haze::Sprite &sprite, size_t x, size_t y, size_t width, size_t height)
+            : sprite(sprite), x(x), y(y), width(width), height(height)
+        {
+            sprite.setTextureRect(sf::IntRect(x, y, width, height));
+            // sprite.setAnimated(true);
+        }
+        Haze::Sprite &sprite;
+        size_t x;
+        size_t y;
+        size_t width;
+        size_t height;
+        std::string getType() const override { return "SplitSprite"; }
+        void show() const override { std::cout << "SplitSprite: " << std::endl; }
+    }; // can compile
+
     struct Window : public Component
     {
         Window(int width, int height) : width(width), height(height)
@@ -153,15 +170,7 @@ namespace Haze
         std::string getType() const override { return "Inputs"; }
         void show() const override { std::cout << "Inputs: " << inputs << std::endl; }
     };
-
-    struct Player : public Component
-    {
-        Player(int player) : player(player) {}
-        int player;
-        std::string getType() const override { return "Player"; }
-        void show() const override { std::cout << "Player: " << player << std::endl; }
-    };
-
+ 
     struct Collision : public Component
     {
         enum CollisionType
@@ -188,13 +197,19 @@ namespace Haze
         void show() const override { std::cout << "Collision: " << scene << std::endl; }
     };
 
-    struct Size : public Component
+    struct Hitbox : public Component
     {
-        Size(float width, float height) : height(height), width(width) {}
-        float height;
-        float width;
-        std::string getType() const override { return "Size"; }
-        void show() const override { std::cout << "Size: " << height << ", " << width << std::endl; }
+        struct floatRect
+        {
+            int x;
+            int y;
+            int width;
+            int height;
+        };
+        Hitbox(std::vector<floatRect> hitbox) : hitbox(hitbox) {}
+        std::vector<floatRect> hitbox;
+        std::string getType() const override { return "Hitbox"; }
+        void show() const override { std::cout << "Hitbox: " << std::endl; }
     };
 
     struct LifeTime : public Component

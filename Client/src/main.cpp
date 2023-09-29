@@ -23,9 +23,8 @@
 
 int main()
 {
-    std::cout << "hello" << std::endl;
+    std::srand(static_cast<unsigned int>(std::time(nullptr)));
     Rttype rtype;
-    std::cout << "hello2" << std::endl;
     rtype.run();
     return 0;
 }

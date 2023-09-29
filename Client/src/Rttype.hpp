@@ -8,6 +8,12 @@
 #pragma once
 
 #include <haze.hpp>
+#include <iostream>
+#include <fstream>
+#include <cstdlib>
+#include <ctime>
+#include "json.hpp"
+
 // #include "GraphicClient.hpp"
 // #include "Component.hpp"
 
@@ -18,13 +24,23 @@ class Rttype
         Haze::Entity *entityVortex;
         Haze::Entity *entitySpaceship;
         Haze::Entity *entityWindow;
-        Haze::Entity *entityWall;
-        char isMoving = '\0';
-        Haze::Velocity *velocityPlayer = new Haze::Velocity(0, 0);
-        Haze::Sprite *vortexSprite = new Haze::Sprite("assets/r-typesheet30a.gif");
-        Haze::Sprite *spaceshipSprite = new Haze::Sprite("assets/r-typesheet1.gif");
+        Haze::Entity *entityWallTop;
+        Haze::Entity *entityWallBottom1;
+        Haze::Entity *entityWallBottom2;
+        Haze::Entity *entityWallBottom3;
+        Haze::Entity *entityWallBottom4;
+        Haze::Entity *entityWallBottom5;
+        Haze::Entity *entityWallBottom6;
         Haze::Sprite *wallSprite = new Haze::Sprite("assets/wall.png");
-        Haze::Window *window = new Haze::Window(800, 600);
+        nlohmann::json jsonData;
+        nlohmann::json sheet;
+        sf::Event event;
+        char isMoving = '\0';
+        void keyPress();
+        void keyRelease();
+        void moveSpaceship();
+        void moveBackground();
+        void changeSpriteBack(Haze::Entity *E);
 
     public:
         Rttype();
