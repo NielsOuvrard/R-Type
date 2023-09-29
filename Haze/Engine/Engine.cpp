@@ -28,6 +28,7 @@ namespace Haze
         _componentList->addList("Velocity");
         _componentList->addList("Sprite");
         _componentList->addList("Window");
+        _componentList->addList("LifeTime");
         _componentList->addList("VelocityOnClick");
         _componentList->addList("Animation");
         _componentList->addList("SplitSprite");
@@ -44,9 +45,8 @@ namespace Haze
         CollisionSystem(_componentList);
         RenderSystem(_componentList);
         DisplaySystem(_componentList);
-        VelocityOnClickSystem(_componentList, "d");
         SplitSpriteSystem(_componentList);
-        DestroyEntity (_componentList, _tics);
+        DestroyEntity(_componentList, _tics);
         _tics++;
     }
 
