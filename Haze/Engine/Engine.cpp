@@ -47,6 +47,7 @@ namespace Haze
         // EventSystem(_componentList);
         DisplaySystem(_componentList);
         VelocityOnClickSystem(_componentList, "d");
+        SplitSpriteSystem(_componentList);
     }
 
     bool Engine::isOpen()
