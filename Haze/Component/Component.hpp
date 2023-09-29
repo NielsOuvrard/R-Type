@@ -107,6 +107,23 @@ namespace Haze
         void show() const override { std::cout << "Animation: " << std::endl; }
     }; // can compile
 
+    struct SplitSprite : public Component
+    {
+        SplitSprite(Haze::Sprite &sprite, size_t x, size_t y, size_t width, size_t height)
+            : sprite(sprite), x(x), y(y), width(width), height(height)
+        {
+            sprite.setTextureRect(sf::IntRect(x, y, width, height));
+            // sprite.setAnimated(true);
+        }
+        Haze::Sprite &sprite;
+        size_t x;
+        size_t y;
+        size_t width;
+        size_t height;
+        std::string getType() const override { return "SplitSprite"; }
+        void show() const override { std::cout << "SplitSprite: " << std::endl; }
+    }; // can compile
+
     struct Window : public Component
     {
         Window(int width, int height) : width(width), height(height)

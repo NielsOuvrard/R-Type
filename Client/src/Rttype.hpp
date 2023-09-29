@@ -40,7 +40,7 @@ class Rttype
         void keyRelease();
         void moveSpaceship();
         void moveBackground(void *component);
-        void changeSpriteBack(Haze::Entity E);
+        void changeSpriteBack(Haze::Entity *E);
 
     public:
         Rttype();

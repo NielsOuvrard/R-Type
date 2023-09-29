@@ -231,6 +231,20 @@ namespace Haze
         }
     }
 
+    void SplitSpriteSystem(ComponentList *componentList)
+    {
+        for (int i = 0; i < componentList->getSize(); i++)
+        {
+            if (componentList->getComponent("SplitSprite", i) != nullptr &&
+                componentList->getComponent("Sprite", i) != nullptr)
+            {
+                auto splitSprite = static_cast<SplitSprite *>(componentList->getComponent("SplitSprite", i));
+                auto sprite = static_cast<Sprite *>(componentList->getComponent("Sprite", i));
+                sprite->sprite.setTextureRect(sf::IntRect(splitSprite->x, splitSprite->y, splitSprite->width, splitSprite->height));
+            }
+        }
+    }
+
     void CollisionSystem(ComponentList *componentList)
     {
         for (int i = 0; i < componentList->getSize(); i++)

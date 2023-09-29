@@ -31,7 +31,9 @@ namespace Haze
         _componentList->addList("VelocityOnClick");
         _componentList->addList("Size");
         _componentList->addList("Animation");
+        _componentList->addList("SplitSprite");
         _componentList->addList("Collision");
+        _componentList->addList("SplitSprite");
     }
 
     void Engine::update()

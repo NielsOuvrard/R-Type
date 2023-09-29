@@ -10,7 +10,6 @@
 Rttype::Rttype()
 {
     engine.init();
-
     std::ifstream inputFile("Client/SpritesMooves/ground.json");
     if (inputFile.is_open()) {
         inputFile >> jsonData;
@@ -51,13 +50,16 @@ Rttype::Rttype()
 
     entityWallBottom1->addComponent(new Haze::Position(0, 600));
     entityWallBottom1->addComponent(new Haze::Size(1920, -280));
-    wallSprite->sprite.setTextureRect(sf::IntRect(sheet["x"], sheet["y"], sheet["width"], sheet["height"]));
     entityWallBottom1->addComponent(wallSprite);
+    entityWallBottom1->addComponent(new Haze::SplitSprite(*static_cast<Haze::Sprite *>(entityWallBottom1->getComponent("Sprite")), sheet["x"], sheet["y"], sheet["width"], sheet["height"]));
+    changeSpriteBack(entityWallBottom1);
 
-    entityWallBottom2->addComponent(new Haze::Position(0, 600));
+    entityWallBottom2->addComponent(new Haze::Position(400, 600));
     entityWallBottom2->addComponent(new Haze::Size(1920, -280));
-    wallSprite->sprite.setTextureRect(sf::IntRect(sheet["x"], sheet["y"], sheet["width"], sheet["height"]));
     entityWallBottom2->addComponent(wallSprite);
+    entityWallBottom2->addComponent(new Haze::SplitSprite(*static_cast<Haze::Sprite *>(entityWallBottom1->getComponent("Sprite")), sheet["x"], sheet["y"], sheet["width"], sheet["height"]));
+    changeSpriteBack(entityWallBottom2);
+
 
     // entityWallBottom->addComponent(new Haze::Position(0, 600));
     // entityWallBottom->addComponent(new Haze::Size(1920, -280));
@@ -181,12 +183,19 @@ void Rttype::moveBackground(void *component)
     
 }
 
-void Rttype::changeSpriteBack(Haze::Entity E)
+void Rttype::changeSpriteBack(Haze::Entity *E)
 {
-    std::srand(static_cast<unsigned int>(std::time(nullptr)));
     int randomNumber = std::rand() % 10 + 1;
     std::cout << "Nombre aléatoire : " << randomNumber << std::endl;
-    sheet = jsonData["sheet" + randomNumber];
+    sheet = jsonData["sheet" + std::to_string(randomNumber)];
+    auto splitSprite = static_cast<Haze::SplitSprite *>(E->getComponent("SplitSprite"));
+    splitSprite->x = sheet["x"];
+    splitSprite->y = sheet["y"];
+    splitSprite->width = sheet["width"];
+    splitSprite->height = sheet["height"];
+    auto sprite = static_cast<Haze::Sprite *>(E->getComponent("Sprite"));
+    sprite->sprite.setTextureRect(sf::IntRect(sheet["x"], sheet["y"], sheet["width"], sheet["height"]));
+
 }
 
 void Rttype::run()
