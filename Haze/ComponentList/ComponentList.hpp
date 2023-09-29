@@ -25,8 +25,8 @@ namespace Haze
         Component *getComponent(std::string type, size_t id);
         void addList(std::string type);
         size_t getSize() const { return _size; };
-        void addRow();
-        void removeRow(size_t id);
+        void addEntity();
+        void removeEntity(size_t id);
         void showComponents();
         std::vector<std::string> getComponentName() const { return _componentName; };
 

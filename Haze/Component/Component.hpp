@@ -170,7 +170,7 @@ namespace Haze
         std::string getType() const override { return "Inputs"; }
         void show() const override { std::cout << "Inputs: " << inputs << std::endl; }
     };
-
+ 
     struct Collision : public Component
     {
         enum CollisionType
@@ -210,5 +210,14 @@ namespace Haze
         std::vector<floatRect> hitbox;
         std::string getType() const override { return "Hitbox"; }
         void show() const override { std::cout << "Hitbox: " << std::endl; }
+    };
+
+    struct LifeTime : public Component
+    {
+        LifeTime(int lifeTime) : lifeTime(lifeTime) {}
+        int lifeTime;
+        int tics = 0;
+        std::string getType() const override { return "LifeTime"; }
+        void show() const override { std::cout << "LifeTime: " << lifeTime << std::endl; }
     };
 }
