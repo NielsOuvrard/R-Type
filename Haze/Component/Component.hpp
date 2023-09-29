@@ -163,80 +163,12 @@ namespace Haze
         void show() const override { std::cout << "Speed: " << speed << std::endl; }
     };
 
-    // struct Shoot : public Component
-    // {
-    //     Shoot(int shoot) : shoot(shoot) {}
-    //     int shoot;
-    //     std::string getType() const override { return "Shoot"; }
-    //     void show() const override { std::cout << "Shoot: " << shoot << std::endl; }
-    // };
-
     struct Inputs : public Component // useless ?
     {
         Inputs(int inputs) : inputs(inputs) {}
         int inputs;
         std::string getType() const override { return "Inputs"; }
         void show() const override { std::cout << "Inputs: " << inputs << std::endl; }
-    };
-
-    // * link to :
-    // Health
-    // Damage
-    // Speed
-    // Sprite / Animation
-    // Collision
-    // Position
-    // Size
-    // Velocity
-    struct Enemy : public Component
-    {
-        Enemy(int enemy) : enemy(enemy)
-        {
-        }
-        int enemy; // type
-        bool canShoot;
-
-        // shoo()
-        //      throw projectile
-        //      drop bomb
-        // move(enemy)
-        //      can fly ?
-        //      Pattern ?
-        //      right to left ?
-        std::string getType() const override { return "Enemy"; }
-        void show() const override { std::cout << "Enemy: " << enemy << std::endl; }
-    };
-
-    struct Player : public Component
-    {
-        Player(int player) : player(player) {}
-        int player;
-        std::string getType() const override { return "Player"; }
-        void show() const override { std::cout << "Player: " << player << std::endl; }
-    };
-
-    struct Boss : public Component
-    {
-        Boss(int boss) : boss(boss) {}
-        int boss;
-        std::string getType() const override { return "Boss"; }
-        void show() const override { std::cout << "Boss: " << boss << std::endl; }
-    };
-
-    // * link to :
-    // Damage
-    // Speed
-    // Sprite / Animation
-    // Collision
-    // Position
-    // Velocity
-    // Size
-    struct Projectile : public Component
-    {
-        Projectile(int projectile) : projectile(projectile) {}
-        int projectile; // type
-        std::string getType() const override { return "Projectile"; }
-        void show() const override { std::cout << "Projectile: " << projectile << std::endl; }
     };
 
     struct Collision : public Component
@@ -265,12 +197,18 @@ namespace Haze
         void show() const override { std::cout << "Collision: " << scene << std::endl; }
     };
 
-    struct Size : public Component
+    struct Hitbox : public Component
     {
-        Size(float width, float height) : height(height), width(width) {}
-        float height;
-        float width;
-        std::string getType() const override { return "Size"; }
-        void show() const override { std::cout << "Size: " << height << ", " << width << std::endl; }
+        struct floatRect
+        {
+            int x;
+            int y;
+            int width;
+            int height;
+        };
+        Hitbox(std::vector<floatRect> hitbox) : hitbox(hitbox) {}
+        std::vector<floatRect> hitbox;
+        std::string getType() const override { return "Hitbox"; }
+        void show() const override { std::cout << "Hitbox: " << std::endl; }
     };
 }

@@ -21,7 +21,7 @@ namespace Haze
     {
         _componentList = new ComponentList();
         _componentList->addList("Scale");
-        _componentList->addList("Size");
+        _componentList->addList("Hitbox");
         _componentList->addList("Damage");
         _componentList->addList("Health");
         _componentList->addList("Position");
@@ -29,7 +29,6 @@ namespace Haze
         _componentList->addList("Sprite");
         _componentList->addList("Window");
         _componentList->addList("VelocityOnClick");
-        _componentList->addList("Size");
         _componentList->addList("Animation");
         _componentList->addList("SplitSprite");
         _componentList->addList("Collision");
