@@ -102,7 +102,7 @@ namespace Haze
             tics = 0.5;
             lastAnimation = std::chrono::high_resolution_clock::now();
             int interval_ms = 100;
-            int duration_sec = 5;
+            int duration_sec = 50;
             animation_thread = std::thread(animateThread, interval_ms, duration_sec, this);
             animation_thread.detach();
         }

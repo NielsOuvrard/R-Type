@@ -20,6 +20,7 @@ private:
     Haze::Engine engine;
     Haze::Entity *entityVortex;
     Haze::Entity *entitySpaceship;
+    Haze::Entity *entityEnnemy;
     Haze::Entity *entityWindow;
     Haze::Entity *entityWallTop;
     Haze::Entity *entityWallBottom1;
