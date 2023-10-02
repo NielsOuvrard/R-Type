@@ -26,6 +26,7 @@ namespace Haze
         }
     }
 
+#ifdef USE_SFML
     void ScaleSystem(ComponentList *componentList)
     {
         for (int i = 0; i < componentList->getSize(); i++)
@@ -91,6 +92,7 @@ namespace Haze
             }
         }
     }
+#endif
 
     void CollisionHandling(ComponentList *componentList, int i, int j)
     {
@@ -132,7 +134,9 @@ namespace Haze
             {
                 auto splitSprite = static_cast<SplitSprite *>(componentList->getComponent("SplitSprite", i));
                 auto sprite = static_cast<Sprite *>(componentList->getComponent("Sprite", i));
+#ifdef USE_SFML
                 sprite->sprite.setTextureRect(sf::IntRect(splitSprite->x, splitSprite->y, splitSprite->width, splitSprite->height));
+#endif
             }
         }
     }

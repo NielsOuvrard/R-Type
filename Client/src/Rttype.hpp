@@ -20,6 +20,7 @@ private:
     Haze::Engine engine;
     Haze::Entity *entityVortex;
     Haze::Entity *entitySpaceship;
+    Haze::Entity *entityEnnemy;
     Haze::Entity *entityWindow;
     Haze::Entity *entityWallTop;
     Haze::Entity *entityWallBottom1;
@@ -31,7 +32,9 @@ private:
     Haze::Sprite *wallSprite = new Haze::Sprite("assets/wall.png");
     nlohmann::json jsonData;
     nlohmann::json sheet;
+#ifdef USE_SFML
     sf::Event event;
+#endif
     char isMoving = '\0';
     void keyPress();
     void keyRelease();

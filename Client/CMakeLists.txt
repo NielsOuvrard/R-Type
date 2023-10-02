@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 project(r-type-client)
     add_compile_options(-Wno-unused-command-line-argument)
+    add_compile_definitions(USE_SFML)
 
 set(
     SOURCES
