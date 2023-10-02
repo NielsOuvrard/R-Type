@@ -13,9 +13,12 @@
 #include <memory>
 #include <functional>
 #include <unordered_map>
-#include <SFML/Graphics.hpp>
-
 #include <thread>
+#include <map>
+
+#ifdef USE_SFML
+#include <SFML/Graphics.hpp>
+#endif
 
 namespace Haze
 {
@@ -78,19 +81,25 @@ namespace Haze
 
     struct Sprite : public Component
     {
-        Sprite(std::string path) : path(path) //, isAnimated(false)
+        Sprite(std::string path) : path(path)
         {
+#ifdef USE_SFML
+            std::cout << "path " << path << std::endl;
             texture.loadFromFile(path);
             sprite.setTexture(texture);
+#endif
         }
         std::string path;
+#ifdef USE_SFML
         sf::Sprite sprite;
         sf::Texture texture;
-        // bool isAnimated;
-        std::string getType() const override { return "Sprite"; }
-        void show() const override { std::cout << "flm" << path << std::endl; }
         void setTextureRect(sf::IntRect rect) { sprite.setTextureRect(rect); }
-        // void setAnimated(bool animated) { isAnimated = animated; }
+#endif
+        std::string getType() const override
+        {
+            return "Sprite";
+        }
+        void show() const override { std::cout << "flm" << path << std::endl; }
     };
 
     struct Animation : public Component
@@ -98,7 +107,9 @@ namespace Haze
         Animation(Haze::Sprite &sprite, size_t x, size_t y, size_t width, size_t height, size_t nbFramesX, size_t nbFramesY, bool boomerang = false)
             : sprite(sprite), x(x), y(y), width(width), height(height), nbFramesX(nbFramesX), nbFramesY(nbFramesY), currentFrame(0), boomerang(boomerang), moveUp(true)
         {
+#ifdef USE_SFML
             sprite.setTextureRect(sf::IntRect(x, y, width, height));
+#endif
             tics = 0.5;
             lastAnimation = std::chrono::high_resolution_clock::now();
             int interval_ms = 100;
@@ -128,8 +139,9 @@ namespace Haze
         SplitSprite(Haze::Sprite &sprite, size_t x, size_t y, size_t width, size_t height)
             : sprite(sprite), x(x), y(y), width(width), height(height)
         {
+#ifdef USE_SFML
             sprite.setTextureRect(sf::IntRect(x, y, width, height));
-            // sprite.setAnimated(true);
+#endif
         }
         Haze::Sprite &sprite;
         size_t x;
@@ -144,13 +156,20 @@ namespace Haze
     {
         Window(int width, int height) : width(width), height(height)
         {
+#ifdef USE_SFML
             window.create(sf::VideoMode(width, height), "R-Type");
             window.setFramerateLimit(60);
+#endif
         }
         int width;
         int height;
+#ifdef USE_SFML
         sf::RenderWindow window;
-        std::string getType() const override { return "Window"; }
+#endif
+        std::string getType() const override
+        {
+            return "Window";
+        }
         void show() const override { std::cout << "Window: " << width << ", " << height << std::endl; }
     };
 

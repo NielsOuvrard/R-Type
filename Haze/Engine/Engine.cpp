@@ -7,6 +7,7 @@
 
 #include "Engine.hpp"
 
+// ? all useless with SFML
 void animateThread(int interval_ms, int duration_sec, Haze::Animation *animation)
 {
     auto start_time = std::chrono::high_resolution_clock::now();
@@ -51,7 +52,9 @@ void animateThread(int interval_ms, int duration_sec, Haze::Animation *animation
                 animation->currentFrame++;
             }
         }
+#ifdef USE_SFML
         animation->sprite.setTextureRect(sf::IntRect(animation->x + (animation->currentFrame * animation->width), animation->y, animation->width, animation->height));
+#endif
         std::this_thread::sleep_for(std::chrono::milliseconds(interval_ms));
     }
 }
@@ -87,13 +90,19 @@ namespace Haze
 
     void Engine::update()
     {
+#ifdef USE_SFML
         ClearSystem(_componentList);
         ScaleSystem(_componentList);
+#endif
         MoveSystem(_componentList);
+#ifdef USE_SFML
         AnimationSystem(_componentList);
+#endif
         CollisionSystem(_componentList);
+#ifdef USE_SFML
         RenderSystem(_componentList);
         DisplaySystem(_componentList);
+#endif
         SplitSpriteSystem(_componentList);
         DestroyEntity(_componentList, _tics);
         _tics++;
@@ -105,8 +114,12 @@ namespace Haze
         {
             if (_componentList->getComponent("Window", i) != nullptr)
             {
+#ifdef USE_SFML
                 auto window = static_cast<Window *>(_componentList->getComponent("Window", i));
                 return window->window.isOpen();
+#else
+                return true;
+#endif
             }
         }
         return false;

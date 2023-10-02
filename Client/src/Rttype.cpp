@@ -120,7 +120,9 @@ Rttype::Rttype()
     // entityWallBottom->addComponent(wallSprite);
 
     entityWindow->addComponent(window);
+#ifdef USE_SFML
     window->window.setFramerateLimit(60);
+#endif
 }
 
 Rttype::~Rttype()
@@ -153,6 +155,7 @@ void Rttype::moveRight(void *component)
 
 void Rttype::keyPress()
 {
+#ifdef USE_SFML
     if (event.type == sf::Event::KeyPressed)
     {
         if (event.key.code == sf::Keyboard::Up)
@@ -172,10 +175,12 @@ void Rttype::keyPress()
             isMoving = 'R';
         }
     }
+#endif
 }
 
 void Rttype::keyRelease()
 {
+#ifdef USE_SFML
     if (event.type == sf::Event::KeyReleased)
     {
         if (event.key.code == sf::Keyboard::Up)
@@ -187,6 +192,7 @@ void Rttype::keyRelease()
         if (event.key.code == sf::Keyboard::Right)
             isMoving = '\0';
     }
+#endif
 }
 
 void Rttype::moveSpaceship()
@@ -292,10 +298,13 @@ void Rttype::run()
     while (engine.isOpen())
     {
         moveSpaceship();
+// input events
+#ifdef USE_SFML
         while (static_cast<Haze::Window *>(entityWindow->getComponent("Window"))->window.pollEvent(event))
         {
             if (event.type == sf::Event::Closed)
             {
+                std::cout << "Window closed" << std::endl;
                 static_cast<Haze::Window *>(entityWindow->getComponent("Window"))->window.close();
             }
             if (event.key.code == sf::Keyboard::Enter)
@@ -311,6 +320,7 @@ void Rttype::run()
             Rttype::keyPress();
             Rttype::keyRelease();
         }
+#endif
         Rttype::moveBackground();
         engine.update();
     }
