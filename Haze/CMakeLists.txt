@@ -2,6 +2,11 @@ cmake_minimum_required(VERSION 3.25)
 project(haze)
 add_compile_options(-Wno-unused-command-line-argument)
 
+option(WITH_GRAPHICS "Build with graphics" ON)
+if (WITH_GRAPHICS)
+    add_compile_definitions(USE_SFML)
+endif()
+
 set(
     SOURCES
     Entity/Entity.cpp

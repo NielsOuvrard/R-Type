@@ -54,7 +54,6 @@ Rttype::Rttype()
 
     entitySpaceship->addComponent(velocityPlayer);
     entitySpaceship->addComponent(new Haze::Position(100, 200));
-
     entitySpaceship->addComponent(new Haze::Scale(3, 3));
     entitySpaceship->addComponent(spaceshipSprite);
     entitySpaceship->addComponent(new Haze::Animation(*spaceshipSprite, 100, 0, 33, 18, 5, 1, true));
@@ -62,8 +61,6 @@ Rttype::Rttype()
     entityEnnemy->addComponent(new Haze::Position(500, 200));
     entityEnnemy->addComponent(new Haze::Velocity(0, 0));
     entityEnnemy->addComponent(new Haze::Scale(3, 3));
-    // 266 * 36
-    // 8 * 1
     entityEnnemy->addComponent(new Haze::Animation(*ennemySprite, 0, 0, 33, 36, 8, 1, true));
     entityEnnemy->addComponent(ennemySprite);
 
@@ -304,7 +301,6 @@ void Rttype::run()
         {
             if (event.type == sf::Event::Closed)
             {
-                std::cout << "Window closed" << std::endl;
                 static_cast<Haze::Window *>(entityWindow->getComponent("Window"))->window.close();
             }
             if (event.key.code == sf::Keyboard::Enter)
@@ -324,4 +320,5 @@ void Rttype::run()
         Rttype::moveBackground();
         engine.update();
     }
+    std::cout << "engine closed!" << std::endl;
 }
