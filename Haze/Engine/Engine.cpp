@@ -7,58 +7,6 @@
 
 #include "Engine.hpp"
 
-// ? all useless with SFML
-void animateThread(int interval_ms, int duration_sec, Haze::Animation *animation)
-{
-    auto start_time = std::chrono::high_resolution_clock::now();
-    while (true)
-    {
-        auto current_time = std::chrono::high_resolution_clock::now();
-        auto elapsed_time = std::chrono::duration_cast<std::chrono::milliseconds>(current_time - start_time).count();
-
-        if (elapsed_time >= duration_sec * 1000)
-        {
-            break; // Exit the animation loop after the specified duration
-        }
-
-        // Animate the sprite
-        if (animation->boomerang)
-        {
-            if (animation->moveUp)
-            {
-                animation->currentFrame++;
-            }
-            else
-            {
-                animation->currentFrame--;
-            }
-            if (animation->currentFrame == animation->nbFramesX - 1)
-            {
-                animation->moveUp = false;
-            }
-            if (animation->currentFrame == 0)
-            {
-                animation->moveUp = true;
-            }
-        }
-        else
-        {
-            if (animation->currentFrame == animation->nbFramesX - 1)
-            {
-                animation->currentFrame = 0;
-            }
-            else
-            {
-                animation->currentFrame++;
-            }
-        }
-#ifdef USE_SFML
-        animation->sprite.setTextureRect(sf::IntRect(animation->x + (animation->currentFrame * animation->width), animation->y, animation->width, animation->height));
-#endif
-        std::this_thread::sleep_for(std::chrono::milliseconds(interval_ms));
-    }
-}
-
 namespace Haze
 {
     Engine::Engine()
@@ -86,25 +34,15 @@ namespace Haze
         _componentList->addList("SplitSprite");
         _componentList->addList("Collision");
         _componentList->addList("SplitSprite");
+
+        _pipelines.push_back(std::make_unique< CorePipeline>());
+        _pipelines.push_back(std::make_unique< GfxPipeline>());
     }
 
     void Engine::update()
     {
-#ifdef USE_SFML
-        ClearSystem(_componentList);
-        ScaleSystem(_componentList);
-#endif
-        MoveSystem(_componentList);
-#ifdef USE_SFML
-        AnimationSystem(_componentList);
-#endif
-        CollisionSystem(_componentList);
-#ifdef USE_SFML
-        RenderSystem(_componentList);
-        DisplaySystem(_componentList);
-#endif
-        SplitSpriteSystem(_componentList);
-        DestroyEntity(_componentList, _tics);
+        for (int i = 0; i < _pipelines.size(); i++)
+            _pipelines[i]->runSystem(_componentList);
         _tics++;
     }
 
@@ -114,12 +52,9 @@ namespace Haze
         {
             if (_componentList->getComponent("Window", i) != nullptr)
             {
-#ifdef USE_SFML
                 auto window = static_cast<Window *>(_componentList->getComponent("Window", i));
                 return window->window.isOpen();
-#else
                 return true;
-#endif
             }
         }
         return false;

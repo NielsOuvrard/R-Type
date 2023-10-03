@@ -12,6 +12,9 @@
 #include "System.hpp"
 #include "Entity.hpp"
 #include "ComponentList.hpp"
+#include "IPipeline.hpp"
+#include "CorePipeline.hpp"
+#include "GfxPipeline.hpp"
 
 namespace Haze
 {
@@ -31,6 +34,7 @@ namespace Haze
     protected:
     private:
         std::vector<std::unique_ptr<Entity>> _entities;
+        std::vector<std::unique_ptr<IPipeline>> _pipelines;
         ComponentList *_componentList;
         int _tics = 0;
     };

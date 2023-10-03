@@ -9,17 +9,10 @@
 #include "Entity.hpp"
 #include "ComponentList.hpp"
 #include <vector>
-#include "matrix.hpp"
 
 namespace Haze
 {
-    void ScaleSystem(ComponentList *componentList);
     void MoveSystem(ComponentList *componentList);
-    void AnimationSystem(ComponentList *componentList);
-    void RenderSystem(ComponentList *componentList);
     void CollisionSystem(ComponentList *componentList);
-    void DisplaySystem(ComponentList *componentList);
-    void ClearSystem(ComponentList *componentList);
-    void SplitSpriteSystem(ComponentList *componentList);
-    void DestroyEntity (ComponentList *componentList, int tics);
+    void DestroyEntity (ComponentList *componentList);
 }
