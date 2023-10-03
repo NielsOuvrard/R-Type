@@ -6,7 +6,7 @@
 */
 
 #include <iostream>
-#include <haze.hpp>
+#include <haze-core.hpp>
 #include <chrono>
 #include <thread>
 // #include "Engine.hpp"
@@ -56,27 +56,25 @@ int main()
     Haze::Engine engine;
     engine.init();
 
-    Haze::Entity *entitySpaceship = engine.createEntity();
-    Haze::Entity *entityEnnemy = engine.createEntity();
-    Haze::Sprite *spaceshipSprite = new Haze::Sprite("assets/r-typesheet1.gif");
-    Haze::Sprite *ennemySprite = new Haze::Sprite("assets/r-typesheet5.gif");
-    Haze::Entity *entityWindow = engine.createEntity();
+    // Haze::Entity *entitySpaceship = engine.createEntity();
+    // Haze::Entity *entityEnnemy = engine.createEntity();
+    // Haze::Sprite *spaceshipSprite = new Haze::Sprite("assets/r-typesheet1.gif");
+    // Haze::Sprite *ennemySprite = new Haze::Sprite("assets/r-typesheet5.gif");
+    // Haze::Entity *entityWindow = engine.createEntity();
 
-    Haze::Window *window = new Haze::Window(800, 600);
-    entityWindow->addComponent(window);
 
-    entitySpaceship->addComponent(new Haze::Position(100, 200));
-    entitySpaceship->addComponent(new Haze::Scale(3, 3));
-    entitySpaceship->addComponent(spaceshipSprite);
-    entitySpaceship->addComponent(new Haze::Animation(*spaceshipSprite, 100, 0, 33, 18, 5, 1, true));
+    // entitySpaceship->addComponent(new Haze::Position(100, 200));
+    // entitySpaceship->addComponent(new Haze::Scale(3, 3));
+    // entitySpaceship->addComponent(spaceshipSprite);
+    // entitySpaceship->addComponent(new Haze::Animation(*spaceshipSprite, 100, 0, 33, 18, 5, 1, true));
 
-    entityEnnemy->addComponent(new Haze::Position(500, 200));
-    entityEnnemy->addComponent(new Haze::Velocity(0, 0));
-    entityEnnemy->addComponent(new Haze::Scale(3, 3));
-    entityEnnemy->addComponent(new Haze::Animation(*ennemySprite, 0, 0, 33, 36, 8, 1, true));
-    entityEnnemy->addComponent(ennemySprite);
+    // entityEnnemy->addComponent(new Haze::Position(500, 200));
+    // entityEnnemy->addComponent(new Haze::Velocity(0, 0));
+    // entityEnnemy->addComponent(new Haze::Scale(3, 3));
+    // entityEnnemy->addComponent(new Haze::Animation(*ennemySprite, 0, 0, 33, 36, 8, 1, true));
+    // entityEnnemy->addComponent(ennemySprite);
 
-    std::cout << "Entity spaceship: " << entitySpaceship << std::endl;
+    // std::cout << "Entity spaceship: " << entitySpaceship << std::endl;
 
     while (engine.isOpen())
     {

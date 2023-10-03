@@ -36,7 +36,9 @@ namespace Haze
         _componentList->addList("SplitSprite");
 
         _pipelines.push_back(std::make_unique< CorePipeline>());
+        #ifdef USE_SFML
         _pipelines.push_back(std::make_unique< GfxPipeline>());
+        #endif
     }
 
     void Engine::update()
@@ -52,8 +54,10 @@ namespace Haze
         {
             if (_componentList->getComponent("Window", i) != nullptr)
             {
+                #ifdef USE_SFML
                 auto window = static_cast<Window *>(_componentList->getComponent("Window", i));
                 return window->window.isOpen();
+                #endif
                 return true;
             }
         }

@@ -14,7 +14,7 @@
 
 #include "Component.hpp"
 #include "GraphicClient.hpp"
-#include <haze.hpp>
+#include <haze-core.hpp>
 #include "./Rttype.hpp"
 
 int main()

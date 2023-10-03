@@ -7,7 +7,7 @@
 
 
 #pragma once
-#define GFX
+#ifdef USE_SFML
 #include "IPipeline.hpp"
 #include "SystemGfx.hpp"
 
@@ -22,3 +22,4 @@ namespace Haze
         private:
     };
 }
+#endif

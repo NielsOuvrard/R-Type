@@ -9,7 +9,6 @@
 #include <iostream>
 #include <vector>
 #include <map>
-#include "System.hpp"
 #include "Entity.hpp"
 #include "ComponentList.hpp"
 #include "IPipeline.hpp"

@@ -23,10 +23,6 @@ namespace Haze
         }
     }
 
-    void AnimationSystem(ComponentList *componentList)
-    {
-    }
-
     void RenderSystem(ComponentList *componentList)
     {
         for (int i = 0; i < componentList->getSize(); i++)

@@ -4,7 +4,7 @@ project(r-type-server)
 set(
     SOURCES
     src/main.cpp
-    ../Rtype/Rtype.cpp
+    # ../Rtype/Rtype.cpp
 )
     add_compile_options(-Wno-unused-command-line-argument)
 
