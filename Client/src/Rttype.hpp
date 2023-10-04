@@ -14,34 +14,39 @@
 #include <cstdlib>
 #include <ctime>
 #include "json.hpp"
+#include "wall.hpp"
+
+// #include "GraphicClient.hpp"
+// #include "Component.hpp"
+
 
 class Rttype
 {
-private:
-    Haze::Engine engine;
-    Haze::Entity *entityVortex;
-    Haze::Entity *entitySpaceship;
-    Haze::Entity *entityEnnemy;
-    Haze::Entity *entityWindow;
-    Haze::Entity *entityWallTop;
-    Haze::Entity *entityWallBottom1;
-    Haze::Entity *entityWallBottom2;
-    Haze::Entity *entityWallBottom3;
-    Haze::Entity *entityWallBottom4;
-    Haze::Entity *entityWallBottom5;
-    Haze::Entity *entityWallBottom6;
-    Haze::Sprite *wallSprite = new Haze::Sprite("assets/wall.png");
-    nlohmann::json jsonData;
-    nlohmann::json sheet;
-#ifdef USE_SFML
-    sf::Event event;
-#endif
-    char isMoving = '\0';
-    void keyPress();
-    void keyRelease();
-    void moveSpaceship();
-    void moveBackground();
-    void changeSpriteBack(Haze::Entity *E);
+    private:
+        Haze::Engine engine;
+        Haze::Entity *entityVortex;
+        Haze::Entity *entitySpaceship;
+        Haze::Entity *entityWindow;
+        Haze::Entity *entityWallTop;
+        Haze::Entity *entityEnnemy;
+        wall *wall1;
+        wall *wall2;
+        wall *wall3;
+        wall *wall4;
+        wall *wall5;
+        wall *wall6;
+        // Haze::Entity *entityBackground;
+        Haze::Sprite *wallSprite = new Haze::Sprite("assets/wall.png");
+        nlohmann::json jsonData;
+        nlohmann::json sheet;
+        #ifdef USE_SFML
+            sf::Event event;
+        #endif
+        char isMoving = '\0';
+        void keyPress();
+        void keyRelease();
+        void moveSpaceship();
+        void moveBackground();
 
 public:
     Rttype();

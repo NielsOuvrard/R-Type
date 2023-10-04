@@ -6,6 +6,7 @@ set(
     SOURCES
     src/main.cpp
     src/Rttype.cpp
+    src/wall.cpp
 )
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
