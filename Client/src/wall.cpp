@@ -6,6 +6,7 @@
 */
 
 #include "wall.hpp"
+#include <haze-graphics.hpp>
 
 wall::wall(Haze::Engine *engine, nlohmann::json data, int x, int y) : _jsonData(data)
 {
@@ -17,6 +18,21 @@ wall::wall(Haze::Engine *engine, nlohmann::json data, int x, int y) : _jsonData(
     _entityWallBottom->addComponent(wallSprite);
     _entityWallBottom->addComponent(new Haze::SplitSprite(*static_cast<Haze::Sprite *>(_entityWallBottom->getComponent("Sprite")),
          _sheet["x"], _sheet["y"], _sheet["width"], _sheet["height"]));
+    Haze::Collision::CollisionInfo colisionInfo;
+    colisionInfo.type = Haze::Collision::LAMBDA;
+    colisionInfo.tics = 1;
+    colisionInfo.onCollision = [](int x, int y) {
+        std::cout << "collision!" << std::endl;
+    };
+    std::map<std::string, Haze::Collision::CollisionInfo> infos = {
+        {"player", colisionInfo},
+    };
+    _entityWallBottom->addComponent(new Haze::Collision("wall", infos));
+    int height = _sheet["height"];
+    int width = _sheet["width"];
+    _entityWallBottom->addComponent(new Haze::Hitbox({{
+        0, 0, height * 4, width * 4
+    }}));
     _entityWallBottom->addComponent(new Haze::Velocity(-1, 0));
     changeSpriteBack(_entityWallBottom);
 }

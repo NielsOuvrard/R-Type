@@ -28,6 +28,17 @@ Rttype::Rttype()
     Haze::Sprite *ennemySprite = new Haze::Sprite("assets/r-typesheet5.gif");
     Haze::Window *window = new Haze::Window(800, 600);
 
+    Haze::Collision::CollisionInfo colisionInfo;
+    colisionInfo.type = Haze::Collision::LAMBDA;
+    colisionInfo.tics = 1;
+    colisionInfo.onCollision = [](int x, int y) {
+        std::cout << "collision!" << std::endl;
+    };
+    std::map<std::string, Haze::Collision::CollisionInfo> infos = {
+        {"wall", colisionInfo},
+    };
+    // infos["ennemy"] = Haze::Collision::CollisionInfo(0, 0, 33, 36);
+
     entityVortex = engine.createEntity();
     entitySpaceship = engine.createEntity();
     entityEnnemy = engine.createEntity();
@@ -45,6 +56,10 @@ Rttype::Rttype()
     entitySpaceship->addComponent(new Haze::Scale(3, 3));
     entitySpaceship->addComponent(spaceshipSprite);
     entitySpaceship->addComponent(new Haze::Animation(*spaceshipSprite, 100, 0, 33, 18, 5, 1, true));
+    entitySpaceship->addComponent(new Haze::Hitbox({{
+        0, 0, 32 * 3, 14 * 3
+    }}));
+    entitySpaceship->addComponent(new Haze::Collision("player", infos));
 
     wall1 = new wall(&engine, jsonData, 0, 600);
     wall2 = new wall(&engine, jsonData, 192, 600);
@@ -95,7 +110,6 @@ void Rttype::moveRight(void *component)
 
 void Rttype::keyPress()
 {
-#ifdef USE_SFML
     if (event.type == sf::Event::KeyPressed)
     {
         if (event.key.code == sf::Keyboard::Up)
@@ -115,12 +129,10 @@ void Rttype::keyPress()
             isMoving = 'R';
         }
     }
-#endif
 }
 
 void Rttype::keyRelease()
 {
-#ifdef USE_SFML
     if (event.type == sf::Event::KeyReleased)
     {
         if (event.key.code == sf::Keyboard::Up)
@@ -132,7 +144,6 @@ void Rttype::keyRelease()
         if (event.key.code == sf::Keyboard::Right)
             isMoving = '\0';
     }
-#endif
 }
 
 void Rttype::moveSpaceship()
@@ -223,7 +234,6 @@ void Rttype::run()
     {
         moveSpaceship();
 // input events
-#ifdef USE_SFML
         while (static_cast<Haze::Window *>(entityWindow->getComponent("Window"))->window.pollEvent(event))
         {
             if (event.type == sf::Event::Closed)
@@ -243,7 +253,6 @@ void Rttype::run()
             Rttype::keyPress();
             Rttype::keyRelease();
         }
-#endif
         Rttype::moveBackground();
         engine.update();
     }

@@ -39,9 +39,7 @@ class Rttype
         Haze::Sprite *wallSprite = new Haze::Sprite("assets/wall.png");
         nlohmann::json jsonData;
         nlohmann::json sheet;
-        #ifdef USE_SFML
-            sf::Event event;
-        #endif
+        sf::Event event;
         char isMoving = '\0';
         void keyPress();
         void keyRelease();

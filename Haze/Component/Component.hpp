@@ -112,7 +112,6 @@ namespace Haze
         {
             CollisionType type;
             double tics;
-
             std::function<void(int, int)> onCollision = [](int i, int j) {};
             std::chrono::time_point<std::chrono::high_resolution_clock> lastCollision = std::chrono::high_resolution_clock::now();
         };
