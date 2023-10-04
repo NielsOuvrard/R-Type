@@ -6,7 +6,7 @@
 */
 
 #include <chrono>
-#include "System.hpp"
+#include "SystemCore.hpp"
 
 namespace Haze
 {
@@ -25,74 +25,6 @@ namespace Haze
             }
         }
     }
-
-#ifdef USE_SFML
-    void ScaleSystem(ComponentList *componentList)
-    {
-        for (int i = 0; i < componentList->getSize(); i++)
-        {
-            if (componentList->getComponent("Scale", i) != nullptr && componentList->getComponent("Sprite", i) != nullptr)
-            {
-                auto scale = static_cast<Scale *>(componentList->getComponent("Scale", i));
-                auto sprite = static_cast<Sprite *>(componentList->getComponent("Sprite", i));
-                sprite->sprite.setScale(scale->x, scale->y);
-            }
-        }
-    }
-
-    void AnimationSystem(ComponentList *componentList)
-    {
-    }
-
-    void RenderSystem(ComponentList *componentList)
-    {
-        for (int i = 0; i < componentList->getSize(); i++)
-        {
-            if (componentList->getComponent("Window", i) != nullptr)
-            {
-                auto window = static_cast<Window *>(componentList->getComponent("Window", i));
-                for (int j = 0; j < componentList->getSize(); j++)
-                {
-                    if (componentList->getComponent("Position", j) != nullptr &&
-                        componentList->getComponent("Sprite", j) != nullptr)
-                    {
-                        auto sprite = static_cast<Sprite *>(componentList->getComponent("Sprite", j));
-                        auto position = static_cast<Position *>(componentList->getComponent("Position", j));
-                        auto scale = static_cast<Scale *>(componentList->getComponent("Scale", j));
-                        if (scale != nullptr)
-                            sprite->sprite.setScale(scale->x, scale->y);
-                        sprite->sprite.setPosition(position->x, position->y);
-                        window->window.draw(sprite->sprite);
-                    }
-                }
-            }
-        }
-    }
-
-    void DisplaySystem(ComponentList *componentList)
-    {
-        for (int i = 0; i < componentList->getSize(); i++)
-        {
-            if (componentList->getComponent("Window", i) != nullptr)
-            {
-                auto window = static_cast<Window *>(componentList->getComponent("Window", i));
-                window->window.display();
-            }
-        }
-    }
-
-    void ClearSystem(ComponentList *componentList)
-    {
-        for (int i = 0; i < componentList->getSize(); i++)
-        {
-            if (componentList->getComponent("Window", i) != nullptr)
-            {
-                auto window = static_cast<Window *>(componentList->getComponent("Window", i));
-                window->window.clear();
-            }
-        }
-    }
-#endif
 
     void CollisionHandling(ComponentList *componentList, int i, int j)
     {
@@ -121,22 +53,6 @@ namespace Haze
                     info2->lastCollision = std::chrono::high_resolution_clock::now();
                     info2->onCollision(j, i);
                 }
-            }
-        }
-    }
-
-    void SplitSpriteSystem(ComponentList *componentList)
-    {
-        for (int i = 0; i < componentList->getSize(); i++)
-        {
-            if (componentList->getComponent("SplitSprite", i) != nullptr &&
-                componentList->getComponent("Sprite", i) != nullptr)
-            {
-                auto splitSprite = static_cast<SplitSprite *>(componentList->getComponent("SplitSprite", i));
-                auto sprite = static_cast<Sprite *>(componentList->getComponent("Sprite", i));
-#ifdef USE_SFML
-                sprite->sprite.setTextureRect(sf::IntRect(splitSprite->x, splitSprite->y, splitSprite->width, splitSprite->height));
-#endif
             }
         }
     }
@@ -202,7 +118,7 @@ namespace Haze
         }
     }
 
-    void DestroyEntity(ComponentList *componentList, int tics)
+    void DestroyEntity(ComponentList *componentList)
     {
         for (int i = 0; i < componentList->getSize(); i++)
         {

@@ -7,7 +7,8 @@
 
 #pragma once
 
-#include <haze.hpp>
+#include <haze-core.hpp>
+#include <haze-graphics.hpp>
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
