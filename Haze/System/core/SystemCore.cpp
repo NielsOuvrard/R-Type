@@ -6,7 +6,7 @@
 */
 
 #include <chrono>
-#include "System.hpp"
+#include "SystemCore.hpp"
 
 namespace Haze
 {

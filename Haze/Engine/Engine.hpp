@@ -13,7 +13,9 @@
 #include "ComponentList.hpp"
 #include "IPipeline.hpp"
 #include "CorePipeline.hpp"
+#ifdef USE_SFML
 #include "GfxPipeline.hpp"
+#endif
 
 namespace Haze
 {

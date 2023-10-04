@@ -9,7 +9,7 @@
 #pragma once
 #define GFX
 #include "IPipeline.hpp"
-#include "System.hpp"
+#include "SystemCore.hpp"
 
 namespace Haze
 {
