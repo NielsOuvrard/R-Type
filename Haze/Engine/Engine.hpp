@@ -9,11 +9,13 @@
 #include <iostream>
 #include <vector>
 #include <map>
-#include "System.hpp"
 #include "Entity.hpp"
 #include "ComponentList.hpp"
-// SFML clock
-#include <SFML/System.hpp>
+#include "IPipeline.hpp"
+#include "CorePipeline.hpp"
+#ifdef USE_SFML
+#include "GfxPipeline.hpp"
+#endif
 
 namespace Haze
 {
@@ -33,6 +35,7 @@ namespace Haze
     protected:
     private:
         std::vector<std::unique_ptr<Entity>> _entities;
+        std::vector<std::unique_ptr<IPipeline>> _pipelines;
         ComponentList *_componentList;
         int _tics = 0;
     };

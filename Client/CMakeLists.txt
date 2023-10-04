@@ -17,15 +17,6 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     includes
 )
 
-# Link your executable with the SFML libraries
-target_link_libraries(${PROJECT_NAME}
-    sfml-window
-    sfml-graphics
-    sfml-system
-    sfml-audio
-    haze
+target_link_libraries(${PROJECT_NAME} PRIVATE
+    haze-graphics
 )
-
-# Include the SFML headers
-target_include_directories(${PROJECT_NAME} PRIVATE ${SFML_INCLUDE_DIR})
-# ça compile pas sa mère sur macOS

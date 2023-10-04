@@ -12,13 +12,9 @@
 ** main
 */
 
-// #include "GraphicClient.hpp"
-// #include <haze.hpp>
-// #include "Component.hpp"
-
-// #include "GraphicClient.hpp"
-// #include <haze.hpp>
-// #include "Component.hpp"
+#include "Component.hpp"
+#include "GraphicClient.hpp"
+#include <haze-core.hpp>
 #include "./Rttype.hpp"
 
 int main()

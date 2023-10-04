@@ -13,7 +13,7 @@
 #include <memory>
 #include <functional>
 #include <unordered_map>
-#include <SFML/Graphics.hpp>
+#include <map>
 
 namespace Haze
 {
@@ -67,77 +67,6 @@ namespace Haze
         void show() const override { std::cout << "VelocityOnClick: flm de tout marquer mdr" << std::endl; }
     };
 
-    struct Sprite : public Component
-    {
-        Sprite(std::string path) : path(path) //, isAnimated(false)
-        {
-            texture.loadFromFile(path);
-            sprite.setTexture(texture);
-        }
-        std::string path;
-        sf::Sprite sprite;
-        sf::Texture texture;
-        // bool isAnimated;
-        std::string getType() const override { return "Sprite"; }
-        void show() const override { std::cout << "flm" << path << std::endl; }
-        void setTextureRect(sf::IntRect rect) { sprite.setTextureRect(rect); }
-        // void setAnimated(bool animated) { isAnimated = animated; }
-    };
-
-    struct Animation : public Component
-    {
-        Animation(Haze::Sprite &sprite, size_t x, size_t y, size_t width, size_t height, size_t nbFramesX, size_t nbFramesY, bool boomerang = false)
-            : sprite(sprite), x(x), y(y), width(width), height(height), nbFramesX(nbFramesX), nbFramesY(nbFramesY), currentFrame(0), boomerang(boomerang), moveUp(true)
-        {
-            sprite.setTextureRect(sf::IntRect(x, y, width, height));
-            // sprite.setAnimated(true);
-        }
-        Haze::Sprite &sprite;
-        sf::Clock clock; // will use later in another system ?
-        size_t x;
-        size_t y;
-        size_t width;
-        size_t height;
-        size_t nbFramesX;
-        size_t nbFramesY;
-        size_t currentFrame;
-        bool boomerang;
-        bool moveUp;
-        std::string getType() const override { return "Animation"; }
-        void show() const override { std::cout << "Animation: " << std::endl; }
-    }; // can compile
-
-    struct SplitSprite : public Component
-    {
-        SplitSprite(Haze::Sprite &sprite, size_t x, size_t y, size_t width, size_t height)
-            : sprite(sprite), x(x), y(y), width(width), height(height)
-        {
-            sprite.setTextureRect(sf::IntRect(x, y, width, height));
-            // sprite.setAnimated(true);
-        }
-        Haze::Sprite &sprite;
-        size_t x;
-        size_t y;
-        size_t width;
-        size_t height;
-        std::string getType() const override { return "SplitSprite"; }
-        void show() const override { std::cout << "SplitSprite: " << std::endl; }
-    }; // can compile
-
-    struct Window : public Component
-    {
-        Window(int width, int height) : width(width), height(height)
-        {
-            window.create(sf::VideoMode(width, height), "R-Type");
-            window.setFramerateLimit(60);
-        }
-        int width;
-        int height;
-        sf::RenderWindow window;
-        std::string getType() const override { return "Window"; }
-        void show() const override { std::cout << "Window: " << width << ", " << height << std::endl; }
-    };
-
     struct Health : public Component
     {
         Health(int health) : health(health) {}
@@ -170,7 +99,7 @@ namespace Haze
         std::string getType() const override { return "Inputs"; }
         void show() const override { std::cout << "Inputs: " << inputs << std::endl; }
     };
- 
+
     struct Collision : public Component
     {
         enum CollisionType

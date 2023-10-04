@@ -7,7 +7,8 @@
 
 #pragma once
 
-#include <haze.hpp>
+#include <haze-core.hpp>
+#include <haze-graphics.hpp>
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
@@ -27,6 +28,7 @@ class Rttype
         Haze::Entity *entitySpaceship;
         Haze::Entity *entityWindow;
         Haze::Entity *entityWallTop;
+        Haze::Entity *entityEnnemy;
         wall *wall1;
         wall *wall2;
         wall *wall3;
@@ -37,19 +39,21 @@ class Rttype
         Haze::Sprite *wallSprite = new Haze::Sprite("assets/wall.png");
         nlohmann::json jsonData;
         nlohmann::json sheet;
-        sf::Event event;
+        #ifdef USE_SFML
+            sf::Event event;
+        #endif
         char isMoving = '\0';
         void keyPress();
         void keyRelease();
         void moveSpaceship();
         void moveBackground();
 
-    public:
-        Rttype();
-        ~Rttype();
-        void run();
-        void moveUp(void *component);
-        void moveDown(void *component);
-        void moveLeft(void *component);
-        void moveRight(void *component);
+public:
+    Rttype();
+    ~Rttype();
+    void run();
+    void moveUp(void *component);
+    void moveDown(void *component);
+    void moveLeft(void *component);
+    void moveRight(void *component);
 };

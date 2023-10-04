@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <haze.hpp>
+#include <haze-core.hpp>
 #include "json.hpp"
 
 class wall

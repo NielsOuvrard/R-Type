@@ -28,25 +28,23 @@ namespace Haze
         _componentList->addList("Velocity");
         _componentList->addList("Sprite");
         _componentList->addList("Window");
+        _componentList->addList("LifeTime");
         _componentList->addList("VelocityOnClick");
         _componentList->addList("Animation");
         _componentList->addList("SplitSprite");
         _componentList->addList("Collision");
         _componentList->addList("SplitSprite");
+
+        _pipelines.push_back(std::make_unique< CorePipeline>());
+        #ifdef USE_SFML
+        _pipelines.push_back(std::make_unique< GfxPipeline>());
+        #endif
     }
 
     void Engine::update()
     {
-        ClearSystem(_componentList);
-        ScaleSystem(_componentList);
-        MoveSystem(_componentList);
-        AnimationSystem(_componentList);
-        CollisionSystem(_componentList);
-        RenderSystem(_componentList);
-        DisplaySystem(_componentList);
-        VelocityOnClickSystem(_componentList, "d");
-        SplitSpriteSystem(_componentList);
-        DestroyEntity (_componentList, _tics);
+        for (int i = 0; i < _pipelines.size(); i++)
+            _pipelines[i]->runSystem(_componentList);
         _tics++;
     }
 
@@ -56,8 +54,11 @@ namespace Haze
         {
             if (_componentList->getComponent("Window", i) != nullptr)
             {
+                #ifdef USE_SFML
                 auto window = static_cast<Window *>(_componentList->getComponent("Window", i));
                 return window->window.isOpen();
+                #endif
+                return true;
             }
         }
         return false;
