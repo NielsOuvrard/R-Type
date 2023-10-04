@@ -57,8 +57,9 @@ Rttype::Rttype()
     entitySpaceship->addComponent(spaceshipSprite);
     entitySpaceship->addComponent(new Haze::Animation(*spaceshipSprite, 100, 0, 33, 18, 5, 1, true));
     entitySpaceship->addComponent(new Haze::Hitbox({{
-        0, 0, 32 * 3, 14 * 3
+        0, 0, 32, 14
     }}));
+    entitySpaceship->addComponent(new Haze::HitboxDisplay());
     entitySpaceship->addComponent(new Haze::Collision("player", infos));
 
     wall1 = new wall(&engine, jsonData, 0, 600);

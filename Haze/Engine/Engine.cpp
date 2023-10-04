@@ -34,6 +34,7 @@ namespace Haze
         _componentList->addList("SplitSprite");
         _componentList->addList("Collision");
         _componentList->addList("SplitSprite");
+        _componentList->addList("HitboxDisplay");
 
         _pipelines.push_back(std::make_unique< CorePipeline>());
         #ifdef USE_SFML

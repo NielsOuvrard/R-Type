@@ -16,6 +16,7 @@ wall::wall(Haze::Engine *engine, nlohmann::json data, int x, int y) : _jsonData(
     _entityWallBottom->addComponent(new Haze::Position(x, y));
     _entityWallBottom->addComponent(new Haze::Scale(4, -4));
     _entityWallBottom->addComponent(wallSprite);
+    _entityWallBottom->addComponent(new Haze::HitboxDisplay());
     _entityWallBottom->addComponent(new Haze::SplitSprite(*static_cast<Haze::Sprite *>(_entityWallBottom->getComponent("Sprite")),
          _sheet["x"], _sheet["y"], _sheet["width"], _sheet["height"]));
     Haze::Collision::CollisionInfo colisionInfo;
@@ -30,8 +31,10 @@ wall::wall(Haze::Engine *engine, nlohmann::json data, int x, int y) : _jsonData(
     _entityWallBottom->addComponent(new Haze::Collision("wall", infos));
     int height = _sheet["height"];
     int width = _sheet["width"];
+    std::cout << "height: " << height << std::endl;
+    std::cout << "width: " << width << std::endl;
     _entityWallBottom->addComponent(new Haze::Hitbox({{
-        0, 0, height * 4, width * 4
+        0, 0, width, height
     }}));
     _entityWallBottom->addComponent(new Haze::Velocity(-1, 0));
     changeSpriteBack(_entityWallBottom);

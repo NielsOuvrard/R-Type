@@ -43,6 +43,23 @@ namespace Haze
                         sprite->sprite.setPosition(position->x, position->y);
                         window->window.draw(sprite->sprite);
                     }
+
+                    if (componentList->getComponent("Hitbox", j) != nullptr &&
+                        componentList->getComponent("HitboxDisplay", j) != nullptr &&
+                        componentList->getComponent("Position", j) != nullptr &&
+                        componentList->getComponent("Scale", j) != nullptr)
+                    {
+                        auto hitbox = static_cast<Hitbox *>(componentList->getComponent("Hitbox", j));
+                        auto hitboxDisplay = static_cast<HitboxDisplay *>(componentList->getComponent("HitboxDisplay", j));
+                        auto position = static_cast<Position *>(componentList->getComponent("Position", j));
+                        auto scale = static_cast<Scale *>(componentList->getComponent("Scale", j));
+                        for (int k = 0; k < hitbox->hitbox.size(); k++)
+                        {
+                            hitboxDisplay->rect.setPosition(hitbox->hitbox[k].x * scale->x + position->x, hitbox->hitbox[k].y * scale->y + position->y);
+                            hitboxDisplay->rect.setSize(sf::Vector2f(hitbox->hitbox[k].width * scale->x, hitbox->hitbox[k].height * scale->y));
+                            window->window.draw(hitboxDisplay->rect);
+                        }
+                    }
                 }
             }
         }

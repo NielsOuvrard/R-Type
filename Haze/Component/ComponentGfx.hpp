@@ -101,6 +101,24 @@ namespace Haze
         }
         void show() const override { std::cout << "Window: " << width << ", " << height << std::endl; }
     };
+
+    struct HitboxDisplay : public Component
+    {
+        HitboxDisplay()
+        {
+            rect.setFillColor(sf::Color::Transparent);
+            rect.setOutlineColor(sf::Color::Red);
+            rect.setOutlineThickness(5);
+        }
+        sf::Color color = sf::Color::Red;
+        sf::RectangleShape rect;
+
+        std::string getType() const override
+        {
+            return "HitboxDisplay";
+        }
+        void show() const override { std::cout << "HitboxDisplay: " << std::endl; }
+    };
 }
 
 

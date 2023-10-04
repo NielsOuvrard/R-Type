@@ -66,18 +66,35 @@ namespace Haze
                 static_cast<int>(rect1.y * s1->y + pos1->y),
                 static_cast<int>(rect1.width * s1->x),
                 static_cast<int>(rect1.height * s1->y)};
+            if (tmp1.width < 0) {
+                tmp1.width = -tmp1.width;
+                tmp1.x -= tmp1.width;
+            }
+            if (tmp1.height < 0) {
+                tmp1.height = -tmp1.height;
+                tmp1.y -= tmp1.height;
+            }
 
             for (auto rect2 : hitbox2)
             {
+
                 Hitbox::floatRect tmp2 = {
                     static_cast<int>(rect2.x * s2->x + pos2->x),
                     static_cast<int>(rect2.y * s2->y + pos2->y),
                     static_cast<int>(rect2.width * s2->x),
                     static_cast<int>(rect2.height * s2->y)};
-                if (tmp1.x < tmp2.x + tmp2.width &&
-                    tmp1.x + tmp1.width > tmp2.x &&
-                    tmp1.y < tmp2.y + tmp2.height &&
-                    tmp1.y + tmp1.height > tmp2.y)
+                if (tmp2.width < 0) {
+                    tmp2.width = -tmp2.width;
+                    tmp2.x -= tmp2.width;
+                }
+                if (tmp2.height < 0) {
+                    tmp2.height = -tmp2.height;
+                    tmp2.y -= tmp2.height;
+                }
+                if (tmp1.x + tmp1.width >= tmp2.x &&
+                    tmp1.x <= tmp2.x + tmp2.width &&
+                    tmp1.y + tmp1.height >= tmp2.y &&
+                    tmp1.y <= tmp2.y + tmp2.height)
                 {
                     return true;
                 }
@@ -110,7 +127,6 @@ namespace Haze
                         auto scale2 = static_cast<Scale *>(componentList->getComponent("Scale", j));
                         if (isColiding(size1->hitbox, size2->hitbox, scale1, scale2, position1, position2))
                         {
-                printf("test\n");
                             CollisionHandling(componentList, i, j);
                         }
                     }
