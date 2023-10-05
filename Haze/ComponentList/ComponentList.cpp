@@ -19,9 +19,9 @@ namespace Haze
 
     void ComponentList::addComponent(Component *component, size_t id)
     {
-        if (_componentList[component->getType()].size() == 0)
-        {
-            return;
+        printf("add component %s\n", component->getType().c_str());
+        if (find(_componentName.begin(), _componentName.end(), component->getType()) == _componentName.end()) {
+            addList(component->getType());
         }
         _componentList[component->getType()][id] = std::unique_ptr<Component>(component);
     }
@@ -41,6 +41,10 @@ namespace Haze
 
     Component *ComponentList::getComponent(std::string type, size_t id)
     {
+        if (find(_componentName.begin(), _componentName.end(), type) == _componentName.end()) {
+            addList(type);
+            return nullptr;
+        }
         return std::move(_componentList[type][id].get());
     }
 

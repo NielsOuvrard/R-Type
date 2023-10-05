@@ -112,15 +112,15 @@ namespace Haze
 
     struct Hitbox : public Component
     {
-        struct floatRect
+        struct intRect
         {
             int x;
             int y;
             int width;
             int height;
         };
-        Hitbox(std::vector<floatRect> hitbox) : hitbox(hitbox) {}
-        std::vector<floatRect> hitbox;
+        Hitbox(std::vector<intRect> hitbox) : hitbox(hitbox) {}
+        std::vector<intRect> hitbox;
         std::string getType() const override { return "Hitbox"; }
         void show() const override { std::cout << "Hitbox: " << std::endl; }
     };

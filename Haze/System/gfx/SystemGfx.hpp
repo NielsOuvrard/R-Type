@@ -14,9 +14,9 @@
 namespace Haze
 {
     void ScaleSystem(ComponentList *componentList);
+    void AnimateSystem(ComponentList *componentList);
     void RenderSystem(ComponentList *componentList);
+    void PullEvent(ComponentList *componentList);
     void DisplaySystem(ComponentList *componentList);
     void ClearSystem(ComponentList *componentList);
-    void SplitSpriteSystem(ComponentList *componentList);
-    void PullEvent(ComponentList *componentList);
 }

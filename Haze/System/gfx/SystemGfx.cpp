@@ -90,16 +90,44 @@ namespace Haze
         }
     }
 
-    void SplitSpriteSystem(ComponentList *componentList)
+    void AnimateSystem(ComponentList *componentList)
     {
         for (int i = 0; i < componentList->getSize(); i++)
         {
-            if (componentList->getComponent("SplitSprite", i) != nullptr &&
+            if (componentList->getComponent("Animation", i) != nullptr &&
                 componentList->getComponent("Sprite", i) != nullptr)
             {
-                auto splitSprite = static_cast<SplitSprite *>(componentList->getComponent("SplitSprite", i));
+                auto animation = static_cast<Animation *>(componentList->getComponent("Animation", i));
                 auto sprite = static_cast<Sprite *>(componentList->getComponent("Sprite", i));
-                sprite->sprite.setTextureRect(sf::IntRect(splitSprite->x, splitSprite->y, splitSprite->width, splitSprite->height));
+                if (std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - animation->lastAnimation).count() > animation->tics)
+                {
+                    animation->lastAnimation = std::chrono::high_resolution_clock::now();
+                    if (animation->type == Animation::BOOMERANG) {
+                        if (animation->direction == true) {
+                            animation->currentFrame++;
+                        } else {
+                            animation->currentFrame--;
+                        }
+                        if (animation->currentFrame == animation->frames.size() - 1) {
+                            animation->direction = false;
+                        } else if (animation->currentFrame == 0) {
+                            animation->direction = true;
+                        }
+                    } else if (animation->type == Animation::LOOP) {
+                        if (animation->direction == true) {
+                            animation->currentFrame++;
+                        } else {
+                            animation->currentFrame--;
+                        }
+                        if (animation->currentFrame == animation->frames.size()) {
+                            animation->currentFrame = 0;
+                        }
+                    }
+                }
+                sprite->sprite.setTextureRect(sf::IntRect(animation->frames[animation->currentFrame].x,
+                                                        animation->frames[animation->currentFrame].y,
+                                                        animation->frames[animation->currentFrame].width,
+                                                        animation->frames[animation->currentFrame].height));
             }
         }
     }
