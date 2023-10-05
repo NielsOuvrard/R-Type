@@ -39,6 +39,8 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(sfml)
 
+add_subdirectory(Network)
+add_subdirectory(NetworkTest)
 add_subdirectory(Haze)
 add_subdirectory(Server)
 add_subdirectory(Client)
