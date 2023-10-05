@@ -18,4 +18,5 @@ namespace Haze
     void DisplaySystem(ComponentList *componentList);
     void ClearSystem(ComponentList *componentList);
     void SplitSpriteSystem(ComponentList *componentList);
+    void PullEvent(ComponentList *componentList);
 }

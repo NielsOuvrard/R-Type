@@ -13,6 +13,7 @@
 #include "ComponentList.hpp"
 #include "IPipeline.hpp"
 #include "CorePipeline.hpp"
+#include "inputs.hpp"
 #ifdef USE_SFML
 #include "GfxPipeline.hpp"
 #endif

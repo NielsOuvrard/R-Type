@@ -43,7 +43,6 @@ class Rttype
         char isMoving = '\0';
         void keyPress();
         void keyRelease();
-        void moveSpaceship();
         void moveBackground();
 
 public:

@@ -12,6 +12,7 @@ namespace Haze {
     {
         _systems.push_back(ScaleSystem);
         _systems.push_back(SplitSpriteSystem);
+        _systems.push_back(PullEvent);
         _systems.push_back(RenderSystem);
         _systems.push_back(DisplaySystem);
         _systems.push_back(ClearSystem);
