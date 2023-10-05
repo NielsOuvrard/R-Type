@@ -7,3 +7,4 @@
 
 #pragma once
 #include "ComponentGfx.hpp"
+#include "inputs.hpp"

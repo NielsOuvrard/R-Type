@@ -18,10 +18,16 @@ namespace Haze
             {
                 auto position = static_cast<Position *>(componentList->getComponent("Position", i));
                 auto velocity = static_cast<Velocity *>(componentList->getComponent("Velocity", i));
-                position->oldX = position->x;
-                position->oldY = position->y;
                 position->x += velocity->x;
                 position->y += velocity->y;
+            }
+            if (componentList->getComponent("Position", i) != nullptr && componentList->getComponent("Move", i) != nullptr)
+            {
+                auto position = static_cast<Position *>(componentList->getComponent("Position", i));
+                auto move = static_cast<Move *>(componentList->getComponent("Move", i));
+                position->x += move->x;
+                position->y += move->y;
+                componentList->removeComponent("Move", i);
             }
         }
     }

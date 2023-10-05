@@ -61,6 +61,32 @@ Rttype::Rttype()
     }}));
     entitySpaceship->addComponent(new Haze::HitboxDisplay());
     entitySpaceship->addComponent(new Haze::Collision("player", infos));
+    entitySpaceship->addComponent(new Haze::OnKeyPressed( [this](int i, std::vector<Haze::InputType> components) {
+        if (std::find(components.begin(), components.end(), Haze::InputType::KEY_ENTER_INPUT) != components.end()) {
+            Haze::Entity *newVortex = engine.createEntity();
+            auto position = static_cast<Haze::Position *>(entitySpaceship->getComponent("Position"));
+            newVortex->addComponent(new Haze::Position(position->x, position->y));
+            newVortex->addComponent(new Haze::Velocity(2, 0));
+            // newVortex->addComponent(new Haze::Size(34 * 3, 34 * 3));
+            newVortex->addComponent(static_cast<Haze::Sprite *>(entityVortex->getComponent("Sprite")));
+            newVortex->addComponent(new Haze::Animation(*static_cast<Haze::Sprite *>(entityVortex->getComponent("Sprite")), 0, 0, 34, 34, 3, 1));
+        }
+
+        if (std::find(components.begin(), components.end(), Haze::InputType::KEY_UP_ARROW) != components.end()) {
+            entitySpaceship->addComponent(new Haze::Move(0, -5));
+        }
+        if (std::find(components.begin(), components.end(), Haze::InputType::KEY_LEFT_ARROW) != components.end()) {
+            entitySpaceship->addComponent(new Haze::Move(-5, 0));
+        }
+        if (std::find(components.begin(), components.end(), Haze::InputType::KEY_DOWN_ARROW) != components.end()) {
+            entitySpaceship->addComponent(new Haze::Move(0, 5));
+        }
+        if (std::find(components.begin(), components.end(), Haze::InputType::KEY_RIGHT_ARROW) != components.end()) {
+            entitySpaceship->addComponent(new Haze::Move(5, 0));
+        }
+    }));
+
+
 
     wall1 = new wall(&engine, jsonData, 0, 600);
     wall2 = new wall(&engine, jsonData, 192, 600);
@@ -83,30 +109,6 @@ Rttype::Rttype()
 
 Rttype::~Rttype()
 {
-}
-
-void Rttype::moveUp(void *component)
-{
-    auto velocity = static_cast<Haze::Velocity *>(component);
-    velocity->y -= 1;
-}
-
-void Rttype::moveDown(void *component)
-{
-    auto velocity = static_cast<Haze::Velocity *>(component);
-    velocity->y += 1;
-}
-
-void Rttype::moveLeft(void *component)
-{
-    auto velocity = static_cast<Haze::Velocity *>(component);
-    velocity->x -= 1;
-}
-
-void Rttype::moveRight(void *component)
-{
-    auto velocity = static_cast<Haze::Velocity *>(component);
-    velocity->x += 1;
 }
 
 void Rttype::keyPress()
@@ -144,53 +146,6 @@ void Rttype::keyRelease()
             isMoving = '\0';
         if (event.key.code == sf::Keyboard::Right)
             isMoving = '\0';
-    }
-}
-
-void Rttype::moveSpaceship()
-{
-    Haze::Velocity *velocityPlayer = static_cast<Haze::Velocity *>(entitySpaceship->getComponent("Velocity"));
-    Haze::Position *positionPlayer = static_cast<Haze::Position *>(entitySpaceship->getComponent("Position"));
-    if (!isMoving)
-    {
-        velocityPlayer->x = 0;
-        velocityPlayer->y = 0;
-    }
-    else if (isMoving == 'U')
-    {
-        velocityPlayer->y -= 1;
-    }
-    else if (isMoving == 'D')
-    {
-        velocityPlayer->y += 1;
-    }
-    else if (isMoving == 'L')
-    {
-        velocityPlayer->x -= 1;
-    }
-    else if (isMoving == 'R')
-    {
-        velocityPlayer->x += 1;
-    }
-    if (positionPlayer->x <= 0)
-    {
-        velocityPlayer->x = 0;
-        positionPlayer->x = 1;
-    }
-    else if (positionPlayer->y <= 0)
-    {
-        positionPlayer->y = 0;
-        velocityPlayer->y = 1;
-    }
-    else if (positionPlayer->x >= 800 - 33 * 3)
-    {
-        velocityPlayer->x = 0;
-        positionPlayer->x = 800 - 33 * 3 - 1;
-    }
-    else if (positionPlayer->y >= 600 - 18 * 3)
-    {
-        positionPlayer->y = 600 - 18 * 3 - 1;
-        velocityPlayer->y = 0;
     }
 }
 
@@ -233,27 +188,6 @@ void Rttype::run()
 {
     while (engine.isOpen())
     {
-        moveSpaceship();
-// input events
-        while (static_cast<Haze::Window *>(entityWindow->getComponent("Window"))->window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-            {
-                static_cast<Haze::Window *>(entityWindow->getComponent("Window"))->window.close();
-            }
-            if (event.key.code == sf::Keyboard::Enter)
-            {
-                Haze::Entity *newVortex = engine.createEntity();
-                auto position = static_cast<Haze::Position *>(entitySpaceship->getComponent("Position"));
-                newVortex->addComponent(new Haze::Position(position->x, position->y));
-                newVortex->addComponent(new Haze::Velocity(2, 0));
-                // newVortex->addComponent(new Haze::Size(34 * 3, 34 * 3));
-                newVortex->addComponent(static_cast<Haze::Sprite *>(entityVortex->getComponent("Sprite")));
-                newVortex->addComponent(new Haze::Animation(*static_cast<Haze::Sprite *>(entityVortex->getComponent("Sprite")), 0, 0, 34, 34, 3, 1));
-            }
-            Rttype::keyPress();
-            Rttype::keyRelease();
-        }
         Rttype::moveBackground();
         engine.update();
     }

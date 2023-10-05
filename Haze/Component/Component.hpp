@@ -30,8 +30,6 @@ namespace Haze
         Position(float x, float y) : x(x), y(y) {}
         float x;
         float y;
-        float oldX = x;
-        float oldY = y;
         std::string getType() const override { return "Position"; }
         void show() const override { std::cout << "Position: " << x << ", " << y << std::endl; }
     };
@@ -54,17 +52,13 @@ namespace Haze
         void show() const override { std::cout << "Velocity: " << x << ", " << y << std::endl; }
     };
 
-    struct VelocityOnClick : public Component // useless ?
+    struct Move : public Component
     {
-        // std::vector<std::vector<std::string>> [0] = touche, [1] = velocity x, [2] velocity y
-        VelocityOnClick(std::vector<std::vector<std::string>> directions) : diretionTop(directions[0]), diretionBot(directions[1]),
-                                                                            diretionRight(directions[2]), diretionLeft(directions[3]) {}
-        std::vector<std::string> diretionTop;
-        std::vector<std::string> diretionBot;
-        std::vector<std::string> diretionRight;
-        std::vector<std::string> diretionLeft;
-        std::string getType() const override { return "VelocityOnClick"; }
-        void show() const override { std::cout << "VelocityOnClick: flm de tout marquer mdr" << std::endl; }
+        Move(float x, float y) : x(x), y(y) {}
+        float x;
+        float y;
+        std::string getType() const override { return "Move"; }
+        void show() const override { std::cout << "Move: " << x << ", " << y << std::endl; }
     };
 
     struct Health : public Component
@@ -83,21 +77,12 @@ namespace Haze
         void show() const override { std::cout << "Damage: " << damage << std::endl; }
     };
 
-    // will be use in move system
     struct Speed : public Component
     {
         Speed(int speed) : speed(speed) {}
         int speed;
         std::string getType() const override { return "Speed"; }
         void show() const override { std::cout << "Speed: " << speed << std::endl; }
-    };
-
-    struct Inputs : public Component // useless ?
-    {
-        Inputs(int inputs) : inputs(inputs) {}
-        int inputs;
-        std::string getType() const override { return "Inputs"; }
-        void show() const override { std::cout << "Inputs: " << inputs << std::endl; }
     };
 
     struct Collision : public Component

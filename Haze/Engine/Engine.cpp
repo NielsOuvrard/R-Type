@@ -35,10 +35,17 @@ namespace Haze
         _componentList->addList("Collision");
         _componentList->addList("SplitSprite");
         _componentList->addList("HitboxDisplay");
+        _componentList->addList("Move");
 
-        _pipelines.push_back(std::make_unique< CorePipeline>());
+        _componentList->addList("OnKeyPressed");
+        _componentList->addList("OnKeyReleased");
+        _componentList->addList("OnMousePressed");
+        _componentList->addList("OnMouseReleased");
+
+
+        _pipelines.push_back(std::make_unique<CorePipeline>());
         #ifdef USE_SFML
-        _pipelines.push_back(std::make_unique< GfxPipeline>());
+        _pipelines.push_back(std::make_unique<GfxPipeline>());
         #endif
     }
 
