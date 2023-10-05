@@ -63,11 +63,11 @@ namespace Haze
         }
     }
 
-    bool isColiding(std::vector<Hitbox::floatRect> hitbox1, std::vector<Hitbox::floatRect> hitbox2, Scale *s1, Scale *s2, Position *pos1, Position *pos2)
+    bool isColiding(std::vector<Hitbox::intRect> hitbox1, std::vector<Hitbox::intRect> hitbox2, Scale *s1, Scale *s2, Position *pos1, Position *pos2)
     {
         for (auto rect1 : hitbox1)
         {
-            Hitbox::floatRect tmp1 = {
+            Hitbox::intRect tmp1 = {
                 static_cast<int>(rect1.x * s1->x + pos1->x),
                 static_cast<int>(rect1.y * s1->y + pos1->y),
                 static_cast<int>(rect1.width * s1->x),
@@ -84,7 +84,7 @@ namespace Haze
             for (auto rect2 : hitbox2)
             {
 
-                Hitbox::floatRect tmp2 = {
+                Hitbox::intRect tmp2 = {
                     static_cast<int>(rect2.x * s2->x + pos2->x),
                     static_cast<int>(rect2.y * s2->y + pos2->y),
                     static_cast<int>(rect2.width * s2->x),

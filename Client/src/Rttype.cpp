@@ -49,13 +49,25 @@ Rttype::Rttype()
     entityVortex->addComponent(new Haze::Velocity(2, 0));
     entityVortex->addComponent(new Haze::Scale(3, 3));
     entityVortex->addComponent(vortexSprite);
-    entityVortex->addComponent(new Haze::Animation(*vortexSprite, 0, 0, 34, 34, 3, 1));
+    // entityVortex->addComponent(new Haze::Animation(*vortexSprite, 0, 0, 34, 34, 3, 1));
+    entityVortex->addComponent(new Haze::Animation({
+            {0, 0, 34, 34},
+            {34, 0, 34, 34},
+            {68, 0, 34, 34}
+        }, Haze::Animation::AnimationType::LOOP, true, 0.2));
 
     entitySpaceship->addComponent(velocityPlayer);
     entitySpaceship->addComponent(new Haze::Position(100, 200));
     entitySpaceship->addComponent(new Haze::Scale(3, 3));
     entitySpaceship->addComponent(spaceshipSprite);
-    entitySpaceship->addComponent(new Haze::Animation(*spaceshipSprite, 100, 0, 33, 18, 5, 1, true));
+    // entitySpaceship->addComponent(new Haze::Animation(*spaceshipSprite, 100, 0, 33, 18, 5, 1, true));
+    entitySpaceship->addComponent(new Haze::Animation({
+            {100, 0, 33, 18},
+            {133, 0, 33, 18},
+            {166, 0, 33, 18},
+            {199, 0, 33, 18},
+            {232, 0, 33, 18}
+        }, Haze::Animation::AnimationType::BOOMERANG, true, 0.2));
     entitySpaceship->addComponent(new Haze::Hitbox({{
         0, 0, 32, 14
     }}));
@@ -67,9 +79,12 @@ Rttype::Rttype()
             auto position = static_cast<Haze::Position *>(entitySpaceship->getComponent("Position"));
             newVortex->addComponent(new Haze::Position(position->x, position->y));
             newVortex->addComponent(new Haze::Velocity(2, 0));
-            // newVortex->addComponent(new Haze::Size(34 * 3, 34 * 3));
             newVortex->addComponent(static_cast<Haze::Sprite *>(entityVortex->getComponent("Sprite")));
-            newVortex->addComponent(new Haze::Animation(*static_cast<Haze::Sprite *>(entityVortex->getComponent("Sprite")), 0, 0, 34, 34, 3, 1));
+            newVortex->addComponent(new Haze::Animation({
+                    {0, 0, 34, 34},
+                    {34, 0, 34, 34},
+                    {68, 0, 34, 34}
+                }, Haze::Animation::AnimationType::LOOP, true, 0.2));
         }
 
         if (std::find(components.begin(), components.end(), Haze::InputType::KEY_UP_ARROW) != components.end()) {
@@ -97,7 +112,17 @@ Rttype::Rttype()
     entityEnnemy->addComponent(new Haze::Position(500, 200));
     entityEnnemy->addComponent(new Haze::Velocity(0, 0));
     entityEnnemy->addComponent(new Haze::Scale(3, 3));
-    entityEnnemy->addComponent(new Haze::Animation(*ennemySprite, 0, 0, 33, 36, 8, 1, true));
+    // entityEnnemy->addComponent(new Haze::Animation(*ennemySprite, 0, 0, 33, 36, 8, 1, true));
+    entityEnnemy->addComponent(new Haze::Animation({
+            {0, 0, 33, 36},
+            {33, 0, 33, 36},
+            {66, 0, 33, 36},
+            {99, 0, 33, 36},
+            {132, 0, 33, 36},
+            {165, 0, 33, 36},
+            {198, 0, 33, 36},
+            {231, 0, 33, 36}
+        }, Haze::Animation::AnimationType::BOOMERANG, true, 0.2));
     entityEnnemy->addComponent(ennemySprite);
 
 

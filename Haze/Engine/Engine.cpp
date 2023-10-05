@@ -20,29 +20,6 @@ namespace Haze
     void Engine::init()
     {
         _componentList = new ComponentList();
-        _componentList->addList("Scale");
-        _componentList->addList("Hitbox");
-        _componentList->addList("Damage");
-        _componentList->addList("Health");
-        _componentList->addList("Position");
-        _componentList->addList("Velocity");
-        _componentList->addList("Sprite");
-        _componentList->addList("Window");
-        _componentList->addList("LifeTime");
-        _componentList->addList("VelocityOnClick");
-        _componentList->addList("Animation");
-        _componentList->addList("SplitSprite");
-        _componentList->addList("Collision");
-        _componentList->addList("SplitSprite");
-        _componentList->addList("HitboxDisplay");
-        _componentList->addList("Move");
-
-        _componentList->addList("OnKeyPressed");
-        _componentList->addList("OnKeyReleased");
-        _componentList->addList("OnMousePressed");
-        _componentList->addList("OnMouseReleased");
-
-
         _pipelines.push_back(std::make_unique<CorePipeline>());
         #ifdef USE_SFML
         _pipelines.push_back(std::make_unique<GfxPipeline>());

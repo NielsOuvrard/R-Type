@@ -14,13 +14,6 @@
 
 namespace Haze
 {
-    struct Animation;
-}
-
-static void animateThread(int interval_ms, int duration_sec, Haze::Animation *animation);
-
-namespace Haze
-{
     struct Sprite : public Component
     {
         Sprite(std::string path) : path(path)
@@ -32,7 +25,6 @@ namespace Haze
         std::string path;
         sf::Sprite sprite;
         sf::Texture texture;
-        void setTextureRect(sf::IntRect rect) { sprite.setTextureRect(rect); }
         std::string getType() const override
         {
             return "Sprite";
@@ -42,49 +34,47 @@ namespace Haze
 
     struct Animation : public Component
     {
-        Animation(Haze::Sprite &sprite, size_t x, size_t y, size_t width, size_t height, size_t nbFramesX, size_t nbFramesY, bool boomerang = false)
-            : sprite(sprite), x(x), y(y), width(width), height(height), nbFramesX(nbFramesX), nbFramesY(nbFramesY), currentFrame(0), boomerang(boomerang), moveUp(true)
+        enum AnimationType
         {
-            sprite.setTextureRect(sf::IntRect(x, y, width, height));
-            tics = 0.5;
-            lastAnimation = std::chrono::high_resolution_clock::now();
-            int interval_ms = 100;
-            int duration_sec = 50;
-            animation_thread = std::thread(animateThread, interval_ms, duration_sec, this);
-            animation_thread.detach();
+            LOOP,
+            BOOMERANG,
+            ONCE
+        };
+        struct intRect
+        {
+            int x;
+            int y;
+            int width;
+            int height;
+        };
+        Animation(std::vector<intRect> frames, AnimationType type, bool direction, double tics) : frames(frames), type(type), tics(tics), direction(direction)
+        {
         }
-        std::thread animation_thread;
-        Haze::Sprite &sprite;
-        std::chrono::time_point<std::chrono::high_resolution_clock> lastAnimation;
+        std::vector<intRect> frames;
+        AnimationType type = AnimationType::LOOP;
         double tics;
-        size_t x;
-        size_t y;
-        size_t width;
-        size_t height;
-        size_t nbFramesX;
-        size_t nbFramesY;
-        size_t currentFrame;
-        bool boomerang;
-        bool moveUp;
+        size_t currentFrame = 0;
+        bool direction = true;
+        std::chrono::time_point<std::chrono::high_resolution_clock> lastAnimation = std::chrono::high_resolution_clock::now();
         std::string getType() const override { return "Animation"; }
         void show() const override { std::cout << "Animation: " << std::endl; }
     };
 
-    struct SplitSprite : public Component
-    {
-        SplitSprite(Haze::Sprite &sprite, size_t x, size_t y, size_t width, size_t height)
-            : sprite(sprite), x(x), y(y), width(width), height(height)
-        {
-            sprite.setTextureRect(sf::IntRect(x, y, width, height));
-        }
-        Haze::Sprite &sprite;
-        size_t x;
-        size_t y;
-        size_t width;
-        size_t height;
-        std::string getType() const override { return "SplitSprite"; }
-        void show() const override { std::cout << "SplitSprite: " << std::endl; }
-    };
+    // struct SplitSprite : public Component
+    // {
+    //     SplitSprite(Haze::Sprite &sprite, size_t x, size_t y, size_t width, size_t height)
+    //         : sprite(sprite), x(x), y(y), width(width), height(height)
+    //     {
+    //         sprite.sprite.setTextureRect(sf::IntRect(x, y, width, height));
+    //     }
+    //     Haze::Sprite &sprite;
+    //     size_t x;
+    //     size_t y;
+    //     size_t width;
+    //     size_t height;
+    //     std::string getType() const override { return "SplitSprite"; }
+    //     void show() const override { std::cout << "SplitSprite: " << std::endl; }
+    // };
 
     struct Window : public Component
     {
@@ -169,51 +159,51 @@ namespace Haze
 }
 
 // ? all useless with SFML
-static void animateThread(int interval_ms, int duration_sec, Haze::Animation *animation)
-{
-    auto start_time = std::chrono::high_resolution_clock::now();
-    while (true)
-    {
-        auto current_time = std::chrono::high_resolution_clock::now();
-        auto elapsed_time = std::chrono::duration_cast<std::chrono::milliseconds>(current_time - start_time).count();
+// static void animateThread(int interval_ms, int duration_sec, Haze::Animation *animation, Haze::Sprite *sprite)
+// {
+//     auto start_time = std::chrono::high_resolution_clock::now();
+//     while (true)
+//     {
+//         auto current_time = std::chrono::high_resolution_clock::now();
+//         auto elapsed_time = std::chrono::duration_cast<std::chrono::milliseconds>(current_time - start_time).count();
 
-        if (elapsed_time >= duration_sec * 1000)
-        {
-            break; // Exit the animation loop after the specified duration
-        }
+//         if (elapsed_time >= duration_sec * 1000)
+//         {
+//             break; // Exit the animation loop after the specified duration
+//         }
 
-        // Animate the sprite
-        if (animation->boomerang)
-        {
-            if (animation->moveUp)
-            {
-                animation->currentFrame++;
-            }
-            else
-            {
-                animation->currentFrame--;
-            }
-            if (animation->currentFrame == animation->nbFramesX - 1)
-            {
-                animation->moveUp = false;
-            }
-            if (animation->currentFrame == 0)
-            {
-                animation->moveUp = true;
-            }
-        }
-        else
-        {
-            if (animation->currentFrame == animation->nbFramesX - 1)
-            {
-                animation->currentFrame = 0;
-            }
-            else
-            {
-                animation->currentFrame++;
-            }
-        }
-        animation->sprite.setTextureRect(sf::IntRect(animation->x + (animation->currentFrame * animation->width), animation->y, animation->width, animation->height));
-        std::this_thread::sleep_for(std::chrono::milliseconds(interval_ms));
-    }
-}
+//         // Animate the sprite
+//         if (animation->boomerang)
+//         {
+//             if (animation->moveUp)
+//             {
+//                 animation->currentFrame++;
+//             }
+//             else
+//             {
+//                 animation->currentFrame--;
+//             }
+//             if (animation->currentFrame == animation->nbFramesX - 1)
+//             {
+//                 animation->moveUp = false;
+//             }
+//             if (animation->currentFrame == 0)
+//             {
+//                 animation->moveUp = true;
+//             }
+//         }
+//         else
+//         {
+//             if (animation->currentFrame == animation->nbFramesX - 1)
+//             {
+//                 animation->currentFrame = 0;
+//             }
+//             else
+//             {
+//                 animation->currentFrame++;
+//             }
+//         }
+//         sprite->sprite.setTextureRect(sf::IntRect(animation->x + (animation->currentFrame * animation->width), animation->y, animation->width, animation->height));
+//         std::this_thread::sleep_for(std::chrono::milliseconds(interval_ms));
+//     }
+// }

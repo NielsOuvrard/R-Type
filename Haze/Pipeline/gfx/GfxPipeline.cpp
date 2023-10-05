@@ -11,7 +11,7 @@ namespace Haze {
     GfxPipeline::GfxPipeline()
     {
         _systems.push_back(ScaleSystem);
-        _systems.push_back(SplitSpriteSystem);
+        _systems.push_back(AnimateSystem);
         _systems.push_back(PullEvent);
         _systems.push_back(RenderSystem);
         _systems.push_back(DisplaySystem);
