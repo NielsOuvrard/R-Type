@@ -22,8 +22,6 @@ namespace network {
     struct datagram {
         datagram_header<T> header;
         std::array<uint8_t, 1024 - sizeof(datagram_header<T>)> body;
-
-        datagram(T id) : header.id(id) {}
     };
 
     template<typename T>
