@@ -16,7 +16,6 @@ public:
         while (std::getline(std::cin, entry)) {
             if (entry == "hello") {
                 std::cout << "Hello!" << std::endl;
-                `
             } else if (entry == "connect") {
                 if (!this->isConnected()) this->connect("127.0.0.1", 3030);
             } else if (entry == "update") {
