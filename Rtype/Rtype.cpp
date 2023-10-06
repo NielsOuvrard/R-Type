@@ -97,18 +97,27 @@ Rtype::Rtype()
                                                       Haze::Animation::AnimationType::LOOP, true, 0.2));
         }
 
+        auto velocity = static_cast<Haze::Velocity *>(entitySpaceship->getComponent("Velocity"));
+        if (velocity == nullptr)
+            entitySpaceship->addComponent(new Haze::Velocity(0, 0));
+        velocity->x = 0;
+        velocity->y = 0;
+
         if (std::find(components.begin(), components.end(), Haze::InputType::KEY_UP_ARROW) != components.end()) {
-            entitySpaceship->addComponent(new Haze::Move(0, -5));
+            velocity->y += -5;
         }
         if (std::find(components.begin(), components.end(), Haze::InputType::KEY_LEFT_ARROW) != components.end()) {
-            entitySpaceship->addComponent(new Haze::Move(-5, 0));
+            velocity->x += -5;
         }
         if (std::find(components.begin(), components.end(), Haze::InputType::KEY_DOWN_ARROW) != components.end()) {
-            entitySpaceship->addComponent(new Haze::Move(0, 5));
+            velocity->y += 5;
         }
         if (std::find(components.begin(), components.end(), Haze::InputType::KEY_RIGHT_ARROW) != components.end()) {
-            entitySpaceship->addComponent(new Haze::Move(5, 0));
-        } }));
+            velocity->x += 5;
+        }
+    }));
+
+
 
     wall1 = new wall(&engine, jsonData, 0, 600);
     wall2 = new wall(&engine, jsonData, 192, 600);

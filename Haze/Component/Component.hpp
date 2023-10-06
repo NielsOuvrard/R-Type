@@ -77,14 +77,6 @@ namespace Haze
         void show() const override { std::cout << "Damage: " << damage << std::endl; }
     };
 
-    struct Speed : public Component
-    {
-        Speed(int speed) : speed(speed) {}
-        int speed;
-        std::string getType() const override { return "Speed"; }
-        void show() const override { std::cout << "Speed: " << speed << std::endl; }
-    };
-
     struct Collision : public Component
     {
         enum CollisionType

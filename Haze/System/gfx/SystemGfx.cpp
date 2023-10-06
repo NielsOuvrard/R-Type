@@ -61,6 +61,18 @@ namespace Haze
                             window->window.draw(hitboxDisplay->rect);
                         }
                     }
+
+                    if (componentList->getComponent("Text", j) != nullptr &&
+                        componentList->getComponent("Position", j) != nullptr &&
+                        componentList->getComponent("Scale", j) != nullptr)
+                    {
+                        auto text = static_cast<Text *>(componentList->getComponent("Text", j));
+                        auto position = static_cast<Position *>(componentList->getComponent("Position", j));
+                        auto scale = static_cast<Scale *>(componentList->getComponent("Scale", j));
+                        text->textObj.setPosition(position->x, position->y);
+                        text->textObj.setScale(scale->x, scale->y);
+                        window->window.draw(text->textObj);
+                    }
                 }
             }
         }
