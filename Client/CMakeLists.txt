@@ -5,7 +5,6 @@ project(r-type-client)
 set(
     SOURCES
     src/main.cpp
-    src/Rtype.cpp
     src/wall.cpp
 )
 set(CMAKE_CXX_STANDARD 17)
