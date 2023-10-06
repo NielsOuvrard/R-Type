@@ -14,12 +14,12 @@
 
 #include "Component.hpp"
 #include <haze-core.hpp>
-#include "./Rttype.hpp"
+#include "./Rtype.hpp"
 
 int main()
 {
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
-    Rttype rtype;
+    Rtype rtype;
     rtype.run();
     return 0;
 }
