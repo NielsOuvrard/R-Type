@@ -31,11 +31,12 @@ namespace Haze {
 
     struct info_entity {
         id_entity id;
-        // std::vector<Component> components;
+        std::vector<std::string> components;
     };
 
     struct info_component {
-        // Component component;
+        std::string component;
+        std::vector<uint8_t> data = std::vector<uint8_t>(128);
     };
 
     struct info_entities {
