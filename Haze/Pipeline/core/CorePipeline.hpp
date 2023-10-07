@@ -7,18 +7,21 @@
 
 
 #pragma once
-#define GFX
 #include "IPipeline.hpp"
 #include "SystemCore.hpp"
+#include "Engine.hpp"
 
 namespace Haze
 {
     class CorePipeline : public APipeline {
         public:
-            CorePipeline();
+            CorePipeline(Engine *engine);
             ~CorePipeline();
+            ComponentList *getComponentList() { return _engine->getComponentList(); }
+            info_inputs *getInputs() { return _engine->getInfoInputs(); }
 
         protected:
         private:
+            Engine *_engine;
     };
 }

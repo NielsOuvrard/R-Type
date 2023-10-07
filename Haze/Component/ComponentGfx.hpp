@@ -79,50 +79,6 @@ namespace Haze
         void show() const override { std::cout << "Window: " << width << ", " << height << std::endl; }
     };
 
-    struct OnKeyPressed : public Component
-    {
-        OnKeyPressed(std::function<void(int, std::vector<InputType>)> callback) : callback(callback) {}
-        std::function<void(int, std::vector<InputType>)> callback;
-        std::string getType() const override
-        {
-            return "OnKeyPressed";
-        }
-        void show() const override { std::cout << "OnKeyPressed" << std::endl; }
-    };
-
-    struct OnKeyReleased : public Component
-    {
-        OnKeyReleased(std::function<void(int, std::vector<InputType>)> callback) : callback(callback) {}
-        std::function<void(int, std::vector<InputType>)> callback;
-        std::string getType() const override
-        {
-            return "OnKeyReleased";
-        }
-        void show() const override { std::cout << "OnKeyReleased" << std::endl; }
-    };
-
-    struct OnMousePressed : public Component
-    {
-        OnMousePressed(std::function<void(int)> callback) : callback(callback) {}
-        std::function<void(int)> callback;
-        std::string getType() const override
-        {
-            return "OnMousePressed";
-        }
-        void show() const override { std::cout << "OnMousePressed" << std::endl; }
-    };
-
-    struct OnMouseReleased : public Component
-    {
-        OnMouseReleased(std::function<void(int)> callback) : callback(callback) {}
-        std::function<void(int)> callback;
-        std::string getType() const override
-        {
-            return "OnMouseReleased";
-        }
-        void show() const override { std::cout << "OnMouseReleased" << std::endl; }
-    };
-
     struct HitboxDisplay : public Component
     {
         HitboxDisplay()

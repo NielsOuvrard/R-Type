@@ -9,6 +9,7 @@
 #include <vector>
 #include <functional>
 #include "ComponentList.hpp"
+#include "protocol.hpp"
 
 namespace Haze
 {
@@ -16,6 +17,8 @@ namespace Haze
         public:
             virtual ~IPipeline() = default;
             virtual void runSystem(ComponentList *components) = 0;
+            virtual ComponentList *getComponentList() = 0;
+            virtual info_inputs *getInputs() = 0;
 
         protected:
         private:
@@ -26,11 +29,11 @@ namespace Haze
             void runSystem(ComponentList *components)
             {
                 for (auto &system : _systems)
-                    system(components);
+                    system(getComponentList(), getInputs());
             }
 
         protected:
-            std::vector<std::function<void(ComponentList *)>> _systems;
+            std::vector<std::function<void(ComponentList *, info_inputs *)>> _systems;
         private:
     };
 }

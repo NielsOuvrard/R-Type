@@ -10,7 +10,9 @@
 #include <string>
 #include <map>
 #include "Component.hpp"
+#ifdef USE_SFML
 #include "ComponentGfx.hpp"
+#endif
 
 namespace Haze
 {
@@ -59,6 +61,12 @@ namespace Haze
         std::string path;
     };
 
+    struct WindowData {
+        int width;
+        int height;
+    };
+
+    #ifdef USE_SFML
     struct AnimationData {
         std::vector<Animation::intRect> frames;
         Animation::AnimationType type;
@@ -66,13 +74,9 @@ namespace Haze
         double tics;
     };
 
-    struct WindowData {
-        int width;
-        int height;
-    };
-
     struct TextData {
         std::string text;
         sf::Color color;
     };
+    #endif
 }

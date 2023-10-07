@@ -8,11 +8,14 @@
 #pragma once
 #include "Entity.hpp"
 #include "ComponentList.hpp"
+#include "protocol.hpp"
+#include <chrono>
 #include <vector>
 
 namespace Haze
 {
-    void MoveSystem(ComponentList *componentList);
-    void CollisionSystem(ComponentList *componentList);
-    void DestroyEntity (ComponentList *componentList);
+    void useInputs(ComponentList *componentList, info_inputs *inputs);
+    void MoveSystem(ComponentList *componentList, info_inputs *inputs);
+    void CollisionSystem(ComponentList *componentList, info_inputs *inputs);
+    void DestroyEntity (ComponentList *componentList, info_inputs *inputs);
 }
