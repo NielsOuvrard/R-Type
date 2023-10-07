@@ -29,6 +29,7 @@ namespace Haze
         void removeEntity(size_t id);
         void removeEntity(Entity *entity);
         bool isOpen();
+        void setInfoInputs(info_inputs info);
         ComponentList *getComponentList() { return _componentList; }
         info_inputs *getInfoInputs() { return &_info_inputs; }
 

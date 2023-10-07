@@ -80,4 +80,9 @@ namespace Haze
         _entities[entity->getId()] = nullptr;
         _componentList->removeEntity(entity->getId());
     }
+
+    void Engine::setInfoInputs(info_inputs info)
+    {
+        _info_inputs = info;
+    }
 }
