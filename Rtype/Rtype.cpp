@@ -10,7 +10,7 @@
 Rtype::Rtype()
 {
     engine.init();
-    std::ifstream inputFile("Client/SpritesMooves/ground.json");
+    std::ifstream inputFile("Rtype/SpritesMooves/ground.json");
     if (inputFile.is_open())
     {
         inputFile >> jsonData;
