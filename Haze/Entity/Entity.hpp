@@ -16,14 +16,11 @@ namespace Haze
     class Entity
     {
     public:
-        Entity();
+        Entity(ComponentList *componentList, size_t _id);
         ~Entity();
-        void setComponentList(ComponentList *componentList);
-        void setId(size_t id);
         void addComponent(Component *component);
         void removeComponent(std::string type);
         Component *getComponent(std::string type);
-        void showComponents();
         size_t getId() const { return _id; };
 
     private:

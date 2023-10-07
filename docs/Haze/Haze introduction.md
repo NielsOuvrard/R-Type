@@ -1,4 +1,4 @@
-
+## Getting Started
 To get started with the Haze Engine, follow these steps:
 
 1. Include the necessary header files:
@@ -47,7 +47,11 @@ while (engine.isOpen())
 ```
 
 ## Components
+Component of the **haze-core** lib are at:
+[[Component]]
 
+Component of the **haze-graphics** lib are at:
+[[ComponentGfx]]
 
 ## Example Usage
 Here's an example of how to use the Haze Engine to create a simple game loop:

@@ -10,20 +10,20 @@
 namespace Haze
 {
 
-    void useInputs(ComponentList *componentList, info_inputs *inputs)
+    void useInputs(ComponentList *componentList, std::vector<info_inputs> *inputs)
     {
-        std::cout << "x: " << inputs->x << " y: " << inputs->y << "type: " << inputs->mouseType << std::endl;
         for (int i = 0; i < componentList->getSize(); i++) {
             if (componentList->getComponent("OnKeyPressed", i) != nullptr) {
                 auto onKeyPressed = static_cast<OnKeyPressed *>(componentList->getComponent("OnKeyPressed", i));
-                onKeyPressed->callback(i, inputs->inputsPressed);
+                if (onKeyPressed->player < inputs->size())
+                    onKeyPressed->callback(i, inputs->at(onKeyPressed->player).inputsPressed);
             }
             if (componentList->getComponent("OnKeyReleased", i) != nullptr) {
                 auto onKeyReleased = static_cast<OnKeyReleased *>(componentList->getComponent("OnKeyReleased", i));
-                onKeyReleased->callback(i, inputs->inputsPressed);
+                if (onKeyReleased->player < inputs->size())
+                    onKeyReleased->callback(i, inputs->at(onKeyReleased->player).inputsPressed);
             }
-            if (inputs->mouseType == PRESSED &&
-                componentList->getComponent("OnMousePressed", i) != nullptr &&
+            if (componentList->getComponent("OnMousePressed", i) != nullptr &&
                 componentList->getComponent("Position", i) != nullptr &&
                 componentList->getComponent("Hitbox", i) != nullptr &&
                 componentList->getComponent("Scale", i) != nullptr) {
@@ -31,17 +31,19 @@ namespace Haze
                 auto position = static_cast<Position *>(componentList->getComponent("Position", i));
                 auto hitbox = static_cast<Hitbox *>(componentList->getComponent("Hitbox", i));
                 auto scale = static_cast<Scale *>(componentList->getComponent("Scale", i));
-                for (int j = 0; j < hitbox->hitbox.size(); j++) {
-                    if (inputs->x >= hitbox->hitbox[j].x * scale->x + position->x &&
-                        inputs->x <= hitbox->hitbox[j].x * scale->x + position->x + hitbox->hitbox[j].width * scale->x &&
-                        inputs->y >= hitbox->hitbox[j].y * scale->y + position->y &&
-                        inputs->y <= hitbox->hitbox[j].y * scale->y + position->y + hitbox->hitbox[j].height * scale->y) {
-                        onMousePressed->callback(i);
+
+                if (onMousePressed->player < inputs->size() && inputs->at(onMousePressed->player).mouseType == PRESSED) {
+                    for (int j = 0; j < hitbox->hitbox.size(); j++) {
+                        if (inputs->at(onMousePressed->player).x >= hitbox->hitbox[j].x * scale->x + position->x &&
+                            inputs->at(onMousePressed->player).x <= hitbox->hitbox[j].x * scale->x + position->x + hitbox->hitbox[j].width * scale->x &&
+                            inputs->at(onMousePressed->player).y >= hitbox->hitbox[j].y * scale->y + position->y &&
+                            inputs->at(onMousePressed->player).y <= hitbox->hitbox[j].y * scale->y + position->y + hitbox->hitbox[j].height * scale->y) {
+                            onMousePressed->callback(i);
+                        }
                     }
                 }
             }
-            if (inputs->mouseType == RELEASED &&
-                componentList->getComponent("OnMouseReleased", i) != nullptr &&
+            if (componentList->getComponent("OnMouseReleased", i) != nullptr &&
                 componentList->getComponent("Position", i) != nullptr &&
                 componentList->getComponent("Hitbox", i) != nullptr &&
                 componentList->getComponent("Scale", i) != nullptr) {
@@ -49,19 +51,21 @@ namespace Haze
                 auto position = static_cast<Position *>(componentList->getComponent("Position", i));
                 auto hitbox = static_cast<Hitbox *>(componentList->getComponent("Hitbox", i));
                 auto scale = static_cast<Scale *>(componentList->getComponent("Scale", i));
-                for (int j = 0; j < hitbox->hitbox.size(); j++) {
-                    if (inputs->x >= hitbox->hitbox[j].x * scale->x + position->x &&
-                        inputs->x <= hitbox->hitbox[j].x * scale->x + position->x + hitbox->hitbox[j].width * scale->x &&
-                        inputs->y >= hitbox->hitbox[j].y * scale->y + position->y &&
-                        inputs->y <= hitbox->hitbox[j].y * scale->y + position->y + hitbox->hitbox[j].height * scale->y) {
-                        onMouseReleased->callback(i);
+                if (onMouseReleased->player < inputs->size() && inputs->at(onMouseReleased->player).mouseType == RELEASED) {
+                    for (int j = 0; j < hitbox->hitbox.size(); j++) {
+                        if (inputs->at(onMouseReleased->player).x >= hitbox->hitbox[j].x * scale->x + position->x &&
+                            inputs->at(onMouseReleased->player).x <= hitbox->hitbox[j].x * scale->x + position->x + hitbox->hitbox[j].width * scale->x &&
+                            inputs->at(onMouseReleased->player).y >= hitbox->hitbox[j].y * scale->y + position->y &&
+                            inputs->at(onMouseReleased->player).y <= hitbox->hitbox[j].y * scale->y + position->y + hitbox->hitbox[j].height * scale->y) {
+                            onMouseReleased->callback(i);
+                        }
                     }
                 }
             }
         }
     }
 
-    void MoveSystem(ComponentList *componentList, info_inputs *inputs)
+    void MoveSystem(ComponentList *componentList, std::vector<info_inputs> *inputs)
     {
         for (int i = 0; i < componentList->getSize(); i++)
         {
@@ -160,7 +164,7 @@ namespace Haze
         return false;
     }
 
-    void CollisionSystem(ComponentList *componentList, info_inputs *inputs)
+    void CollisionSystem(ComponentList *componentList, std::vector<info_inputs> *inputs)
     {
         for (int i = 0; i < componentList->getSize(); i++)
         {
@@ -192,7 +196,7 @@ namespace Haze
         }
     }
 
-    void DestroyEntity(ComponentList *componentList, info_inputs *inputs)
+    void DestroyEntity(ComponentList *componentList, std::vector<info_inputs> *inputs)
     {
         for (int i = 0; i < componentList->getSize(); i++)
         {

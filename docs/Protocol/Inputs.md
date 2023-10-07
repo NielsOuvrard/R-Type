@@ -63,8 +63,6 @@ enum InputType {
     KEY_DOWN_ARROW,
     KEY_LEFT_ARROW,
     KEY_RIGHT_ARROW,
-
-    NOTHING
 };
 ```
 

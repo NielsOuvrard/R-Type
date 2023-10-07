@@ -35,7 +35,6 @@ namespace Haze
     {
         for (int i = 0; i < _pipelines.size(); i++)
             _pipelines[i]->runSystem(_componentList);
-        _tics++;
     }
 
     bool Engine::isOpen()
@@ -56,9 +55,7 @@ namespace Haze
 
     Entity *Engine::createEntity()
     {
-        Entity *entity = new Entity();
-        entity->setComponentList(_componentList);
-        entity->setId(_entities.size());
+        Entity *entity = new Entity(_componentList, _entities.size());
         _entities.push_back(std::unique_ptr<Entity>(entity));
         _componentList->addEntity();
         return entity;
@@ -66,6 +63,8 @@ namespace Haze
 
     Entity *Engine::getEntity(size_t id)
     {
+        if (id >= _entities.size())
+            return nullptr;
         return _entities[id].get();
     }
 
@@ -81,8 +80,11 @@ namespace Haze
         _componentList->removeEntity(entity->getId());
     }
 
-    void Engine::setInfoInputs(info_inputs info)
+    void Engine::setInfoInputs(info_inputs info, size_t id)
     {
-        _info_inputs = info;
+        if (id == _infoInputs.size())
+            _infoInputs.push_back(info);
+        else
+            _infoInputs[id] = info;
     }
 }
