@@ -18,7 +18,7 @@ namespace Haze
             virtual ~IPipeline() = default;
             virtual void runSystem(ComponentList *components) = 0;
             virtual ComponentList *getComponentList() = 0;
-            virtual info_inputs *getInputs() = 0;
+            virtual std::vector<info_inputs> *getInputs() = 0;
 
         protected:
         private:
@@ -33,7 +33,7 @@ namespace Haze
             }
 
         protected:
-            std::vector<std::function<void(ComponentList *, info_inputs *)>> _systems;
+            std::vector<std::function<void(ComponentList *, std::vector<info_inputs>*)>> _systems;
         private:
     };
 }

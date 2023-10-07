@@ -14,10 +14,10 @@
 
 namespace Haze
 {
-    void ScaleSystem(ComponentList *componentList, info_inputs *inputs);
-    void AnimateSystem(ComponentList *componentList, info_inputs *inputs);
-    void RenderSystem(ComponentList *componentList, info_inputs *inputs);
-    void PullEvent(ComponentList *componentList, info_inputs *inputs);
-    void DisplaySystem(ComponentList *componentList, info_inputs *inputs);
-    void ClearSystem(ComponentList *componentList, info_inputs *inputs);
+    void ScaleSystem(ComponentList *componentList, std::vector<info_inputs> *inputs);
+    void AnimateSystem(ComponentList *componentList, std::vector<info_inputs> *inputs);
+    void RenderSystem(ComponentList *componentList, std::vector<info_inputs> *inputs);
+    void PullEvent(ComponentList *componentList, std::vector<info_inputs> *inputs);
+    void DisplaySystem(ComponentList *componentList, std::vector<info_inputs> *inputs);
+    void ClearSystem(ComponentList *componentList, std::vector<info_inputs> *inputs);
 }

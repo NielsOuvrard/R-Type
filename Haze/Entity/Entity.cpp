@@ -8,7 +8,7 @@
 #include "Entity.hpp"
 
 namespace Haze {
-    Entity::Entity()
+    Entity::Entity(ComponentList *componentList, size_t id) : _componentList(componentList), _id(id)
     {
     }
 
@@ -29,23 +29,6 @@ namespace Haze {
     Component *Entity::getComponent(std::string type)
     {
         return _componentList->getComponent(type, _id);
-    }
-
-    void Entity::showComponents()
-    {
-        // for (auto *component : _components) {
-        //     std::cout << component->getType() << std::endl;
-        // }
-    }
-
-    void Entity::setComponentList(ComponentList *componentList)
-    {
-        _componentList = componentList;
-    }
-
-    void Entity::setId(size_t id)
-    {
-        _id = id;
     }
 
 }

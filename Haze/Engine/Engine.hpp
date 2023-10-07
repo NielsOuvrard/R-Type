@@ -12,7 +12,6 @@
 #include "Entity.hpp"
 #include "ComponentList.hpp"
 #include "IPipeline.hpp"
-#include "inputs.hpp"
 #include "protocol.hpp"
 
 namespace Haze
@@ -29,17 +28,15 @@ namespace Haze
         void removeEntity(size_t id);
         void removeEntity(Entity *entity);
         bool isOpen();
-        void setInfoInputs(info_inputs info);
+        void setInfoInputs(info_inputs info, size_t id);
         ComponentList *getComponentList() { return _componentList; }
-        info_inputs *getInfoInputs() { return &_info_inputs; }
+        std::vector<info_inputs> *getInfoInputs() { return &_infoInputs; }
 
     protected:
     private:
         std::vector<std::unique_ptr<Entity>> _entities;
         std::vector<std::unique_ptr<IPipeline>> _pipelines;
         ComponentList *_componentList;
-        info_inputs _info_inputs;
-
-        int _tics = 0;
+        std::vector<info_inputs> _infoInputs;
     };
 }

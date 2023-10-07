@@ -11,7 +11,7 @@
 
 namespace Haze
 {
-    void ScaleSystem(ComponentList *componentList, info_inputs *inputs)
+    void ScaleSystem(ComponentList *componentList, std::vector<info_inputs> *inputs)
     {
         for (int i = 0; i < componentList->getSize(); i++)
         {
@@ -24,7 +24,7 @@ namespace Haze
         }
     }
 
-    void RenderSystem(ComponentList *componentList, info_inputs *inputs)
+    void RenderSystem(ComponentList *componentList, std::vector<info_inputs> *inputs)
     {
         for (int i = 0; i < componentList->getSize(); i++)
         {
@@ -78,7 +78,7 @@ namespace Haze
         }
     }
 
-    void DisplaySystem(ComponentList *componentList, info_inputs *inputs)
+    void DisplaySystem(ComponentList *componentList, std::vector<info_inputs> *inputs)
     {
         for (int i = 0; i < componentList->getSize(); i++)
         {
@@ -90,7 +90,7 @@ namespace Haze
         }
     }
 
-    void ClearSystem(ComponentList *componentList, info_inputs *inputs)
+    void ClearSystem(ComponentList *componentList, std::vector<info_inputs> *inputs)
     {
         for (int i = 0; i < componentList->getSize(); i++)
         {
@@ -102,7 +102,7 @@ namespace Haze
         }
     }
 
-    void AnimateSystem(ComponentList *componentList, info_inputs *inputs)
+    void AnimateSystem(ComponentList *componentList, std::vector<info_inputs> *inputs)
     {
         for (int i = 0; i < componentList->getSize(); i++)
         {
@@ -144,19 +144,19 @@ namespace Haze
         }
     }
 
-    void PullEvent(ComponentList *componentList, info_inputs *inputs)
+    void PullEvent(ComponentList *componentList, std::vector<info_inputs> *inputs)
     {
-        std::vector<InputType> *inputsPressed = &inputs->inputsPressed;
-        std::vector<InputType> *inputsReleased = &inputs->inputsReleased;
-        int *x = &inputs->x;
-        int *y = &inputs->y;
-        MouseType *mouseType = &inputs->mouseType;
+        if (inputs->size() == 0)
+            inputs->push_back({});
+        std::vector<InputType> *inputsPressed = &inputs->at(0).inputsPressed;
+        std::vector<InputType> *inputsReleased = &inputs->at(0).inputsReleased;
+        int *x = &inputs->at(0).x;
+        int *y = &inputs->at(0).y;
+        MouseType *mouseType = &inputs->at(0).mouseType;
 
         *inputsPressed = {};
         *inputsReleased = {};
         *mouseType = MouseType::NOTHING;
-        // *x = 0;
-        // *y = 0;
         (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) ? (inputsPressed->push_back(InputType::KEY_A)) : void();
         (sf::Keyboard::isKeyPressed(sf::Keyboard::B)) ? (inputsPressed->push_back(InputType::KEY_B)) : void();
         (sf::Keyboard::isKeyPressed(sf::Keyboard::C)) ? (inputsPressed->push_back(InputType::KEY_C)) : void();

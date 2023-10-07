@@ -129,8 +129,9 @@ namespace Haze
 
     struct OnKeyPressed : public Component
     {
-        OnKeyPressed(std::function<void(int, std::vector<InputType>)> callback) : callback(callback) {}
+        OnKeyPressed(std::function<void(int, std::vector<InputType>)> callback, size_t player = 0) : callback(callback), player(player) {}
         std::function<void(int, std::vector<InputType>)> callback;
+        size_t player;
         std::string getType() const override
         {
             return "OnKeyPressed";
@@ -140,8 +141,9 @@ namespace Haze
 
     struct OnKeyReleased : public Component
     {
-        OnKeyReleased(std::function<void(int, std::vector<InputType>)> callback) : callback(callback) {}
+        OnKeyReleased(std::function<void(int, std::vector<InputType>)> callback, size_t player = 0) : callback(callback), player(player) {}
         std::function<void(int, std::vector<InputType>)> callback;
+        size_t player;
         std::string getType() const override
         {
             return "OnKeyReleased";
@@ -151,8 +153,9 @@ namespace Haze
 
     struct OnMousePressed : public Component
     {
-        OnMousePressed(std::function<void(int)> callback) : callback(callback) {}
+        OnMousePressed(std::function<void(int)> callback, size_t player = 0) : callback(callback), player(player) {}
         std::function<void(int)> callback;
+        size_t player;
         std::string getType() const override
         {
             return "OnMousePressed";
@@ -162,8 +165,9 @@ namespace Haze
 
     struct OnMouseReleased : public Component
     {
-        OnMouseReleased(std::function<void(int)> callback) : callback(callback) {}
+        OnMouseReleased(std::function<void(int)> callback, size_t player = 0) : callback(callback), player(player) {}
         std::function<void(int)> callback;
+        size_t player;
         std::string getType() const override
         {
             return "OnMouseReleased";

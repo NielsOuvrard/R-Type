@@ -36,5 +36,5 @@ Client:
 ```
 
 ## Doc
-[[Haze introduction]]
-[[Protocol]]
+[[Haze/Haze introduction]]
+[[Protocol/Protocol]]

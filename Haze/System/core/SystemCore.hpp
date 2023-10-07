@@ -14,8 +14,8 @@
 
 namespace Haze
 {
-    void useInputs(ComponentList *componentList, info_inputs *inputs);
-    void MoveSystem(ComponentList *componentList, info_inputs *inputs);
-    void CollisionSystem(ComponentList *componentList, info_inputs *inputs);
-    void DestroyEntity (ComponentList *componentList, info_inputs *inputs);
+    void useInputs(ComponentList *componentList, std::vector<info_inputs> *inputs);
+    void MoveSystem(ComponentList *componentList, std::vector<info_inputs> *inputs);
+    void CollisionSystem(ComponentList *componentList, std::vector<info_inputs> *inputs);
+    void DestroyEntity (ComponentList *componentList, std::vector<info_inputs> *inputs);
 }

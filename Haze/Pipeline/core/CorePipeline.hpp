@@ -5,7 +5,6 @@
 ** hazeGfx
 */
 
-
 #pragma once
 #include "IPipeline.hpp"
 #include "SystemCore.hpp"
@@ -18,7 +17,7 @@ namespace Haze
             CorePipeline(Engine *engine);
             ~CorePipeline();
             ComponentList *getComponentList() { return _engine->getComponentList(); }
-            info_inputs *getInputs() { return _engine->getInfoInputs(); }
+            std::vector<info_inputs> *getInputs() { return _engine->getInfoInputs(); }
 
         protected:
         private:
