@@ -4,18 +4,16 @@ project(r-type-client)
 
 set(
     SOURCES
-    src/main.cpp
-    src/wall.cpp
 )
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_executable(${PROJECT_NAME} ${SOURCES})
-target_include_directories(${PROJECT_NAME} PRIVATE
-    src
-    includes
-)
+# add_executable(${PROJECT_NAME} ${SOURCES})
+# target_include_directories(${PROJECT_NAME} PRIVATE
+#     src
+#     includes
+# )
 
-target_link_libraries(${PROJECT_NAME} PRIVATE
-    haze-graphics
-)
+# target_link_libraries(${PROJECT_NAME} PRIVATE
+#     haze-graphics
+# )
