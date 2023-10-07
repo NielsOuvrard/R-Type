@@ -8,6 +8,7 @@
 #pragma once
 
 #include <haze-core.hpp>
+#include <haze-graphics.hpp>
 #include "json.hpp"
 
 class wall

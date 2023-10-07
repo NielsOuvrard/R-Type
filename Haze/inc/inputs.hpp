@@ -70,8 +70,12 @@ namespace Haze
         KEY_UP_ARROW,
         KEY_DOWN_ARROW,
         KEY_LEFT_ARROW,
-        KEY_RIGHT_ARROW,
+        KEY_RIGHT_ARROW
+    };
 
-        NOTHING
+    enum MouseType {
+        NOTHING,
+        RELEASED,
+        PRESSED
     };
 }

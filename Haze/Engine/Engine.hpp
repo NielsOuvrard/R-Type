@@ -12,11 +12,8 @@
 #include "Entity.hpp"
 #include "ComponentList.hpp"
 #include "IPipeline.hpp"
-#include "CorePipeline.hpp"
 #include "inputs.hpp"
-#ifdef USE_SFML
-#include "GfxPipeline.hpp"
-#endif
+#include "protocol.hpp"
 
 namespace Haze
 {
@@ -32,12 +29,17 @@ namespace Haze
         void removeEntity(size_t id);
         void removeEntity(Entity *entity);
         bool isOpen();
+        void setInfoInputs(info_inputs info);
+        ComponentList *getComponentList() { return _componentList; }
+        info_inputs *getInfoInputs() { return &_info_inputs; }
 
     protected:
     private:
         std::vector<std::unique_ptr<Entity>> _entities;
         std::vector<std::unique_ptr<IPipeline>> _pipelines;
         ComponentList *_componentList;
+        info_inputs _info_inputs;
+
         int _tics = 0;
     };
 }

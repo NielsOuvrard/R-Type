@@ -9,15 +9,19 @@
 #pragma once
 #include "IPipeline.hpp"
 #include "SystemGfx.hpp"
+#include "Engine.hpp"
 
 namespace Haze
 {
     class GfxPipeline : public APipeline {
         public:
-            GfxPipeline();
+            GfxPipeline(Engine *engine);
             ~GfxPipeline();
+            ComponentList *getComponentList() { return _engine->getComponentList(); }
+            info_inputs *getInputs() { return _engine->getInfoInputs(); }
 
         protected:
         private:
+            Engine *_engine;
     };
 }

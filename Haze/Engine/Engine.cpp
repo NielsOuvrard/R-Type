@@ -7,6 +7,11 @@
 
 #include "Engine.hpp"
 
+#include "CorePipeline.hpp"
+#ifdef USE_SFML
+#include "GfxPipeline.hpp"
+#endif
+
 namespace Haze
 {
     Engine::Engine()
@@ -20,9 +25,9 @@ namespace Haze
     void Engine::init()
     {
         _componentList = new ComponentList();
-        _pipelines.push_back(std::make_unique<CorePipeline>());
+        _pipelines.push_back(std::make_unique<CorePipeline>(this));
         #ifdef USE_SFML
-        _pipelines.push_back(std::make_unique<GfxPipeline>());
+        _pipelines.push_back(std::make_unique<GfxPipeline>(this));
         #endif
     }
 
@@ -74,5 +79,10 @@ namespace Haze
     {
         _entities[entity->getId()] = nullptr;
         _componentList->removeEntity(entity->getId());
+    }
+
+    void Engine::setInfoInputs(info_inputs info)
+    {
+        _info_inputs = info;
     }
 }

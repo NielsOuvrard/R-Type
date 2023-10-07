@@ -60,22 +60,6 @@ namespace Haze
         void show() const override { std::cout << "Animation: " << std::endl; }
     };
 
-    // struct SplitSprite : public Component
-    // {
-    //     SplitSprite(Haze::Sprite &sprite, size_t x, size_t y, size_t width, size_t height)
-    //         : sprite(sprite), x(x), y(y), width(width), height(height)
-    //     {
-    //         sprite.sprite.setTextureRect(sf::IntRect(x, y, width, height));
-    //     }
-    //     Haze::Sprite &sprite;
-    //     size_t x;
-    //     size_t y;
-    //     size_t width;
-    //     size_t height;
-    //     std::string getType() const override { return "SplitSprite"; }
-    //     void show() const override { std::cout << "SplitSprite: " << std::endl; }
-    // };
-
     struct Window : public Component
     {
         Window(int width, int height) : width(width), height(height)
@@ -83,60 +67,20 @@ namespace Haze
             window.create(sf::VideoMode(width, height), "R-Type");
             window.setFramerateLimit(60);
             window.setKeyRepeatEnabled(true);
+            view.reset(sf::FloatRect(0, 0, width, height));
+            view.setViewport(sf::FloatRect(0, 0, 1.0f, 1.0f));
+            window.setView(view);
         }
         int width;
         int height;
         sf::RenderWindow window;
+        sf::View view;
         sf::Event event;
         std::string getType() const override
         {
             return "Window";
         }
         void show() const override { std::cout << "Window: " << width << ", " << height << std::endl; }
-    };
-
-    struct OnKeyPressed : public Component
-    {
-        OnKeyPressed(std::function<void(int, std::vector<InputType>)> callback) : callback(callback) {}
-        std::function<void(int, std::vector<InputType>)> callback;
-        std::string getType() const override
-        {
-            return "OnKeyPressed";
-        }
-        void show() const override { std::cout << "OnKeyPressed" << std::endl; }
-    };
-
-    struct OnKeyReleased : public Component
-    {
-        OnKeyReleased(std::function<void(int, std::vector<InputType>)> callback) : callback(callback) {}
-        std::function<void(int, std::vector<InputType>)> callback;
-        std::string getType() const override
-        {
-            return "OnKeyReleased";
-        }
-        void show() const override { std::cout << "OnKeyReleased" << std::endl; }
-    };
-
-    struct OnMousePressed : public Component
-    {
-        OnMousePressed(std::function<void(int)> callback) : callback(callback) {}
-        std::function<void(int)> callback;
-        std::string getType() const override
-        {
-            return "OnMousePressed";
-        }
-        void show() const override { std::cout << "OnMousePressed" << std::endl; }
-    };
-
-    struct OnMouseReleased : public Component
-    {
-        OnMouseReleased(std::function<void(int)> callback) : callback(callback) {}
-        std::function<void(int)> callback;
-        std::string getType() const override
-        {
-            return "OnMouseReleased";
-        }
-        void show() const override { std::cout << "OnMouseReleased" << std::endl; }
     };
 
     struct HitboxDisplay : public Component
@@ -156,54 +100,24 @@ namespace Haze
         }
         void show() const override { std::cout << "HitboxDisplay: " << std::endl; }
     };
+
+    struct Text : public Component
+    {
+        Text(std::string text, sf::Color color) : text(text), color(color)
+        {
+            font.loadFromFile("assets/fonts/arial.ttf");
+            textObj.setFont(font);
+            textObj.setString(text);
+            textObj.setFillColor(color);
+        }
+        std::string text;
+        sf::Color color;
+        sf::Font font;
+        sf::Text textObj;
+        std::string getType() const override
+        {
+            return "Text";
+        }
+        void show() const override { std::cout << "Text: " << text << std::endl; }
+    };
 }
-
-// ? all useless with SFML
-// static void animateThread(int interval_ms, int duration_sec, Haze::Animation *animation, Haze::Sprite *sprite)
-// {
-//     auto start_time = std::chrono::high_resolution_clock::now();
-//     while (true)
-//     {
-//         auto current_time = std::chrono::high_resolution_clock::now();
-//         auto elapsed_time = std::chrono::duration_cast<std::chrono::milliseconds>(current_time - start_time).count();
-
-//         if (elapsed_time >= duration_sec * 1000)
-//         {
-//             break; // Exit the animation loop after the specified duration
-//         }
-
-//         // Animate the sprite
-//         if (animation->boomerang)
-//         {
-//             if (animation->moveUp)
-//             {
-//                 animation->currentFrame++;
-//             }
-//             else
-//             {
-//                 animation->currentFrame--;
-//             }
-//             if (animation->currentFrame == animation->nbFramesX - 1)
-//             {
-//                 animation->moveUp = false;
-//             }
-//             if (animation->currentFrame == 0)
-//             {
-//                 animation->moveUp = true;
-//             }
-//         }
-//         else
-//         {
-//             if (animation->currentFrame == animation->nbFramesX - 1)
-//             {
-//                 animation->currentFrame = 0;
-//             }
-//             else
-//             {
-//                 animation->currentFrame++;
-//             }
-//         }
-//         sprite->sprite.setTextureRect(sf::IntRect(animation->x + (animation->currentFrame * animation->width), animation->y, animation->width, animation->height));
-//         std::this_thread::sleep_for(std::chrono::milliseconds(interval_ms));
-//     }
-// }

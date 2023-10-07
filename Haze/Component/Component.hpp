@@ -14,6 +14,7 @@
 #include <functional>
 #include <unordered_map>
 #include <map>
+#include "inputs.hpp"
 
 namespace Haze
 {
@@ -77,14 +78,6 @@ namespace Haze
         void show() const override { std::cout << "Damage: " << damage << std::endl; }
     };
 
-    struct Speed : public Component
-    {
-        Speed(int speed) : speed(speed) {}
-        int speed;
-        std::string getType() const override { return "Speed"; }
-        void show() const override { std::cout << "Speed: " << speed << std::endl; }
-    };
-
     struct Collision : public Component
     {
         enum CollisionType
@@ -132,5 +125,49 @@ namespace Haze
         int tics = 0;
         std::string getType() const override { return "LifeTime"; }
         void show() const override { std::cout << "LifeTime: " << lifeTime << std::endl; }
+    };
+
+    struct OnKeyPressed : public Component
+    {
+        OnKeyPressed(std::function<void(int, std::vector<InputType>)> callback) : callback(callback) {}
+        std::function<void(int, std::vector<InputType>)> callback;
+        std::string getType() const override
+        {
+            return "OnKeyPressed";
+        }
+        void show() const override { std::cout << "OnKeyPressed" << std::endl; }
+    };
+
+    struct OnKeyReleased : public Component
+    {
+        OnKeyReleased(std::function<void(int, std::vector<InputType>)> callback) : callback(callback) {}
+        std::function<void(int, std::vector<InputType>)> callback;
+        std::string getType() const override
+        {
+            return "OnKeyReleased";
+        }
+        void show() const override { std::cout << "OnKeyReleased" << std::endl; }
+    };
+
+    struct OnMousePressed : public Component
+    {
+        OnMousePressed(std::function<void(int)> callback) : callback(callback) {}
+        std::function<void(int)> callback;
+        std::string getType() const override
+        {
+            return "OnMousePressed";
+        }
+        void show() const override { std::cout << "OnMousePressed" << std::endl; }
+    };
+
+    struct OnMouseReleased : public Component
+    {
+        OnMouseReleased(std::function<void(int)> callback) : callback(callback) {}
+        std::function<void(int)> callback;
+        std::string getType() const override
+        {
+            return "OnMouseReleased";
+        }
+        void show() const override { std::cout << "OnMouseReleased" << std::endl; }
     };
 }

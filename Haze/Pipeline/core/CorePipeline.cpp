@@ -8,8 +8,9 @@
 #include "CorePipeline.hpp"
 
 namespace Haze {
-    CorePipeline::CorePipeline()
+    CorePipeline::CorePipeline(Engine *engine) : _engine(engine)
     {
+        _systems.push_back(useInputs);
         _systems.push_back(MoveSystem);
         _systems.push_back(CollisionSystem);
         _systems.push_back(DestroyEntity);

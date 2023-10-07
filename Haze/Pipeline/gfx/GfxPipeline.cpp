@@ -8,7 +8,7 @@
 #include "GfxPipeline.hpp"
 
 namespace Haze {
-    GfxPipeline::GfxPipeline()
+    GfxPipeline::GfxPipeline(Engine *engine) : _engine(engine)
     {
         _systems.push_back(ScaleSystem);
         _systems.push_back(AnimateSystem);

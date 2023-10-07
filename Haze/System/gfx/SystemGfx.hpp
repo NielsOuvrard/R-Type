@@ -10,13 +10,14 @@
 #include "ComponentList.hpp"
 #include "ComponentGfx.hpp"
 #include <vector>
+#include "protocol.hpp"
 
 namespace Haze
 {
-    void ScaleSystem(ComponentList *componentList);
-    void AnimateSystem(ComponentList *componentList);
-    void RenderSystem(ComponentList *componentList);
-    void PullEvent(ComponentList *componentList);
-    void DisplaySystem(ComponentList *componentList);
-    void ClearSystem(ComponentList *componentList);
+    void ScaleSystem(ComponentList *componentList, info_inputs *inputs);
+    void AnimateSystem(ComponentList *componentList, info_inputs *inputs);
+    void RenderSystem(ComponentList *componentList, info_inputs *inputs);
+    void PullEvent(ComponentList *componentList, info_inputs *inputs);
+    void DisplaySystem(ComponentList *componentList, info_inputs *inputs);
+    void ClearSystem(ComponentList *componentList, info_inputs *inputs);
 }
