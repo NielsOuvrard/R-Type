@@ -12,6 +12,7 @@ namespace Haze
 
     void useInputs(ComponentList *componentList, info_inputs *inputs)
     {
+        std::cout << "x: " << inputs->x << " y: " << inputs->y << "type: " << inputs->mouseType << std::endl;
         for (int i = 0; i < componentList->getSize(); i++) {
             if (componentList->getComponent("OnKeyPressed", i) != nullptr) {
                 auto onKeyPressed = static_cast<OnKeyPressed *>(componentList->getComponent("OnKeyPressed", i));

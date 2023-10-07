@@ -151,6 +151,12 @@ namespace Haze
         int *x = &inputs->x;
         int *y = &inputs->y;
         MouseType *mouseType = &inputs->mouseType;
+
+        *inputsPressed = {};
+        *inputsReleased = {};
+        *mouseType = MouseType::NOTHING;
+        // *x = 0;
+        // *y = 0;
         (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) ? (inputsPressed->push_back(InputType::KEY_A)) : void();
         (sf::Keyboard::isKeyPressed(sf::Keyboard::B)) ? (inputsPressed->push_back(InputType::KEY_B)) : void();
         (sf::Keyboard::isKeyPressed(sf::Keyboard::C)) ? (inputsPressed->push_back(InputType::KEY_C)) : void();
@@ -214,6 +220,11 @@ namespace Haze
             if (componentList->getComponent("Window", i) != nullptr)
             {
                 auto window = static_cast<Window *>(componentList->getComponent("Window", i));
+                *x = (int) window->window.mapPixelToCoords(sf::Mouse::getPosition(window->window)).x;
+                *y = (int) window->window.mapPixelToCoords(sf::Mouse::getPosition(window->window)).y;
+                if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+                    *mouseType = PRESSED;
+                }
                 while (window->window.pollEvent(window->event))
                 {
                     if (window->event.type == sf::Event::Closed)
@@ -395,15 +406,11 @@ namespace Haze
                                 break;
                         }
                     }
-                    if (window->event.type == sf::Event::MouseButtonPressed) {
-                        *mouseType = PRESSED;
-                    }
                     if (window->event.type == sf::Event::MouseButtonReleased) {
                         *mouseType = RELEASED;
                     }
                 }
-                *x = window->event.mouseMove.x;
-                *y = window->event.mouseMove.y;
+                break;
             }
         }
     }
