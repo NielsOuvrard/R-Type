@@ -9,15 +9,7 @@
 
 int main(void)
 {
-    std::cout << "\033[1;33m";
-    std::cout << "calling the server!" << std::endl;
-
     Rtype rtype;
-
-    // cout in red color
-    std::cout << "\033[1;31m";
-    std::cout << "calling the server!" << std::endl;
-
     rtype.run();
     return 0;
 }
