@@ -34,13 +34,13 @@ namespace Haze
                 for (int j = 0; j < componentList->getSize(); j++)
                 {
                     if (componentList->getComponent("Position", j) != nullptr &&
-                        componentList->getComponent("Sprite", j) != nullptr)
+                        componentList->getComponent("Sprite", j) != nullptr &&
+                        componentList->getComponent("Scale", j) != nullptr)
                     {
                         auto sprite = static_cast<Sprite *>(componentList->getComponent("Sprite", j));
                         auto position = static_cast<Position *>(componentList->getComponent("Position", j));
                         auto scale = static_cast<Scale *>(componentList->getComponent("Scale", j));
-                        if (scale != nullptr)
-                            sprite->sprite.setScale(scale->x, scale->y);
+                        sprite->sprite.setScale(scale->x, scale->y);
                         sprite->sprite.setPosition(position->x, position->y);
                         window->window.draw(sprite->sprite);
                     }
@@ -71,6 +71,7 @@ namespace Haze
                         auto scale = static_cast<Scale *>(componentList->getComponent("Scale", j));
                         text->textObj.setPosition(position->x, position->y);
                         text->textObj.setScale(scale->x, scale->y);
+                        text->textObj.setString(text->text);
                         window->window.draw(text->textObj);
                     }
                 }
