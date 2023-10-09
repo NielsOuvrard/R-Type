@@ -6,6 +6,9 @@
 */
 
 #include "Rtype.hpp"
+#include "net_data_channel.h"
+#include "net_server.h"
+#include "data.h"
 
 Rtype::Rtype()
 {
@@ -229,8 +232,9 @@ void Rtype::moveBackground()
     }
 }
 
-void Rtype::run()
+void Rtype::run(std::shared_ptr<network::data_channel<protocol::UDPProtocol>> dataChannel)
 {
+    _dataChannel = std::move(dataChannel);
     while (engine.isOpen())
     {
         Rtype::moveBackground();

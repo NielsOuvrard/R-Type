@@ -15,7 +15,8 @@
 #include <ctime>
 #include "json.hpp"
 #include "wall.hpp"
-
+#include "data.h"
+#include "net_data_channel.h"
 // #include "GraphicClient.hpp"
 // #include "Component.hpp"
 
@@ -30,6 +31,7 @@ private:
     Haze::Entity *entityWindow;
     Haze::Entity *entityWallTop;
     Haze::Entity *entityEnnemy;
+    std::shared_ptr<network::data_channel<protocol::UDPProtocol>> _dataChannel;
     wall *wall1;
     wall *wall2;
     wall *wall3;
@@ -49,7 +51,7 @@ private:
 public:
     Rtype();
     ~Rtype();
-    void run();
+    void run(std::shared_ptr<network::data_channel<protocol::UDPProtocol>> _dataChannel);
     void moveUp(void *component);
     void moveDown(void *component);
     void moveLeft(void *component);

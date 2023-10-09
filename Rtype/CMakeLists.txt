@@ -1,53 +1,22 @@
-# cmake_minimum_required(VERSION 3.25)
-# project(haze)
-# add_compile_options(-Wno-unused-command-line-argument)
+cmake_minimum_required(VERSION 3.25)
+project(rtype-game)
+add_compile_options(-Wno-unused-command-line-argument)
 
-# set(CMAKE_CXX_STANDARD 17)
-# set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+set(
+    SOURCES
+    Rtype.cpp
+    src/wall.cpp
+)
 
-
-# set(
-#     SOURCES_CORE
-#     Entity/Entity.cpp
-#     System/core/SystemCore.cpp
-#     Engine/Engine.cpp
-#     ComponentList/ComponentList.cpp
-#     Pipeline/core/CorePipeline.cpp
-# )
-# add_library(haze STATIC ${SOURCES_CORE})
-# target_include_directories(haze PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/inc)
-# target_include_directories(haze PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/System/core)
-# target_include_directories(haze PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Entity)
-# target_include_directories(haze PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Engine)
-# target_include_directories(haze PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Component)
-# target_include_directories(haze PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/ComponentList)
-# target_include_directories(haze PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Pipeline)
-# target_include_directories(haze PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Pipeline/core)
-
-
-
-
-# set(
-#     SOURCES_GRAPHICS
-#     Entity/Entity.cpp
-#     System/core/SystemCore.cpp
-#     System/gfx/SystemGfx.cpp
-#     Engine/Engine.cpp
-#     ComponentList/ComponentList.cpp
-#     Pipeline/core/CorePipeline.cpp
-#     Pipeline/gfx/GfxPipeline.cpp
-# )
-# add_library(haze-graphics STATIC ${SOURCES_GRAPHICS})
-# target_compile_definitions(haze-graphics PUBLIC USE_SFML=1)
-# target_include_directories(haze-graphics PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/inc)
-# target_include_directories(haze-graphics PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/System/gfx)
-# target_include_directories(haze-graphics PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/System/core)
-# target_include_directories(haze-graphics PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Entity)
-# target_include_directories(haze-graphics PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Engine)
-# target_include_directories(haze-graphics PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Component)
-# target_include_directories(haze-graphics PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/ComponentList)
-# target_include_directories(haze-graphics PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Pipeline)
-# target_include_directories(haze-graphics PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Pipeline/gfx)
-# target_include_directories(haze-graphics PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Pipeline/core)
-# target_link_libraries(haze-graphics PUBLIC sfml-graphics sfml-window sfml-system)
+add_library(${PROJECT_NAME} STATIC ${SOURCES})
+target_compile_definitions(${PROJECT_NAME} PUBLIC USE_SFML=1)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} includes)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} src)
+target_link_libraries(${PROJECT_NAME} PUBLIC
+    haze-graphics
+    Network
+    protocols
+)
