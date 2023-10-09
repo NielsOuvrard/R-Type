@@ -21,7 +21,7 @@ namespace Haze
             if (componentList->getComponent("OnKeyReleased", i) != nullptr) {
                 auto onKeyReleased = static_cast<OnKeyReleased *>(componentList->getComponent("OnKeyReleased", i));
                 if (onKeyReleased->player < inputs->size())
-                    onKeyReleased->callback(i, inputs->at(onKeyReleased->player).inputsPressed);
+                    onKeyReleased->callback(i, inputs->at(onKeyReleased->player).inputsReleased);
             }
             if (componentList->getComponent("OnMousePressed", i) != nullptr &&
                 componentList->getComponent("Position", i) != nullptr &&

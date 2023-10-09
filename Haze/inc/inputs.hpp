@@ -48,6 +48,8 @@ namespace Haze
         NUMKEY_8,
         NUMKEY_9,
 
+        KEY_DOT,
+
         KEY_ESC,
         KEY_ENTER_INPUT,
         KEY_BACK,
