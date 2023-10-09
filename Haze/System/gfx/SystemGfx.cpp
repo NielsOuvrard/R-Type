@@ -214,6 +214,7 @@ namespace Haze
         (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) ? (inputsPressed->push_back(InputType::KEY_DOWN_ARROW)) : void();
         (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) ? (inputsPressed->push_back(InputType::KEY_LEFT_ARROW)) : void();
         (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) ? (inputsPressed->push_back(InputType::KEY_RIGHT_ARROW)) : void();
+        (sf::Keyboard::isKeyPressed(sf::Keyboard::Period)) ? (inputsPressed->push_back(InputType::KEY_DOT)) : void();
 
         for (int i = 0; i < componentList->getSize(); i++)
         {
@@ -401,6 +402,9 @@ namespace Haze
                                 break;
                             case sf::Keyboard::Right:
                                 inputsReleased->push_back(InputType::KEY_RIGHT_ARROW);
+                                break;
+                            case sf::Keyboard::Period:
+                                inputsReleased->push_back(InputType::KEY_DOT);
                                 break;
                             default:
                                 break;
