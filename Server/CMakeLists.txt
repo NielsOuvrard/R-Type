@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.26)
 project(r-type-server)
 
 set(
@@ -15,3 +15,5 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     Network
     rtype-game
 )
+
+target_include_directories(${PROJECT_NAME} PUBLIC .)
