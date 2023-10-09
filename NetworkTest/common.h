@@ -6,7 +6,7 @@
 
 #include <cstdint>
 
-enum class Protocol : std::uint32_t {
+enum class Protocol : std::uint8_t {
     // Request
     create_room,
     get_rooms,
@@ -15,9 +15,11 @@ enum class Protocol : std::uint32_t {
     start_room,
 
     // Response
+    ok,
+    ko,
+    rooms,
     data_channel,
 };
-
 
 enum class UDPProtocol : std::uint32_t {
     alive,

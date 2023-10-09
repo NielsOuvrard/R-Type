@@ -5,18 +5,14 @@
 ** System
 */
 
-#include <chrono>
 #include "SystemGfx.hpp"
 #include "inputs.hpp"
+#include <chrono>
 
-namespace Haze
-{
-    void ScaleSystem(ComponentList *componentList, std::vector<info_inputs> *inputs)
-    {
-        for (int i = 0; i < componentList->getSize(); i++)
-        {
-            if (componentList->getComponent("Scale", i) != nullptr && componentList->getComponent("Sprite", i) != nullptr)
-            {
+namespace Haze {
+    void ScaleSystem(ComponentList *componentList, std::vector<info_inputs> *inputs) {
+        for (int i = 0; i < componentList->getSize(); i++) {
+            if (componentList->getComponent("Scale", i) != nullptr && componentList->getComponent("Sprite", i) != nullptr) {
                 auto scale = static_cast<Scale *>(componentList->getComponent("Scale", i));
                 auto sprite = static_cast<Sprite *>(componentList->getComponent("Sprite", i));
                 sprite->sprite.setScale(scale->x, scale->y);
@@ -24,21 +20,16 @@ namespace Haze
         }
     }
 
-    void RenderSystem(ComponentList *componentList, std::vector<info_inputs> *inputs)
-    {
-        for (int i = 0; i < componentList->getSize(); i++)
-        {
-            if (componentList->getComponent("Window", i) != nullptr)
-            {
+    void RenderSystem(ComponentList *componentList, std::vector<info_inputs> *inputs) {
+        for (int i = 0; i < componentList->getSize(); i++) {
+            if (componentList->getComponent("Window", i) != nullptr) {
                 auto window = static_cast<Window *>(componentList->getComponent("Window", i));
-                for (int j = 0; j < componentList->getSize(); j++)
-                {
+                for (int j = 0; j < componentList->getSize(); j++) {
                     if (componentList->getComponent("Hide", j) != nullptr)
                         continue;
                     if (componentList->getComponent("Position", j) != nullptr &&
                         componentList->getComponent("Sprite", j) != nullptr &&
-                        componentList->getComponent("Scale", j) != nullptr)
-                    {
+                        componentList->getComponent("Scale", j) != nullptr) {
                         auto sprite = static_cast<Sprite *>(componentList->getComponent("Sprite", j));
                         auto position = static_cast<Position *>(componentList->getComponent("Position", j));
                         auto scale = static_cast<Scale *>(componentList->getComponent("Scale", j));
@@ -50,14 +41,12 @@ namespace Haze
                     if (componentList->getComponent("Hitbox", j) != nullptr &&
                         componentList->getComponent("HitboxDisplay", j) != nullptr &&
                         componentList->getComponent("Position", j) != nullptr &&
-                        componentList->getComponent("Scale", j) != nullptr)
-                    {
+                        componentList->getComponent("Scale", j) != nullptr) {
                         auto hitbox = static_cast<Hitbox *>(componentList->getComponent("Hitbox", j));
                         auto hitboxDisplay = static_cast<HitboxDisplay *>(componentList->getComponent("HitboxDisplay", j));
                         auto position = static_cast<Position *>(componentList->getComponent("Position", j));
                         auto scale = static_cast<Scale *>(componentList->getComponent("Scale", j));
-                        for (int k = 0; k < hitbox->hitbox.size(); k++)
-                        {
+                        for (int k = 0; k < hitbox->hitbox.size(); k++) {
                             hitboxDisplay->rect.setPosition(hitbox->hitbox[k].x * scale->x + position->x, hitbox->hitbox[k].y * scale->y + position->y);
                             hitboxDisplay->rect.setSize(sf::Vector2f(hitbox->hitbox[k].width * scale->x, hitbox->hitbox[k].height * scale->y));
                             window->window.draw(hitboxDisplay->rect);
@@ -66,8 +55,7 @@ namespace Haze
 
                     if (componentList->getComponent("Text", j) != nullptr &&
                         componentList->getComponent("Position", j) != nullptr &&
-                        componentList->getComponent("Scale", j) != nullptr)
-                    {
+                        componentList->getComponent("Scale", j) != nullptr) {
                         auto text = static_cast<Text *>(componentList->getComponent("Text", j));
                         auto position = static_cast<Position *>(componentList->getComponent("Position", j));
                         auto scale = static_cast<Scale *>(componentList->getComponent("Scale", j));
@@ -81,43 +69,33 @@ namespace Haze
         }
     }
 
-    void DisplaySystem(ComponentList *componentList, std::vector<info_inputs> *inputs)
-    {
-        for (int i = 0; i < componentList->getSize(); i++)
-        {
-            if (componentList->getComponent("Window", i) != nullptr)
-            {
+    void DisplaySystem(ComponentList *componentList, std::vector<info_inputs> *inputs) {
+        for (int i = 0; i < componentList->getSize(); i++) {
+            if (componentList->getComponent("Window", i) != nullptr) {
                 auto window = static_cast<Window *>(componentList->getComponent("Window", i));
                 window->window.display();
             }
         }
     }
 
-    void ClearSystem(ComponentList *componentList, std::vector<info_inputs> *inputs)
-    {
-        for (int i = 0; i < componentList->getSize(); i++)
-        {
-            if (componentList->getComponent("Window", i) != nullptr)
-            {
+    void ClearSystem(ComponentList *componentList, std::vector<info_inputs> *inputs) {
+        for (int i = 0; i < componentList->getSize(); i++) {
+            if (componentList->getComponent("Window", i) != nullptr) {
                 auto window = static_cast<Window *>(componentList->getComponent("Window", i));
                 window->window.clear();
             }
         }
     }
 
-    void AnimateSystem(ComponentList *componentList, std::vector<info_inputs> *inputs)
-    {
-        for (int i = 0; i < componentList->getSize(); i++)
-        {
+    void AnimateSystem(ComponentList *componentList, std::vector<info_inputs> *inputs) {
+        for (int i = 0; i < componentList->getSize(); i++) {
             if (componentList->getComponent("Hide", i) != nullptr)
                 continue;
             if (componentList->getComponent("Animation", i) != nullptr &&
-                componentList->getComponent("Sprite", i) != nullptr)
-            {
+                componentList->getComponent("Sprite", i) != nullptr) {
                 auto animation = static_cast<Animation *>(componentList->getComponent("Animation", i));
                 auto sprite = static_cast<Sprite *>(componentList->getComponent("Sprite", i));
-                if (std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - animation->lastAnimation).count() > animation->tics)
-                {
+                if (std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - animation->lastAnimation).count() > animation->tics) {
                     animation->lastAnimation = std::chrono::high_resolution_clock::now();
                     if (animation->type == Animation::BOOMERANG) {
                         if (animation->direction == true) {
@@ -142,15 +120,14 @@ namespace Haze
                     }
                 }
                 sprite->sprite.setTextureRect(sf::IntRect(animation->frames[animation->currentFrame].x,
-                                                        animation->frames[animation->currentFrame].y,
-                                                        animation->frames[animation->currentFrame].width,
-                                                        animation->frames[animation->currentFrame].height));
+                                                          animation->frames[animation->currentFrame].y,
+                                                          animation->frames[animation->currentFrame].width,
+                                                          animation->frames[animation->currentFrame].height));
             }
         }
     }
 
-    void PullEvent(ComponentList *componentList, std::vector<info_inputs> *inputs)
-    {
+    void PullEvent(ComponentList *componentList, std::vector<info_inputs> *inputs) {
         if (inputs->size() == 0)
             inputs->push_back({});
         std::vector<InputType> *inputsPressed = &inputs->at(0).inputsPressed;
@@ -221,22 +198,19 @@ namespace Haze
         (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) ? (inputsPressed->push_back(InputType::KEY_RIGHT_ARROW)) : void();
         (sf::Keyboard::isKeyPressed(sf::Keyboard::Period)) ? (inputsPressed->push_back(InputType::KEY_DOT)) : void();
 
-        for (int i = 0; i < componentList->getSize(); i++)
-        {
-            if (componentList->getComponent("Window", i) != nullptr)
-            {
+        for (int i = 0; i < componentList->getSize(); i++) {
+            if (componentList->getComponent("Window", i) != nullptr) {
                 auto window = static_cast<Window *>(componentList->getComponent("Window", i));
                 *x = (int) window->window.mapPixelToCoords(sf::Mouse::getPosition(window->window)).x;
                 *y = (int) window->window.mapPixelToCoords(sf::Mouse::getPosition(window->window)).y;
                 if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
                     *mouseType = PRESSED;
                 }
-                while (window->window.pollEvent(window->event))
-                {
+                while (window->window.pollEvent(window->event)) {
                     if (window->event.type == sf::Event::Closed)
                         window->window.close();
                     if (window->event.type == sf::Event::KeyReleased) {
-                        switch (window->event.KeyReleased) {
+                        switch (window->event.key.code) {
                             case sf::Keyboard::A:
                                 inputsReleased->push_back(InputType::KEY_A);
                                 break;
@@ -423,4 +397,4 @@ namespace Haze
             }
         }
     }
-}
+}// namespace Haze
