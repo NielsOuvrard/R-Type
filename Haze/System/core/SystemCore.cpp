@@ -13,6 +13,8 @@ namespace Haze
     void useInputs(ComponentList *componentList, std::vector<info_inputs> *inputs)
     {
         for (int i = 0; i < componentList->getSize(); i++) {
+            if (componentList->getComponent("Hide", i) != nullptr)
+                continue;
             if (componentList->getComponent("OnKeyPressed", i) != nullptr) {
                 auto onKeyPressed = static_cast<OnKeyPressed *>(componentList->getComponent("OnKeyPressed", i));
                 if (onKeyPressed->player < inputs->size())
@@ -69,6 +71,8 @@ namespace Haze
     {
         for (int i = 0; i < componentList->getSize(); i++)
         {
+            if (componentList->getComponent("Hide", i) != nullptr)
+                continue;
             if (componentList->getComponent("Position", i) != nullptr && componentList->getComponent("Velocity", i) != nullptr)
             {
                 auto position = static_cast<Position *>(componentList->getComponent("Position", i));
@@ -168,6 +172,8 @@ namespace Haze
     {
         for (int i = 0; i < componentList->getSize(); i++)
         {
+            if (componentList->getComponent("Hide", i) != nullptr)
+                continue;
             if (componentList->getComponent("Position", i) &&
                 componentList->getComponent("Hitbox", i) &&
                 componentList->getComponent("Scale", i))

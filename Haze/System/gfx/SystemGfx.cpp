@@ -33,6 +33,8 @@ namespace Haze
                 auto window = static_cast<Window *>(componentList->getComponent("Window", i));
                 for (int j = 0; j < componentList->getSize(); j++)
                 {
+                    if (componentList->getComponent("Hide", j) != nullptr)
+                        continue;
                     if (componentList->getComponent("Position", j) != nullptr &&
                         componentList->getComponent("Sprite", j) != nullptr &&
                         componentList->getComponent("Scale", j) != nullptr)
@@ -107,6 +109,8 @@ namespace Haze
     {
         for (int i = 0; i < componentList->getSize(); i++)
         {
+            if (componentList->getComponent("Hide", i) != nullptr)
+                continue;
             if (componentList->getComponent("Animation", i) != nullptr &&
                 componentList->getComponent("Sprite", i) != nullptr)
             {

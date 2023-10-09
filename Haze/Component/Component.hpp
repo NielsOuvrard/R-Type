@@ -174,4 +174,11 @@ namespace Haze
         }
         void show() const override { std::cout << "OnMouseReleased" << std::endl; }
     };
+
+    struct Hide : public Component
+    {
+        Hide() {}
+        std::string getType() const override { return "Hide"; }
+        void show() const override { std::cout << "Hide" << std::endl; }
+    };
 }
