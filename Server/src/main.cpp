@@ -3,27 +3,29 @@
 //
 
 // #include "common.h"
+#include "Rtype.hpp"
 #include "data.h"
 #include "lobby.h"
 #include "net_connection.h"
 #include "net_data_channel.h"
 #include "net_server.h"
-#include "Rtype.hpp"
 
-class server : public network::server_interface<protocol::Lobby> {
+
+class server : public network::server_interface<protocol::lobby> {
 public:
-    explicit server(uint16_t port) : network::server_interface<protocol::Lobby>(port) {}
+    explicit server(uint16_t port) : network::server_interface<protocol::lobby>(port) {}
 
 protected:
-    void onMessage(std::shared_ptr<network::connection<protocol::Lobby>> from, network::message<protocol::Lobby> &msg) override {
+    void onMessage(std::shared_ptr<network::connection<protocol::lobby>> from, network::message<protocol::lobby> &msg) override
+    {
         switch (msg.header.id) {
-            case protocol::Lobby::start_room:
+            case protocol::lobby::start_room:
                 if (!_dataChannel) {
-                    _dataChannel = std::make_shared<network::data_channel<protocol::UDPProtocol>>(this->_context);
-                    network::message<protocol::Lobby> res = {{protocol::Lobby::data_channel, 0}};
+                    _dataChannel = std::make_shared<network::data_channel<protocol::data>>(this->_context);
+                    network::message<protocol::lobby> res = {{protocol::lobby::data_channel, 0}};
                     res << _dataChannel->getEndpoint();
                     this->messageAllClient(res);
-                    Rtype rtype(this->_context);
+                    Rtype rtype;
                     rtype.run(_dataChannel);
                 }
                 break;
@@ -31,12 +33,14 @@ protected:
                 break;
         }
     }
-    bool onClientConnection(std::shared_ptr<network::connection<protocol::Lobby>> client) override {
+
+    bool onClientConnection(std::shared_ptr<network::connection<protocol::lobby>> client) override
+    {
         return true;
     }
 
 private:
-    std::shared_ptr<network::data_channel<protocol::UDPProtocol>> _dataChannel = nullptr;
+    std::shared_ptr<network::data_channel<protocol::data>> _dataChannel = nullptr;
 };
 
 

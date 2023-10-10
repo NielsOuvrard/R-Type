@@ -20,6 +20,14 @@ namespace Haze {
         int y;
     };
 
+    struct info_inputs_weak {
+        std::array<InputType, 100> pressedInputs;
+        std::array<InputType, 100> releasedInputs;
+        MouseType mouseType;
+        int x;
+        int y;
+    };
+
     struct id_entity {
         int id;
     };
@@ -42,4 +50,4 @@ namespace Haze {
     struct info_entities {
         std::vector<id_entity> id;
     };
-}
+}// namespace Haze

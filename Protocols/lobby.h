@@ -2,9 +2,8 @@
 
 #include <cstdint>
 
-namespace protocol
-{
-    enum class Lobby : std::uint32_t {
+namespace protocol {
+    enum class lobby : std::uint32_t {
         // Request
         create_room,
         get_rooms,
@@ -13,7 +12,9 @@ namespace protocol
         start_room,
 
         // Response
+        ok,
+        ko,
+        rooms,
         data_channel,
     };
-} // namespace protocol
-
+}// namespace protocol

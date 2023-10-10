@@ -4,7 +4,7 @@
 
 #include "Login.h"
 
-namespace cmp {
+namespace element {
     Login::Login(
             Haze::Engine &engine, float x, float y, std::function<void(const std::string &, uint16_t)> callback)
         : _engine(engine),
@@ -36,14 +36,16 @@ namespace cmp {
     void Login::onValidate(std::function<void(const std::string &, uint16_t)> callback) {
         _onValidateFnc = std::move(callback);
     }
-    void Login::hide() {
-        _ip.getEntity().addComponent(new Haze::Hide);
-        _port.getEntity().addComponent(new Haze::Hide);
-        _validate.getEntity().addComponent(new Haze::Hide);
+    void Login::setHide(bool state) {
+        _hidden = state;
+        if (state) {
+            _ip.getEntity().addComponent(new Haze::Hide);
+            _port.getEntity().addComponent(new Haze::Hide);
+            _validate.getEntity().addComponent(new Haze::Hide);
+        } else {
+            _ip.getEntity().removeComponent("Hide");
+            _port.getEntity().removeComponent("Hide");
+            _validate.getEntity().removeComponent("Hide");
+        }
     }
-    void Login::unhide() {
-        _ip.getEntity().removeComponent("Hide");
-        _port.getEntity().removeComponent("Hide");
-        _validate.getEntity().removeComponent("Hide");
-    }
-}// namespace cmp
+}// namespace element

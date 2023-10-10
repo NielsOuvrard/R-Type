@@ -15,6 +15,9 @@ namespace network {
         message_header<T> header;
         std::vector<uint8_t> body;
 
+        message() = default;
+        explicit message(T id) : header({id, 0}) {}
+
         friend std::ostream &operator<<(std::ostream &os, const message<T> &msg) {
             os << "ID: " << msg.header.id << " Size: " << msg.header.size;
             return os;

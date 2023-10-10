@@ -13,22 +13,19 @@
 */
 
 #include "Rtype.hpp"
+#include "data.h"
 #include "net_data_channel.h"
 #include "net_server.h"
-#include "data.h"
 
 Rtype::Rtype(asio::io_context &context) : network::data_channel<protocol::UDPProtocol>(context)
 {
     engine.init();
     std::ifstream inputFile("Rtype/SpritesMooves/ground.json");
-    if (inputFile.is_open())
-    {
+    if (inputFile.is_open()) {
         inputFile >> jsonData;
         inputFile.close();
         sheet = jsonData["sheet1"];
-    }
-    else
-    {
+    } else {
         std::cout << "Impossible d'ouvrir le fichier !" << std::endl;
         exit(84);
     }
@@ -43,12 +40,11 @@ Rtype::Rtype(asio::io_context &context) : network::data_channel<protocol::UDPPro
     Haze::Collision::CollisionInfo colisionInfo;
     colisionInfo.type = Haze::Collision::LAMBDA;
     colisionInfo.tics = 1;
-    colisionInfo.onCollision = [](int x, int y)
-    {
+    colisionInfo.onCollision = [](int x, int y) {
         std::cout << "collision!" << std::endl;
     };
     std::map<std::string, Haze::Collision::CollisionInfo> infos = {
-        {"wall", colisionInfo},
+            {"wall", colisionInfo},
     };
     // infos["ennemy"] = Haze::Collision::CollisionInfo(0, 0, 33, 36);
 
@@ -94,7 +90,6 @@ Rtype::Rtype(asio::io_context &context) : network::data_channel<protocol::UDPPro
     entitySpaceship->addComponent(new Haze::Hitbox({{0, 0, 32, 14}}));
     entitySpaceship->addComponent(new Haze::HitboxDisplay());
     entitySpaceship->addComponent(new Haze::Collision("player", infos));
-
     entitySpaceship->addComponent(new Haze::OnKeyPressed([this](int i, std::vector<Haze::InputType> components)
                                                          {
         if (std::find(components.begin(), components.end(), Haze::InputType::KEY_ENTER_INPUT) != components.end()) {
@@ -104,8 +99,8 @@ Rtype::Rtype(asio::io_context &context) : network::data_channel<protocol::UDPPro
             newShot->addComponent(new Haze::Velocity(2, 0));
             newShot->addComponent(static_cast<Haze::Sprite *>(entityShot->getComponent("Sprite")));
             newShot->addComponent(new Haze::Animation({{0, 0, 16, 14},
-                                                      {16, 0, 16, 14},
-                                                      {32, 0, 16, 14}},
+                                                       {16, 0, 16, 14},
+                                                       {32, 0, 16, 14}},
                                                       Haze::Animation::AnimationType::LOOP, true, 0.2));
         }
 
@@ -128,7 +123,6 @@ Rtype::Rtype(asio::io_context &context) : network::data_channel<protocol::UDPPro
             velocity->x += 5;
         }
     }));
-
 
 
     wall1 = new wall(&engine, jsonData, 0, 600);
@@ -165,22 +159,17 @@ Rtype::~Rtype()
 
 void Rtype::keyPress()
 {
-    if (event.type == sf::Event::KeyPressed)
-    {
-        if (event.key.code == sf::Keyboard::Up)
-        {
+    if (event.type == sf::Event::KeyPressed) {
+        if (event.key.code == sf::Keyboard::Up) {
             isMoving = 'U';
         }
-        if (event.key.code == sf::Keyboard::Left)
-        {
+        if (event.key.code == sf::Keyboard::Left) {
             isMoving = 'L';
         }
-        if (event.key.code == sf::Keyboard::Down)
-        {
+        if (event.key.code == sf::Keyboard::Down) {
             isMoving = 'D';
         }
-        if (event.key.code == sf::Keyboard::Right)
-        {
+        if (event.key.code == sf::Keyboard::Right) {
             isMoving = 'R';
         }
     }
@@ -188,8 +177,7 @@ void Rtype::keyPress()
 
 void Rtype::keyRelease()
 {
-    if (event.type == sf::Event::KeyReleased)
-    {
+    if (event.type == sf::Event::KeyReleased) {
         if (event.key.code == sf::Keyboard::Up)
             isMoving = '\0';
         if (event.key.code == sf::Keyboard::Left)
@@ -210,43 +198,36 @@ void Rtype::moveBackground()
     Haze::Position *position5 = static_cast<Haze::Position *>(wall5->_entityWallBottom->getComponent("Position"));
     Haze::Position *position6 = static_cast<Haze::Position *>(wall6->_entityWallBottom->getComponent("Position"));
 
-    if (position1->x <= -200)
-    {
+    if (position1->x <= -200) {
         position1->x = 800;
         wall1->changeSpriteBack(wall1->_entityWallBottom);
     }
-    if (position2->x <= -200)
-    {
+    if (position2->x <= -200) {
         position2->x = 800;
         wall2->changeSpriteBack(wall2->_entityWallBottom);
     }
-    if (position3->x <= -200)
-    {
+    if (position3->x <= -200) {
         position3->x = 800;
         wall3->changeSpriteBack(wall3->_entityWallBottom);
     }
-    if (position4->x <= -200)
-    {
+    if (position4->x <= -200) {
         position4->x = 800;
         wall4->changeSpriteBack(wall4->_entityWallBottom);
     }
-    if (position5->x <= -200)
-    {
+    if (position5->x <= -200) {
         position5->x = 800;
         wall5->changeSpriteBack(wall5->_entityWallBottom);
     }
-    if (position6->x <= -200)
-    {
+    if (position6->x <= -200) {
         position6->x = 800;
         wall6->changeSpriteBack(wall6->_entityWallBottom);
     }
 }
 
-void Rtype::run(std::shared_ptr<network::data_channel<protocol::UDPProtocol>> dataChannel)
+void Rtype::run(std::shared_ptr<network::data_channel<protocol::data>> dataChannel)
 {
     _dataChannel = std::move(dataChannel);
-    while (engine.isOpen())
-    {
+    while (engine.isOpen()) {
         Rtype::moveBackground();
         engine.update();
     }

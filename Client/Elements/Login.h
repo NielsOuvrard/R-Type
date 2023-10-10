@@ -10,14 +10,19 @@
 #include "Button.h"
 #include "TextInput.h"
 
-namespace cmp {
+namespace element {
     class Login {
     public:
         Login(Haze::Engine &engine, float x, float y, std::function<void(const std::string &, uint16_t)> callback);
-        void setPosition(float x, float y);
+
+    public:
         void onValidate(std::function<void(const std::string &, uint16_t)> callback);
-        void hide();
-        void unhide();
+
+    public:
+        void setPosition(float x, float y);
+        void setHide(bool state);
+
+        [[nodiscard]] bool isHidden() const { return _hidden; }
 
     private:
         Haze::Engine &_engine;
@@ -33,5 +38,7 @@ namespace cmp {
         TextInput _ip;
         TextInput _port;
         Button _validate;
+
+        bool _hidden = false;
     };
-}// namespace cmp
+}// namespace element
