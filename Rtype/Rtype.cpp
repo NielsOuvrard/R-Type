@@ -17,7 +17,7 @@
 #include "net_data_channel.h"
 #include "net_server.h"
 
-Rtype::Rtype()
+Rtype::Rtype(asio::io_context &context) : network::data_channel<protocol::UDPProtocol>(context)
 {
     engine.init();
     std::ifstream inputFile("Rtype/SpritesMooves/ground.json");
@@ -90,7 +90,8 @@ Rtype::Rtype()
     entitySpaceship->addComponent(new Haze::Hitbox({{0, 0, 32, 14}}));
     entitySpaceship->addComponent(new Haze::HitboxDisplay());
     entitySpaceship->addComponent(new Haze::Collision("player", infos));
-    entitySpaceship->addComponent(new Haze::OnKeyPressed([this](int i, std::vector<Haze::InputType> components) {
+    entitySpaceship->addComponent(new Haze::OnKeyPressed([this](int i, std::vector<Haze::InputType> components)
+                                                         {
         if (std::find(components.begin(), components.end(), Haze::InputType::KEY_ENTER_INPUT) != components.end()) {
             Haze::Entity *newShot = engine.createEntity();
             auto position = static_cast<Haze::Position *>(entitySpaceship->getComponent("Position"));
@@ -146,6 +147,7 @@ Rtype::Rtype()
     entityEnnemy->addComponent(ennemySprite);
 
     entityWindow->addComponent(window);
+
 #ifdef USE_SFML
     window->window.setFramerateLimit(60);
 #endif

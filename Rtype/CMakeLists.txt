@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.26)
+cmake_minimum_required(VERSION 3.25)
 project(rtype-game)
 add_compile_options(-Wno-unused-command-line-argument)
 
@@ -15,8 +15,8 @@ add_library(${PROJECT_NAME} STATIC ${SOURCES})
 target_compile_definitions(${PROJECT_NAME} PUBLIC USE_SFML=1)
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} includes)
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} src)
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/Protocols)
-# target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/Network)
-
-target_link_libraries(${PROJECT_NAME} PUBLIC Network)
-target_link_libraries(${PROJECT_NAME} PUBLIC haze-graphics)
+target_link_libraries(${PROJECT_NAME} PUBLIC
+    haze-graphics
+    Network
+    protocols
+)
