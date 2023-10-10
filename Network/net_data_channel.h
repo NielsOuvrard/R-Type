@@ -21,7 +21,8 @@ namespace network {
         virtual ~data_channel() = default;
 
     public:// Receiving information
-        void startListening() {
+        void startListening()
+        {
             try {
                 asyncReceive();
             } catch (std::exception &e) {
@@ -31,7 +32,8 @@ namespace network {
 
 
     public:// Sending information
-        void sendTo(const datagram<T> &datagram, const udp::endpoint &to) {
+        void sendTo(const datagram<T> &datagram, const udp::endpoint &to)
+        {
             asio::post(_context, [this, datagram, to]() {
                 bool writing = !_outbox.empty();
                 _outbox.push_back({to, datagram});
@@ -40,24 +42,27 @@ namespace network {
                 }
             });
         }
-        void sendAll(const datagram<T> &datagram) {
+        void sendAll(const datagram<T> &datagram)
+        {
             for (auto &to: _peers) {
                 sendTo(datagram, to);
             }
         }
-        void sendSome(const datagram<T> &datagram, std::vector<udp::endpoint> some) {
+        void sendSome(const datagram<T> &datagram, std::vector<udp::endpoint> some)
+        {
             for (auto &to: some) {
                 sendTo(datagram, to);
             }
         }
 
     public:
-        void update(size_t maxDatagram = -1, bool wait = false) {
+        void update(size_t maxDatagram = -1, bool wait = false)
+        {
             if (wait) _inbox.wait();
             size_t count = 0;
             while (count < maxDatagram && !_inbox.empty()) {
                 owned_datagram<T> msg = _inbox.pop_front();
-                onMessage(msg.owner, msg.content);
+                onReceive(msg.target, msg.data);
                 count++;
             }
         }
@@ -67,7 +72,8 @@ namespace network {
         //        ThreadSafeQueue<owned_message<T>> &getIncoming() { return _inbox; }
 
     public:// Async Actions
-        void asyncReceive() {
+        void asyncReceive()
+        {
             _socket.async_receive_from(
                     asio::buffer(&_datagramBuffer, sizeof(datagram<T>)),
                     _peerBuffer,
@@ -82,7 +88,8 @@ namespace network {
                         }
                     });
         }
-        void asyncWrite() {
+        void asyncWrite()
+        {
             _socket.async_send_to(
                     asio::buffer(&_outbox.front().data, 1024),
                     _outbox.front().target,
