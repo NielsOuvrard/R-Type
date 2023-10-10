@@ -8,7 +8,7 @@
 #include "haze-core.hpp"
 #include "haze-graphics.hpp"
 
-namespace cmp {
+namespace element {
     class Button {
     public:
         Button(Haze::Engine &engine, std::string label, std::function<void(int)> callback = {});
@@ -24,4 +24,4 @@ namespace cmp {
         Haze::Entity *_entity;
         std::string _label;
     };
-}// namespace cmp
+}// namespace element

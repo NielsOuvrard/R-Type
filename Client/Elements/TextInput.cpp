@@ -6,7 +6,7 @@
 #include <SFML/Graphics.hpp>
 #include <utility>
 
-namespace cmp {
+namespace element {
     TextInput::TextInput(Haze::Engine &engine, std::string placeHolder)
         : _engine(engine),
           _entity(_engine.createEntity()),
@@ -57,4 +57,4 @@ namespace cmp {
         _isFocused = isFocused;
     }
 
-}// namespace cmp
+}// namespace element

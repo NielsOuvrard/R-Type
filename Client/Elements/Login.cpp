@@ -4,7 +4,7 @@
 
 #include "Login.h"
 
-namespace cmp {
+namespace element {
     Login::Login(
             Haze::Engine &engine, float x, float y, std::function<void(const std::string &, uint16_t)> callback)
         : _engine(engine),
@@ -46,4 +46,4 @@ namespace cmp {
         _port.getEntity().removeComponent("Hide");
         _validate.getEntity().removeComponent("Hide");
     }
-}// namespace cmp
+}// namespace element
