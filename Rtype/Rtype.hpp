@@ -26,9 +26,9 @@
 #include <iostream>
 // #include "GraphicClient.hpp"
 // #include "Component.hpp"
+// #include "common.h"
 
-
-class Rtype : public network::data_channel<protocol::UDPProtocol>
+class Rtype : public network::data_channel<protocol::data>
 {
 protected:
     Haze::Engine engine;
@@ -64,5 +64,6 @@ public:
     void moveDown(void *component);
     void moveLeft(void *component);
     void moveRight(void *component);
+    // void onReceive(udp::endpoint from, datagram<T> content) override;
+    // void onReceive(udp::endpoint from, network::datagram<protocol::data> content) override;
 };
-
