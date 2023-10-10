@@ -52,102 +52,102 @@ Rtype::Rtype(asio::io_context &context) : network::data_channel<protocol::data>(
     };
     // infos["ennemy"] = Haze::Collision::CollisionInfo(0, 0, 33, 36);
 
-    entityVortex = engine.createEntity();
-    entityShot = engine.createEntity();
-    entitySpaceship = engine.createEntity();
-    entityEnnemy = engine.createEntity();
-    entityWindow = engine.createEntity();
-    entityWallTop = engine.createEntity();
+    for (int i = 0; i < 7; i++) // from VORTEX to BACKGROUND
+    {
+        entities.push_back(engine.createEntity());
+    }
 
-    entityVortex->addComponent(new Haze::Position(120, 200));
-    entityVortex->addComponent(new Haze::Velocity(2, 0));
-    entityVortex->addComponent(new Haze::Scale(3, 3));
-    entityVortex->addComponent(vortexSprite);
-    // entityVortex->addComponent(new Haze::Animation(*vortexSprite, 0, 0, 34, 34, 3, 1));
-    entityVortex->addComponent(new Haze::Animation({{0, 0, 34, 34},
-                                                    {34, 0, 34, 34},
-                                                    {68, 0, 34, 34}},
-                                                   Haze::Animation::AnimationType::LOOP, true, 0.2));
+    entities[VORTEX]->addComponent(new Haze::Position(120, 200));
+    entities[VORTEX]->addComponent(new Haze::Velocity(2, 0));
+    entities[VORTEX]->addComponent(new Haze::Scale(3, 3));
+    entities[VORTEX]->addComponent(vortexSprite);
+    // entities[VORTEX]->addComponent(new Haze::Animation(*vortexSprite, 0, 0, 34, 34, 3, 1));
+    entities[VORTEX]->addComponent(new Haze::Animation({{0, 0, 34, 34},
+                                                        {34, 0, 34, 34},
+                                                        {68, 0, 34, 34}},
+                                                       Haze::Animation::AnimationType::LOOP, true, 0.2));
 
-    entityShot->addComponent(new Haze::Position(100, 200));
-    entityShot->addComponent(new Haze::Velocity(2, 0));
-    entityShot->addComponent(new Haze::Scale(3, 3));
+    entities[SHOT]->addComponent(new Haze::Position(100, 200));
+    entities[SHOT]->addComponent(new Haze::Velocity(2, 0));
+    entities[SHOT]->addComponent(new Haze::Scale(3, 3));
     // x = 3 * 16
     // y = 1 * 14
-    entityShot->addComponent(new Haze::Animation({{0, 0, 16, 14},
-                                                  {16, 0, 16, 14},
-                                                  {32, 0, 16, 14}},
-                                                 Haze::Animation::AnimationType::LOOP, true, 0.2));
-    entityShot->addComponent(shotSprite);
+    entities[SHOT]->addComponent(new Haze::Animation({{0, 0, 16, 14},
+                                                      {16, 0, 16, 14},
+                                                      {32, 0, 16, 14}},
+                                                     Haze::Animation::AnimationType::LOOP, true, 0.2));
+    entities[SHOT]->addComponent(shotSprite);
 
-    entitySpaceship->addComponent(velocityPlayer);
-    entitySpaceship->addComponent(new Haze::Position(100, 200));
-    entitySpaceship->addComponent(new Haze::Scale(3, 3));
-    entitySpaceship->addComponent(spaceshipSprite);
-    // entitySpaceship->addComponent(new Haze::Animation(*spaceshipSprite, 100, 0, 33, 18, 5, 1, true));
-    entitySpaceship->addComponent(new Haze::Animation({{100, 0, 33, 18},
-                                                       {133, 0, 33, 18},
-                                                       {166, 0, 33, 18},
-                                                       {199, 0, 33, 18},
-                                                       {232, 0, 33, 18}},
-                                                      Haze::Animation::AnimationType::BOOMERANG, true, 0.2));
-    entitySpaceship->addComponent(new Haze::Hitbox({{0, 0, 32, 14}}));
-    entitySpaceship->addComponent(new Haze::HitboxDisplay());
-    entitySpaceship->addComponent(new Haze::Collision("player", infos));
-    entitySpaceship->addComponent(new Haze::OnKeyPressed([this](int i, std::vector<Haze::InputType> components) {
-        if (std::find(components.begin(), components.end(), Haze::InputType::KEY_ENTER_INPUT) != components.end()) {
-            Haze::Entity *newShot = engine.createEntity();
-            auto position = static_cast<Haze::Position *>(entitySpaceship->getComponent("Position"));
-            newShot->addComponent(new Haze::Position(position->x + 33 * 3, position->y));
-            newShot->addComponent(new Haze::Velocity(2, 0));
-            newShot->addComponent(static_cast<Haze::Sprite *>(entityShot->getComponent("Sprite")));
-            newShot->addComponent(new Haze::Animation({{0, 0, 16, 14},
-                                                       {16, 0, 16, 14},
-                                                       {32, 0, 16, 14}},
-                                                      Haze::Animation::AnimationType::LOOP, true, 0.2));
-        }
+    entities[SPACESHIP]->addComponent(velocityPlayer);
+    entities[SPACESHIP]->addComponent(new Haze::Position(100, 200));
+    entities[SPACESHIP]->addComponent(new Haze::Scale(3, 3));
+    entities[SPACESHIP]->addComponent(spaceshipSprite);
+    // entities[SPACESHIP]->addComponent(new Haze::Animation(*spaceshipSprite, 100, 0, 33, 18, 5, 1, true));
+    entities[SPACESHIP]->addComponent(new Haze::Animation({{100, 0, 33, 18},
+                                                           {133, 0, 33, 18},
+                                                           {166, 0, 33, 18},
+                                                           {199, 0, 33, 18},
+                                                           {232, 0, 33, 18}},
+                                                          Haze::Animation::AnimationType::BOOMERANG, true, 0.2));
+    entities[SPACESHIP]->addComponent(new Haze::Hitbox({{0, 0, 32, 14}}));
+    entities[SPACESHIP]->addComponent(new Haze::HitboxDisplay());
+    entities[SPACESHIP]->addComponent(new Haze::Collision("player", infos));
+    entities[SPACESHIP]->addComponent(new Haze::OnKeyPressed([this](int i, std::vector<Haze::InputType> components)
+                                                             {
+    if (std::find(components.begin(), components.end(), Haze::InputType::KEY_ENTER_INPUT) != components.end()) {
+        Haze::Entity *newShot = engine.createEntity();
+        auto position = static_cast<Haze::Position *>(entities[SPACESHIP]->getComponent("Position"));
+        newShot->addComponent(new Haze::Position(position->x + 33 * 3, position->y));
+        newShot->addComponent(new Haze::Velocity(2, 0));
+        newShot->addComponent(static_cast<Haze::Sprite *>(entities[SHOT]->getComponent("Sprite")));
+        newShot->addComponent(new Haze::Animation({{0, 0, 16, 14},
+                                                    {16, 0, 16, 14},
+                                                    {32, 0, 16, 14}},
+                                                    Haze::Animation::AnimationType::LOOP, true, 0.2));
+    }
 
-        auto velocity = static_cast<Haze::Velocity *>(entitySpaceship->getComponent("Velocity"));
-        if (velocity == nullptr)
-            entitySpaceship->addComponent(new Haze::Velocity(0, 0));
-        velocity->x = 0;
-        velocity->y = 0;
+    auto velocity = static_cast<Haze::Velocity *>(entities[SPACESHIP]->getComponent("Velocity"));
+    if (velocity == nullptr)
+        entities[SPACESHIP]->addComponent(new Haze::Velocity(0, 0));
+    velocity->x = 0;
+    velocity->y = 0;
 
-        if (std::find(components.begin(), components.end(), Haze::InputType::KEY_UP_ARROW) != components.end()) {
-            velocity->y += -5;
-        }
-        if (std::find(components.begin(), components.end(), Haze::InputType::KEY_LEFT_ARROW) != components.end()) {
-            velocity->x += -5;
-        }
-        if (std::find(components.begin(), components.end(), Haze::InputType::KEY_DOWN_ARROW) != components.end()) {
-            velocity->y += 5;
-        }
-        if (std::find(components.begin(), components.end(), Haze::InputType::KEY_RIGHT_ARROW) != components.end()) {
-            velocity->x += 5;
-        } }));
+    if (std::find(components.begin(), components.end(), Haze::InputType::KEY_UP_ARROW) != components.end()) {
+        velocity->y += -5;
+    }
+    if (std::find(components.begin(), components.end(), Haze::InputType::KEY_LEFT_ARROW) != components.end()) {
+        velocity->x += -5;
+    }
+    if (std::find(components.begin(), components.end(), Haze::InputType::KEY_DOWN_ARROW) != components.end()) {
+        velocity->y += 5;
+    }
+    if (std::find(components.begin(), components.end(), Haze::InputType::KEY_RIGHT_ARROW) != components.end()) {
+        velocity->x += 5;
+    } }));
 
-    wall1 = new wall(&engine, jsonData, 0, 600);
-    wall2 = new wall(&engine, jsonData, 192, 600);
-    wall3 = new wall(&engine, jsonData, 384, 600);
-    wall4 = new wall(&engine, jsonData, 576, 600);
-    wall5 = new wall(&engine, jsonData, 768, 600);
-    wall6 = new wall(&engine, jsonData, 950, 600);
-    entityEnnemy->addComponent(new Haze::Position(500, 200));
-    entityEnnemy->addComponent(new Haze::Velocity(0, 0));
-    entityEnnemy->addComponent(new Haze::Scale(3, 3));
-    // entityEnnemy->addComponent(new Haze::Animation(*ennemySprite, 0, 0, 33, 36, 8, 1, true));
-    entityEnnemy->addComponent(new Haze::Animation({{0, 0, 33, 36},
-                                                    {33, 0, 33, 36},
-                                                    {66, 0, 33, 36},
-                                                    {99, 0, 33, 36},
-                                                    {132, 0, 33, 36},
-                                                    {165, 0, 33, 36},
-                                                    {198, 0, 33, 36},
-                                                    {231, 0, 33, 36}},
-                                                   Haze::Animation::AnimationType::BOOMERANG, true, 0.2));
-    entityEnnemy->addComponent(ennemySprite);
+    walls.push_back(new wall(&engine, jsonData, 0, 600));
+    walls.push_back(new wall(&engine, jsonData, 192, 600));
+    walls.push_back(new wall(&engine, jsonData, 384, 600));
+    walls.push_back(new wall(&engine, jsonData, 576, 600));
+    walls.push_back(new wall(&engine, jsonData, 768, 600));
+    walls.push_back(new wall(&engine, jsonData, 950, 600));
 
-    entityWindow->addComponent(window);
+    entities[ENNEMY]->addComponent(new Haze::Position(500, 200));
+    entities[ENNEMY]->addComponent(new Haze::Velocity(0, 0));
+    entities[ENNEMY]->addComponent(new Haze::Scale(3, 3));
+    // entities[ENNEMY]->addComponent(new Haze::Animation(*ennemySprite, 0, 0, 33, 36, 8, 1, true));
+    entities[ENNEMY]->addComponent(new Haze::Animation({{0, 0, 33, 36},
+                                                        {33, 0, 33, 36},
+                                                        {66, 0, 33, 36},
+                                                        {99, 0, 33, 36},
+                                                        {132, 0, 33, 36},
+                                                        {165, 0, 33, 36},
+                                                        {198, 0, 33, 36},
+                                                        {231, 0, 33, 36}},
+                                                       Haze::Animation::AnimationType::BOOMERANG, true, 0.2));
+    entities[ENNEMY]->addComponent(ennemySprite);
+
+    entities[WINDOW]->addComponent(window);
 
 #ifdef USE_SFML
     window->window.setFramerateLimit(60);
@@ -198,42 +198,15 @@ void Rtype::keyRelease()
 
 void Rtype::moveBackground()
 {
-    Haze::Position *position1 = static_cast<Haze::Position *>(wall1->_entityWallBottom->getComponent("Position"));
-    Haze::Position *position2 = static_cast<Haze::Position *>(wall2->_entityWallBottom->getComponent("Position"));
-    Haze::Position *position3 = static_cast<Haze::Position *>(wall3->_entityWallBottom->getComponent("Position"));
-    Haze::Position *position4 = static_cast<Haze::Position *>(wall4->_entityWallBottom->getComponent("Position"));
-    Haze::Position *position5 = static_cast<Haze::Position *>(wall5->_entityWallBottom->getComponent("Position"));
-    Haze::Position *position6 = static_cast<Haze::Position *>(wall6->_entityWallBottom->getComponent("Position"));
+    for (int i = 0; i < 6; ++i)
+    {
+        Haze::Position *position = static_cast<Haze::Position *>(walls[i]->_entityWallBottom->getComponent("Position"));
 
-    if (position1->x <= -200)
-    {
-        position1->x = 800;
-        wall1->changeSpriteBack(wall1->_entityWallBottom);
-    }
-    if (position2->x <= -200)
-    {
-        position2->x = 800;
-        wall2->changeSpriteBack(wall2->_entityWallBottom);
-    }
-    if (position3->x <= -200)
-    {
-        position3->x = 800;
-        wall3->changeSpriteBack(wall3->_entityWallBottom);
-    }
-    if (position4->x <= -200)
-    {
-        position4->x = 800;
-        wall4->changeSpriteBack(wall4->_entityWallBottom);
-    }
-    if (position5->x <= -200)
-    {
-        position5->x = 800;
-        wall5->changeSpriteBack(wall5->_entityWallBottom);
-    }
-    if (position6->x <= -200)
-    {
-        position6->x = 800;
-        wall6->changeSpriteBack(wall6->_entityWallBottom);
+        if (position->x <= -200)
+        {
+            position->x = 800;
+            walls[i]->changeSpriteBack(walls[i]->_entityWallBottom);
+        }
     }
 }
 
@@ -253,8 +226,10 @@ void Rtype::onReceive(udp::endpoint from, network::datagram<protocol::data> cont
     switch (content.header.id)
     {
     case protocol::data::create_entity:
+        // tell to every client to create an entity, with the id of the entity
         break;
     case protocol::data::delete_entity:
+        // tell to every client to delete an entity, with the id of the entity
         break;
     case protocol::data::add_component:
         // Haze::info_component info;

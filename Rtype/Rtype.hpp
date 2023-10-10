@@ -24,33 +24,33 @@
 #include <haze-core.hpp>
 #include <haze-graphics.hpp>
 #include <iostream>
-// #include "GraphicClient.hpp"
-// #include "Component.hpp"
-// #include "common.h"
+
+// Haze::Engine
+#define VORTEX 0
+#define SPACESHIP 1
+#define SHOT 2
+#define WINDOW 3
+#define WALL_TOP 4
+#define ENNEMY 5
+#define BACKGROUND 6
 
 class Rtype : public network::data_channel<protocol::data>
 {
 protected:
     Haze::Engine engine;
-    Haze::Entity *entityVortex;
-    Haze::Entity *entitySpaceship;
-    Haze::Entity *entityShot;
-    // srd::vector<Haze::Entity *> entityShots;
-    Haze::Entity *entityWindow;
-    Haze::Entity *entityWallTop;
-    Haze::Entity *entityEnnemy;
+
+    std::vector<Haze::Entity *> entities;
+    std::vector<wall *> walls;
+
     std::shared_ptr<network::data_channel<protocol::data>> _dataChannel;
-    wall *wall1;
-    wall *wall2;
-    wall *wall3;
-    wall *wall4;
-    wall *wall5;
-    wall *wall6;
-    // Haze::Entity *entityBackground;
-    Haze::Sprite *wallSprite = new Haze::Sprite("assets/wall.png");
+
+    Haze::Sprite *wallSprite = new Haze::Sprite("assets/wall.png"); // ? sure about this ?
+
     nlohmann::json jsonData;
     nlohmann::json sheet;
+
     sf::Event event;
+
     char isMoving = '\0';
     void keyPress();
     void keyRelease();
