@@ -1,3 +1,8 @@
+> [!abstract] Haze for
+> **H**aze
+> **A**tomic
+> **Z**izi
+> **E**ngine
 ## Getting Started
 To get started with the Haze Engine, follow these steps:
 

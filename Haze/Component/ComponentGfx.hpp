@@ -22,9 +22,7 @@ namespace Haze {
         std::string path;
         sf::Sprite sprite;
         sf::Texture texture;
-        std::string getType() const override {
-            return "Sprite";
-        }
+        std::string getType() const override {return "Sprite";}
         void show() const override { std::cout << "flm" << path << std::endl; }
     };
 
@@ -66,9 +64,7 @@ namespace Haze {
         sf::RenderWindow window;
         sf::View view;
         sf::Event event;
-        std::string getType() const override {
-            return "Window";
-        }
+        std::string getType() const override {return "Window";}
         void show() const override { std::cout << "Window: " << width << ", " << height << std::endl; }
     };
 
@@ -81,9 +77,7 @@ namespace Haze {
         sf::Color color = sf::Color::Red;
         sf::RectangleShape rect;
 
-        std::string getType() const override {
-            return "HitboxDisplay";
-        }
+        std::string getType() const override {return "HitboxDisplay";}
         void show() const override { std::cout << "HitboxDisplay: " << std::endl; }
     };
 
@@ -98,9 +92,7 @@ namespace Haze {
         sf::Color color;
         sf::Font font;
         sf::Text textObj;
-        std::string getType() const override {
-            return "Text";
-        }
+        std::string getType() const override {return "Text";}
         void show() const override { std::cout << "Text: " << text << std::endl; }
     };
 }// namespace Haze
