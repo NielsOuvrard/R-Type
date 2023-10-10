@@ -16,38 +16,48 @@ namespace Haze {
         std::vector<InputType> inputsPressed;
         std::vector<InputType> inputsReleased;
         MouseType mouseType;
-        int x;
-        int y;
+        int32_t x;
+        int32_t y;
     };
 
     struct info_inputs_weak {
         std::array<InputType, 100> pressedInputs;
         std::array<InputType, 100> releasedInputs;
         MouseType mouseType;
-        int x;
-        int y;
+
+        // mouse coordinates
+        int32_t x;
+        int32_t y;
     };
 
-    struct id_entity {
-        int id;
+    // # Entities
+    struct entity_id {
+        uint32_t id;
     };
 
-    struct id_component {
-        id_entity id;
-        std::string component;
-    };
-
-    struct info_entity {
-        id_entity id;
+    // !Unused
+    struct entity_info {
+        uint32_t id;
         std::vector<std::string> components;
     };
 
-    struct info_component {
-        std::string component;
-        std::vector<uint8_t> data = std::vector<uint8_t>(128);
+    // !Unused
+    struct entities_info {
+        std::array<uint32_t, 200> ids;
     };
 
-    struct info_entities {
-        std::vector<id_entity> id;
+    // # Components
+    struct component_id {
+        uint32_t id;
+        char name[128];
     };
+
+    // !unused
+    struct component_info {
+        uint32_t id;
+        char name[128];
+        std::array<uint8_t, 128> data;
+    };
+
+
 }// namespace Haze

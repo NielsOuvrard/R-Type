@@ -94,8 +94,7 @@ Rtype::Rtype(asio::io_context &context) : network::data_channel<protocol::data>(
     entitySpaceship->addComponent(new Haze::Hitbox({{0, 0, 32, 14}}));
     entitySpaceship->addComponent(new Haze::HitboxDisplay());
     entitySpaceship->addComponent(new Haze::Collision("player", infos));
-    entitySpaceship->addComponent(new Haze::OnKeyPressed([this](int i, std::vector<Haze::InputType> components)
-                                                         {
+    entitySpaceship->addComponent(new Haze::OnKeyPressed([this](int i, std::vector<Haze::InputType> components) {
         if (std::find(components.begin(), components.end(), Haze::InputType::KEY_ENTER_INPUT) != components.end()) {
             Haze::Entity *newShot = engine.createEntity();
             auto position = static_cast<Haze::Position *>(entitySpaceship->getComponent("Position"));
