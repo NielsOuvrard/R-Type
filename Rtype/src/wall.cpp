@@ -41,6 +41,7 @@ wall::wall(Haze::Engine *engine, nlohmann::json data, int x, int y) : _jsonData(
     _entityWallBottom->addComponent(new Haze::Collision("wall", infos));
     int height = _sheet["height"];
     int width = _sheet["width"];
+
     std::cout << "height: " << height << std::endl;
     std::cout << "width: " << width << std::endl;
     _entityWallBottom->addComponent(new Haze::Hitbox({{0, 0, width, height}}));
