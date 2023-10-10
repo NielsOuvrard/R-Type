@@ -2,7 +2,7 @@
 // Created by erwan on 9/29/23.
 //
 
-#include "./common.h"
+#include "common.h"
 #include "net_data_channel.h"
 #include "net_server.h"
 
@@ -37,21 +37,3 @@ protected:
 private:
     std::unique_ptr<network::data_channel<UDPProtocol>> _dataChannel = nullptr;
 };
-
-int main()
-{
-    server srv(3030);
-    srv.start();
-    while (true)
-    {
-        srv.update(5, true);
-    }
-}
-
-// class game_instance : public rtype , public network::data_channel_interface<UDPProtocol>
-
-// onReceive, we can override
-
-// getter sur file inbox (receive box)
-// on manip la queue
-// getIncoming return queue

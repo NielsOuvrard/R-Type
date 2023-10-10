@@ -1,8 +1,15 @@
 /*
-** EPITECH PROJECT, 2023
-** cpp r-type
-** File description:
-** wall.cpp
+** ooooooooo.           ooooooooooooo
+** `888   `Y88.         8'   888   `8
+**  888   .d88'              888      oooo    ooo oo.ooooo.   .ooooo.
+**  888ooo88P'               888       `88.  .8'   888' `88b d88' `88b
+**  888`88b.    8888888      888        `88..8'    888   888 888ooo888
+**  888  `88b.               888         `888'     888   888 888    .o
+** o888o  o888o             o888o         .8'      888bod8P' `Y8bod8P'
+**                                    .o..P'       888
+**                                    `Y8P'       o888o
+**
+** Wall
 */
 
 #include "wall.hpp"
@@ -20,13 +27,12 @@ wall::wall(Haze::Engine *engine, nlohmann::json data, int x, int y) : _jsonData(
     // _entityWallBottom->addComponent(new Haze::SplitSprite(*static_cast<Haze::Sprite *>(_entityWallBottom->getComponent("Sprite")),
     //      _sheet["x"], _sheet["y"], _sheet["width"], _sheet["height"]));
 
-    _entityWallBottom->addComponent(new Haze::Animation({
-            {_sheet["x"], _sheet["y"], _sheet["width"], _sheet["height"]}
-        }, Haze::Animation::AnimationType::ONCE, true, 0.2));
+    _entityWallBottom->addComponent(new Haze::Animation({{_sheet["x"], _sheet["y"], _sheet["width"], _sheet["height"]}}, Haze::Animation::AnimationType::ONCE, true, 0.2));
     Haze::Collision::CollisionInfo colisionInfo;
     colisionInfo.type = Haze::Collision::LAMBDA;
     colisionInfo.tics = 1;
-    colisionInfo.onCollision = [](int x, int y) {
+    colisionInfo.onCollision = [](int x, int y)
+    {
         std::cout << "collision!" << std::endl;
     };
     std::map<std::string, Haze::Collision::CollisionInfo> infos = {
@@ -37,9 +43,7 @@ wall::wall(Haze::Engine *engine, nlohmann::json data, int x, int y) : _jsonData(
     int width = _sheet["width"];
     std::cout << "height: " << height << std::endl;
     std::cout << "width: " << width << std::endl;
-    _entityWallBottom->addComponent(new Haze::Hitbox({{
-        0, 0, width, height
-    }}));
+    _entityWallBottom->addComponent(new Haze::Hitbox({{0, 0, width, height}}));
     _entityWallBottom->addComponent(new Haze::Velocity(-1, 0));
     changeSpriteBack(_entityWallBottom);
 }
