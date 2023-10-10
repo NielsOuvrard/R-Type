@@ -24,5 +24,5 @@ private:
     bool _isBuild = false;
     Haze::Engine _engine;
     Haze::Entity *_window;
-    std::unique_ptr<cmp::Login> _login = nullptr;
+    std::unique_ptr<element::Login> _login = nullptr;
 };

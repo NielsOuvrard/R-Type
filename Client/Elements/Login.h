@@ -10,7 +10,7 @@
 #include "Button.h"
 #include "TextInput.h"
 
-namespace cmp {
+namespace element {
     class Login {
     public:
         Login(Haze::Engine &engine, float x, float y, std::function<void(const std::string &, uint16_t)> callback);
@@ -34,4 +34,4 @@ namespace cmp {
         TextInput _port;
         Button _validate;
     };
-}// namespace cmp
+}// namespace element

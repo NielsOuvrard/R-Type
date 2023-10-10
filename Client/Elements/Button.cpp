@@ -6,7 +6,7 @@
 
 #include <utility>
 
-namespace cmp {
+namespace element {
     Button::Button(Haze::Engine &engine, std::string label, std::function<void(int)> callback)
         : _engine(engine),
           _entity(_engine.createEntity()),
@@ -21,4 +21,4 @@ namespace cmp {
     Haze::Entity &Button::getEntity() const {
         return *_entity;
     }
-}// namespace cmp
+}// namespace element

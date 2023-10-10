@@ -23,7 +23,7 @@ void client::build() {
     _window = _engine.createEntity();
     _window->addComponent(new Haze::Window(800, 600));
 
-    _login = std::make_unique<cmp::Login>(_engine, 100, 300, [this](const std::string &ip, uint16_t port) {
+    _login = std::make_unique<element::Login>(_engine, 100, 300, [this](const std::string &ip, uint16_t port) {
         std::cout << "Ip: " << ip << ":" << port << std::endl;
         connect(ip, port);
     });

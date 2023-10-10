@@ -10,12 +10,13 @@ set(SOURCES
         client.h
         main.cpp
         common.h
-        components/TextInput.cpp
-        components/TextInput.h
-        components/Button.cpp
-        components/Button.h
-        components/Login.cpp
-        components/Login.h
+        Elements/TextInput.cpp
+        Elements/TextInput.h
+        Elements/Button.cpp
+        Elements/Button.h
+        Elements/Login.cpp
+        Elements/Login.h
+        Elements/Element.h
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})

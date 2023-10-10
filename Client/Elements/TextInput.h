@@ -8,7 +8,7 @@
 #include "haze-core.hpp"
 #include "haze-graphics.hpp"
 
-namespace cmp {
+namespace element {
     class TextInput {
     public:
         explicit TextInput(Haze::Engine &engine, std::string placeHolder);
@@ -24,4 +24,4 @@ namespace cmp {
         std::string _placeHolder;
         std::string _value;
     };
-}// namespace cmp
+}// namespace element
