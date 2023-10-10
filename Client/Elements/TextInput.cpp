@@ -11,7 +11,7 @@ namespace element {
         : _engine(engine),
           _entity(_engine.createEntity()),
           _placeHolder(std::move(placeHolder)) {
-        _entity->addComponent(new Haze::Text(_placeHolder, sf::Color::White, "NotoMono.ttf"));
+        _entity->addComponent(new Haze::Text(_placeHolder, Haze::Text::WHITE, "NotoMono.ttf"));
         _entity->addComponent(new Haze::Scale(1, 1));
         _entity->addComponent(new Haze::HitboxDisplay);
         _entity->addComponent(new Haze::Hitbox({{-10, -5, 200, 50}}));

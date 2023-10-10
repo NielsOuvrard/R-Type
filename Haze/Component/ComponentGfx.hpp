@@ -82,11 +82,53 @@ namespace Haze {
     };
 
     struct Text : public Component {
-        Text(const std::string &text, sf::Color color, const std::string &fontname = "arial.ttf") : text(text), color(color) {
+        enum colorHaze {
+            RED,
+            GREEN,
+            BLUE,
+            YELLOW,
+            BLACK,
+            WHITE,
+            MAGENTA,
+            CYAN,
+            TRANSPARENT,
+            COLOR_COUNT
+        };
+        Text(const std::string &text, colorHaze color, const std::string &fontname = "arial.ttf") : text(text), color(color) {
             font.loadFromFile("../assets/fonts/" + fontname);
             textObj.setFont(font);
             textObj.setString(text);
-            textObj.setFillColor(color);
+            switch (color) {
+                case RED:
+                    textObj.setFillColor(sf::Color::Red);
+                    break;
+                case GREEN:
+                    textObj.setFillColor(sf::Color::Green);
+                    break;
+                case BLUE:
+                    textObj.setFillColor(sf::Color::Blue);
+                    break;
+                case YELLOW:
+                    textObj.setFillColor(sf::Color::Yellow);
+                    break;
+                case BLACK:
+                    textObj.setFillColor(sf::Color::Black);
+                    break;
+                case WHITE:
+                    textObj.setFillColor(sf::Color::White);
+                    break;
+                case MAGENTA:
+                    textObj.setFillColor(sf::Color::Magenta);
+                    break;
+                case CYAN:
+                    textObj.setFillColor(sf::Color::Cyan);
+                    break;
+                case TRANSPARENT:
+                    textObj.setFillColor(sf::Color::Transparent);
+                    break;
+                default:
+                    break;
+            }
         }
         std::string text;
         sf::Color color;

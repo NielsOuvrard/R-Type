@@ -12,6 +12,7 @@ set(
     Entity/Entity.cpp
     System/core/SystemCore.cpp
     Engine/Engine.cpp
+    Factory/Factory.cpp
     ComponentList/ComponentList.cpp
     Pipeline/core/CorePipeline.cpp
 )
@@ -23,6 +24,7 @@ target_include_directories(haze PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Engine)
 target_include_directories(haze PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Component)
 target_include_directories(haze PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/ComponentList)
 target_include_directories(haze PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Pipeline)
+target_include_directories(haze PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Factory)
 target_include_directories(haze PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Pipeline/core)
 
 
@@ -34,6 +36,7 @@ set(
     System/core/SystemCore.cpp
     System/gfx/SystemGfx.cpp
     Engine/Engine.cpp
+    Factory/Factory.cpp
     ComponentList/ComponentList.cpp
     Pipeline/core/CorePipeline.cpp
     Pipeline/gfx/GfxPipeline.cpp
@@ -49,5 +52,6 @@ target_include_directories(haze-graphics PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Comp
 target_include_directories(haze-graphics PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/ComponentList)
 target_include_directories(haze-graphics PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Pipeline)
 target_include_directories(haze-graphics PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Pipeline/gfx)
+target_include_directories(haze-graphics PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Factory)
 target_include_directories(haze-graphics PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Pipeline/core)
 target_link_libraries(haze-graphics PUBLIC sfml-graphics sfml-window sfml-system)

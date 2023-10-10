@@ -76,7 +76,7 @@ namespace Haze
 
     struct TextData {
         std::string text;
-        sf::Color color;
+        Haze::Text::colorHaze color;
     };
     #endif
 }
