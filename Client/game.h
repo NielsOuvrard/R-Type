@@ -16,15 +16,16 @@ public:
     explicit game(asio::io_context &context, Haze::Engine &engine);
     void onReceive(udp::endpoint from, network::datagram<data> content) override;
 
-    void createEntity(Haze::info_component info) {}
-    void deleteEntity() {}
-    void addComponent() {}
-    void removeComponent() {}
-    void infoComponent() {}
-    void infoEntity() {}
-    void infoEntities() {}
+    void createEntity(Haze::entity_id id);
+    void deleteEntity(Haze::entity_id id);
+    void addComponent(Haze::component_info info);
+    void removeComponent(Haze::component_id id);
+    // !Unused
+    //    void infoComponent();
+    //    void infoEntity();
+    //    void infoEntities();
 
 private:
     Haze::Engine &_engine;
-    std::list<Haze::Entity *> _entities;
+    std::map<uint32_t, Haze::Entity *> _entities;
 };

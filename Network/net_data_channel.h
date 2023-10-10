@@ -22,11 +22,11 @@ namespace network
               _socket(context, udp::endpoint(udp::v4(), 0)) { asyncReceive(); };
         virtual ~data_channel() = default;
 
-    public: // Receiving information
+
+    public:// Receiving information
         void startListening()
         {
-            try
-            {
+            try {
                 asyncReceive();
             }
             catch (std::exception &e)
@@ -35,11 +35,10 @@ namespace network
             }
         }
 
-    public: // Sending information
+    public:// Sending information
         void sendTo(const datagram<T> &datagram, const udp::endpoint &to)
         {
-            asio::post(_context, [this, datagram, to]()
-                       {
+            asio::post(_context, [this, datagram, to]() {
                 bool writing = !_outbox.empty();
                 _outbox.push_back({to, datagram});
                 if (!writing) {
@@ -48,15 +47,15 @@ namespace network
         }
         void sendAll(const datagram<T> &datagram)
         {
-            for (auto &to : _peers)
-            {
+
+            for (auto &to: _peers) {
                 sendTo(datagram, to);
             }
         }
         void sendSome(const datagram<T> &datagram, std::vector<udp::endpoint> some)
         {
-            for (auto &to : some)
-            {
+
+            for (auto &to: some) {
                 sendTo(datagram, to);
             }
         }
@@ -64,8 +63,8 @@ namespace network
     public:
         void update(size_t maxDatagram = -1, bool wait = false)
         {
-            if (wait)
-                _inbox.wait();
+
+            if (wait) _inbox.wait();
             size_t count = 0;
             while (count < maxDatagram && !_inbox.empty())
             {
@@ -79,7 +78,8 @@ namespace network
 
         //        ThreadSafeQueue<owned_message<T>> &getIncoming() { return _inbox; }
 
-    public: // Async Actions
+
+    public:// Async Actions
         void asyncReceive()
         {
             _socket.async_receive_from(
