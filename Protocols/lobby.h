@@ -3,7 +3,7 @@
 #include <cstdint>
 
 namespace protocol {
-    enum class Lobby : std::uint32_t {
+    enum class lobby : std::uint32_t {
         // Request
         create_room,
         get_rooms,

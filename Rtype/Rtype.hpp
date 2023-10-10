@@ -14,21 +14,20 @@
 
 #pragma once
 
+#include "data.h"
+#include "json.hpp"
+#include "net_data_channel.h"
+#include "wall.hpp"
+#include <cstdlib>
+#include <ctime>
+#include <fstream>
 #include <haze-core.hpp>
 #include <haze-graphics.hpp>
 #include <iostream>
-#include <fstream>
-#include <cstdlib>
-#include <ctime>
-#include "json.hpp"
-#include "wall.hpp"
-#include "data.h"
-#include "net_data_channel.h"
 // #include "GraphicClient.hpp"
 // #include "Component.hpp"
 
-class Rtype
-{
+class Rtype {
 protected:
     Haze::Engine engine;
     Haze::Entity *entityVortex;
@@ -38,7 +37,7 @@ protected:
     Haze::Entity *entityWindow;
     Haze::Entity *entityWallTop;
     Haze::Entity *entityEnnemy;
-    std::shared_ptr<network::data_channel<protocol::UDPProtocol>> _dataChannel;
+    std::shared_ptr<network::data_channel<protocol::data>> _dataChannel;
     wall *wall1;
     wall *wall2;
     wall *wall3;
@@ -58,7 +57,7 @@ protected:
 public:
     Rtype();
     ~Rtype();
-    void run(std::shared_ptr<network::data_channel<protocol::UDPProtocol>> _dataChannel);
+    void run(std::shared_ptr<network::data_channel<protocol::data>> _dataChannel);
     void moveUp(void *component);
     void moveDown(void *component);
     void moveLeft(void *component);

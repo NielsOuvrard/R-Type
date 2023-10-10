@@ -37,7 +37,6 @@ namespace element {
         _onValidateFnc = std::move(callback);
     }
     void Login::setHide(bool state) {
-        if (_hidden == state) return;
         _hidden = state;
         if (state) {
             _ip.getEntity().addComponent(new Haze::Hide);
