@@ -14,10 +14,11 @@
 
 #include "Rtype.hpp"
 #include "data.h"
+#include "data.h"
 #include "net_data_channel.h"
 #include "net_server.h"
 
-Rtype::Rtype(asio::io_context &context) : network::data_channel<protocol::data>(context)
+Rtype::Rtype(asio::io_context &context) : network::data_channel<protocol::recieved_by_server>(context)
 {
     engine.init();
     std::ifstream inputFile("Rtype/SpritesMooves/ground.json");
@@ -34,10 +35,10 @@ Rtype::Rtype(asio::io_context &context) : network::data_channel<protocol::data>(
     }
 
     Haze::Velocity *velocityPlayer = new Haze::Velocity(0, 0);
-    Haze::Sprite *vortexSprite = new Haze::Sprite("assets/r-typesheet30a.gif");
-    Haze::Sprite *shotSprite = new Haze::Sprite("assets/shot.png");
-    Haze::Sprite *spaceshipSprite = new Haze::Sprite("assets/r-typesheet1.gif");
-    Haze::Sprite *ennemySprite = new Haze::Sprite("assets/r-typesheet5.gif");
+    Haze::Sprite *vortexSprite = new Haze::Sprite("assets/r-typesheet30a.gif");  // ? useless
+    Haze::Sprite *shotSprite = new Haze::Sprite("assets/shot.png");              // ? useless
+    Haze::Sprite *spaceshipSprite = new Haze::Sprite("assets/r-typesheet1.gif"); // ? useless
+    Haze::Sprite *ennemySprite = new Haze::Sprite("assets/r-typesheet5.gif");    // ? useless
     Haze::Window *window = new Haze::Window(800, 600);
 
     Haze::Collision::CollisionInfo colisionInfo;
@@ -61,7 +62,6 @@ Rtype::Rtype(asio::io_context &context) : network::data_channel<protocol::data>(
     entities[VORTEX]->addComponent(new Haze::Velocity(2, 0));
     entities[VORTEX]->addComponent(new Haze::Scale(3, 3));
     entities[VORTEX]->addComponent(vortexSprite);
-    // entities[VORTEX]->addComponent(new Haze::Animation(*vortexSprite, 0, 0, 34, 34, 3, 1));
     entities[VORTEX]->addComponent(new Haze::Animation({{0, 0, 34, 34},
                                                         {34, 0, 34, 34},
                                                         {68, 0, 34, 34}},
@@ -135,7 +135,6 @@ Rtype::Rtype(asio::io_context &context) : network::data_channel<protocol::data>(
     entities[ENNEMY]->addComponent(new Haze::Position(500, 200));
     entities[ENNEMY]->addComponent(new Haze::Velocity(0, 0));
     entities[ENNEMY]->addComponent(new Haze::Scale(3, 3));
-    // entities[ENNEMY]->addComponent(new Haze::Animation(*ennemySprite, 0, 0, 33, 36, 8, 1, true));
     entities[ENNEMY]->addComponent(new Haze::Animation({{0, 0, 33, 36},
                                                         {33, 0, 33, 36},
                                                         {66, 0, 33, 36},
@@ -221,23 +220,79 @@ void Rtype::run(std::shared_ptr<network::data_channel<protocol::data>> dataChann
     std::cout << "engine closed!" << std::endl;
 }
 
-void Rtype::onReceive(udp::endpoint from, network::datagram<protocol::data> content)
+void Rtype::onReceive(udp::endpoint from, network::datagram<protocol::recieved_by_server> content)
 {
     switch (content.header.id)
     {
-    case protocol::data::create_entity:
-        // tell to every client to create an entity, with the id of the entity
-        break;
-    case protocol::data::delete_entity:
-        // tell to every client to delete an entity, with the id of the entity
-        break;
-    case protocol::data::add_component:
-        // Haze::info_component info;
-        // std::memcpy(&info, content.body.data(), content.header.size);
-        // addComponent();
-        break;
-    case protocol::data::remove_component:
+
+        // | ID            | Body         | Response ID    |
+        // | ------------- | ------------ | -------------- |
+        // | INPUT         | info_inputs  | NONE           |
+        // | GET_ENTITY    | id_entity    | INFO_ENTITY    |
+        // | GET_ENTITIES  | NONE         | INFO_ENTITIES  |
+        // | GET_COMPONENT | id_component | INFO_COMPONENT |
+        // | ALIVE         | NONE         | NONE           |
+
+    case protocol::recieved_by_server::input: // TODO : could be many players, see about that
+    {
+        Haze::info_inputs info;
+        std::memcpy(&info, content.body.data(), content.header.size);
+        // auto input = static_cast<Haze::Input *>(entities[SPACESHIP]->getComponent("Input"));
+        // if (input == nullptr)
+        //     entities[SPACESHIP]->addComponent(new Haze::Input());
         break;
     }
-    // ...
+    case protocol::recieved_by_server::get_entity:
+    {
+        Haze::id_entity info;
+        std::memcpy(&info, content.body.data(), content.header.size);
+        // entities.push_back(engine.createEntity());
+        // tell to every client to create an entity, with the id of the entity
+        break;
+    }
+    case protocol::recieved_by_server::get_entities:
+    {
+        // tell to every client to delete an entity, with the id of the entity
+        break;
+    }
+    case protocol::recieved_by_server::get_component:
+    {
+        Haze::id_component info;
+        std::memcpy(&info, content.body.data(), content.header.size);
+        // addComponent();
+        break;
+    }
+    case protocol::recieved_by_server::alive:
+    {
+        // TODO
+        break;
+    }
+    }
 }
+
+/*
+
+write this when sending to a client
+
+case protocol::data::create_entity:
+
+    Haze::info_entity info;
+    // cast content.body to info_entity
+    std::memcpy(&info, content.body.data(), content.header.size);
+
+    entities.push_back(engine.createEntity());
+
+
+    // tell to every client to create an entity, with the id of the entity
+    break;
+case protocol::data::delete_entity:
+    // tell to every client to delete an entity, with the id of the entity
+    break;
+case protocol::data::add_component:
+    // Haze::info_component info;
+    // std::memcpy(&info, content.body.data(), content.header.size);
+    // addComponent();
+    break;
+case protocol::data::remove_component:
+    break;
+*/

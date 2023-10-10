@@ -15,6 +15,7 @@
 #pragma once
 
 #include "data.h"
+#include "data.h"
 #include "json.hpp"
 #include "net_data_channel.h"
 #include "wall.hpp"
@@ -34,7 +35,7 @@
 #define ENNEMY 5
 #define BACKGROUND 6
 
-class Rtype : public network::data_channel<protocol::data>
+class Rtype : public network::data_channel<protocol::recieved_by_server>
 {
 protected:
     Haze::Engine engine;
@@ -65,5 +66,5 @@ public:
     void moveLeft(void *component);
     void moveRight(void *component);
     // void onReceive(udp::endpoint from, datagram<T> content) override;
-    void onReceive(udp::endpoint from, network::datagram<protocol::data> content) override;
+    void onReceive(udp::endpoint from, network::datagram<protocol::recieved_by_server> content) override;
 };

@@ -11,8 +11,10 @@
 #include "inputs.hpp"
 #include <vector>
 
-namespace Haze {
-    struct info_inputs {
+namespace Haze
+{
+    struct info_inputs
+    {
         std::vector<InputType> inputsPressed;
         std::vector<InputType> inputsReleased;
         MouseType mouseType;
@@ -20,7 +22,19 @@ namespace Haze {
         int32_t y;
     };
 
-    struct info_inputs_weak {
+    struct id_entity
+    {
+        uint32_t id;
+    };
+
+    struct id_component
+    {
+        id_entity id;
+        std::string component;
+    };
+
+    struct info_inputs_weak
+    {
         std::array<InputType, 100> pressedInputs;
         std::array<InputType, 100> releasedInputs;
         MouseType mouseType;
@@ -31,33 +45,37 @@ namespace Haze {
     };
 
     // # Entities
-    struct entity_id {
+    struct entity_id
+    {
         uint32_t id;
     };
 
     // !Unused
-    struct entity_info {
+    struct entity_info
+    {
         uint32_t id;
         std::vector<std::string> components;
     };
 
     // !Unused
-    struct entities_info {
+    struct entities_info
+    {
         std::array<uint32_t, 200> ids;
     };
 
     // # Components
-    struct component_id {
+    struct component_id
+    {
         uint32_t id;
         char name[128];
     };
 
     // !unused
-    struct component_info {
+    struct component_info
+    {
         uint32_t id;
         char name[128];
         std::array<uint8_t, 128> data;
     };
 
-
-}// namespace Haze
+} // namespace Haze
