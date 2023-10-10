@@ -41,7 +41,7 @@ FetchContent_MakeAvailable(sfml)
 
 add_subdirectory(Protocols)
 add_subdirectory(Network)
-add_subdirectory(NetworkTest)
+# add_subdirectory(NetworkTest)
 add_subdirectory(Haze)
 add_subdirectory(Rtype)
 add_subdirectory(Server)
