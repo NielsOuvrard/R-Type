@@ -10,6 +10,7 @@
 #include "net_data_channel.h"
 #include "net_server.h"
 
+
 class server : public network::server_interface<protocol::lobby> {
 public:
     explicit server(uint16_t port) : network::server_interface<protocol::lobby>(port) {}
@@ -32,6 +33,7 @@ protected:
                 break;
         }
     }
+
     bool onClientConnection(std::shared_ptr<network::connection<protocol::lobby>> client) override
     {
         return true;
@@ -41,8 +43,8 @@ private:
     std::shared_ptr<network::data_channel<protocol::data>> _dataChannel = nullptr;
 };
 
-int main()
-{
+
+int main() {
     server srv(3030);
     srv.start();
     std::cout << "Server started" << std::endl;

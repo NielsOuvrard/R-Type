@@ -15,5 +15,3 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     Network
     rtype-game
 )
-
-target_include_directories(${PROJECT_NAME} PUBLIC .)
