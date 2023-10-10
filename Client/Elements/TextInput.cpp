@@ -3,7 +3,6 @@
 //
 
 #include "TextInput.h"
-#include <SFML/Graphics.hpp>
 #include <utility>
 
 namespace element {

@@ -15,7 +15,6 @@
 namespace Haze {
     struct Sprite : public Component {
         Sprite(std::string path) : path(path) {
-            std::cout << "path " << path << std::endl;
             texture.loadFromFile(path);
             sprite.setTexture(texture);
         }
