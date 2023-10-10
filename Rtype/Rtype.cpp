@@ -249,6 +249,21 @@ void Rtype::run(std::shared_ptr<network::data_channel<protocol::data>> dataChann
     std::cout << "engine closed!" << std::endl;
 }
 
-// void onReceive(udp::endpoint from, network::datagram<protocol::data> content)
-// {
-// }
+void Rtype::onReceive(udp::endpoint from, network::datagram<protocol::data> content)
+{
+    switch (content.header.id)
+    {
+    case protocol::data::create_entity:
+        break;
+    case protocol::data::delete_entity:
+        break;
+    case protocol::data::add_component:
+        // Haze::info_component info;
+        // std::memcpy(&info, content.body.data(), content.header.size);
+        // addComponent();
+        break;
+    case protocol::data::remove_component:
+        break;
+    }
+    // ...
+}

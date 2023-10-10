@@ -65,5 +65,5 @@ public:
     void moveLeft(void *component);
     void moveRight(void *component);
     // void onReceive(udp::endpoint from, datagram<T> content) override;
-    // void onReceive(udp::endpoint from, network::datagram<protocol::data> content) override;
+    void onReceive(udp::endpoint from, network::datagram<protocol::data> content) override;
 };
