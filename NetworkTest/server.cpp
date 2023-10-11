@@ -11,7 +11,8 @@ public:
     explicit server(uint16_t port) : network::server_interface<Protocol>(port) {}
 
 protected:
-    void onMessage(std::shared_ptr<network::connection<Protocol>> from, network::message<Protocol> &msg) override {
+    void onMessage(std::shared_ptr<network::connection<Protocol>> from, network::message<Protocol> &msg) override
+    {
         switch (msg.header.id) {
             case Protocol::start_room:
                 if (!_dataChannel) {
@@ -25,7 +26,8 @@ protected:
                 break;
         }
     }
-    bool onClientConnection(std::shared_ptr<network::connection<Protocol>> client) override {
+    bool onClientConnection(std::shared_ptr<network::connection<Protocol>> client) override
+    {
         return true;
     }
 
@@ -33,7 +35,8 @@ private:
     std::unique_ptr<network::data_channel<UDPProtocol>> _dataChannel = nullptr;
 };
 
-int main() {
+int main()
+{
     server srv(3030);
     srv.start();
     while (true) {

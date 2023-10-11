@@ -6,8 +6,24 @@
 
 game::game(asio::io_context &context, Haze::Engine &engine)
     : network::data_channel<data>(context),
-      _engine(engine)
+      _engine(engine),
+      _inputGrabber(_engine.createEntity())
 {
+    _inputGrabber->addComponent(new Haze::OnKeyPressed([this](int id, std::vector<Haze::InputType> keys) {
+        uint32_t i = 0;
+        Haze::info_inputs_weak info{};
+        for (auto &key: keys) {
+            if (i < info.pressedInputs.max_size()) {
+                info.pressedInputs[0] = key;
+                i++;
+            }
+        }
+        if (i) {
+            network::datagram<data> msg(data::input);
+            std::memcpy(msg.body.data(), &info, sizeof(Haze::info_inputs_weak));
+            sendAll(msg);
+        }
+    }));
 }
 
 void game::onReceive(udp::endpoint from, network::datagram<data> content)
@@ -57,8 +73,7 @@ void game::deleteEntity(Haze::entity_id id)
 void game::addComponent(Haze::component_info info)
 {
     Haze::Entity *e = _engine.getEntity(info.id);
-    // Todo: Wait for haze component factory
-    //    e->addComponent(new Haze::)
+    e->addComponent(Haze::Factory::createComponent(info.name, info.data));
 }
 
 void game::removeComponent(Haze::component_id id)

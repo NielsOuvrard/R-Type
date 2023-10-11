@@ -5,32 +5,46 @@
 #include "client.h"
 #include "net_message.h"
 
-client::client() {
+client::client()
+{
     _engine.init();
 }
 
 client::~client() {}
 
 
-void client::start() {
+void client::start()
+{
     if (!_isBuild) build();
     while (_engine.isOpen()) {
         if (!_login->isHidden() && isConnected()) {
             _startButton->getEntity().removeComponent("Hide");
             _login->setHide(true);
         }
-        if (!_inGame && _dataChannel) {
-            _startButton->getEntity().removeComponent("Hide");
-        }
-        if (_inGame && _dataChannel) {
-            _dataChannel->update(5, false);
+
+        // TCP Events
+        while (!getIncoming().empty()) {
+            network::message<lobby> msg = getIncoming().pop_front().content;
+            switch (msg.header.id) {
+                case lobby::data_channel: {
+                    if (!_game) {
+                        asio::ip::udp::endpoint peer;
+                        msg >> peer;
+                        _game = std::make_unique<game>(_context, _engine);
+                        _game->addPeer(peer);
+                        _startButton->getEntity().addComponent(new Haze::Hide);
+                    }
+                    break;
+                }
+            }
         }
         _engine.update();
     }
     std::cout << "engine closed!" << std::endl;
 }
 
-void client::build() {
+void client::build()
+{
     std::cout << "[CLIENT] Building resources..." << std::endl;
     _window = _engine.createEntity();
     _window->addComponent(new Haze::Window(800, 600));

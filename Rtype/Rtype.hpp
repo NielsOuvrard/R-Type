@@ -35,6 +35,7 @@
 #define ENNEMY 5
 #define BACKGROUND 6
 
+
 class Rtype : public network::data_channel<protocol::data>
 {
     struct clientData
@@ -42,7 +43,6 @@ class Rtype : public network::data_channel<protocol::data>
         uint32_t id;
         bool isAlive;
     };
-
 protected:
     Haze::Engine engine;
 
@@ -53,9 +53,7 @@ protected:
 
     std::map<asio::ip::udp::endpoint, clientData> playersId;
 
-    std::shared_ptr<network::data_channel<protocol::data>> _dataChannel;
-
-    Haze::Sprite *wallSprite = new Haze::Sprite("assets/wall.png"); // ? sure about this ?
+    Haze::Sprite *wallSprite = new Haze::Sprite("assets/wall.png");// ? sure about this ?
 
     nlohmann::json jsonData;
     nlohmann::json sheet;
@@ -70,6 +68,7 @@ protected:
 public:
     Rtype(asio::io_context &context);
     ~Rtype();
+
     void run(std::shared_ptr<network::data_channel<protocol::data>> _dataChannel);
     // void moveUp(void *component);
     // void moveDown(void *component);

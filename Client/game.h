@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "Factory.hpp"
 #include "data.h"
 #include "haze-core.hpp"
 #include "haze-graphics.hpp"
@@ -16,7 +17,9 @@ public:
     explicit game(asio::io_context &context, Haze::Engine &engine);
     void onReceive(udp::endpoint from, network::datagram<data> content) override;
 
-    void createEntity(Haze::entity_id id);
+public:
+    void
+    createEntity(Haze::entity_id id);
     void deleteEntity(Haze::entity_id id);
     void addComponent(Haze::component_info info);
     void removeComponent(Haze::component_id id);
@@ -27,5 +30,6 @@ public:
 
 private:
     Haze::Engine &_engine;
+    Haze::Entity *_inputGrabber;
     std::map<uint32_t, Haze::Entity *> _entities;
 };

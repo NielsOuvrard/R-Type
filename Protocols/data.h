@@ -14,6 +14,7 @@ namespace protocol
         get_component,
         alive,
         join,
+        input,
 
         // server
         create_entity,
