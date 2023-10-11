@@ -6,6 +6,7 @@
 
 #include "Elements/Login.h"
 #include "data.h"
+#include "game.h"
 #include "haze-core.hpp"
 #include "haze-graphics.hpp"
 #include "lobby.h"
@@ -27,10 +28,10 @@ private:
     bool _isBuild = false;
     bool _inGame = false;
 
-    std::unique_ptr<network::data_channel<protocol::data>> _dataChannel = nullptr;
+    std::unique_ptr<game> _game = nullptr;
 
     // Haze GFX components
-    Haze::Entity *_window;
+    Haze::Entity *_window = nullptr;
     std::unique_ptr<element::Login> _login = nullptr;
     std::unique_ptr<element::Button> _startButton = nullptr;
 };

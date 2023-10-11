@@ -8,6 +8,7 @@ namespace protocol {
         // client
         alive,
         join,
+        input,
 
         // server
         create_entity,
