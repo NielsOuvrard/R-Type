@@ -19,7 +19,6 @@ namespace Haze
 
     void ComponentList::addComponent(Component *component, size_t id)
     {
-        printf("add component %s\n", component->getType().c_str());
         if (find(_componentName.begin(), _componentName.end(), component->getType()) == _componentName.end()) {
             addList(component->getType());
         }
