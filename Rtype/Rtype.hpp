@@ -23,7 +23,7 @@
 #include <ctime>
 #include <fstream>
 #include <haze-core.hpp>
-#include <haze-graphics.hpp>
+#include <haze-graphics.hpp> // ? sure about this ?
 #include <iostream>
 
 // Haze::Engine
@@ -35,13 +35,23 @@
 #define ENNEMY 5
 #define BACKGROUND 6
 
-class Rtype : public network::data_channel<protocol::recieved_by_server>
+class Rtype : public network::data_channel<protocol::data>
 {
+    struct clientData
+    {
+        uint32_t id;
+        bool isAlive;
+    };
+
 protected:
     Haze::Engine engine;
 
     std::vector<Haze::Entity *> entities;
-    std::vector<wall *> walls;
+    std::vector<wall *> walls; // c'est quoi ça ? map ?
+
+    std::vector<Haze::Entity *> players;
+
+    std::map<asio::ip::udp::endpoint, clientData> playersId;
 
     std::shared_ptr<network::data_channel<protocol::data>> _dataChannel;
 
@@ -61,10 +71,11 @@ public:
     Rtype(asio::io_context &context);
     ~Rtype();
     void run(std::shared_ptr<network::data_channel<protocol::data>> _dataChannel);
-    void moveUp(void *component);
-    void moveDown(void *component);
-    void moveLeft(void *component);
-    void moveRight(void *component);
-    // void onReceive(udp::endpoint from, datagram<T> content) override;
-    void onReceive(udp::endpoint from, network::datagram<protocol::recieved_by_server> content) override;
+    // void moveUp(void *component);
+    // void moveDown(void *component);
+    // void moveLeft(void *component);
+    // void moveRight(void *component);
+    void onReceive(udp::endpoint from, network::datagram<protocol::data> content) override;
+
+    uint32_t getClientId(asio::ip::udp::endpoint endpoint);
 };

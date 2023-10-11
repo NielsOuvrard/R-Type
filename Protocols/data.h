@@ -5,19 +5,13 @@
 
 namespace protocol
 {
-
-    enum class recieved_by_server : std::uint32_t
+    enum class data : std::uint32_t
     {
+        // client
         input,
         get_entity,
         get_entities,
         get_component,
-        alive,
-    };
-
-    enum class data : std::uint32_t
-    {
-        // client
         alive,
         join,
 
