@@ -21,14 +21,11 @@ Rtype::Rtype(asio::io_context &context) : network::data_channel<protocol::data>(
 {
     engine.init();
     std::ifstream inputFile("Rtype/SpritesMooves/ground.json");
-    if (inputFile.is_open())
-    {
+    if (inputFile.is_open()) {
         inputFile >> jsonData;
         inputFile.close();
         sheet = jsonData["sheet1"];
-    }
-    else
-    {
+    } else {
         std::cout << "Impossible d'ouvrir le fichier !" << std::endl;
         exit(84);
     }
@@ -43,16 +40,15 @@ Rtype::Rtype(asio::io_context &context) : network::data_channel<protocol::data>(
     Haze::Collision::CollisionInfo colisionInfo;
     colisionInfo.type = Haze::Collision::LAMBDA;
     colisionInfo.tics = 1;
-    colisionInfo.onCollision = [](int x, int y)
-    {
+    colisionInfo.onCollision = [](int x, int y) {
         std::cout << "collision!" << std::endl;
     };
     std::map<std::string, Haze::Collision::CollisionInfo> infos = {
-        {"wall", colisionInfo},
+            {"wall", colisionInfo},
     };
     // infos["ennemy"] = Haze::Collision::CollisionInfo(0, 0, 33, 36);
 
-    for (int i = 0; i < 7; i++) // from VORTEX to BACKGROUND
+    for (int i = 0; i < 7; i++)// from VORTEX to BACKGROUND
     {
         entities.push_back(engine.createEntity());
     }
@@ -92,8 +88,7 @@ Rtype::Rtype(asio::io_context &context) : network::data_channel<protocol::data>(
     entities[SPACESHIP]->addComponent(new Haze::Hitbox({{0, 0, 32, 14}}));
     entities[SPACESHIP]->addComponent(new Haze::HitboxDisplay());
     entities[SPACESHIP]->addComponent(new Haze::Collision("player", infos));
-    entities[SPACESHIP]->addComponent(new Haze::OnKeyPressed([this](int i, std::vector<Haze::InputType> components)
-                                                             {
+    entities[SPACESHIP]->addComponent(new Haze::OnKeyPressed([this](int i, std::vector<Haze::InputType> components) {
     if (std::find(components.begin(), components.end(), Haze::InputType::KEY_ENTER_INPUT) != components.end()) {
         Haze::Entity *newShot = engine.createEntity();
         auto position = static_cast<Haze::Position *>(entities[SPACESHIP]->getComponent("Position"));
@@ -160,22 +155,17 @@ Rtype::~Rtype()
 
 void Rtype::keyPress()
 {
-    if (event.type == sf::Event::KeyPressed)
-    {
-        if (event.key.code == sf::Keyboard::Up)
-        {
+    if (event.type == sf::Event::KeyPressed) {
+        if (event.key.code == sf::Keyboard::Up) {
             isMoving = 'U';
         }
-        if (event.key.code == sf::Keyboard::Left)
-        {
+        if (event.key.code == sf::Keyboard::Left) {
             isMoving = 'L';
         }
-        if (event.key.code == sf::Keyboard::Down)
-        {
+        if (event.key.code == sf::Keyboard::Down) {
             isMoving = 'D';
         }
-        if (event.key.code == sf::Keyboard::Right)
-        {
+        if (event.key.code == sf::Keyboard::Right) {
             isMoving = 'R';
         }
     }
@@ -183,8 +173,7 @@ void Rtype::keyPress()
 
 void Rtype::keyRelease()
 {
-    if (event.type == sf::Event::KeyReleased)
-    {
+    if (event.type == sf::Event::KeyReleased) {
         if (event.key.code == sf::Keyboard::Up)
             isMoving = '\0';
         if (event.key.code == sf::Keyboard::Left)
@@ -198,23 +187,19 @@ void Rtype::keyRelease()
 
 void Rtype::moveBackground()
 {
-    for (int i = 0; i < 6; ++i)
-    {
+    for (int i = 0; i < 6; ++i) {
         Haze::Position *position = static_cast<Haze::Position *>(walls[i]->_entityWallBottom->getComponent("Position"));
 
-        if (position->x <= -200)
-        {
+        if (position->x <= -200) {
             position->x = 800;
             walls[i]->changeSpriteBack(walls[i]->_entityWallBottom);
         }
     }
 }
 
-void Rtype::run(std::shared_ptr<network::data_channel<protocol::data>> dataChannel)
+void Rtype::run()
 {
-    _dataChannel = std::move(dataChannel);
-    while (engine.isOpen())
-    {
+    while (engine.isOpen()) {
         Rtype::moveBackground();
         engine.update();
     }
@@ -223,21 +208,20 @@ void Rtype::run(std::shared_ptr<network::data_channel<protocol::data>> dataChann
 
 void Rtype::onReceive(udp::endpoint from, network::datagram<protocol::data> content)
 {
-    switch (content.header.id)
-    {
-    case protocol::data::create_entity:
-        // tell to every client to create an entity, with the id of the entity
-        break;
-    case protocol::data::delete_entity:
-        // tell to every client to delete an entity, with the id of the entity
-        break;
-    case protocol::data::add_component:
-        // Haze::info_component info;
-        // std::memcpy(&info, content.body.data(), content.header.size);
-        // addComponent();
-        break;
-    case protocol::data::remove_component:
-        break;
+    switch (content.header.id) {
+        case protocol::data::create_entity:
+            // tell to every client to create an entity, with the id of the entity
+            break;
+        case protocol::data::delete_entity:
+            // tell to every client to delete an entity, with the id of the entity
+            break;
+        case protocol::data::add_component:
+            // Haze::info_component info;
+            // std::memcpy(&info, content.body.data(), content.header.size);
+            // addComponent();
+            break;
+        case protocol::data::remove_component:
+            break;
     }
     // ...
 }
