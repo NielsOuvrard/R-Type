@@ -52,7 +52,6 @@ Rtype::Rtype(asio::io_context &context) : network::data_channel<protocol::data>(
     // Haze::Sprite *shotSprite = new Haze::Sprite("assets/shot.png");              // ? useless
     // Haze::Sprite *spaceshipSprite = new Haze::Sprite("assets/r-typesheet1.gif"); // ? useless
     // Haze::Sprite *ennemySprite = new Haze::Sprite("assets/r-typesheet5.gif");    // ? useless
-    // Haze::Window *window = new Haze::Window(800, 600);
 
     Haze::Collision::CollisionInfo colisionInfo;
     colisionInfo.type = Haze::Collision::LAMBDA;
@@ -165,7 +164,8 @@ Rtype::Rtype(asio::io_context &context) : network::data_channel<protocol::data>(
     //                                                    Haze::Animation::AnimationType::BOOMERANG, true, 0.2));
     // entities[ENNEMY]->addComponent(ennemySprite);
 
-    // entities[WINDOW]->addComponent(window);
+    Haze::Window *window = new Haze::Window(0, 0);
+    entities[WINDOW]->addComponent(window);
 
 #ifdef USE_SFML
     // window->window.setFramerateLimit(60);
@@ -232,7 +232,7 @@ void Rtype::run()
 {
     while (engine.isOpen())
     {
-        Rtype::moveBackground();
+        Rtype::moveBackground(); // necessary for collision
         engine.update();
     }
     std::cout << "engine closed!" << std::endl;
