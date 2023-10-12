@@ -8,10 +8,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container: epitechcontent/epitest-docker
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Install build dependencies
-        run: sudo apt update && sudo apt install -y cmake
-      # - name: Compile
-      #   run: mkdir build && cmake -S . -B build && cmake --build build
+      - name: Compile
+        run: mkdir build && cmake -S . -B build && cmake --build build
