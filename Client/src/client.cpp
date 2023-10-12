@@ -21,9 +21,14 @@ public:
             if (entry == "hello")
             {
                 std::cout << "Hello!" << std::endl;
-            } else if (entry == "connect") {
-                if (!this->isConnected()) this->connect("127.0.0.1", 3030);
-            } else if (entry == "update") {
+            }
+            else if (entry == "connect")
+            {
+                if (!this->isConnected())
+                    this->connect("127.0.0.1", 3030);
+            }
+            else if (entry == "update")
+            {
                 update();
             }
             else if (entry == "start")
@@ -36,7 +41,7 @@ public:
             {
                 if (_dataChannel)
                 {
-                    network::datagram<protocol::UDPProtocol> data = {{protocol::UDPProtocol::alive, 0, std::chrono::system_clock::now()}};
+                    network::datagram<protocol::data> data = {{protocol::data::alive, 0, std::chrono::system_clock::now()}};
                     _dataChannel->sendAll(data);
                 }
             }
@@ -57,7 +62,7 @@ public:
                     {
                         asio::ip::udp::endpoint peer;
                         msg >> peer;
-                        _dataChannel = std::make_unique<network::data_channel<protocol::UDPProtocol>>(this->_context);
+                        _dataChannel = std::make_unique<network::data_channel<protocol::data>>(this->_context);
                         _dataChannel->addPeer(peer);
                     }
                     break;
@@ -69,7 +74,7 @@ public:
     }
 
 private:
-    std::unique_ptr<network::data_channel<protocol::UDPProtocol>> _dataChannel = nullptr;
+    std::unique_ptr<network::data_channel<protocol::data>> _dataChannel = nullptr;
 };
 
 int main()
