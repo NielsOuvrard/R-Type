@@ -42,6 +42,9 @@ public:
         asio::ip::udp::endpoint endpoint;
         std::chrono::time_point<std::chrono::high_resolution_clock> lastActivityTime;
         uint32_t id;
+        // uint32_t score;
+        // uint32_t life; // component damage ?
+        Haze::Entity *entity;
     };
 
     Rtype(asio::io_context &context);
@@ -50,7 +53,6 @@ public:
     void run();
     void onReceive(udp::endpoint from, network::datagram<protocol::data> content) override;
     void sendToClient(ClientInfo &client, network::datagram<protocol::data> content);
-    // void sendToClient(ClientInfo &client, network::datagram<protocol::data> content)
 
 protected:
     Haze::Engine engine;
@@ -68,8 +70,9 @@ protected:
     nlohmann::json jsonData;
     nlohmann::json sheet;
 
-    char isMoving = '\0';
-    void createPlayer();
+    void createPlayer(ClientInfo &client);
+    void createEmptyClients();
 
     void moveBackground();
+    void checkInactivesClients();
 };

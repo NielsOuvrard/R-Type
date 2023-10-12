@@ -26,19 +26,7 @@ Rtype::Rtype(asio::io_context &context) : network::data_channel<protocol::data>(
     engine.setInfoInputs({std::vector<Haze::InputType>(), std::vector<Haze::InputType>(), Haze::MouseType::NOTHING, 0, 0}, 3);
     engine.setInfoInputs({std::vector<Haze::InputType>(), std::vector<Haze::InputType>(), Haze::MouseType::NOTHING, 0, 0}, 4);
 
-    asio::ip::udp::endpoint defaultEndpoint;
-
-    //    std::vector<ClientInfo> clients;
-    // asio::ip::udp::endpoint endpoint;
-    // std::chrono::time_point<std::chrono::high_resolution_clock> lastActivityTime;
-    // uint32_t id;
-
-    std::chrono::time_point<std::chrono::high_resolution_clock> lastActivityTime = std::chrono::high_resolution_clock::now() - std::chrono::seconds(10);
-
-    clients.push_back({defaultEndpoint, lastActivityTime, 1});
-    clients.push_back({defaultEndpoint, lastActivityTime, 2});
-    clients.push_back({defaultEndpoint, lastActivityTime, 3});
-    clients.push_back({defaultEndpoint, lastActivityTime, 4});
+    createEmptyClients();
 
     std::ifstream inputFile("Rtype/SpritesMooves/ground.json");
     if (inputFile.is_open())
@@ -196,12 +184,43 @@ void Rtype::moveBackground()
     }
 }
 
+void Rtype::createEmptyClients()
+{
+    asio::ip::udp::endpoint defaultEndpoint;
+    std::chrono::time_point<std::chrono::high_resolution_clock> lastActivityTime = std::chrono::high_resolution_clock::now() - std::chrono::seconds(10);
+
+    for (int i = 0; i < 4; i++)
+    {
+        ClientInfo newClient;
+        newClient.endpoint = defaultEndpoint;
+        newClient.lastActivityTime = lastActivityTime;
+        newClient.id = i + 1;
+        // newClient.score = 0;
+        // newClient.life = 0;
+        newClient.entity = nullptr;
+
+        clients.push_back(newClient);
+    }
+}
+
+void Rtype::checkInactivesClients()
+{
+    for (int i = 0; i < 4; i++)
+    {
+        if (std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - clients[i].lastActivityTime).count() > 5)
+        {
+            engine.removeEntity(clients[i].entity);
+        }
+    }
+}
+
 void Rtype::run()
 {
     while (engine.isOpen())
     {
-        Rtype::moveBackground(); // necessary for collision
+        moveBackground(); // necessary for collision
         engine.update();
+        checkInactivesClients();
     }
     std::cout << "engine closed!" << std::endl;
 }
@@ -214,7 +233,7 @@ void Rtype::sendToClient(ClientInfo &client, network::datagram<protocol::data> c
     // TODO : send to client
 }
 
-void Rtype::createPlayer()
+void Rtype::createPlayer(ClientInfo &client)
 {
     // TODO : create a new player
     Haze::Entity *newPlayer = engine.createEntity();
@@ -283,6 +302,7 @@ void Rtype::createPlayer()
                 velocity->x += 5;
             }
         }));
+    client.entity = newPlayer;
 }
 
 void Rtype::onReceive(udp::endpoint from, network::datagram<protocol::data> content)
@@ -307,7 +327,7 @@ void Rtype::onReceive(udp::endpoint from, network::datagram<protocol::data> cont
         for (int i = 0; i < 4; i++)
         {
             // * if the client already exist, and if he is not dead
-            if (clients[i].endpoint == from && (std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - clients[i].lastActivityTime).count() > 5))
+            if (clients[i].endpoint == from && clients[i].entity != nullptr)
             {
                 clients[i].lastActivityTime = std::chrono::high_resolution_clock::now();
                 id_player = i;
@@ -317,7 +337,7 @@ void Rtype::onReceive(udp::endpoint from, network::datagram<protocol::data> cont
             else if (clients[i].endpoint == from)
             {
                 clients[i].lastActivityTime = std::chrono::high_resolution_clock::now();
-                createPlayer();
+                createPlayer(clients[i]);
                 id_player = i;
                 break;
             }
@@ -326,7 +346,7 @@ void Rtype::onReceive(udp::endpoint from, network::datagram<protocol::data> cont
             {
                 clients[i].lastActivityTime = std::chrono::high_resolution_clock::now();
                 clients[i].endpoint = from;
-                createPlayer();
+                createPlayer(clients[i]);
                 id_player = i;
                 break;
             }
