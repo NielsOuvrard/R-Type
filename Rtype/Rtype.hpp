@@ -22,7 +22,7 @@
 #include <ctime>
 #include <fstream>
 #include <haze-core.hpp>
-#include <haze-graphics.hpp>// ? sure about this ?
+#include <haze-graphics.hpp> // ? sure about this ?
 #include <iostream>
 
 // Haze::Engine
@@ -34,45 +34,42 @@
 #define ENNEMY 5
 #define BACKGROUND 6
 
-
-class Rtype : public network::data_channel<protocol::data> {
-    struct clientData {
+class Rtype : public network::data_channel<protocol::data>
+{
+public:
+    struct ClientInfo
+    {
+        asio::ip::udp::endpoint endpoint;
+        std::chrono::time_point<std::chrono::high_resolution_clock> lastActivityTime;
         uint32_t id;
-        bool isAlive;
     };
+
+    Rtype(asio::io_context &context);
+    ~Rtype();
+
+    void run();
+    void onReceive(udp::endpoint from, network::datagram<protocol::data> content) override;
+    void sendToClient(ClientInfo &client, network::datagram<protocol::data> content);
+    // void sendToClient(ClientInfo &client, network::datagram<protocol::data> content)
 
 protected:
     Haze::Engine engine;
 
     std::vector<Haze::Entity *> entities;
-    std::vector<wall *> walls;// c'est quoi ça ? map ?
+    std::vector<wall *> walls; // ? c'est la map ?
 
     std::vector<Haze::Entity *> players;
 
-    std::map<asio::ip::udp::endpoint, clientData> playersId;
+    // std::map<asio::ip::udp::endpoint, ClientInfo> playersId;
+    std::vector<ClientInfo> clients;
 
-    Haze::Sprite *wallSprite = new Haze::Sprite("assets/wall.png");// ? sure about this ?
+    Haze::Sprite *wallSprite = new Haze::Sprite("assets/wall.png"); // ? sure about this ?
 
     nlohmann::json jsonData;
     nlohmann::json sheet;
 
-    sf::Event event;
-
     char isMoving = '\0';
-    void keyPress();
-    void keyRelease();
+    void createPlayer();
+
     void moveBackground();
-
-public:
-    Rtype(asio::io_context &context);
-    ~Rtype();
-
-    void run();
-    // void moveUp(void *component);
-    // void moveDown(void *component);
-    // void moveLeft(void *component);
-    // void moveRight(void *component);
-    void onReceive(udp::endpoint from, network::datagram<protocol::data> content) override;
-
-    uint32_t getClientId(asio::ip::udp::endpoint endpoint);
 };
