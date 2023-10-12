@@ -15,7 +15,6 @@
 #pragma once
 
 #include "data.h"
-#include "data.h"
 #include "json.hpp"
 #include "net_data_channel.h"
 #include "wall.hpp"
@@ -23,7 +22,7 @@
 #include <ctime>
 #include <fstream>
 #include <haze-core.hpp>
-#include <haze-graphics.hpp> // ? sure about this ?
+#include <haze-graphics.hpp>// ? sure about this ?
 #include <iostream>
 
 // Haze::Engine
@@ -36,18 +35,17 @@
 #define BACKGROUND 6
 
 
-class Rtype : public network::data_channel<protocol::data>
-{
-    struct clientData
-    {
+class Rtype : public network::data_channel<protocol::data> {
+    struct clientData {
         uint32_t id;
         bool isAlive;
     };
+
 protected:
     Haze::Engine engine;
 
     std::vector<Haze::Entity *> entities;
-    std::vector<wall *> walls; // c'est quoi ça ? map ?
+    std::vector<wall *> walls;// c'est quoi ça ? map ?
 
     std::vector<Haze::Entity *> players;
 
@@ -69,7 +67,7 @@ public:
     Rtype(asio::io_context &context);
     ~Rtype();
 
-    void run(std::shared_ptr<network::data_channel<protocol::data>> _dataChannel);
+    void run();
     // void moveUp(void *component);
     // void moveDown(void *component);
     // void moveLeft(void *component);

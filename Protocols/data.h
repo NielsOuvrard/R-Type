@@ -3,10 +3,8 @@
 #include "haze-core.hpp"
 #include <cstdint>
 
-namespace protocol
-{
-    enum class data : std::uint32_t
-    {
+namespace protocol {
+    enum class data : std::uint32_t {
         // client
         input,
         get_entity,
@@ -14,7 +12,6 @@ namespace protocol
         get_component,
         alive,
         join,
-        input,
 
         // server
         create_entity,
@@ -26,4 +23,4 @@ namespace protocol
         info_entities,
         dead,
     };
-} // namespace protocol
+}// namespace protocol
