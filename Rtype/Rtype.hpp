@@ -58,9 +58,12 @@ protected:
     Haze::Engine engine;
 
     std::vector<Haze::Entity *> entities;
-    std::vector<wall *> walls; // ? c'est la map ?
 
-    std::vector<Haze::Entity *> players;
+    std::vector<std::pair<Haze::Entity *, std::chrono::time_point<std::chrono::high_resolution_clock>>> shots;
+    std::vector<std::pair<Haze::Entity *, std::chrono::time_point<std::chrono::high_resolution_clock>>> ennemies;
+
+    std::vector<wall *> walls; // ? c'est la map ?
+    // std::vector<Haze::Entity *> backgrounds; ? or is wall
 
     // std::map<asio::ip::udp::endpoint, ClientInfo> playersId;
     std::vector<ClientInfo> clients;

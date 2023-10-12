@@ -42,10 +42,6 @@ Rtype::Rtype(asio::io_context &context) : network::data_channel<protocol::data>(
     }
 
     Haze::Velocity *velocityPlayer = new Haze::Velocity(0, 0);
-    // Haze::Sprite *vortexSprite = new Haze::Sprite("assets/r-typesheet30a.gif");  // ? useless
-    // Haze::Sprite *shotSprite = new Haze::Sprite("assets/shot.png");              // ? useless
-    // Haze::Sprite *spaceshipSprite = new Haze::Sprite("assets/r-typesheet1.gif"); // ? useless
-    // Haze::Sprite *ennemySprite = new Haze::Sprite("assets/r-typesheet5.gif");    // ? useless
 
     Haze::Collision::CollisionInfo colisionInfo;
     colisionInfo.type = Haze::Collision::LAMBDA;
@@ -68,6 +64,7 @@ Rtype::Rtype(asio::io_context &context) : network::data_channel<protocol::data>(
     entities[VORTEX]->addComponent(new Haze::Position(120, 200));
     entities[VORTEX]->addComponent(new Haze::Velocity(2, 0));
     entities[VORTEX]->addComponent(new Haze::Scale(3, 3));
+    // Haze::Sprite *vortexSprite = new Haze::Sprite("assets/r-typesheet30a.gif");  // ? useless
     // entities[VORTEX]->addComponent(vortexSprite);
     // entities[VORTEX]->addComponent(new Haze::Animation({{0, 0, 34, 34},
     //                                                     {34, 0, 34, 34},
@@ -85,60 +82,6 @@ Rtype::Rtype(asio::io_context &context) : network::data_channel<protocol::data>(
     //                                                   {32, 0, 16, 14}},
     //                                                  Haze::Animation::AnimationType::LOOP, true, 0.2));
     // entities[SHOT]->addComponent(shotSprite);
-
-    // ! DELETE ALL OF THIS -> CREATE PLAYER FUNCTION
-    entities[SPACESHIP]->addComponent(velocityPlayer);
-    entities[SPACESHIP]->addComponent(new Haze::Position(100, 200));
-    entities[SPACESHIP]->addComponent(new Haze::Scale(3, 3));
-    // entities[SPACESHIP]->addComponent(spaceshipSprite);
-    // entities[SPACESHIP]->addComponent(new Haze::Animation({{100, 0, 33, 18},
-    //                                                        {133, 0, 33, 18},
-    //                                                        {166, 0, 33, 18},
-    //                                                        {199, 0, 33, 18},
-    //                                                        {232, 0, 33, 18}},
-    //                                                       Haze::Animation::AnimationType::BOOMERANG, true, 0.2));
-    entities[SPACESHIP]->addComponent(new Haze::Hitbox({{0, 0, 32, 14}}));
-    entities[SPACESHIP]->addComponent(new Haze::HitboxDisplay());
-    entities[SPACESHIP]->addComponent(new Haze::Collision("player", infos));
-    entities[SPACESHIP]->addComponent(new Haze::OnKeyPressed(
-        [this](int i, std::vector<Haze::InputType> components)
-        {
-            if (std::find(components.begin(), components.end(), Haze::InputType::KEY_ENTER_INPUT) != components.end())
-            {
-                Haze::Entity *newShot = engine.createEntity();
-                auto position = static_cast<Haze::Position *>(entities[SPACESHIP]->getComponent("Position"));
-                newShot->addComponent(new Haze::Position(position->x + 33 * 3, position->y));
-                newShot->addComponent(new Haze::Velocity(2, 0));
-                newShot->addComponent(static_cast<Haze::Sprite *>(entities[SHOT]->getComponent("Sprite")));
-                // newShot->addComponent(new Haze::Animation({{0, 0, 16, 14},
-                //                                            {16, 0, 16, 14},
-                //                                            {32, 0, 16, 14}},
-                //                                           Haze::Animation::AnimationType::LOOP, true, 0.2));
-            }
-
-            auto velocity = static_cast<Haze::Velocity *>(entities[SPACESHIP]->getComponent("Velocity"));
-            if (velocity == nullptr)
-                entities[SPACESHIP]->addComponent(new Haze::Velocity(0, 0));
-            velocity->x = 0;
-            velocity->y = 0;
-
-            if (std::find(components.begin(), components.end(), Haze::InputType::KEY_UP_ARROW) != components.end())
-            {
-                velocity->y += -5;
-            }
-            if (std::find(components.begin(), components.end(), Haze::InputType::KEY_LEFT_ARROW) != components.end())
-            {
-                velocity->x += -5;
-            }
-            if (std::find(components.begin(), components.end(), Haze::InputType::KEY_DOWN_ARROW) != components.end())
-            {
-                velocity->y += 5;
-            }
-            if (std::find(components.begin(), components.end(), Haze::InputType::KEY_RIGHT_ARROW) != components.end())
-            {
-                velocity->x += 5;
-            }
-        }));
 
     walls.push_back(new wall(&engine, jsonData, 0, 600));
     walls.push_back(new wall(&engine, jsonData, 192, 600));
@@ -160,6 +103,7 @@ Rtype::Rtype(asio::io_context &context) : network::data_channel<protocol::data>(
     //                                                     {198, 0, 33, 36},
     //                                                     {231, 0, 33, 36}},
     //                                                    Haze::Animation::AnimationType::BOOMERANG, true, 0.2));
+    // Haze::Sprite *ennemySprite = new Haze::Sprite("assets/r-typesheet5.gif");    // ? useless
     // ? can we remove sprite ? entities[ENNEMY]->addComponent(ennemySprite);
 
     Haze::Window *window = new Haze::Window(0, 0);
@@ -233,12 +177,14 @@ void Rtype::sendToClient(ClientInfo &client, network::datagram<protocol::data> c
     // TODO : send to client
 }
 
+// void Rtype::createShot(ClientInfo &client)
 void Rtype::createPlayer(ClientInfo &client)
 {
     // TODO : create a new player
     Haze::Entity *newPlayer = engine.createEntity();
     Haze::Velocity *velocityPlayer = new Haze::Velocity(0, 0);
 
+    // * no idea what is this
     Haze::Collision::CollisionInfo colisionInfo;
     colisionInfo.type = Haze::Collision::LAMBDA;
     colisionInfo.tics = 1;
@@ -253,8 +199,8 @@ void Rtype::createPlayer(ClientInfo &client)
     newPlayer->addComponent(velocityPlayer);
     newPlayer->addComponent(new Haze::Position(100, 200));
     newPlayer->addComponent(new Haze::Scale(3, 3));
-    // newPlayer->addComponent(spaceshipSprite);
-    // newPlayer->addComponent(new Haze::Animation({{100, 0, 33, 18},
+    // entities[SPACESHIP]->addComponent(spaceshipSprite);
+    // entities[SPACESHIP]->addComponent(new Haze::Animation({{100, 0, 33, 18},
     //                                                        {133, 0, 33, 18},
     //                                                        {166, 0, 33, 18},
     //                                                        {199, 0, 33, 18},
@@ -268,15 +214,19 @@ void Rtype::createPlayer(ClientInfo &client)
         {
             if (std::find(components.begin(), components.end(), Haze::InputType::KEY_ENTER_INPUT) != components.end())
             {
+                // TODO : vector of shots
                 Haze::Entity *newShot = engine.createEntity();
                 auto position = static_cast<Haze::Position *>(newPlayer->getComponent("Position"));
                 newShot->addComponent(new Haze::Position(position->x + 33 * 3, position->y));
                 newShot->addComponent(new Haze::Velocity(2, 0));
                 newShot->addComponent(static_cast<Haze::Sprite *>(entities[SHOT]->getComponent("Sprite")));
+                // Haze::Sprite *shotSprite = new Haze::Sprite("assets/shot.png");              // ? useless
                 // newShot->addComponent(new Haze::Animation({{0, 0, 16, 14},
                 //                                            {16, 0, 16, 14},
                 //                                            {32, 0, 16, 14}},
                 //                                           Haze::Animation::AnimationType::LOOP, true, 0.2));
+                newShot->addComponent(new Haze::Scale(3, 3));
+                shots.push_back(std::make_pair(newShot, std::chrono::high_resolution_clock::now()));
             }
 
             auto velocity = static_cast<Haze::Velocity *>(newPlayer->getComponent("Velocity"));
@@ -303,6 +253,7 @@ void Rtype::createPlayer(ClientInfo &client)
             }
         }));
     client.entity = newPlayer;
+    // TODO : send to client with componentData
 }
 
 void Rtype::onReceive(udp::endpoint from, network::datagram<protocol::data> content)
