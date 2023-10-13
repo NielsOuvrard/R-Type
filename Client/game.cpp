@@ -30,29 +30,36 @@ void game::onReceive(udp::endpoint from, network::datagram<data> content)
 {
     switch (content.header.id) {
         case data::create_entity: {
+            std::cout << "[GAME] creating entity\n";
             Haze::entity_id id = {0};
             std::memcpy(&id, content.body.data(), content.header.size);
             createEntity(id);
             break;
         }
         case data::delete_entity: {
+            std::cout << "[GAME] deleting entity\n";
             Haze::entity_id id = {0};
             std::memcpy(&id, content.body.data(), content.header.size);
             deleteEntity(id);
             break;
         }
         case data::add_component: {
+            std::cout << "[GAME] adding component\n";
             Haze::component_info info = {0};
             std::memcpy(&info, content.body.data(), content.header.size);
             addComponent(info);
             break;
         }
         case data::remove_component: {
+            std::cout << "[GAME] removing component\n";
             Haze::component_id info = {0};
             std::memcpy(&info, content.body.data(), content.header.size);
             removeComponent(info);
             break;
         }
+        default:
+            std::cout << "[GAME] Error couldn't parse datagram";
+            break;
     }
 }
 
@@ -72,8 +79,7 @@ void game::deleteEntity(Haze::entity_id id)
 
 void game::addComponent(Haze::component_info info)
 {
-    Haze::Entity *e = _engine.getEntity(info.id);
-    e->addComponent(Haze::Factory::createComponent(info.name, info.data));
+    _entities[info.id]->addComponent(Haze::Factory::createComponent(std::string(info.name), info.data));
 }
 
 void game::removeComponent(Haze::component_id id)

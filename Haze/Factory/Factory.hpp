@@ -13,16 +13,14 @@
 #include "Component.hpp"
 #include "componentData.hpp"
 
-namespace Haze
-{
-    class Factory
-    {
+namespace Haze {
+    class Factory {
     public:
         Factory();
         ~Factory();
-        static Component *createComponent(std::string type, std::array<uint8_t, 128> data);
+        static Component *createComponent(std::string type, std::array<uint8_t, 256> data);
 
     protected:
     private:
     };
-}
+}// namespace Haze

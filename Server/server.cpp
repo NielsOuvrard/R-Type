@@ -19,7 +19,7 @@ void server::onMessage(std::shared_ptr<network::connection<lobby>> from, network
                 network::message<lobby> res(lobby::data_channel);
                 res << _game->getEndpoint();
                 this->messageAllClient(res);
-                _game->run();
+                _game->start();
             }
             break;
         }

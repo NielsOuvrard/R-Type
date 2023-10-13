@@ -22,6 +22,10 @@ void client::start()
             _login->setHide(true);
         }
 
+        if (_game) {
+            _game->update(5, false);
+        }
+
         // TCP Events
         while (!getIncoming().empty()) {
             network::message<lobby> msg = getIncoming().pop_front().content;

@@ -18,8 +18,7 @@ public:
     void onReceive(udp::endpoint from, network::datagram<data> content) override;
 
 public:
-    void
-    createEntity(Haze::entity_id id);
+    void createEntity(Haze::entity_id id);
     void deleteEntity(Haze::entity_id id);
     void addComponent(Haze::component_info info);
     void removeComponent(Haze::component_id id);

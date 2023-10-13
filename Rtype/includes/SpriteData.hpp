@@ -16,8 +16,7 @@
 
 #include "InetrfaceElement.hpp"
 
-class Sprite
-{
+class Sprite {
 public:
     Sprite()
     {
@@ -29,11 +28,11 @@ public:
     {
         _texture = sf::Texture();
         _sprite = sf::Sprite();
-        if (!_texture.loadFromFile(path))
-        {
+        if (!_texture.loadFromFile(path)) {
             std::cout << "Error loading texture" << std::endl;
             return;
         }
+        std::cout << "loading " << path << " texture" << std::endl;
         _texture.setSmooth(false);
         _sprite.setTexture(_texture);
     }

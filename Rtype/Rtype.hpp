@@ -18,65 +18,51 @@
 #include "json.hpp"
 #include "net_data_channel.h"
 #include "wall.hpp"
+#include <Factory.hpp>
 #include <cstdlib>
 #include <ctime>
 #include <fstream>
 #include <haze-core.hpp>
-#include <haze-graphics.hpp> // ? sure about this ?
+#include <haze-graphics.hpp>// ? sure about this ?
 #include <iostream>
 
-// Haze::Engine
-#define VORTEX 0
-#define SPACESHIP 1
-#define SHOT 2
-#define WINDOW 3
-#define WALL_TOP 4
-#define ENNEMY 5
-#define BACKGROUND 6
-
-class Rtype : public network::data_channel<protocol::data>
-{
+class Rtype : public network::data_channel<protocol::data> {
 public:
-    struct ClientInfo
-    {
+    struct Remote {
         asio::ip::udp::endpoint endpoint;
-        std::chrono::time_point<std::chrono::high_resolution_clock> lastActivityTime;
-        uint32_t id;
-        // uint32_t score;
-        // uint32_t life; // component damage ?
-        Haze::Entity *entity;
+        std::chrono::system_clock::time_point lastActivity;
+
+        explicit Remote(const udp::endpoint &endpoint) : endpoint(endpoint), lastActivity(std::chrono::system_clock::now()) {}
     };
 
+    struct Player {
+        std::unique_ptr<Remote> remote = nullptr;
+        Haze::Entity *entity = nullptr;
+        uint32_t hp = 10;
+        uint32_t score = 0;
+    };
+
+public:
     Rtype(asio::io_context &context);
     ~Rtype();
 
-    void run();
+public:
+    void start();
+    void stop();
+
     void onReceive(udp::endpoint from, network::datagram<protocol::data> content) override;
-    void sendToClient(ClientInfo &client, network::datagram<protocol::data> content);
-    void sendEverythings(udp::endpoint to);
+    void sendEverything(udp::endpoint &to);
 
-protected:
-    Haze::Engine engine;
+    void checkInactiveClients();
 
-    std::vector<Haze::Entity *> entities;
+    void createPlayer(Player &client);
+    Player &findPlayer(const asio::ip::udp::endpoint &endpoint);
+    uint32_t findPlayerIndex(const asio::ip::udp::endpoint &endpoint);
 
-    std::vector<std::pair<Haze::Entity *, std::chrono::time_point<std::chrono::high_resolution_clock>>> shots;
-    std::vector<std::pair<Haze::Entity *, std::chrono::time_point<std::chrono::high_resolution_clock>>> ennemies;
+private:
+    Haze::Engine _engine;
 
-    std::vector<wall *> walls; // ? c'est la map ?
-    // std::vector<Haze::Entity *> backgrounds; ? or is wall
-
-    // std::map<asio::ip::udp::endpoint, ClientInfo> playersId;
-    std::vector<ClientInfo> clients;
-
-    Haze::Sprite *wallSprite = new Haze::Sprite("assets/wall.png"); // ? sure about this ?
-
-    nlohmann::json jsonData;
-    nlohmann::json sheet;
-
-    void createPlayer(ClientInfo &client);
-    void createEmptyClients();
-
-    void moveBackground();
-    void checkInactivesClients();
+    std::vector<Haze::Entity *> _entities;
+    std::array<Player, 4> _players;
+    bool _running = false;
 };

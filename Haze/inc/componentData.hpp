@@ -6,16 +6,15 @@
 */
 
 #pragma once
-#include <iostream>
-#include <string>
-#include <map>
 #include "Component.hpp"
+#include <iostream>
+#include <map>
+#include <string>
 #ifdef USE_SFML
 #include "ComponentGfx.hpp"
 #endif
 
-namespace Haze
-{
+namespace Haze {
     struct PositionData {
         float x;
         float y;
@@ -50,7 +49,7 @@ namespace Haze
     };
 
     struct HitboxData {
-        std::vector<Hitbox::intRect> hitbox;
+        Hitbox::intRect hitbox;
     };
 
     struct LifeTimeData {
@@ -58,7 +57,7 @@ namespace Haze
     };
 
     struct SpriteData {
-        std::string path;
+        char path[128];
     };
 
     struct WindowData {
@@ -66,7 +65,7 @@ namespace Haze
         int height;
     };
 
-    #ifdef USE_SFML
+#ifdef USE_SFML
     struct AnimationData {
         std::vector<Animation::intRect> frames;
         Animation::AnimationType type;
@@ -78,5 +77,5 @@ namespace Haze
         std::string text;
         Haze::Text::colorHaze color;
     };
-    #endif
-}
+#endif
+}// namespace Haze
