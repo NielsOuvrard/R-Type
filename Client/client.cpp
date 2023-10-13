@@ -12,10 +12,10 @@ client::client()
 
 client::~client() {}
 
-
 void client::start()
 {
-    if (!_isBuild) build();
+    if (!_isBuild)
+        build();
     while (_engine.isOpen()) {
         if (!_login->isHidden() && isConnected()) {
             _startButton->getEntity().removeComponent("Hide");
@@ -33,10 +33,25 @@ void client::start()
                         _game = std::make_unique<game>(_context, _engine);
                         _game->addPeer(peer);
                         _startButton->getEntity().addComponent(new Haze::Hide);
+
+                        network::datagram<protocol::data> data(protocol::data::join);
+                        _game->sendTo(data, peer);
+
+                        std::cout << "send join" << std::endl;
                     }
                     break;
                 }
             }
+        }
+
+        std::vector<Haze::info_inputs> *inputs = _engine.getInfoInputs();
+
+        // if m is pressed, send a message to the server
+        if (inputs->size() > 0 && inputs->at(0).inputsPressed.size() > 0 && inputs->at(0).inputsPressed[0] == Haze::InputType::KEY_M) {
+            network::datagram<protocol::data> data(protocol::data::join);
+
+            _game->sendAll(data);
+            std::cout << "send join" << std::endl;
         }
         _engine.update();
     }
@@ -51,13 +66,11 @@ void client::build()
 
     _login = std::make_unique<element::Login>(_engine, 100, 300, [this](const std::string &ip, uint16_t port) {
         std::cout << "Ip: " << ip << ":" << port << std::endl;
-        connect(ip, port);
-    });
+        connect(ip, port); });
 
     _startButton = std::make_unique<element::Button>(_engine, "Start Game", [this](int id) {
         network::message<protocol::lobby> msg(protocol::lobby::start_room);
-        send(msg);
-    });
+        send(msg); });
     _startButton->getEntity().addComponent(new Haze::Hide);
     _startButton->getEntity().addComponent(new Haze::Position(200, 200));
 

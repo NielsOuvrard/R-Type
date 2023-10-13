@@ -46,16 +46,15 @@ Rtype::Rtype(asio::io_context &context) : network::data_channel<protocol::data>(
     Haze::Collision::CollisionInfo colisionInfo;
     colisionInfo.type = Haze::Collision::LAMBDA;
     colisionInfo.tics = 1;
-    colisionInfo.onCollision = [](int x, int y)
-    {
+    colisionInfo.onCollision = [](int x, int y) {
         std::cout << "collision!" << std::endl;
     };
     std::map<std::string, Haze::Collision::CollisionInfo> infos = {
-        {"wall", colisionInfo},
+            {"wall", colisionInfo},
     };
     // infos["ennemy"] = Haze::Collision::CollisionInfo(0, 0, 33, 36);
 
-    for (int i = 0; i < 7; i++) // from VORTEX to BACKGROUND
+    for (int i = 0; i < 7; i++)// from VORTEX to BACKGROUND
     {
         entities.push_back(engine.createEntity());
     }
@@ -117,12 +116,10 @@ Rtype::~Rtype()
 
 void Rtype::moveBackground()
 {
-    for (int i = 0; i < 6; ++i)
-    {
+    for (int i = 0; i < 6; ++i) {
         Haze::Position *position = static_cast<Haze::Position *>(walls[i]->_entityWallBottom->getComponent("Position"));
 
-        if (position->x <= -200)
-        {
+        if (position->x <= -200) {
             position->x = 800;
             walls[i]->changeSpriteBack(walls[i]->_entityWallBottom);
         }
@@ -135,8 +132,7 @@ void Rtype::createEmptyClients()
     asio::ip::udp::endpoint defaultEndpoint;
     std::chrono::time_point<std::chrono::high_resolution_clock> lastActivityTime = std::chrono::high_resolution_clock::now() - std::chrono::seconds(10);
 
-    for (int i = 0; i < 4; i++)
-    {
+    for (int i = 0; i < 4; i++) {
         ClientInfo newClient;
         newClient.endpoint = defaultEndpoint;
         newClient.lastActivityTime = lastActivityTime;
@@ -152,22 +148,21 @@ void Rtype::createEmptyClients()
 
 void Rtype::checkInactivesClients()
 {
-    for (int i = 0; i < 4; i++)
-    {
-        if (clients[i].entity != nullptr && std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - clients[i].lastActivityTime).count() > 5)
-        {
+    for (auto &client: clients) {
+        if (client.entity != nullptr && std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - client.lastActivityTime).count() > 5) {
 
-            engine.removeEntity(clients[i].entity);
+            engine.removeEntity(client.entity->getId());
+            client.entity = nullptr;
         }
     }
 }
 
 void Rtype::run()
 {
-    while (engine.isOpen())
-    {
+    while (engine.isOpen()) {
         // moveBackground(); // necessary for collision
         engine.update();
+        update(5, false);
         checkInactivesClients();
     }
     std::cout << "engine closed!" << std::endl;
@@ -195,21 +190,21 @@ void Rtype::createPlayer(ClientInfo &client)
     std::cout << "createPlayer" << std::endl;
     // TODO : create a new player
     Haze::Entity *newPlayer = engine.createEntity();
-    Haze::Velocity *velocityPlayer = new Haze::Velocity(0, 0);
 
     // * no idea what is this
     Haze::Collision::CollisionInfo colisionInfo;
     colisionInfo.type = Haze::Collision::LAMBDA;
     colisionInfo.tics = 1;
-    colisionInfo.onCollision = [](int x, int y)
-    {
+    colisionInfo.onCollision = [](int x, int y) {
         std::cout << "collision!" << std::endl;
     };
     std::map<std::string, Haze::Collision::CollisionInfo> infos = {
-        {"wall", colisionInfo},
+            {"wall", colisionInfo},
     };
 
-    newPlayer->addComponent(velocityPlayer);
+    std::cout << "colision ok" << std::endl;
+
+    newPlayer->addComponent(new Haze::Velocity(0, 0));
     newPlayer->addComponent(new Haze::Position(100, 200));
     newPlayer->addComponent(new Haze::Scale(3, 3));
     // entities[SPACESHIP]->addComponent(spaceshipSprite);
@@ -222,49 +217,45 @@ void Rtype::createPlayer(ClientInfo &client)
     newPlayer->addComponent(new Haze::Hitbox({{0, 0, 32, 14}}));
     newPlayer->addComponent(new Haze::HitboxDisplay());
     newPlayer->addComponent(new Haze::Collision("player", infos));
+    std::cout << "colision added" << std::endl;
     newPlayer->addComponent(new Haze::OnKeyPressed(
-        [this, &newPlayer](int i, std::vector<Haze::InputType> components)
-        {
-            if (std::find(components.begin(), components.end(), Haze::InputType::KEY_ENTER_INPUT) != components.end())
-            {
-                // TODO : vector of shots
-                Haze::Entity *newShot = engine.createEntity();
-                auto position = static_cast<Haze::Position *>(newPlayer->getComponent("Position"));
-                newShot->addComponent(new Haze::Position(position->x + 33 * 3, position->y));
-                newShot->addComponent(new Haze::Velocity(2, 0));
-                newShot->addComponent(static_cast<Haze::Sprite *>(entities[SHOT]->getComponent("Sprite")));
-                // Haze::Sprite *shotSprite = new Haze::Sprite("assets/shot.png");              // ? useless
-                // newShot->addComponent(new Haze::Animation({{0, 0, 16, 14},
-                //                                            {16, 0, 16, 14},
-                //                                            {32, 0, 16, 14}},
-                //                                           Haze::Animation::AnimationType::LOOP, true, 0.2));
-                newShot->addComponent(new Haze::Scale(3, 3));
-                shots.push_back(std::make_pair(newShot, std::chrono::high_resolution_clock::now()));
-            }
+            [this, newPlayer](int i, std::vector<Haze::InputType> components) {
+                if (std::find(components.begin(), components.end(), Haze::InputType::KEY_ENTER_INPUT) != components.end()) {
+                    // TODO : vector of shots
+                    Haze::Entity *newShot = engine.createEntity();
+                    auto position = static_cast<Haze::Position *>(newPlayer->getComponent("Position"));
+                    newShot->addComponent(new Haze::Position(position->x + 33 * 3, position->y));
+                    newShot->addComponent(new Haze::Velocity(2, 0));
+                    newShot->addComponent(static_cast<Haze::Sprite *>(entities[SHOT]->getComponent("Sprite")));
+                    // Haze::Sprite *shotSprite = new Haze::Sprite("assets/shot.png");              // ? useless
+                    // newShot->addComponent(new Haze::Animation({{0, 0, 16, 14},
+                    //                                            {16, 0, 16, 14},
+                    //                                            {32, 0, 16, 14}},
+                    //                                           Haze::Animation::AnimationType::LOOP, true, 0.2));
+                    newShot->addComponent(new Haze::Scale(3, 3));
+                    shots.push_back(std::make_pair(newShot, std::chrono::high_resolution_clock::now()));
+                }
 
-            auto velocity = static_cast<Haze::Velocity *>(newPlayer->getComponent("Velocity"));
-            if (velocity == nullptr)
-                newPlayer->addComponent(new Haze::Velocity(0, 0));
-            velocity->x = 0;
-            velocity->y = 0;
+                auto velocity = static_cast<Haze::Velocity *>(newPlayer->getComponent("Velocity"));
+                if (velocity == nullptr)
+                    newPlayer->addComponent(new Haze::Velocity(0, 0));
+                velocity->x = 0;
+                velocity->y = 0;
 
-            if (std::find(components.begin(), components.end(), Haze::InputType::KEY_UP_ARROW) != components.end())
-            {
-                velocity->y += -5;
-            }
-            if (std::find(components.begin(), components.end(), Haze::InputType::KEY_LEFT_ARROW) != components.end())
-            {
-                velocity->x += -5;
-            }
-            if (std::find(components.begin(), components.end(), Haze::InputType::KEY_DOWN_ARROW) != components.end())
-            {
-                velocity->y += 5;
-            }
-            if (std::find(components.begin(), components.end(), Haze::InputType::KEY_RIGHT_ARROW) != components.end())
-            {
-                velocity->x += 5;
-            }
-        }));
+                if (std::find(components.begin(), components.end(), Haze::InputType::KEY_UP_ARROW) != components.end()) {
+                    velocity->y += -5;
+                }
+                if (std::find(components.begin(), components.end(), Haze::InputType::KEY_LEFT_ARROW) != components.end()) {
+                    velocity->x += -5;
+                }
+                if (std::find(components.begin(), components.end(), Haze::InputType::KEY_DOWN_ARROW) != components.end()) {
+                    velocity->y += 5;
+                }
+                if (std::find(components.begin(), components.end(), Haze::InputType::KEY_RIGHT_ARROW) != components.end()) {
+                    velocity->x += 5;
+                }
+            }));
+    std::cout << "lambda client.entity" << std::endl;
     client.entity = newPlayer;
     // TODO : send to client with componentData
 }
@@ -272,7 +263,7 @@ void Rtype::createPlayer(ClientInfo &client)
 void Rtype::sendEverythings(udp::endpoint to)
 {
     std::cout << "sendEverythings" << std::endl;
-
+    // TODO
     // * ID               | Body           | Response ID |
     // * ---------------- | -------------- | ----------- |
     // * CREATE_ENTITY    | id_entity      | NONE        |
@@ -290,18 +281,31 @@ void Rtype::sendEverythings(udp::endpoint to)
     // {
     //     if (clients[i].entity != nullptr)
     //     {
-    for (std::string type : engine.getComponentList()->getComponentName())
-    {
+    network::datagram<protocol::data> msg(protocol::data::create_entity);
+    std::memcpy(msg.body.data(), static_cast<void *>(clients[0].entity), sizeof(Haze::Component));
+    sendTo(msg, to);
+    std::cout << "send Entity" << std::endl;
+    Haze::Sprite *spaceshipSprite = new Haze::Sprite("assets/r-typesheet1.gif");
+    int i = 0;
+    network::datagram<protocol::data> msg_compo1(protocol::data::add_component);
+    std::memcpy(msg_compo1.body.data(), static_cast<void *>(spaceshipSprite), sizeof(Haze::Component));
+    sendTo(msg_compo1, to);
+
+
+    for (std::string type: engine.getComponentList()->getComponentName()) {
+        if (type == "Window") {
+            break;
+        }
         auto component = engine.getComponentList()->getComponent(type, 0);
         std::cout << "type : " << type << std::endl;
 
         // Haze::Component *info;
+        network::datagram<protocol::data> msg_compo(protocol::data::add_component);
 
-        network::datagram<protocol::data> msg(protocol::data::create_entity);
-        std::memcpy(msg.body.data(), static_cast<void *>(component), sizeof(Haze::Component));
+        std::memcpy(msg_compo.body.data(), static_cast<void *>(component), sizeof(Haze::Component));
+        sendTo(msg_compo, to);
 
-        sendTo(msg, to);
-
+        i++;
         // sendTo(
         // network::datagram<protocol::data>(
         //     protocol::data::create_entity, engine.getComponentList()->getComponent(type, 0)),
@@ -321,7 +325,8 @@ void Rtype::sendEverythings(udp::endpoint to)
 
 void Rtype::onReceive(udp::endpoint from, network::datagram<protocol::data> content)
 {
-    // | ID            | Body         | Response ID    |
+    // ! hello
+    // * ID            | Body         | Response ID    |
     // | ------------- | ------------ | -------------- |
     // | INPUT         | info_inputs  | NONE           |
     // | GET_ENTITY    | id_entity    | INFO_ENTITY    |
@@ -330,95 +335,84 @@ void Rtype::onReceive(udp::endpoint from, network::datagram<protocol::data> cont
     // | ALIVE         | NONE         | NONE           |
     std::cout << "onReceive" << std::endl;
     int8_t id_player = -1;
-    switch (content.header.id)
-    {
-    case protocol::data::join:
-    {
-        std::cout << "join" << std::endl;
-        for (int i = 0; i < 4; i++)
-        {
-            // * if the client already exist, and if he is not dead
-            if (clients[i].endpoint == from && clients[i].entity != nullptr)
-            {
-                clients[i].lastActivityTime = std::chrono::high_resolution_clock::now();
-                id_player = i;
-                break;
+    switch (content.header.id) {
+        case protocol::data::join: {
+            std::cout << "join" << std::endl;
+            for (int i = 0; i < 4; i++) {
+                // * if the client already exist, and if he is not dead
+                if (clients[i].endpoint == from && clients[i].entity != nullptr) {
+                    clients[i].lastActivityTime = std::chrono::high_resolution_clock::now();
+                    id_player = i;
+                    break;
+                }
+                // * if the client already exist, but if he is dead
+                else if (clients[i].endpoint == from) {
+                    clients[i].lastActivityTime = std::chrono::high_resolution_clock::now();
+                    createPlayer(clients[i]);
+                    sendEverythings(clients[i].endpoint);
+                    id_player = i;
+                    break;
+                }
+                // * if the client doesn't exist
+                else if (std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - clients[i].lastActivityTime).count() > 5) {
+                    clients[i].lastActivityTime = std::chrono::high_resolution_clock::now();
+                    clients[i].endpoint = from;
+                    createPlayer(clients[i]);
+                    sendEverythings(clients[i].endpoint);
+                    id_player = i;
+                    break;
+                }
             }
-            // * if the client already exist, but if he is dead
-            else if (clients[i].endpoint == from)
-            {
-                clients[i].lastActivityTime = std::chrono::high_resolution_clock::now();
-                createPlayer(clients[i]);
-                // TODO sendEverythings(clients[i].endpoint);
-                id_player = i;
-                break;
-            }
-            // * if the client doesn't exist
-            else if (std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - clients[i].lastActivityTime).count() > 5)
-            {
-                clients[i].lastActivityTime = std::chrono::high_resolution_clock::now();
-                clients[i].endpoint = from;
-                createPlayer(clients[i]);
-                // TODO sendEverythings(clients[i].endpoint);
-                id_player = i;
-                break;
-            }
+            // * if the server is full
+            if (id_player == -1)
+                return;
+            break;
         }
-        // * if the server is full
-        if (id_player == -1)
-            return;
-        break;
-    }
 
-    // ! use id_player
-    case protocol::data::input:
-    {
-        Haze::info_inputs_weak info;
-        std::memcpy(&info, content.body.data(), content.header.size);
-        Haze::info_inputs inputs;
-        inputs.inputsPressed = std::vector<Haze::InputType>(info.pressedInputs.begin(), info.pressedInputs.end());
-        inputs.inputsReleased = std::vector<Haze::InputType>(info.releasedInputs.begin(), info.releasedInputs.end());
-        inputs.mouseType = info.mouseType;
-        inputs.x = info.x;
-        inputs.y = info.y;
+        // ! use id_player
+        case protocol::data::input: {
+            Haze::info_inputs_weak info;
+            std::memcpy(&info, content.body.data(), content.header.size);
+            Haze::info_inputs inputs;
+            inputs.inputsPressed = std::vector<Haze::InputType>(info.pressedInputs.begin(), info.pressedInputs.end());
+            inputs.inputsReleased = std::vector<Haze::InputType>(info.releasedInputs.begin(), info.releasedInputs.end());
+            inputs.mouseType = info.mouseType;
+            inputs.x = info.x;
+            inputs.y = info.y;
 
-        // // clientData data = playersId[from];
-        int id = -1;
-        for (ClientInfo &data : clients)
-            if (data.endpoint == from)
-                id = data.id;
+            // // clientData data = playersId[from];
+            int id = -1;
+            for (ClientInfo &data: clients)
+                if (data.endpoint == from)
+                    id = data.id;
 
-        engine.setInfoInputs(inputs, id); // TODO
+            engine.setInfoInputs(inputs, id);// TODO
 
-        break;
-    }
-    case protocol::data::get_entity:
-    {
-        Haze::id_entity info;
-        std::memcpy(&info, content.body.data(), content.header.size);
-        // entities.push_back(engine.createEntity());
-        // tell to every client to create an entity, with the id of the entity
-        break;
-    }
-    case protocol::data::get_entities:
-    {
-        // tell to every client to delete an entity, with the id of the entity
-        break;
-    }
-    case protocol::data::get_component:
-    {
-        Haze::id_component info;
-        std::memcpy(&info, content.body.data(), content.header.size);
-        // addComponent();
-        break;
-    }
-    case protocol::data::alive:
-    {
-        // TODO
-        break;
-    }
-    default:
-        break;
+            break;
+        }
+        case protocol::data::get_entity: {
+            Haze::id_entity info;
+            std::memcpy(&info, content.body.data(), content.header.size);
+            // entities.push_back(engine.createEntity());
+            // tell to every client to create an entity, with the id of the entity
+            break;
+        }
+        case protocol::data::get_entities: {
+            // tell to every client to delete an entity, with the id of the entity
+            break;
+        }
+        case protocol::data::get_component: {
+            Haze::id_component info;
+            std::memcpy(&info, content.body.data(), content.header.size);
+            // addComponent();
+            break;
+        }
+        case protocol::data::alive: {
+            // TODO
+            break;
+        }
+        default:
+            break;
     }
 }
 
