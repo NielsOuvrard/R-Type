@@ -28,18 +28,18 @@ Rtype::Rtype(asio::io_context &context) : network::data_channel<protocol::data>(
 
     createEmptyClients();
 
-    std::ifstream inputFile("Rtype/SpritesMooves/ground.json");
-    if (inputFile.is_open())
-    {
-        inputFile >> jsonData;
-        inputFile.close();
-        sheet = jsonData["sheet1"];
-    }
-    else
-    {
-        std::cout << "Impossible d'ouvrir le fichier !" << std::endl;
-        exit(84);
-    }
+    // std::ifstream inputFile("Rtype/SpritesMooves/ground.json");
+    // if (inputFile.is_open())
+    // {
+    //     inputFile >> jsonData;
+    //     inputFile.close();
+    //     sheet = jsonData["sheet1"];
+    // }
+    // else
+    // {
+    //     std::cout << "Impossible d'ouvrir le fichier !" << std::endl;
+    //     exit(84);
+    // }
 
     Haze::Velocity *velocityPlayer = new Haze::Velocity(0, 0);
 
@@ -83,13 +83,12 @@ Rtype::Rtype(asio::io_context &context) : network::data_channel<protocol::data>(
     //                                                  Haze::Animation::AnimationType::LOOP, true, 0.2));
     // entities[SHOT]->addComponent(shotSprite);
 
-    walls.push_back(new wall(&engine, jsonData, 0, 600));
-    walls.push_back(new wall(&engine, jsonData, 192, 600));
-    walls.push_back(new wall(&engine, jsonData, 384, 600));
-    walls.push_back(new wall(&engine, jsonData, 576, 600));
-    walls.push_back(new wall(&engine, jsonData, 768, 600));
-    walls.push_back(new wall(&engine, jsonData, 950, 600));
-
+    // walls.push_back(new wall(&engine, jsonData, 0, 600));
+    // walls.push_back(new wall(&engine, jsonData, 192, 600));
+    // walls.push_back(new wall(&engine, jsonData, 384, 600));
+    // walls.push_back(new wall(&engine, jsonData, 576, 600));
+    // walls.push_back(new wall(&engine, jsonData, 768, 600));
+    // walls.push_back(new wall(&engine, jsonData, 950, 600));
     // ! DELETE THIS -> LOAD FROM FILE THE LEVEL
     entities[ENNEMY]->addComponent(new Haze::Position(500, 200));
     entities[ENNEMY]->addComponent(new Haze::Velocity(0, 0));
@@ -108,6 +107,8 @@ Rtype::Rtype(asio::io_context &context) : network::data_channel<protocol::data>(
 
     Haze::Window *window = new Haze::Window(0, 0);
     entities[WINDOW]->addComponent(window);
+
+    std::cout << "window created" << std::endl;
 }
 
 Rtype::~Rtype()
@@ -130,6 +131,7 @@ void Rtype::moveBackground()
 
 void Rtype::createEmptyClients()
 {
+    std::cout << "createEmptyClients" << std::endl;
     asio::ip::udp::endpoint defaultEndpoint;
     std::chrono::time_point<std::chrono::high_resolution_clock> lastActivityTime = std::chrono::high_resolution_clock::now() - std::chrono::seconds(10);
 
@@ -145,14 +147,16 @@ void Rtype::createEmptyClients()
 
         clients.push_back(newClient);
     }
+    std::cout << "empty clients created" << std::endl;
 }
 
 void Rtype::checkInactivesClients()
 {
     for (int i = 0; i < 4; i++)
     {
-        if (std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - clients[i].lastActivityTime).count() > 5)
+        if (clients[i].entity != nullptr && std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - clients[i].lastActivityTime).count() > 5)
         {
+
             engine.removeEntity(clients[i].entity);
         }
     }
@@ -162,7 +166,7 @@ void Rtype::run()
 {
     while (engine.isOpen())
     {
-        moveBackground(); // necessary for collision
+        // moveBackground(); // necessary for collision
         engine.update();
         checkInactivesClients();
     }
@@ -175,11 +179,20 @@ void Rtype::run()
 void Rtype::sendToClient(ClientInfo &client, network::datagram<protocol::data> content)
 {
     // TODO : send to client
+
+    // void sendTo(const datagram<T> &datagram, const udp::endpoint &to);
+    // void sendAll(const datagram<T> &datagram);
+    // void sendSome(const datagram<T> &datagram, std::vector<udp::endpoint> some);
+
+    // network::data_channel<protocol::data>> client::_dataChannel
+
+    sendTo(content, client.endpoint);
 }
 
 // void Rtype::createShot(ClientInfo &client)
 void Rtype::createPlayer(ClientInfo &client)
 {
+    std::cout << "createPlayer" << std::endl;
     // TODO : create a new player
     Haze::Entity *newPlayer = engine.createEntity();
     Haze::Velocity *velocityPlayer = new Haze::Velocity(0, 0);
@@ -256,9 +269,58 @@ void Rtype::createPlayer(ClientInfo &client)
     // TODO : send to client with componentData
 }
 
+void Rtype::sendEverythings(udp::endpoint to)
+{
+    std::cout << "sendEverythings" << std::endl;
+
+    // * ID               | Body           | Response ID |
+    // * ---------------- | -------------- | ----------- |
+    // * CREATE_ENTITY    | id_entity      | NONE        |
+    // * DELETE_ENTITY    | id_entity      | NONE        |
+    // * ADD_COMPONENT    | info_component | NONE        |
+    // * REMOVE_COMPONENT | id_component   | NONE        |
+    // * INFO_COMPONENT   | info_component | NONE        |
+    // * INFO_ENTITY      | info_entity    | NONE        |
+    // * INFO_ENTITIES    | info_entities  | NONE        |
+    // * DEAD             | NONE           | NONE        |
+    // // TODO : send to client
+
+    // send Entities
+    // for (uint8_t i = 0; i < 4; i++)
+    // {
+    //     if (clients[i].entity != nullptr)
+    //     {
+    for (std::string type : engine.getComponentList()->getComponentName())
+    {
+        auto component = engine.getComponentList()->getComponent(type, 0);
+        std::cout << "type : " << type << std::endl;
+
+        // Haze::Component *info;
+
+        network::datagram<protocol::data> msg(protocol::data::create_entity);
+        std::memcpy(msg.body.data(), static_cast<void *>(component), sizeof(Haze::Component));
+
+        sendTo(msg, to);
+
+        // sendTo(
+        // network::datagram<protocol::data>(
+        //     protocol::data::create_entity, engine.getComponentList()->getComponent(type, 0)),
+        // {
+
+        // header = id, size, timestamp
+        //     {protocol::data::create_entity, 0, std::chrono::system_clock::now()},
+        //     engine.getComponentList()->getComponent(type, 0)},
+        // to);
+        // {{protocol::data::alive, 0, std::chrono::system_clock::now()}};
+    }
+    //     }
+    // }
+
+    // send shots
+}
+
 void Rtype::onReceive(udp::endpoint from, network::datagram<protocol::data> content)
 {
-    std::cout << "onReceive" << std::endl;
     // | ID            | Body         | Response ID    |
     // | ------------- | ------------ | -------------- |
     // | INPUT         | info_inputs  | NONE           |
@@ -266,15 +328,13 @@ void Rtype::onReceive(udp::endpoint from, network::datagram<protocol::data> cont
     // | GET_ENTITIES  | NONE         | INFO_ENTITIES  |
     // | GET_COMPONENT | id_component | INFO_COMPONENT |
     // | ALIVE         | NONE         | NONE           |
-
-    // TODO : join & cie
-
+    std::cout << "onReceive" << std::endl;
     int8_t id_player = -1;
     switch (content.header.id)
     {
     case protocol::data::join:
     {
-        bool exist = 0;
+        std::cout << "join" << std::endl;
         for (int i = 0; i < 4; i++)
         {
             // * if the client already exist, and if he is not dead
@@ -289,6 +349,7 @@ void Rtype::onReceive(udp::endpoint from, network::datagram<protocol::data> cont
             {
                 clients[i].lastActivityTime = std::chrono::high_resolution_clock::now();
                 createPlayer(clients[i]);
+                // TODO sendEverythings(clients[i].endpoint);
                 id_player = i;
                 break;
             }
@@ -298,6 +359,7 @@ void Rtype::onReceive(udp::endpoint from, network::datagram<protocol::data> cont
                 clients[i].lastActivityTime = std::chrono::high_resolution_clock::now();
                 clients[i].endpoint = from;
                 createPlayer(clients[i]);
+                // TODO sendEverythings(clients[i].endpoint);
                 id_player = i;
                 break;
             }
@@ -309,7 +371,7 @@ void Rtype::onReceive(udp::endpoint from, network::datagram<protocol::data> cont
     }
 
     // ! use id_player
-    case protocol::data::input: // TODO : could be many players, see about that
+    case protocol::data::input:
     {
         Haze::info_inputs_weak info;
         std::memcpy(&info, content.body.data(), content.header.size);
@@ -320,7 +382,7 @@ void Rtype::onReceive(udp::endpoint from, network::datagram<protocol::data> cont
         inputs.x = info.x;
         inputs.y = info.y;
 
-        // clientData data = playersId[from];
+        // // clientData data = playersId[from];
         int id = -1;
         for (ClientInfo &data : clients)
             if (data.endpoint == from)

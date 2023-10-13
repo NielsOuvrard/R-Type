@@ -53,6 +53,7 @@ public:
     void run();
     void onReceive(udp::endpoint from, network::datagram<protocol::data> content) override;
     void sendToClient(ClientInfo &client, network::datagram<protocol::data> content);
+    void sendEverythings(udp::endpoint to);
 
 protected:
     Haze::Engine engine;
