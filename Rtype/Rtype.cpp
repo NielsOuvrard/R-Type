@@ -50,14 +50,28 @@ void Rtype::checkInactiveClients()
 }
 
 void Rtype::start()
-{
-    _running = true;
+{_running = true;
+    std::chrono::steady_clock::time_point previousTime = std::chrono::steady_clock::now();
+    const std::chrono::milliseconds targetFrameTime(1000 / 60); // 60 FPS
+
     while (_running) {
         // moveBackground(); // necessary for collision
         _engine.update();
         update(5, false);
         checkInactiveClients();
+
+        // Calculate time taken in this loop
+        std::chrono::steady_clock::time_point currentTime = std::chrono::steady_clock::now();
+        std::chrono::milliseconds elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - previousTime);
+
+        // Sleep to achieve the target frame rate
+        if (elapsedTime < targetFrameTime) {
+            std::this_thread::sleep_for(targetFrameTime - elapsedTime);
+        }
+
+        previousTime = std::chrono::steady_clock::now();
     }
+
 }
 
 void Rtype::stop()
@@ -134,23 +148,23 @@ void Rtype::createPlayer(Player &client)
 
                     if (IS_KEY_PRESSED(KEY_Z)) {
                         sendAll(RType::message::addComponent(newPlayer->getId(), "Position", new Haze::PositionData{position->x, position->y + 5}, sizeof(Haze::PositionData)));
-                        position->y -= 1;
-                        //                    velocity->y += -1;
+                        position->y -= 5;
+                        //                    velocity->y += -5;
                     }
                     if (IS_KEY_PRESSED(KEY_Q)) {
                         sendAll(RType::message::addComponent(newPlayer->getId(), "Position", new Haze::PositionData{position->x - 5, position->y}, sizeof(Haze::PositionData)));
-                        position->x += -1;
-                        //                    velocity->x += -1;
+                        position->x += -5;
+                        //                    velocity->x += -5;
                     }
                     if (IS_KEY_PRESSED(KEY_S)) {
                         sendAll(RType::message::addComponent(newPlayer->getId(), "Position", new Haze::PositionData{position->x, position->y - 5}, sizeof(Haze::PositionData)));
-                        position->y += 1;
-                        //                    velocity->y += 1;
+                        position->y += 5;
+                        //                    velocity->y += 5;
                     }
                     if (IS_KEY_PRESSED(KEY_D)) {
                         sendAll(RType::message::addComponent(newPlayer->getId(), "Position", new Haze::PositionData{position->x + 5, position->y}, sizeof(Haze::PositionData)));
-                        position->x += 1;
-                        //                    velocity->x += 1;
+                        position->x += 5;
+                        //                    velocity->x += 5;
                     }
                     newPlayer->addComponent(new Haze::Position(position->x, position->y));
                     //                if (velocity->x != 0 || velocity->y != 0) {
