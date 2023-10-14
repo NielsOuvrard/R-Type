@@ -290,8 +290,10 @@ void Rtype::onReceive(udp::endpoint from, network::datagram<protocol::data> cont
             //            inputs.inputsPressed.push_back(keyFound);
             //            inputs.inputsReleased.push_back(keyFound);
 
-            uint32_t id = findPlayerIndex(from) - 1;
-            _engine.setInfoInputs(inputs, id);
+            uint32_t id = findPlayerIndex(from);
+            if (id == 0)
+                return;
+            _engine.setInfoInputs(inputs, id - 1);
             break;
         }
         case protocol::data::alive: {
