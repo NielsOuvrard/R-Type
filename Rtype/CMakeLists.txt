@@ -8,14 +8,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(
         SOURCES
         Rtype.cpp
-        src/wall.cpp
+        class/wall.cpp
         protocol.h
 )
 
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
 target_compile_definitions(${PROJECT_NAME} PUBLIC USE_SFML=1)
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} includes)
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} src)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} inc)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} class)
 target_link_libraries(${PROJECT_NAME} PUBLIC
         haze-graphics
         Network
