@@ -89,7 +89,7 @@ namespace network
                 {
                     if (!ec)
                     {
-                        std::cout << "[DATA] Received datagram" << std::endl;
+                        // std::cout << "[DATA] Received datagram" << std::endl;
                         _peers.insert(_peerBuffer);
                         _inbox.push_back({_peerBuffer, _datagramBuffer});
                         asyncReceive();
@@ -109,7 +109,7 @@ namespace network
                 {
                     if (!ec)
                     {
-                        std::cout << "[DATA] datagram sent" << std::endl;
+                        //std::cout << "[DATA] datagram sent" << std::endl;
                         _outbox.pop_front();
                         if (!_outbox.empty())
                             asyncWrite();

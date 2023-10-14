@@ -40,6 +40,8 @@ public:
         Haze::Entity *entity = nullptr;
         uint32_t hp = 10;
         uint32_t score = 0;
+        std::chrono::steady_clock::time_point lastShot = std::chrono::steady_clock::now();
+        std::chrono::steady_clock::time_point lastMove = std::chrono::steady_clock::now();
     };
 
 public:

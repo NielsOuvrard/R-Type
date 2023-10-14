@@ -10,17 +10,34 @@ game::game(asio::io_context &context, Haze::Engine &engine)
       _inputGrabber(_engine.createEntity())
 {
     _inputGrabber->addComponent(new Haze::OnKeyPressed([this](int id, std::vector<Haze::InputType> keys) {
-        uint32_t i = 0;
         Haze::info_inputs_weak info{};
+        uint32_t i = 0;
         for (auto &key: keys) {
             if (i < info.pressedInputs.max_size()) {
-                info.pressedInputs[0] = key;
+                info.pressedInputs[i] = key;
                 i++;
             }
         }
         if (i) {
             network::datagram<data> msg(data::input);
             std::memcpy(msg.body.data(), &info, sizeof(Haze::info_inputs_weak));
+            msg.header.size = sizeof(Haze::info_inputs_weak);
+            sendAll(msg);
+        }
+    }));
+    _inputGrabber->addComponent(new Haze::OnKeyReleased([this](int id, std::vector<Haze::InputType> keys) {
+        uint32_t i = 0;
+        Haze::info_inputs_weak info{};
+        for (auto &key: keys) {
+            if (i < info.releasedInputs.max_size()) {
+                info.releasedInputs[i] = key;
+                i++;
+            }
+        }
+        if (i) {
+            network::datagram<data> msg(data::input);
+            std::memcpy(msg.body.data(), &info, sizeof(Haze::info_inputs_weak));
+            msg.header.size = sizeof(Haze::info_inputs_weak);
             sendAll(msg);
         }
     }));
@@ -30,28 +47,28 @@ void game::onReceive(udp::endpoint from, network::datagram<data> content)
 {
     switch (content.header.id) {
         case data::create_entity: {
-            std::cout << "[GAME] creating entity\n";
+            //std::cout << "[GAME] creating entity\n";
             Haze::entity_id id = {0};
             std::memcpy(&id, content.body.data(), content.header.size);
             createEntity(id);
             break;
         }
         case data::delete_entity: {
-            std::cout << "[GAME] deleting entity\n";
+            //std::cout << "[GAME] deleting entity\n";
             Haze::entity_id id = {0};
             std::memcpy(&id, content.body.data(), content.header.size);
             deleteEntity(id);
             break;
         }
         case data::add_component: {
-            std::cout << "[GAME] adding component\n";
+            //std::cout << "[GAME] adding component\n";
             Haze::component_info info = {0};
             std::memcpy(&info, content.body.data(), content.header.size);
             addComponent(info);
             break;
         }
         case data::remove_component: {
-            std::cout << "[GAME] removing component\n";
+            //std::cout << "[GAME] removing component\n";
             Haze::component_id info = {0};
             std::memcpy(&info, content.body.data(), content.header.size);
             removeComponent(info);

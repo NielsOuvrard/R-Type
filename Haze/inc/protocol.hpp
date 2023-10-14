@@ -30,8 +30,8 @@ namespace Haze {
     };
 
     struct info_inputs_weak {
-        std::array<InputType, 100> pressedInputs;
-        std::array<InputType, 100> releasedInputs;
+        std::array<InputType, 10> pressedInputs;
+        std::array<InputType, 10> releasedInputs;
         MouseType mouseType;
 
         // mouse coordinates
