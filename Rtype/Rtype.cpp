@@ -214,10 +214,14 @@ void Rtype::sendEverything(udp::endpoint &to)
         if (player.remote && player.entity) {
             std::cout << "\x1B[32m"
                       << "SEND PLAYER " << player.entity->getId() << "\n\x1B[0m";
+            auto pos = dynamic_cast<Haze::Position *>(player.entity->getComponent("Position"));
+            auto scale = dynamic_cast<Haze::Scale *>(player.entity->getComponent("Scale"));
+            auto hitbox = dynamic_cast<Haze::Hitbox *>(player.entity->getComponent("Hitbox"))->hitbox.front();
+
             sendTo(RType::message::createEntity(player.entity->getId()), to);
-            sendTo(RType::message::addComponent(player.entity->getId(), "Position", player.entity->getComponent("Position"), sizeof(Haze::PositionData)), to);
-            sendTo(RType::message::addComponent(player.entity->getId(), "Scale", player.entity->getComponent("Scale"), sizeof(Haze::ScaleData)), to);
-            sendTo(RType::message::addComponent(player.entity->getId(), "Hitbox", player.entity->getComponent("Hitbox"), sizeof(Haze::HitboxData)), to);
+            sendTo(RType::message::addComponent(player.entity->getId(), "Position", new Haze::PositionData{pos->x, pos->y}, sizeof(Haze::PositionData)), to);
+            sendTo(RType::message::addComponent(player.entity->getId(), "Scale", new Haze::ScaleData{scale->x, scale->y}, sizeof(Haze::ScaleData)), to);
+            sendTo(RType::message::addComponent(player.entity->getId(), "Hitbox", new Haze::HitboxData{hitbox}, sizeof(Haze::HitboxData)), to);
             sendTo(RType::message::addComponent(player.entity->getId(), "Sprite", new Haze::SpriteData{"assets/r-typesheet30a.gif"}, sizeof(Haze::SpriteData)), to);
             sendTo(RType::message::addComponent(player.entity->getId(), "HitboxDisplay", nullptr, 0), to);
         }
