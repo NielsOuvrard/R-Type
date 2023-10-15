@@ -48,6 +48,7 @@ public:
 private:
     Haze::Engine _engine;
 
+    std::vector<wall *> _walls;
     std::vector<Haze::Entity *> _entities;
     std::array<Player, 4> _players;
     bool _running = false;

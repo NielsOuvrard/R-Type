@@ -15,11 +15,11 @@
 #include "wall.hpp"
 #include <haze-graphics.hpp>
 
-wall::wall(Haze::Engine *engine, nlohmann::json data, int x, int y) : _jsonData(data)
+wall::wall(Haze::Engine &engine, nlohmann::json data, int x, int y) : _jsonData(data)
 {
-    _entityWallBottom = engine->createEntity();
-    _sheet = _jsonData["sheet1"];
-    _wallSprite = new Haze::Sprite("assets/wall.png");
+    _entityWallBottom = engine.createEntity();
+    _sheet = _jsonData["animation"][0];
+    _wallSprite = new Haze::Sprite("assets/sprites/wall.png");
     _entityWallBottom->addComponent(new Haze::Position(x, y));
     _entityWallBottom->addComponent(new Haze::Scale(4, -4));
     _entityWallBottom->addComponent(_wallSprite);
@@ -54,8 +54,8 @@ wall::~wall()
 
 void wall::changeSpriteBack(Haze::Entity *E)
 {
-    int randomNumber = std::rand() % 10 + 1;
-    _sheet = _jsonData["sheet" + std::to_string(randomNumber)];
+    idSprite = std::rand() % 10;
+    _sheet = _jsonData["animation"][idSprite];
     auto Animation = static_cast<Haze::Animation *>(E->getComponent("Animation"));
     Animation->frames[0].x = _sheet["x"];
     Animation->frames[0].y = _sheet["y"];
