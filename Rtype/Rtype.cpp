@@ -141,6 +141,24 @@ void Rtype::sendEverything(udp::endpoint &to)
     //    }
 }
 
+void printInfoInputs(const Haze::info_inputs_weak &info)
+{
+    std::cout << "Pressed Inputs: ";
+    for (const auto &input: info.pressedInputs) {
+        std::cout << static_cast<int>(input) << " ";
+    }
+    std::cout << std::endl;
+
+    std::cout << "Released Inputs: ";
+    for (const auto &input: info.releasedInputs) {
+        std::cout << static_cast<int>(input) << " ";
+    }
+    std::cout << std::endl;
+
+    std::cout << "Mouse Type: " << static_cast<int>(info.mouseType) << std::endl;
+    std::cout << "Mouse Coordinates: (" << info.x << ", " << info.y << ")" << std::endl;
+}
+
 void Rtype::onReceive(udp::endpoint from, network::datagram<protocol::data> content)
 {
     // refresh player's activity
@@ -180,17 +198,18 @@ void Rtype::onReceive(udp::endpoint from, network::datagram<protocol::data> cont
             // std::cout << "\x1B[32m[SERVER] INPUT RECEIVE\n";
             Haze::info_inputs_weak info{};
             std::memcpy(&info, content.body.data(), content.header.size);
+            printInfoInputs(info);
             Haze::info_inputs inputs;
             for (auto &key: info.pressedInputs) {
                 if (key != Haze::NO) {
                     inputs.inputsPressed.push_back(key);
-                    // std::cout << "pressed " << 'a' + key << std::endl;
+                    std::cout << "pressed " << char('a' + key) << std::endl;
                 }
             }
             for (auto &key: info.releasedInputs) {
                 if (key != Haze::NO) {
                     inputs.inputsReleased.push_back(key);
-                    // std::cout << "released " << key << std::endl;
+                    std::cout << "released " << char('a' + key) << std::endl;
                 }
             }
             inputs.mouseType = info.mouseType;
@@ -233,7 +252,8 @@ void Rtype::createPlayer(Player &player)
     sendAll(RType::message::addComponent(player.entity->getId(), "Scale", new Haze::ScaleData{3, 3}, sizeof(Haze::ScaleData)));
     sendAll(RType::message::addComponent(player.entity->getId(), "Hitbox", new Haze::HitboxData({0, 0, 32, 14}), sizeof(Haze::HitboxData)));
     sendAll(RType::message::addComponent(player.entity->getId(), "HitboxDisplay", nullptr, 0));
-    sendAll(RType::message::addComponent(player.entity->getId(), "Sprite", new Haze::SpriteData{"assets/r-typesheet30a.gif"}, sizeof(Haze::SpriteData)));
+    sendAll(RType::message::addComponent(player.entity->getId(), "Sprite", new Haze::SpriteData{"assets/sprites/spaceship.gif"}, sizeof(Haze::SpriteData)));
+    sendAll(RType::message::addComponent(player.entity->getId(), "Animation", new Haze::AnimationData{"assets/AnimationJSON/spaceship.json"}, sizeof(Haze::SpriteData)));
 
     // ! animation didn't work, receive {0, 0, 0, 0}
     //    sendAll(RType::message::addComponent(client.entity->getId(), "Animation", new Haze::AnimationData({
@@ -264,7 +284,8 @@ void Rtype::createPlayer(Player &player)
                     sendAll(RType::message::addComponent(newShot->getId(), "Hitbox", new Haze::HitboxData({0, 0, 32, 14}), sizeof(Haze::HitboxData)));
                     sendAll(RType::message::addComponent(newShot->getId(), "HitboxDisplay", nullptr, 0));
                     sendAll(RType::message::addComponent(newShot->getId(), "Velocity", new Haze::VelocityData{2, 0}, sizeof(Haze::VelocityData)));
-                    sendAll(RType::message::addComponent(newShot->getId(), "Sprite", new Haze::SpriteData{"assets/shot.png"}, sizeof(Haze::SpriteData)));
+                    sendAll(RType::message::addComponent(newShot->getId(), "Sprite", new Haze::SpriteData{"assets/sprites/shot.png"}, sizeof(Haze::SpriteData)));
+                    sendAll(RType::message::addComponent(newShot->getId(), "Animation", new Haze::AnimationData{"assets/AnimationJSON/shot.json"}, sizeof(Haze::SpriteData)));
                     std::cout << "[SERVER] SEND SHOT\n";
                 }
 

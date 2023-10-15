@@ -67,10 +67,7 @@ namespace Haze {
 
 #ifdef USE_SFML
     struct AnimationData {
-        std::vector<Animation::intRect> frames;
-        Animation::AnimationType type;
-        bool direction;
-        double tics;
+        char path[128];
     };
 
     struct TextData {

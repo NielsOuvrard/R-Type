@@ -14,7 +14,7 @@
 
 #pragma onces
 
-#include "../../Client/json.hpp"
+#include "../../Haze/inc/json.hpp"
 #include <haze-core.hpp>
 #include <haze-graphics.hpp>
 

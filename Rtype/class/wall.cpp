@@ -27,16 +27,15 @@ wall::wall(Haze::Engine *engine, nlohmann::json data, int x, int y) : _jsonData(
     // _entityWallBottom->addComponent(new Haze::SplitSprite(*static_cast<Haze::Sprite *>(_entityWallBottom->getComponent("Sprite")),
     //      _sheet["x"], _sheet["y"], _sheet["width"], _sheet["height"]));
 
-    _entityWallBottom->addComponent(new Haze::Animation({{_sheet["x"], _sheet["y"], _sheet["width"], _sheet["height"]}}, Haze::Animation::AnimationType::ONCE, true, 0.2));
+    _entityWallBottom->addComponent(new Haze::Animation("assets/AnimationJSON/ground.json"));
     Haze::Collision::CollisionInfo colisionInfo;
     colisionInfo.type = Haze::Collision::LAMBDA;
     colisionInfo.tics = 1;
-    colisionInfo.onCollision = [](int x, int y)
-    {
+    colisionInfo.onCollision = [](int x, int y) {
         std::cout << "collision!" << std::endl;
     };
     std::map<std::string, Haze::Collision::CollisionInfo> infos = {
-        {"player", colisionInfo},
+            {"player", colisionInfo},
     };
     _entityWallBottom->addComponent(new Haze::Collision("wall", infos));
     int height = _sheet["height"];

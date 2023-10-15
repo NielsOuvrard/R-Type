@@ -65,7 +65,7 @@ namespace Haze {
         }
         if (type == "Animation") {
             AnimationData *animation = reinterpret_cast<AnimationData *>(data.data());
-            return new Animation(animation->frames, animation->type, animation->direction, animation->tics);
+            return new Animation(animation->path);
         }
         if (type == "Text") {
             TextData *text = reinterpret_cast<TextData *>(data.data());
