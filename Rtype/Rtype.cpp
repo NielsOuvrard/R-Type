@@ -215,13 +215,6 @@ void Rtype::onReceive(udp::endpoint from, network::datagram<protocol::data> cont
             inputs.mouseType = info.mouseType;
             inputs.x = info.x;
             inputs.y = info.y;
-            //            Haze::InputType keyFound;
-            //            std::memcpy(&keyFound, content.body.data(), 1);
-            //            Haze::InputType keyReleased;
-            //            std::memcpy(&keyReleased, content.body.data() + 1, 1);
-            //            Haze::info_inputs inputs{};
-            //            inputs.inputsPressed.push_back(keyFound);
-            //            inputs.inputsReleased.push_back(keyFound);
 
             uint32_t id = findPlayerIndex(from);
             if (id == 0)
@@ -255,17 +248,6 @@ void Rtype::createPlayer(Player &player)
     sendAll(RType::message::addComponent(player.entity->getId(), "Sprite", new Haze::SpriteData{"assets/sprites/spaceship.gif"}, sizeof(Haze::SpriteData)));
     sendAll(RType::message::addComponent(player.entity->getId(), "Animation", new Haze::AnimationData{"assets/AnimationJSON/spaceship.json"}, sizeof(Haze::SpriteData)));
 
-    // ! animation didn't work, receive {0, 0, 0, 0}
-    //    sendAll(RType::message::addComponent(client.entity->getId(), "Animation", new Haze::AnimationData({
-    //        {
-    //        {0, 0, 34, 34},
-    //        {34, 0, 34, 34},
-    //        {68, 0, 34, 34}
-    //        },
-    //        Haze::Animation::AnimationType::LOOP,
-    //        true, 0.2
-    //        }), sizeof(Haze::AnimationData)));
-
     player.entity->addComponent(new Haze::OnKeyPressed(
             [this, &player](int id, std::vector<Haze::InputType> components) {
                 if (IS_KEY_PRESSED(KEY_F) && player.missileCd.IsReady()) {
@@ -275,7 +257,7 @@ void Rtype::createPlayer(Player &player)
                     newShot->addComponent(new Haze::Position(position->x + 33 * 3, position->y));
                     newShot->addComponent(new Haze::Velocity(2, 0));
                     newShot->addComponent(new Haze::Scale(3, 3));
-                    // TODO add hitbox, collider and send animation...
+                    // TODO add hitbox and collider
                     _entities.push_back(newShot);
                     // * send shot
                     sendAll(RType::message::createEntity(newShot->getId()));
