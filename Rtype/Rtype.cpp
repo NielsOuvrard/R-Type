@@ -74,6 +74,7 @@ uint32_t Rtype::getPlayerID(const udp::endpoint &endpoint)
 
 void Rtype::sendEverything(udp::endpoint &to)
 {
+    _background->send();
     // * send to the new player all players data
     for (auto &player: _players) {
         player->send();
@@ -81,7 +82,6 @@ void Rtype::sendEverything(udp::endpoint &to)
     for (auto &enemy: _enemies) {
         enemy->send();
     }
-    _background->send();
 }
 
 void Rtype::start()
@@ -90,11 +90,11 @@ void Rtype::start()
     std::chrono::steady_clock::time_point previousTime = std::chrono::steady_clock::now();
     const std::chrono::milliseconds targetFrameTime(1000 / 60);// 60 FPS
 
+    _background->build();
 
     _enemies.emplace_back(std::make_unique<Enemy>(_engine, _channel));
     _enemies.back()->build();
 
-    _background->build();
 
     //    std::ifstream inputFile("assets/AnimationJSON/ground.json");
     //    nlohmann::json jsonData;

@@ -23,7 +23,7 @@ public:
 //    void sendUpdate();
 
 public:// public members
-    uint32_t _hp = 20; // useless
+    uint32_t _hp = 50; // useless
     Haze::Entity *_entity = nullptr;
 
 private:

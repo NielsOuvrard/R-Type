@@ -15,7 +15,7 @@ void Enemy::build()
 {
     _entity = _engine.createEntity();
     _entity->addComponent(new Haze::Position(500, 300));
-//    _entity->addComponent(new Haze::Velocity(-2, 0));
+    //    _entity->addComponent(new Haze::Velocity(-2, 0));
     _entity->addComponent(new Haze::Scale(3, 3));
     _entity->addComponent(new Haze::Hitbox({{5, 5, 33 - 10, 36 - 10}}));
 
@@ -25,10 +25,20 @@ void Enemy::build()
             Haze::Collision::LAMBDA,
             0.1,
             [this](int a, int b) {
-                // life -= damage
-                std::cout << "missile missile missile missile\n";
-            }
-    };
+                auto damage = dynamic_cast<Haze::Damage *>(_engine.getEntity(b)->getComponent("Damage"));
+                if (damage == nullptr) {
+                    std::cout << "Error: Damage component not found" << std::endl;
+                    return;
+                }
+                std::cout << "hp = " << _hp << " - " << damage->damage << " = " << _hp - damage->damage << std::endl;
+                if (_hp - damage->damage < 0) {
+                    _channel.sendAll(RType::message::deleteEntity(_entity->getId()));
+                    _entity->addComponent(new Haze::Destroy());
+                    std::cout << "Enemy died" << std::endl;
+                } else {
+                    _hp -= damage->damage;
+                }
+            }};
     _entity->addComponent(new Haze::Collision("enemy", mapCollision));
     send();
 }
@@ -41,11 +51,10 @@ void Enemy::send()
 
     _channel.sendAll(RType::message::addComponent(_entity->getId(), "Health", new Haze::HealthData{50}, sizeof(Haze::HealthData)));
     _channel.sendAll(RType::message::addComponent(_entity->getId(), "Position", new Haze::PositionData{500, 300}, sizeof(Haze::PositionData)));
-//    _channel.sendAll(RType::message::addComponent(_entity->getId(), "Velocity", new Haze::VelocityData{-2, 0}, sizeof(Haze::VelocityData)));
+    //    _channel.sendAll(RType::message::addComponent(_entity->getId(), "Velocity", new Haze::VelocityData{-2, 0}, sizeof(Haze::VelocityData)));
     _channel.sendAll(RType::message::addComponent(_entity->getId(), "Scale", new Haze::ScaleData{3, 3}, sizeof(Haze::ScaleData)));
     _channel.sendAll(RType::message::addComponent(_entity->getId(), "Hitbox", new Haze::HitboxData{5, 5, 33 - 10, 36 - 10}, sizeof(Haze::HitboxData)));
     _channel.sendAll(RType::message::addComponent(_entity->getId(), "HitboxDisplay", nullptr, 0));
     _channel.sendAll(RType::message::addComponent(_entity->getId(), "Sprite", new Haze::SpriteData{"assets/sprites/enemy.gif"}, sizeof(Haze::SpriteData)));
     _channel.sendAll(RType::message::addComponent(_entity->getId(), "Animation", new Haze::AnimationData{"assets/AnimationJSON/enemy.json"}, sizeof(Haze::AnimationData)));
 }
-
