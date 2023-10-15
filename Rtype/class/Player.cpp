@@ -24,7 +24,7 @@ void Player::build()
     _entity->addComponent(new Haze::Hitbox({{0, 0, 32, 14}}));
     _entity->addComponent(new Haze::OnKeyPressed(
             [this](int actor, std::vector<Haze::InputType> components) {
-                if (IS_KEY_PRESSED(KEY_F)) { // && _missileCd.IsReady() // ! didn't work, why ?
+                if (IS_KEY_PRESSED(KEY_F)) {// && _missileCd.IsReady() // ! didn't work, why ?
                     _missileCd.Activate();
                     auto position = dynamic_cast<Haze::Position *>(this->_entity->getComponent("Position"));
                     _missiles.emplace_back(_engine, _channel, position);
@@ -74,8 +74,16 @@ void Player::send()
     _channel.sendAll(RType::message::addComponent(_entity->getId(), "Hitbox", new Haze::HitboxData{hitbox}, sizeof(Haze::HitboxData)));
 
     _channel.sendAll(RType::message::addComponent(_entity->getId(), "HitboxDisplay", nullptr, 0));
-    _channel.sendAll(RType::message::addComponent(_entity->getId(), "Sprite", new Haze::SpriteData{"assets/sprites/spaceship.gif"}, sizeof(Haze::SpriteData)));
-    _channel.sendAll(RType::message::addComponent(_entity->getId(), "Animation", new Haze::AnimationData{"assets/AnimationJSON/spaceship.json"}, sizeof(Haze::AnimationData)));
+    _channel.sendAll(RType::message::addComponent(_entity->getId(), "Sprite", new Haze::SpriteData{"assets/sprites/spaceships.png"}, sizeof(Haze::SpriteData)));
+    if (_id == 1) {
+        _channel.sendAll(RType::message::addComponent(_entity->getId(), "Animation", new Haze::AnimationData{"assets/AnimationJSON/spaceship1.json"}, sizeof(Haze::AnimationData)));
+    } else if (_id == 2) {
+        _channel.sendAll(RType::message::addComponent(_entity->getId(), "Animation", new Haze::AnimationData{"assets/AnimationJSON/spaceship2.json"}, sizeof(Haze::AnimationData)));
+    } else if (_id == 3) {
+        _channel.sendAll(RType::message::addComponent(_entity->getId(), "Animation", new Haze::AnimationData{"assets/AnimationJSON/spaceship3.json"}, sizeof(Haze::AnimationData)));
+    } else if (_id == 4) {
+        _channel.sendAll(RType::message::addComponent(_entity->getId(), "Animation", new Haze::AnimationData{"assets/AnimationJSON/spaceship4.json"}, sizeof(Haze::AnimationData)));
+    }
 }
 
 void Player::sendUpdate()

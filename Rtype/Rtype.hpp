@@ -16,6 +16,7 @@
 
 #include "../Client/json.hpp"
 #include "Player.h"
+#include "Enemy.h"
 #include "data.h"
 #include "net_data_channel.h"
 #include "net_server.h"
@@ -55,5 +56,6 @@ private:
     std::vector<wall *> _walls;
     std::vector<Haze::Entity *> _entities;
     std::vector<std::unique_ptr<Player>> _players;
+    std::vector<std::unique_ptr<Enemy>> _enemies;
     bool _running = false;
 };
