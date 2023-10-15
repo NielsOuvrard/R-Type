@@ -24,7 +24,7 @@ void Player::build()
     _entity->addComponent(new Haze::Hitbox({{0, 0, 32, 14}}));
     _entity->addComponent(new Haze::OnKeyPressed(
             [this](int actor, std::vector<Haze::InputType> components) {
-                if (IS_KEY_PRESSED(KEY_F)) { // && _missileCd.IsReady() // ! didn't work, why ?
+                if (IS_KEY_PRESSED(KEY_F) && _missileCd.IsReady()) {
                     _missileCd.Activate();
                     auto position = dynamic_cast<Haze::Position *>(this->_entity->getComponent("Position"));
                     _missiles.emplace_back(_engine, _channel, position);
