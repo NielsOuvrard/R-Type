@@ -1,35 +1,35 @@
 {
-    "tics": 0,
+    "tics": 0.5,
     "type": "loop",
     "animation": [
         {
             "x": 106,
             "y": 3,
-            "width": 32,
+            "width": 28,
             "height": 14
         },
         {
             "x": 139,
             "y": 3,
-            "width": 32,
+            "width": 28,
             "height": 13
         },
         {
             "x": 173,
             "y": 3,
-            "width": 31,
+            "width": 28,
             "height": 13
         },
         {
             "x": 205,
             "y": 3,
-            "width": 32,
+            "width": 28,
             "height": 13
         },
         {
             "x": 138,
             "y": 2,
-            "width": 32,
+            "width": 28,
             "height": 14
         }
     ]
