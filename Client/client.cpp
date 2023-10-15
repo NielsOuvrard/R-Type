@@ -25,7 +25,8 @@ void client::start()
         }
 
         if (_game) {
-            _game->update(5, false);
+            std::cout << "[INBOX] " << _game->getIncoming().count() << std::endl;
+            _game->update(50, false);
         }
 
         // TCP Events
