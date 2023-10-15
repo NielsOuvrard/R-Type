@@ -8,7 +8,9 @@
 #pragma once
 #include "Component.hpp"
 #include "inputs.hpp"
+#include "json.hpp"
 #include <SFML/Graphics.hpp>
+#include <fstream>
 #include <iostream>
 #include <thread>
 
@@ -46,8 +48,32 @@ namespace Haze {
             int height;
         };
 
-        Animation(std::vector<intRect> frames, AnimationType type, bool direction, double tics) : frames(frames), type(type), tics(tics), direction(direction)
+        Animation(std::string path_json)
         {
+            std::ifstream inputFile(path_json);
+            if (!inputFile.is_open()) {
+                std::cout << "Impossible d'ouvrir le fichier !" << std::endl;
+                return;
+            }
+            // * put the json file in a string
+            nlohmann::json jsonData;
+            inputFile >> jsonData;
+            inputFile.close();
+            // * parse the json string into variables
+            tics = jsonData["tics"];
+            if (jsonData["type"] == "loop")
+                type = AnimationType::LOOP;
+            else if (jsonData["type"] == "boomerang")
+                type = AnimationType::BOOMERANG;
+            else if (jsonData["type"] == "once")
+                type = AnimationType::ONCE;
+            else
+                type = AnimationType::LOOP;
+            nlohmann::json animation = jsonData["animation"];
+
+            for (const auto &frame: animation) {
+                frames.push_back(intRect({frame["x"], frame["y"], frame["width"], frame["height"]}));
+            }
         }
 
         std::vector<intRect> frames;
