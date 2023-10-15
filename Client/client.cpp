@@ -16,6 +16,8 @@ void client::start()
 {
     if (!_isBuild)
         build();
+    std::chrono::steady_clock::time_point previousTime = std::chrono::steady_clock::now();
+    const std::chrono::milliseconds targetFrameTime(1000 / 60);// 60 FPS
     while (_engine.isOpen()) {
         if (!_login->isHidden() && isConnected()) {
             _startButton->getEntity().removeComponent("Hide");
@@ -58,6 +60,14 @@ void client::start()
             std::cout << "send join" << std::endl;
         }
         _engine.update();
+
+        std::chrono::steady_clock::time_point currentTime = std::chrono::steady_clock::now();
+        std::chrono::milliseconds elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - previousTime);
+        // Sleep to achieve the target frame rate
+        if (elapsedTime < targetFrameTime) {
+            std::this_thread::sleep_for(targetFrameTime - elapsedTime);
+        }
+        previousTime = std::chrono::steady_clock::now();
     }
     std::cout << "engine closed!" << std::endl;
 }

@@ -56,6 +56,18 @@ void Rtype::start()
         update(5, false);
         checkInactiveClients();
 
+        for (auto &player: _players) {
+            if (player.remote && player.entity) {
+                auto pos = dynamic_cast<Haze::Position *>(player.entity->getComponent("Position"));
+                auto scale = dynamic_cast<Haze::Scale *>(player.entity->getComponent("Scale"));
+                auto hitbox = dynamic_cast<Haze::Hitbox *>(player.entity->getComponent("Hitbox"))->hitbox.front();
+
+                sendAll(RType::message::addComponent(player.entity->getId(), "Position", new Haze::PositionData{pos->x, pos->y}, sizeof(Haze::PositionData)));
+                sendAll(RType::message::addComponent(player.entity->getId(), "Scale", new Haze::ScaleData{scale->x, scale->y}, sizeof(Haze::ScaleData)));
+                sendAll(RType::message::addComponent(player.entity->getId(), "Hitbox", new Haze::HitboxData{hitbox}, sizeof(Haze::HitboxData)));
+            }
+        }
+
         // Calculate time taken in this loop
         std::chrono::steady_clock::time_point currentTime = std::chrono::steady_clock::now();
         std::chrono::milliseconds elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - previousTime);
@@ -165,20 +177,20 @@ void Rtype::onReceive(udp::endpoint from, network::datagram<protocol::data> cont
         }
 
         case protocol::data::input: {
-            std::cout << "\x1B[32m[SERVER] INPUT RECEIVE\n";
+            // std::cout << "\x1B[32m[SERVER] INPUT RECEIVE\n";
             Haze::info_inputs_weak info{};
             std::memcpy(&info, content.body.data(), content.header.size);
             Haze::info_inputs inputs;
             for (auto &key: info.pressedInputs) {
                 if (key != Haze::NO) {
                     inputs.inputsPressed.push_back(key);
-                    std::cout << "pressed " << 'a' + key << std::endl;
+                    // std::cout << "pressed " << 'a' + key << std::endl;
                 }
             }
             for (auto &key: info.releasedInputs) {
                 if (key != Haze::NO) {
                     inputs.inputsReleased.push_back(key);
-                    std::cout << "released " << key << std::endl;
+                    // std::cout << "released " << key << std::endl;
                 }
             }
             inputs.mouseType = info.mouseType;
@@ -256,38 +268,24 @@ void Rtype::createPlayer(Player &player)
                     std::cout << "[SERVER] SEND SHOT\n";
                 }
 
-                auto position = dynamic_cast<Haze::Position *>(player.entity->getComponent("Position"));
+                auto velocity = dynamic_cast<Haze::Velocity *>(player.entity->getComponent("Velocity"));
+                if (velocity == nullptr)
+                    player.entity->addComponent(new Haze::Velocity(0, 0));
+                velocity->x = 0;
+                velocity->y = 0;
 
                 if (IS_KEY_PRESSED(KEY_Z)) {
-                    std::cout << "pressed Z\n";
-                    sendAll(RType::message::addComponent(player.entity->getId(), "Position", new Haze::PositionData{position->x, position->y + 5}, sizeof(Haze::PositionData)));
-                    position->y -= 5;
-                    //                    velocity->y += -5;
+                    velocity->y += -10;
                 }
                 if (IS_KEY_PRESSED(KEY_Q)) {
-                    std::cout << "pressed Q\n";
-                    sendAll(RType::message::addComponent(player.entity->getId(), "Position", new Haze::PositionData{position->x - 5, position->y}, sizeof(Haze::PositionData)));
-                    position->x += -5;
-                    //                    velocity->x += -5;
+                    velocity->x += -10;
                 }
                 if (IS_KEY_PRESSED(KEY_S)) {
-                    std::cout << "pressed S\n";
-                    sendAll(RType::message::addComponent(player.entity->getId(), "Position", new Haze::PositionData{position->x, position->y - 5}, sizeof(Haze::PositionData)));
-                    position->y += 5;
-                    //                    velocity->y += 5;
+                    velocity->y += 10;
                 }
                 if (IS_KEY_PRESSED(KEY_D)) {
-                    std::cout << "pressed D\n";
-                    sendAll(RType::message::addComponent(player.entity->getId(), "Position", new Haze::PositionData{position->x + 5, position->y}, sizeof(Haze::PositionData)));
-                    position->x += 5;
-                    //                    velocity->x += 5;
+                    velocity->x += 10;
                 }
-                //                    entity->addComponent(new Haze::Position(position->x, position->y));
-
-                //                if (velocity->x != 0 || velocity->y != 0) {
-                //                    std::cout << "velocity: " << velocity->x << ", " << velocity->y << std::endl;
-                //                    sendAll(RType::message::addComponent(entity->getId(), "Velocity", new Haze::VelocityData{velocity->x, velocity->y}, sizeof(Haze::VelocityData)));
-                //                }
             },
             player.id));
 }

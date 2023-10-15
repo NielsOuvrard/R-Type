@@ -117,6 +117,7 @@ namespace Haze {
         OnKeyPressed(std::function<void(int, std::vector<InputType>)> callback, size_t player = 0) : callback(callback), player(player) {}
         std::function<void(int, std::vector<InputType>)> callback;
         size_t player;
+        std::chrono::time_point<std::chrono::high_resolution_clock> timer = std::chrono::high_resolution_clock::now();
         std::string getType() const override
         {
             return "OnKeyPressed";
