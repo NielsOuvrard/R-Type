@@ -12,7 +12,7 @@
 
 class Missile {
 public:
-    Missile(Haze::Engine &engine, network::data_channel<protocol::data> &channel);
+    Missile(Haze::Engine &engine, network::data_channel<protocol::data> &channel, Haze::Position *pos);
     void build();
     void send();
     void sendUpdate();
@@ -22,4 +22,5 @@ public:
 private:
     Haze::Engine &_engine;
     network::data_channel<protocol::data> &_channel;
+    Haze::Position *_pos;
 };

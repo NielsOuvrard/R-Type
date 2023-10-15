@@ -81,8 +81,8 @@ void Rtype::sendEverything(udp::endpoint &to)
 void Rtype::start()
 {
     _running = true;
-    //    std::chrono::steady_clock::time_point previousTime = std::chrono::steady_clock::now();
-    //    const std::chrono::milliseconds targetFrameTime(1000 / 60);// 60 FPS
+        std::chrono::steady_clock::time_point previousTime = std::chrono::steady_clock::now();
+        const std::chrono::milliseconds targetFrameTime(1000 / 60);// 60 FPS
 
     //    std::ifstream inputFile("assets/AnimationJSON/ground.json");
     //    nlohmann::json jsonData;
@@ -137,15 +137,15 @@ void Rtype::start()
 
         // moveBackground(); // necessary for collision
 
-        //        // Calculate time taken in this loop
-        //        std::chrono::steady_clock::time_point currentTime = std::chrono::steady_clock::now();
-        //        std::chrono::milliseconds elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - previousTime);
-        //
-        //        // Sleep to achieve the target frame rate
-        //        if (elapsedTime < targetFrameTime) {
-        //            std::this_thread::sleep_for(targetFrameTime - elapsedTime);
-        //        }
-        //        previousTime = std::chrono::steady_clock::now();
+        // Calculate time taken in this loop
+        std::chrono::steady_clock::time_point currentTime = std::chrono::steady_clock::now();
+        std::chrono::milliseconds elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - previousTime);
+
+        // Sleep to achieve the target frame rate
+        if (elapsedTime < targetFrameTime) {
+            std::this_thread::sleep_for(targetFrameTime - elapsedTime);
+        }
+        previousTime = std::chrono::steady_clock::now();
     }
 }
 

@@ -15,13 +15,15 @@ namespace element {
           _onValidateFnc(std::move(callback))
     {
         setPosition(_position.x, _position.y);
+        // _ip.setValue("88.120.142.2");
+        // _port.setValue("3001");
         _ip.setValue("127.0.0.1");
         _port.setValue("3030");
         _validate.onClick([this](int id) {
             _onValidateFnc(_ip.getValue(), std::stoi(_port.getValue()));
         });
     }
-    
+
     void Login::setPosition(float x, float y)
     {
         auto ip_pos = dynamic_cast<Haze::Position *>(_ip.getEntity().getComponent("Position"));
