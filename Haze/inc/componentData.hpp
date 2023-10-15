@@ -70,6 +70,11 @@ namespace Haze {
         char path[128];
     };
 
+    struct SpriteCropedData {
+        char path[128];
+        uint8_t id;
+    };
+
     struct TextData {
         std::string text;
         Haze::Text::colorHaze color;

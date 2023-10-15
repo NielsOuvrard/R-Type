@@ -96,6 +96,15 @@ namespace Haze {
         for (int i = 0; i < componentList->getSize(); i++) {
             if (componentList->getComponent("Hide", i) != nullptr)
                 continue;
+            if (componentList->getComponent("SpriteCroped", i) != nullptr &&
+                componentList->getComponent("Sprite", i) != nullptr) {
+                auto animation = static_cast<SpriteCroped *>(componentList->getComponent("SpriteCroped", i));
+                auto sprite = static_cast<Sprite *>(componentList->getComponent("Sprite", i));
+                sprite->sprite.setTextureRect(sf::IntRect(animation->frames[animation->frameId].x,
+                                                          animation->frames[animation->frameId].y,
+                                                          animation->frames[animation->frameId].width,
+                                                          animation->frames[animation->frameId].height));
+            }
             if (componentList->getComponent("Animation", i) != nullptr &&
                 componentList->getComponent("Sprite", i) != nullptr) {
                 auto animation = static_cast<Animation *>(componentList->getComponent("Animation", i));
