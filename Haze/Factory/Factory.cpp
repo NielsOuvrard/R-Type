@@ -52,7 +52,7 @@ namespace Haze {
         }
         if (type == "LifeTime") {
             LifeTimeData *lifeTime = reinterpret_cast<LifeTimeData *>(data.data());
-            return new LifeTime(lifeTime->lifeTime);
+            return new LifeTime(lifeTime->lifeTime, [](int id) {});
         }
 #ifdef USE_SFML
         if (type == "Sprite") {

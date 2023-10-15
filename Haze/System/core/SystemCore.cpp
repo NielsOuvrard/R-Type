@@ -216,6 +216,7 @@ namespace Haze
                 lifeTime->tics++;
                 if (lifeTime->tics >= lifeTime->lifeTime)
                 {
+                    lifeTime->callback(i);
                     componentList->removeEntity(i);
                 }
             }
