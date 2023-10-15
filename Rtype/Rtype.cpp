@@ -74,14 +74,13 @@ uint32_t Rtype::getPlayerID(const udp::endpoint &endpoint)
 
 void Rtype::sendEverything(udp::endpoint &to)
 {
-    // * send to the new player all players data
+    _background->send();
     for (auto &player: _players) {
         player->send();
     }
-    for (auto &wall : _walls) {
+    for (auto &wall: _walls) {
         wall->send();
     }
-    _background->send();
 }
 
 void Rtype::start()
@@ -102,10 +101,10 @@ void Rtype::start()
     inputFile >> jsonData;
     inputFile.close();
 
-    //    for (int i = 0; i < 8; i++) {
-    //        _walls.push_back(new wall(_engine, jsonData, 250 * i, 600));
-    //        _channel.sendAll(RType::message::createEntity(_walls.back()->_entityWallBottom->getId()));
-    //
+    for (int i = 0; i < 8; i++) {
+        _walls.emplace_back(std::make_unique<Wall>(_engine, _channel, jsonData, 250 * i, 600));
+        _walls.back()->build(i);
+    }
 
     /**
       * Update Cycle
@@ -213,7 +212,7 @@ void Rtype::sendUpdate()
         player->sendUpdate();
     }
     _background->sendUpdate();
-    for (auto &wall : _walls) {
+    for (auto &wall: _walls) {
         wall->sendUpdate();
     }
 }
@@ -221,7 +220,4 @@ void Rtype::sendUpdate()
 void Rtype::update()
 {
     _background->update();
-    for (auto &wall : _walls) {
-        wall->update();
-    }
 }

@@ -12,7 +12,7 @@ Missile::Missile(Haze::Engine &engine, network::data_channel<protocol::data> &ch
 void Missile::build()
 {
     entity = _engine.createEntity();
-    Haze::Position * position = _pos;
+    Haze::Position *position = _pos;
     if (_pos == nullptr) {
         position = new Haze::Position(0, 0);
     }
@@ -34,5 +34,5 @@ void Missile::send()
     _channel.sendAll(RType::message::addComponent(entity->getId(), "Velocity", new Haze::VelocityData{2, 0}, sizeof(Haze::VelocityData)));
     _channel.sendAll(RType::message::addComponent(entity->getId(), "Sprite", new Haze::SpriteData{"assets/sprites/shot.png"}, sizeof(Haze::SpriteData)));
     _channel.sendAll(RType::message::addComponent(entity->getId(), "Animation", new Haze::AnimationData{"assets/AnimationJSON/shot.json"}, sizeof(Haze::AnimationData)));
-    _channel.sendAll(RType::message::addComponent(entity->getId(), "SpriteCroped", new Haze::SpriteCropedData{2}, sizeof(Haze::SpriteCropedData)));
+    _channel.sendAll(RType::message::addComponent(entity->getId(), "SpriteCropped", new Haze::SpriteCroppedData{2}, sizeof(Haze::SpriteCroppedData)));
 }

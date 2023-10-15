@@ -67,9 +67,9 @@ namespace Haze {
             AnimationData *animation = reinterpret_cast<AnimationData *>(data.data());
             return new Animation(animation->path);
         }
-        if (type == "SpriteCroped") {
-            SpriteCropedData *spriteCroped = reinterpret_cast<SpriteCropedData *>(data.data());
-            return new SpriteCroped(spriteCroped->id);
+        if (type == "SpriteCropped") {
+            SpriteCroppedData *spriteCropped = reinterpret_cast<SpriteCroppedData *>(data.data());
+            return new SpriteCropped(spriteCropped->id);
         }
         if (type == "Text") {
             TextData *text = reinterpret_cast<TextData *>(data.data());

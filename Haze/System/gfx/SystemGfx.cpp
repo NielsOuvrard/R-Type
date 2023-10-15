@@ -97,10 +97,10 @@ namespace Haze {
             if (componentList->getComponent("Hide", i) != nullptr)
                 continue;
             if (componentList->getComponent("Animation", i) != nullptr &&
-                componentList->getComponent("SpriteCroped", i) != nullptr &&
+                componentList->getComponent("SpriteCropped", i) != nullptr &&
                 componentList->getComponent("Sprite", i) != nullptr) {
                 auto animation = static_cast<Animation *>(componentList->getComponent("Animation", i));
-                auto sprite_id = static_cast<SpriteCroped *>(componentList->getComponent("SpriteCroped", i));
+                auto sprite_id = static_cast<SpriteCropped *>(componentList->getComponent("SpriteCropped", i));
                 auto sprite = static_cast<Sprite *>(componentList->getComponent("Sprite", i));
                 sprite->sprite.setTextureRect(sf::IntRect(animation->frames[sprite_id->frameId].x,
                                                           animation->frames[sprite_id->frameId].y,

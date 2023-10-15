@@ -15,17 +15,16 @@
 #pragma onces
 
 #include "../../Haze/inc/json.hpp"
+#include <Factory.hpp>
 #include <haze-core.hpp>
 #include <haze-graphics.hpp>
 #include <net_data_channel.h>
 #include <protocol.h>
-#include <Factory.hpp>
 
-class wall {
+class Wall {
 public:
-    wall::wall(Haze::Engine &engine, network::data_channel<protocol::data> &channel, nlohmann::json dataJSON, float x, float y);
-    void build();
-    void update();
+    Wall(Haze::Engine &engine, network::data_channel<protocol::data> &channel, nlohmann::json dataJSON, float x, float y);
+    void build(uint8_t frameIndex = 0);
     void send();
     void sendUpdate();
 
@@ -34,9 +33,10 @@ private:
     network::data_channel<protocol::data> &_channel;
 
     std::vector<Haze::Animation::intRect> _frames;
+    uint8_t _frameIndex = 0;
     float _x;
     float _y;
 
-    Haze::Entity *_entity;
+    Haze::Entity *_entity = nullptr;
     nlohmann::json _dataJSON;
 };

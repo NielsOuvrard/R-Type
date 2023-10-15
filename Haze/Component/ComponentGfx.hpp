@@ -90,16 +90,16 @@ namespace Haze {
         void show() const override { std::cout << "Animation: " << std::endl; }
     };
 
-    struct SpriteCroped : public Component {
-        SpriteCroped(uint8_t id) : frameId(id)
+    struct SpriteCropped : public Component {
+        SpriteCropped(uint8_t id) : frameId(id)
         {
         }
 
         uint8_t frameId;
 
-        std::string getType() const override { return "SpriteCroped"; }
+        std::string getType() const override { return "SpriteCropped"; }
 
-        void show() const override { std::cout << "SpriteCroped: " << std::endl; }
+        void show() const override { std::cout << "SpriteCropped: " << std::endl; }
     };
 
     struct Window : public Component {
