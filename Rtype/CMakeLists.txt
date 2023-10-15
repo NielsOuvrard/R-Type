@@ -18,6 +18,8 @@ set(
         class/Missile.h
         class/Enemy.cpp
         class/Enemy.h
+        class/Paralax.cpp
+        class/Paralax.h
 )
 
 add_library(${PROJECT_NAME} STATIC ${SOURCES})

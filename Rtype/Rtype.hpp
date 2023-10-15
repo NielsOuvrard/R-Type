@@ -15,6 +15,7 @@
 #pragma once
 
 #include "../Client/json.hpp"
+#include "Paralax.h"
 #include "Player.h"
 #include "Enemy.h"
 #include "data.h"
@@ -38,6 +39,7 @@ public:
 public:
     void start();
     void stop();
+    void update();
     void sendUpdate();
 
     void onReceive(udp::endpoint from, network::datagram<protocol::data> content);
@@ -46,13 +48,13 @@ public:
 
     void checkInactiveClients();
 
-    Player &findPlayer(const asio::ip::udp::endpoint &endpoint);
     uint32_t getPlayerID(const asio::ip::udp::endpoint &endpoint);
 
 private:
     Haze::Engine _engine;
     network::data_channel<protocol::data> _channel;
 
+    std::unique_ptr<Paralax> _background;
     std::vector<wall *> _walls;
     std::vector<Haze::Entity *> _entities;
     std::vector<std::unique_ptr<Player>> _players;
