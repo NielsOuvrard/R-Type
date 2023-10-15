@@ -19,10 +19,10 @@ wall::wall(Haze::Engine *engine, nlohmann::json data, int x, int y) : _jsonData(
 {
     _entityWallBottom = engine->createEntity();
     _sheet = _jsonData["sheet1"];
-    Haze::Sprite *wallSprite = new Haze::Sprite("assets/wall.png");
+    _wallSprite = new Haze::Sprite("assets/wall.png");
     _entityWallBottom->addComponent(new Haze::Position(x, y));
     _entityWallBottom->addComponent(new Haze::Scale(4, -4));
-    _entityWallBottom->addComponent(wallSprite);
+    _entityWallBottom->addComponent(_wallSprite);
     _entityWallBottom->addComponent(new Haze::HitboxDisplay());
     // _entityWallBottom->addComponent(new Haze::SplitSprite(*static_cast<Haze::Sprite *>(_entityWallBottom->getComponent("Sprite")),
     //      _sheet["x"], _sheet["y"], _sheet["width"], _sheet["height"]));
@@ -45,7 +45,7 @@ wall::wall(Haze::Engine *engine, nlohmann::json data, int x, int y) : _jsonData(
     std::cout << "height: " << height << std::endl;
     std::cout << "width: " << width << std::endl;
     _entityWallBottom->addComponent(new Haze::Hitbox({{0, 0, width, height}}));
-    _entityWallBottom->addComponent(new Haze::Velocity(-1, 0));
+//    _entityWallBottom->addComponent(new Haze::Velocity(-1, 0));
     changeSpriteBack(_entityWallBottom);
 }
 
