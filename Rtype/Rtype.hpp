@@ -14,9 +14,9 @@
 
 #pragma once
 
+#include "../Client/json.hpp"
 #include "Player.h"
 #include "data.h"
-#include "json.hpp"
 #include "net_data_channel.h"
 #include "wall.hpp"
 #include <Factory.hpp>
