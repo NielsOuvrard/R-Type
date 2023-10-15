@@ -22,11 +22,12 @@ class wall {
 private:
 public:
     void changeSpriteBack(Haze::Entity *E);
-    Haze::Sprite *_wallSprite = new Haze::Sprite("assets/wall.png");
+    Haze::Sprite *_wallSprite = new Haze::Sprite("assets/sprites/wall.png");
     Haze::Entity *_entityWallBottom;
     nlohmann::json _sheet;
     nlohmann::json _jsonData;
+    u_int8_t idSprite;
 
-    wall(Haze::Engine *engine, nlohmann::json _jsonData, int x, int y);
+    wall(Haze::Engine &engine, nlohmann::json _jsonData, int x, int y);
     ~wall();
 };

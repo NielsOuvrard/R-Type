@@ -84,6 +84,38 @@ void Rtype::start()
     //    std::chrono::steady_clock::time_point previousTime = std::chrono::steady_clock::now();
     //    const std::chrono::milliseconds targetFrameTime(1000 / 60);// 60 FPS
 
+    std::ifstream inputFile("assets/AnimationJSON/ground.json");
+    nlohmann::json jsonData;
+
+    if (!inputFile.is_open()) {
+        std::cerr << "Error: Could not open file for reading" << std::endl;
+        return;
+    }
+    inputFile >> jsonData;
+    inputFile.close();
+
+    for (int i = 0; i < 8; i++) {
+        _walls.push_back(new wall(_engine, jsonData, 250 * i, 600));
+        sendAll(RType::message::createEntity(_walls.back()->_entityWallBottom->getId()));
+        auto pos = dynamic_cast<Haze::Position *>(_walls.back()->_entityWallBottom->getComponent("Position"));
+        auto scale = dynamic_cast<Haze::Scale *>(_walls.back()->_entityWallBottom->getComponent("Scale"));
+        auto hitbox = dynamic_cast<Haze::Hitbox *>(_walls.back()->_entityWallBottom->getComponent("Hitbox"))->hitbox.front();
+
+        sendAll(RType::message::addComponent(_walls.back()->_entityWallBottom->getId(), "Position", new Haze::PositionData{pos->x, pos->y},
+        sizeof(Haze::PositionData)));
+        sendAll(RType::message::addComponent(_walls.back()->_entityWallBottom->getId(), "Scale", new Haze::ScaleData{scale->x, scale->y},
+            sizeof(Haze::ScaleData)));
+        sendAll(RType::message::addComponent(_walls.back()->_entityWallBottom->getId(), "Hitbox", new Haze::HitboxData{hitbox},
+            sizeof(Haze::HitboxData)));
+        sendAll(RType::message::addComponent(_walls.back()->_entityWallBottom->getId(), "Sprite", new Haze::SpriteData{"assets/sprites/wall.png"}
+            , sizeof(Haze::SpriteData)));
+        sendAll(RType::message::addComponent(_walls.back()->_entityWallBottom->getId(), "HitboxDisplay", nullptr, 0));
+        sendAll(RType::message::addComponent(_walls.back()->_entityWallBottom->getId(), "Animation", new Haze::AnimationData{"assets/AnimationJSON/ground.json"},
+        sizeof(Haze::AnimationData)));
+        sendAll(RType::message::addComponent(_walls.back()->_entityWallBottom->getId(), "SpriteCroped", new Haze::SpriteCropedData{_walls.back()->idSprite},
+        sizeof(Haze::SpriteCropedData)));
+    }
+
     /**
       * Update Cycle
       */
@@ -166,13 +198,6 @@ void Rtype::onReceive(udp::endpoint from, network::datagram<protocol::data> cont
             inputs.mouseType = info.mouseType;
             inputs.x = info.x;
             inputs.y = info.y;
-            //            Haze::InputType keyFound;
-            //            std::memcpy(&keyFound, content.body.data(), 1);
-            //            Haze::InputType keyReleased;
-            //            std::memcpy(&keyReleased, content.body.data() + 1, 1);
-            //            Haze::info_inputs inputs{};
-            //            inputs.inputsPressed.push_back(keyFound);
-            //            inputs.inputsReleased.push_back(keyFound);
 
             uint32_t id = getPlayerID(from);
             if (!id) return;

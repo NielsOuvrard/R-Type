@@ -52,6 +52,7 @@ private:
     Haze::Engine _engine;
     network::data_channel<protocol::data> _channel;
 
+    std::vector<wall *> _walls;
     std::vector<Haze::Entity *> _entities;
     std::vector<std::unique_ptr<Player>> _players;
     bool _running = false;

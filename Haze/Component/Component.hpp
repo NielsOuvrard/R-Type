@@ -106,8 +106,9 @@ namespace Haze {
     };
 
     struct LifeTime : public Component {
-        LifeTime(int lifeTime) : lifeTime(lifeTime) {}
+        LifeTime(int lifeTime, std::function<void(int)> callback) : lifeTime(lifeTime), callback(callback) {}
         int lifeTime;
+        std::function<void(int)> callback;
         int tics = 0;
         std::string getType() const override { return "LifeTime"; }
         void show() const override { std::cout << "LifeTime: " << lifeTime << std::endl; }

@@ -35,17 +35,17 @@ namespace Haze {
     };
 
     struct Animation : public Component {
-        enum AnimationType {
-            LOOP,
-            BOOMERANG,
-            ONCE
-        };
-
         struct intRect {
             int x;
             int y;
             int width;
             int height;
+        };
+
+        enum AnimationType {
+            LOOP,
+            BOOMERANG,
+            ONCE
         };
 
         Animation(std::string path_json)
@@ -55,10 +55,12 @@ namespace Haze {
                 std::cout << "Impossible d'ouvrir le fichier !" << std::endl;
                 return;
             }
+
             // * put the json file in a string
             nlohmann::json jsonData;
             inputFile >> jsonData;
             inputFile.close();
+
             // * parse the json string into variables
             tics = jsonData["tics"];
             if (jsonData["type"] == "loop")
@@ -86,6 +88,18 @@ namespace Haze {
         std::string getType() const override { return "Animation"; }
 
         void show() const override { std::cout << "Animation: " << std::endl; }
+    };
+
+    struct SpriteCroped : public Component {
+        SpriteCroped(uint8_t id) : frameId(id)
+        {
+        }
+
+        uint8_t frameId;
+
+        std::string getType() const override { return "SpriteCroped"; }
+
+        void show() const override { std::cout << "SpriteCroped: " << std::endl; }
     };
 
     struct Window : public Component {
