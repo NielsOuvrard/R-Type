@@ -71,7 +71,6 @@ namespace Haze {
     };
 
     struct SpriteCropedData {
-        char path[128];
         uint8_t id;
     };
 

@@ -34,15 +34,14 @@ namespace Haze {
         void show() const override { std::cout << "flm" << path << std::endl; }
     };
 
-    // * for SpriteCroped and Animation
-    struct intRect {
-        int x;
-        int y;
-        int width;
-        int height;
-    };
-
     struct Animation : public Component {
+        struct intRect {
+            int x;
+            int y;
+            int width;
+            int height;
+        };
+
         enum AnimationType {
             LOOP,
             BOOMERANG,
@@ -56,10 +55,12 @@ namespace Haze {
                 std::cout << "Impossible d'ouvrir le fichier !" << std::endl;
                 return;
             }
+
             // * put the json file in a string
             nlohmann::json jsonData;
             inputFile >> jsonData;
             inputFile.close();
+
             // * parse the json string into variables
             tics = jsonData["tics"];
             if (jsonData["type"] == "loop")
@@ -90,27 +91,11 @@ namespace Haze {
     };
 
     struct SpriteCroped : public Component {
-        SpriteCroped(std::string path_json, uint8_t id) : frameId(id)
+        SpriteCroped(uint8_t id) : frameId(id)
         {
-            std::ifstream inputFile(path_json);
-            if (!inputFile.is_open()) {
-                std::cout << "Impossible d'ouvrir le fichier !" << std::endl;
-                return;
-            }
-            // * put the json file in a string
-            nlohmann::json jsonData;
-            inputFile >> jsonData;
-            inputFile.close();
-
-            // * parse the json string into variables
-            nlohmann::json str_of_frames = jsonData["str_of_frames"];
-            for (const auto &frame: str_of_frames) {
-                frames.push_back(intRect({frame["x"], frame["y"], frame["width"], frame["height"]}));
-            }
         }
 
-        std::vector<intRect> frames;
-        uint8_t frameId = 0;
+        uint8_t frameId;
 
         std::string getType() const override { return "SpriteCroped"; }
 

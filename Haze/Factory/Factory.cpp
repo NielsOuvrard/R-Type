@@ -69,7 +69,7 @@ namespace Haze {
         }
         if (type == "SpriteCroped") {
             SpriteCropedData *spriteCroped = reinterpret_cast<SpriteCropedData *>(data.data());
-            return new SpriteCroped(spriteCroped->path, spriteCroped->id);
+            return new SpriteCroped(spriteCroped->id);
         }
         if (type == "Text") {
             TextData *text = reinterpret_cast<TextData *>(data.data());
