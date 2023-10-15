@@ -10,7 +10,8 @@
 #include <chrono>
 
 namespace Haze {
-    void ScaleSystem(ComponentList *componentList, std::vector<info_inputs> *inputs) {
+    void ScaleSystem(ComponentList *componentList, std::vector<info_inputs> *inputs)
+    {
         for (int i = 0; i < componentList->getSize(); i++) {
             if (componentList->getComponent("Scale", i) != nullptr && componentList->getComponent("Sprite", i) != nullptr) {
                 auto scale = static_cast<Scale *>(componentList->getComponent("Scale", i));
@@ -20,7 +21,8 @@ namespace Haze {
         }
     }
 
-    void RenderSystem(ComponentList *componentList, std::vector<info_inputs> *inputs) {
+    void RenderSystem(ComponentList *componentList, std::vector<info_inputs> *inputs)
+    {
         for (int i = 0; i < componentList->getSize(); i++) {
             if (componentList->getComponent("Window", i) != nullptr) {
                 auto window = static_cast<Window *>(componentList->getComponent("Window", i));
@@ -69,7 +71,8 @@ namespace Haze {
         }
     }
 
-    void DisplaySystem(ComponentList *componentList, std::vector<info_inputs> *inputs) {
+    void DisplaySystem(ComponentList *componentList, std::vector<info_inputs> *inputs)
+    {
         for (int i = 0; i < componentList->getSize(); i++) {
             if (componentList->getComponent("Window", i) != nullptr) {
                 auto window = static_cast<Window *>(componentList->getComponent("Window", i));
@@ -78,7 +81,8 @@ namespace Haze {
         }
     }
 
-    void ClearSystem(ComponentList *componentList, std::vector<info_inputs> *inputs) {
+    void ClearSystem(ComponentList *componentList, std::vector<info_inputs> *inputs)
+    {
         for (int i = 0; i < componentList->getSize(); i++) {
             if (componentList->getComponent("Window", i) != nullptr) {
                 auto window = static_cast<Window *>(componentList->getComponent("Window", i));
@@ -87,7 +91,8 @@ namespace Haze {
         }
     }
 
-    void AnimateSystem(ComponentList *componentList, std::vector<info_inputs> *inputs) {
+    void AnimateSystem(ComponentList *componentList, std::vector<info_inputs> *inputs)
+    {
         for (int i = 0; i < componentList->getSize(); i++) {
             if (componentList->getComponent("Hide", i) != nullptr)
                 continue;
@@ -127,7 +132,8 @@ namespace Haze {
         }
     }
 
-    void PullEvent(ComponentList *componentList, std::vector<info_inputs> *inputs) {
+    void PullEvent(ComponentList *componentList, std::vector<info_inputs> *inputs)
+    {
         if (inputs->size() == 0)
             inputs->push_back({});
         std::vector<InputType> *inputsPressed = &inputs->at(0).inputsPressed;
@@ -391,6 +397,12 @@ namespace Haze {
                     }
                     if (window->event.type == sf::Event::MouseButtonReleased) {
                         *mouseType = RELEASED;
+                    }
+                    if (window->event.type == sf::Event::GainedFocus) {
+                        window->active = true;
+                    }
+                    if (window->event.type == sf::Event::LostFocus) {
+                        window->active = false;
                     }
                 }
                 break;

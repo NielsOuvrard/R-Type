@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include "Player.h"
 #include "data.h"
 #include "json.hpp"
 #include "net_data_channel.h"
@@ -28,23 +29,6 @@
 
 class Rtype : public network::data_channel<protocol::data> {
 public:
-    struct Remote {
-        asio::ip::udp::endpoint endpoint;
-        std::chrono::system_clock::time_point lastActivity;
-
-        explicit Remote(const udp::endpoint &endpoint) : endpoint(endpoint), lastActivity(std::chrono::system_clock::now()) {}
-    };
-
-    struct Player {
-        std::unique_ptr<Remote> remote = nullptr;
-        Haze::Entity *entity = nullptr;
-        uint32_t hp = 10;
-        uint32_t score = 0;
-        std::chrono::steady_clock::time_point lastShot = std::chrono::steady_clock::now();
-        std::chrono::steady_clock::time_point lastMove = std::chrono::steady_clock::now();
-    };
-
-public:
     Rtype(asio::io_context &context);
     ~Rtype();
 
@@ -57,7 +41,7 @@ public:
 
     void checkInactiveClients();
 
-    void createPlayer(Player &client);
+    void createPlayer(Player &player);
     Player &findPlayer(const asio::ip::udp::endpoint &endpoint);
     uint32_t findPlayerIndex(const asio::ip::udp::endpoint &endpoint);
 

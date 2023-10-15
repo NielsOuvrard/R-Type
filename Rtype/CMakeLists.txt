@@ -10,6 +10,10 @@ set(
         Rtype.cpp
         class/wall.cpp
         protocol.h
+        class/Player.cpp
+        class/Player.h
+        class/Cooldown.cpp
+        class/Cooldown.h
 )
 
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
