@@ -14,42 +14,17 @@
 
 #include "wall.hpp"
 #include <haze-graphics.hpp>
+#include <utility>
 
-wall::wall(Haze::Engine &engine, nlohmann::json data, int x, int y) : _jsonData(data)
-{
-    _entityWallBottom = engine.createEntity();
-    _sheet = _jsonData["animation"][0];
-    _wallSprite = new Haze::Sprite("assets/sprites/wall.png");
-    _entityWallBottom->addComponent(new Haze::Position(x, y));
-    _entityWallBottom->addComponent(new Haze::Scale(4, -4));
-    _entityWallBottom->addComponent(_wallSprite);
-    _entityWallBottom->addComponent(new Haze::HitboxDisplay());
-    // _entityWallBottom->addComponent(new Haze::SplitSprite(*static_cast<Haze::Sprite *>(_entityWallBottom->getComponent("Sprite")),
-    //      _sheet["x"], _sheet["y"], _sheet["width"], _sheet["height"]));
+wall::wall(Haze::Engine &engine, network::data_channel<protocol::data> &channel, nlohmann::json dataJSON, float x, float y)
+    : _engine(engine), _channel(channel), _dataJSON(std::move(dataJSON)), _x(x), _y(y)
+    {
 
-    _entityWallBottom->addComponent(new Haze::Animation("assets/AnimationJSON/ground.json"));
-    Haze::Collision::CollisionInfo colisionInfo;
-    colisionInfo.type = Haze::Collision::LAMBDA;
-    colisionInfo.tics = 1;
-    colisionInfo.onCollision = [](int x, int y) {
-        std::cout << "collision!" << std::endl;
-    };
-    std::map<std::string, Haze::Collision::CollisionInfo> infos = {
-            {"player", colisionInfo},
-    };
-    _entityWallBottom->addComponent(new Haze::Collision("wall", infos));
-    int height = _sheet["height"];
-    int width = _sheet["width"];
-
-    std::cout << "height: " << height << std::endl;
-    std::cout << "width: " << width << std::endl;
-    _entityWallBottom->addComponent(new Haze::Hitbox({{0, 0, width, height}}));
-//    _entityWallBottom->addComponent(new Haze::Velocity(-1, 0));
-    changeSpriteBack(_entityWallBottom);
-}
-
-wall::~wall()
-{
+    // Create the frames
+    nlohmann::json animation = _dataJSON["animation"];
+    for (const auto &frame: animation) {
+        _frames.emplace_back(Haze::Animation::intRect{frame["x"], frame["y"], frame["width"], frame["height"]});
+    }
 }
 
 void wall::changeSpriteBack(Haze::Entity *E)
@@ -61,4 +36,50 @@ void wall::changeSpriteBack(Haze::Entity *E)
     Animation->frames[0].y = _sheet["y"];
     Animation->frames[0].width = _sheet["width"];
     Animation->frames[0].height = _sheet["height"];
+}
+
+void wall::build() {
+    _entity = _engine.createEntity();
+    _entity->addComponent(new Haze::Position(x, y));
+    _entity->addComponent(new Haze::Scale(4, -4));
+//    _entity->addComponent(new Haze::Velocity(1, 0));
+
+    Haze::Collision::CollisionInfo collisionInfo = {
+            Haze::Collision::LAMBDA,
+            0.1,
+            [this](int a, int b){
+                std::cout << "Collide\n";
+            }
+    };
+    std::map<std::string, Haze::Collision::CollisionInfo> infos = {
+            {"player", collisionInfo},
+    };
+    auto hitbox = static_cast<Haze::Hitbox::intRect>(_frames[0]);
+    _entity->addComponent(new Haze::Collision("wall", infos));
+    _entity->addComponent(new Haze::Hitbox{hitbox});
+    send();
+}
+
+void wall::update() {
+
+}
+
+void wall::send() {
+    auto id = _entity.getId();
+    auto pos = dynamic_cast<Haze::Position *>(_entity->getComponent("Position"));
+    auto scale = dynamic_cast<Haze::Scale *>(_entity->getComponent("Scale"));
+    auto hitbox = dynamic_cast<Haze::Hitbox *>(_entity->getComponent("Hitbox"))->hitbox.front();
+
+    _channel.sendAll(RType::message::addComponent(id, "Position", new Haze::PositionData{pos->x, pos->y}, sizeof(Haze::PositionData)));
+    _channel.sendAll(RType::message::addComponent(id, "Scale", new Haze::ScaleData{scale->x, scale->y}, sizeof(Haze::ScaleData)));
+    _channel.sendAll(RType::message::addComponent(id, "Hitbox", new Haze::HitboxData{hitbox}, sizeof(Haze::HitboxData)));
+    _channel.sendAll(RType::message::addComponent(id, "Sprite", new Haze::SpriteData{"assets/sprites/wall.png"}, sizeof(Haze::SpriteData)));
+    _channel.sendAll(RType::message::addComponent(id, "Animation", new Haze::AnimationData{"assets/AnimationJSON/ground.json"}, sizeof(Haze::AnimationData)));
+    _channel.sendAll(RType::message::addComponent(id, "SpriteCroped", new Haze::SpriteCropedData{idSprite},sizeof(Haze::SpriteCropedData)));
+    _channel.sendAll(RType::message::addComponent(id, "HitboxDisplay", nullptr, 0));
+    }
+}
+
+void wall::sendUpdate() {
+
 }

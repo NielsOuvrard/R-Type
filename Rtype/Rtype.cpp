@@ -78,6 +78,9 @@ void Rtype::sendEverything(udp::endpoint &to)
     for (auto &player: _players) {
         player->send();
     }
+    for (auto &wall : _walls) {
+        wall->send();
+    }
     _background->send();
 }
 
@@ -89,36 +92,20 @@ void Rtype::start()
 
     _background->build();
 
-    //    std::ifstream inputFile("assets/AnimationJSON/ground.json");
-    //    nlohmann::json jsonData;
-    //
-    //    if (!inputFile.is_open()) {
-    //        std::cerr << "Error: Could not open file for reading" << std::endl;
-    //        return;
-    //    }
-    //    inputFile >> jsonData;
-    //    inputFile.close();
-    //
+    std::ifstream inputFile("assets/AnimationJSON/ground.json");
+    nlohmann::json jsonData;
+
+    if (!inputFile.is_open()) {
+        std::cerr << "Error: Could not open file for reading" << std::endl;
+        return;
+    }
+    inputFile >> jsonData;
+    inputFile.close();
+
     //    for (int i = 0; i < 8; i++) {
     //        _walls.push_back(new wall(_engine, jsonData, 250 * i, 600));
     //        _channel.sendAll(RType::message::createEntity(_walls.back()->_entityWallBottom->getId()));
-    //        auto pos = dynamic_cast<Haze::Position *>(_walls.back()->_entityWallBottom->getComponent("Position"));
-    //        auto scale = dynamic_cast<Haze::Scale *>(_walls.back()->_entityWallBottom->getComponent("Scale"));
-    //        auto hitbox = dynamic_cast<Haze::Hitbox *>(_walls.back()->_entityWallBottom->getComponent("Hitbox"))->hitbox.front();
     //
-    //        _channel.sendAll(RType::message::addComponent(_walls.back()->_entityWallBottom->getId(), "Position", new Haze::PositionData{pos->x, pos->y},
-    //                                                      sizeof(Haze::PositionData)));
-    //        _channel.sendAll(RType::message::addComponent(_walls.back()->_entityWallBottom->getId(), "Scale", new Haze::ScaleData{scale->x, scale->y},
-    //                                                      sizeof(Haze::ScaleData)));
-    //        _channel.sendAll(RType::message::addComponent(_walls.back()->_entityWallBottom->getId(), "Hitbox", new Haze::HitboxData{hitbox},
-    //                                                      sizeof(Haze::HitboxData)));
-    //        _channel.sendAll(RType::message::addComponent(_walls.back()->_entityWallBottom->getId(), "Sprite", new Haze::SpriteData{"assets/sprites/wall.png"}, sizeof(Haze::SpriteData)));
-    //        _channel.sendAll(RType::message::addComponent(_walls.back()->_entityWallBottom->getId(), "HitboxDisplay", nullptr, 0));
-    //        _channel.sendAll(RType::message::addComponent(_walls.back()->_entityWallBottom->getId(), "Animation", new Haze::AnimationData{"assets/AnimationJSON/ground.json"},
-    //                                                      sizeof(Haze::AnimationData)));
-    //        _channel.sendAll(RType::message::addComponent(_walls.back()->_entityWallBottom->getId(), "SpriteCroped", new Haze::SpriteCropedData{_walls.back()->idSprite},
-    //                                                      sizeof(Haze::SpriteCropedData)));
-    //    }
 
     /**
       * Update Cycle
@@ -226,9 +213,15 @@ void Rtype::sendUpdate()
         player->sendUpdate();
     }
     _background->sendUpdate();
+    for (auto &wall : _walls) {
+        wall->sendUpdate();
+    }
 }
 
 void Rtype::update()
 {
     _background->update();
+    for (auto &wall : _walls) {
+        wall->update();
+    }
 }

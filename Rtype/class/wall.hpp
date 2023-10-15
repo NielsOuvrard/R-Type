@@ -17,17 +17,26 @@
 #include "../../Haze/inc/json.hpp"
 #include <haze-core.hpp>
 #include <haze-graphics.hpp>
+#include <net_data_channel.h>
+#include <protocol.h>
+#include <Factory.hpp>
 
 class wall {
-private:
 public:
-    void changeSpriteBack(Haze::Entity *E);
-    Haze::Sprite *_wallSprite = new Haze::Sprite("assets/sprites/wall.png");
-    Haze::Entity *_entityWallBottom;
-    nlohmann::json _sheet;
-    nlohmann::json _jsonData;
-    u_int8_t idSprite;
+    wall::wall(Haze::Engine &engine, network::data_channel<protocol::data> &channel, nlohmann::json dataJSON, float x, float y);
+    void build();
+    void update();
+    void send();
+    void sendUpdate();
 
-    wall(Haze::Engine &engine, nlohmann::json _jsonData, int x, int y);
-    ~wall();
+private:
+    Haze::Engine &_engine;
+    network::data_channel<protocol::data> &_channel;
+
+    std::vector<Haze::Animation::intRect> _frames;
+    float _x;
+    float _y;
+
+    Haze::Entity *_entity;
+    nlohmann::json _dataJSON;
 };
