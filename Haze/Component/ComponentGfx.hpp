@@ -59,19 +59,17 @@ namespace Haze {
             nlohmann::json jsonData;
             inputFile >> jsonData;
             inputFile.close();
-            // * parse the json string
-            nlohmann::json data = nlohmann::json::parse(jsonData);
-
-            tics = data["tics"];
-            if (data["type"] == "loop")
+            // * parse the json string into variables
+            tics = jsonData["tics"];
+            if (jsonData["type"] == "loop")
                 type = AnimationType::LOOP;
-            else if (data["type"] == "boomerang")
+            else if (jsonData["type"] == "boomerang")
                 type = AnimationType::BOOMERANG;
-            else if (data["type"] == "once")
+            else if (jsonData["type"] == "once")
                 type = AnimationType::ONCE;
             else
                 type = AnimationType::LOOP;
-            nlohmann::json animation = data["animation"];
+            nlohmann::json animation = jsonData["animation"];
 
             for (const auto &frame: animation) {
                 frames.push_back(intRect({frame["x"], frame["y"], frame["width"], frame["height"]}));
