@@ -18,6 +18,8 @@
 #include "Player.h"
 #include "data.h"
 #include "net_data_channel.h"
+#include "net_server.h"
+#include "protocol.h"
 #include "wall.hpp"
 #include <Factory.hpp>
 #include <cstdlib>
@@ -27,7 +29,7 @@
 #include <haze-graphics.hpp>// ? sure about this ?
 #include <iostream>
 
-class Rtype : public network::data_channel<protocol::data> {
+class Rtype {
 public:
     Rtype(asio::io_context &context);
     ~Rtype();
@@ -35,20 +37,22 @@ public:
 public:
     void start();
     void stop();
+    void sendUpdate();
 
-    void onReceive(udp::endpoint from, network::datagram<protocol::data> content) override;
+    void onReceive(udp::endpoint from, network::datagram<protocol::data> content);
     void sendEverything(udp::endpoint &to);
+    [[nodiscard]] asio::ip::udp::endpoint getEndpoint() const;
 
     void checkInactiveClients();
 
-    void createPlayer(Player &player);
     Player &findPlayer(const asio::ip::udp::endpoint &endpoint);
-    uint32_t findPlayerIndex(const asio::ip::udp::endpoint &endpoint);
+    uint32_t getPlayerID(const asio::ip::udp::endpoint &endpoint);
 
 private:
     Haze::Engine _engine;
+    network::data_channel<protocol::data> _channel;
 
     std::vector<Haze::Entity *> _entities;
-    std::array<Player, 4> _players;
+    std::vector<std::unique_ptr<Player>> _players;
     bool _running = false;
 };

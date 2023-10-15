@@ -14,6 +14,8 @@ set(
         class/Player.h
         class/Cooldown.cpp
         class/Cooldown.h
+        class/Missile.cpp
+        class/Missile.h
 )
 
 add_library(${PROJECT_NAME} STATIC ${SOURCES})

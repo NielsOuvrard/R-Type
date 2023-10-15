@@ -4,18 +4,19 @@
 
 #pragma once
 
+#include "../protocol.h"
 #include "Cooldown.h"
-#include "Entity.hpp"
-#include "net_common.h"
-#include <cstdint>
-#include <iostream>
-#include <memory>
+#include "Missile.h"
+#include <componentData.hpp>
+#include <data.h>
+#include <haze-core.hpp>
+#include <net_data_channel.h>
 
 using namespace asio::ip;
 using namespace std::chrono_literals;
 
-struct Player {
-
+class Player {
+public:
     struct Remote {
         asio::ip::udp::endpoint endpoint;
         Cooldown activityCd{10s};
@@ -23,12 +24,23 @@ struct Player {
         explicit Remote(udp::endpoint endpoint) : endpoint(std::move(endpoint)) { activityCd.Activate(); }
     };
 
-    std::unique_ptr<Remote> remote = nullptr;
-    Haze::Entity *entity = nullptr;
+    Player(Haze::Engine &engine, network::data_channel<protocol::data> &channel, uint32_t id);
+    void build();
+    void send();
+    void sendUpdate();
 
-    uint32_t id = 0;
-    uint32_t hp = 20;
-    uint32_t score = 0;
+public:// public members
+    std::unique_ptr<Remote> _remote = nullptr;
+    Haze::Entity *_entity = nullptr;
 
-    Cooldown missileCd{50ms};
+    uint32_t _id = 0;
+    uint32_t _hp = 20;
+    uint32_t _score = 0;
+
+    std::vector<Missile> _missiles;
+    Cooldown _missileCd{50ms};
+
+private:
+    Haze::Engine &_engine;
+    network::data_channel<protocol::data> &_channel;
 };

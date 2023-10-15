@@ -34,7 +34,7 @@ struct Position : public Component
 };
 ```
 
-`Position` is used to set the position of the entity
+`Position` is used to set the position of the _entity
 
 ```cpp
 struct Scale : public Component
@@ -47,7 +47,7 @@ struct Scale : public Component
 };
 ```
 
-`Scale` sets the scale of the entity. This is applied to the `Hitbox`
+`Scale` sets the scale of the _entity. This is applied to the `Hitbox`
 
 ```cpp
 struct Velocity : public Component
@@ -60,7 +60,7 @@ struct Velocity : public Component
 };
 ```
 
-`Velocity` is the movement applied to the entity every frame
+`Velocity` is the movement applied to the _entity every frame
 
 ```cpp
 struct Move : public Component
@@ -73,7 +73,7 @@ struct Move : public Component
 };
 ```
 
-`Move` is a movement applied only once to the entity, it is automatically destroyed after use
+`Move` is a movement applied only once to the _entity, it is automatically destroyed after use
 
 ```cpp
 struct Health : public Component
@@ -85,7 +85,7 @@ struct Health : public Component
 };
 ```
 
-`Health` can be use to setup the health of an entity
+`Health` can be use to setup the health of an _entity
 
 ```cpp
 struct Damage : public Component
@@ -97,7 +97,7 @@ struct Damage : public Component
 };
 ```
 
-`Damage` can be used to setup the damage of an entity
+`Damage` can be used to setup the damage of an _entity
 
 ```cpp
 struct Collision : public Component
@@ -126,11 +126,11 @@ struct Collision : public Component
 };
 ```
 
-`Collision` is the component that will define the collision behavior of an entity.
+`Collision` is the component that will define the collision behavior of an _entity.
 It takes :
 
-- a **scene** that will be use as an identification tag for a group of entity
-- and a map of **behavior** that will define what happens on collision between two entity of certain scene.
+- a **scene** that will be use as an identification tag for a group of _entity
+- and a map of **behavior** that will define what happens on collision between two _entity of certain scene.
 
 ```cpp
 struct Hitbox : public Component
@@ -149,7 +149,7 @@ struct Hitbox : public Component
 };
 ```
 
-`Hitbox` is used to set the hitbox of an entity
+`Hitbox` is used to set the hitbox of an _entity
 it is defined as a vector of `intRect` which allows to have a hitbox composed of multiples rectangles.
 
 ```cpp
@@ -163,7 +163,7 @@ struct LifeTime : public Component
 };
 ```
 
-`LifeTime` can be used to set a lifetime limit for an entity
+`LifeTime` can be used to set a lifetime limit for an _entity
 This lifetime is expressed in tics.
 
 ```cpp
@@ -179,7 +179,7 @@ struct OnKeyPressed : public Component
 
 `OnKeyPressed` can be used to set a **callback** to execute, with as an argument every simultaneous key pressed in the
 engine.
-The `size_t` **Player** is the id of the inputs.
+The `size_t` **Player** is the _id of the inputs.
 The engine can have multiple list of inputs if used as a server.
 
 ```cpp
@@ -195,7 +195,7 @@ struct OnKeyReleased : public Component
 
 `OnKeyReleased` can be used to set a **callback** to execute, with as an argument every simultaneous key released in the
 engine.
-The `size_t` **Player** is the id of the inputs.
+The `size_t` **Player** is the _id of the inputs.
 The engine can have multiple list of inputs if used as a server.
 
 ```cpp
@@ -210,8 +210,8 @@ struct OnMousePressed : public Component
 ```
 
 `OnMousePressed` can be used to set a **callback** to execute every time the mouse is pressed and is intersecting the *
-*hitbox** of the entity.
-The `size_t` **Player** is the id of the inputs.
+*hitbox** of the _entity.
+The `size_t` **Player** is the _id of the inputs.
 The engine can have multiple list of inputs if used as a server.
 
 ```cpp
@@ -226,8 +226,8 @@ struct OnMouseReleased : public Component
 ```
 
 `OnMouseReleased` can be used to set a **callback** to execute every time the mouse is released and is intersecting the
-**hitbox** of the entity.
-The `size_t` **Player** is the id of the inputs.
+**hitbox** of the _entity.
+The `size_t` **Player** is the _id of the inputs.
 The engine can have multiple list of inputs if used as a server.
 
 ```cpp
@@ -239,5 +239,5 @@ struct Hide : public Component
 };
 ```
 
-`Hide` is used to disable an entity.
-When in this state, the entity in not displayed nor can receive inputs or move. 
+`Hide` is used to disable an _entity.
+When in this state, the _entity in not displayed nor can receive inputs or move. 
