@@ -37,14 +37,9 @@ Rtype::~Rtype() = default;
 void Rtype::checkInactiveClients()
 {
     for (auto &player: _players) {
-        if (player.remote) {
-            auto highResNow = std::chrono::high_resolution_clock::now();
-
-            std::chrono::duration<double> duration = highResNow.time_since_epoch() - player.remote->lastActivity.time_since_epoch();
-
-            if (duration.count() > 5.0) {
-                player.remote = nullptr;
-            }
+        if (player.remote && player.remote->activityCd.IsReady()) {
+            std::cout << "[RType] Player " << player.id << " Timeout!" << std::endl;
+            player.remote = nullptr;
         }
     }
 }
@@ -60,6 +55,18 @@ void Rtype::start()
         _engine.update();
         update(5, false);
         checkInactiveClients();
+
+        for (auto &player: _players) {
+            if (player.remote && player.entity) {
+                auto pos = dynamic_cast<Haze::Position *>(player.entity->getComponent("Position"));
+                auto scale = dynamic_cast<Haze::Scale *>(player.entity->getComponent("Scale"));
+                auto hitbox = dynamic_cast<Haze::Hitbox *>(player.entity->getComponent("Hitbox"))->hitbox.front();
+
+                sendAll(RType::message::addComponent(player.entity->getId(), "Position", new Haze::PositionData{pos->x, pos->y}, sizeof(Haze::PositionData)));
+                sendAll(RType::message::addComponent(player.entity->getId(), "Scale", new Haze::ScaleData{scale->x, scale->y}, sizeof(Haze::ScaleData)));
+                sendAll(RType::message::addComponent(player.entity->getId(), "Hitbox", new Haze::HitboxData{hitbox}, sizeof(Haze::HitboxData)));
+            }
+        }
 
         // Calculate time taken in this loop
         std::chrono::steady_clock::time_point currentTime = std::chrono::steady_clock::now();
@@ -79,128 +86,24 @@ void Rtype::stop()
     _running = false;
 }
 
-void Rtype::createPlayer(Player &client)
+// TODO: change the return type to a shared_ptr
+Player &Rtype::findPlayer(const udp::endpoint &endpoint)
 {
-    std::cout << "\x1B[31m"
-              << "CREATE PLAYER"
-              << "\n\x1B[0m";
-    Haze::Entity *newPlayer = _engine.createEntity();
-    newPlayer->addComponent(new Haze::Velocity(0, 0));
-    newPlayer->addComponent(new Haze::Position(100, 200));
-    newPlayer->addComponent(new Haze::Scale(3, 3));
-    newPlayer->addComponent(new Haze::Hitbox({{0, 0, 32, 14}}));
+    for (auto &player: _players) {
+        if (player.remote && player.remote->endpoint == endpoint)
+            return player;
+    }
+}
 
-    sendAll(RType::message::createEntity(newPlayer->getId()));
-    sendAll(RType::message::addComponent(newPlayer->getId(), "Position", new Haze::PositionData{100, 200}, sizeof(Haze::PositionData)));
-    sendAll(RType::message::addComponent(newPlayer->getId(), "Scale", new Haze::ScaleData{3, 3}, sizeof(Haze::ScaleData)));
-    sendAll(RType::message::addComponent(newPlayer->getId(), "Hitbox", new Haze::HitboxData({0, 0, 32, 14}), sizeof(Haze::HitboxData)));
-    sendAll(RType::message::addComponent(newPlayer->getId(), "HitboxDisplay", nullptr, 0));
-    sendAll(RType::message::addComponent(newPlayer->getId(), "Sprite", new Haze::SpriteData{"assets/r-typesheet30a.gif"}, sizeof(Haze::SpriteData)));
-
-    // ! animation didn't work, receive {0, 0, 0, 0}
-    //    sendAll(RType::message::addComponent(newPlayer->getId(), "Animation", new Haze::AnimationData({
-    //        {
-    //        {0, 0, 34, 34},
-    //        {34, 0, 34, 34},
-    //        {68, 0, 34, 34}
-    //        },
-    //        Haze::Animation::AnimationType::LOOP,
-    //        true, 0.2
-    //        }), sizeof(Haze::AnimationData)));
-
-    newPlayer->addComponent(new Haze::OnKeyPressed(
-            [this, newPlayer](int i, std::vector<Haze::InputType> components) {
-                auto currentTimeShot = std::chrono::steady_clock::now();
-                auto lastShotTime = _players[newPlayer->getId()].lastShot;
-                auto durationShot = std::chrono::duration_cast<std::chrono::milliseconds>(currentTimeShot - lastShotTime);
-                if (IS_KEY_PRESSED(KEY_F) && (durationShot >= std::chrono::seconds(1))) {
-                    // * reset the clock
-                    _players[newPlayer->getId()].lastShot = std::chrono::steady_clock::now();
-                    // * create shot
-                    Haze::Entity *newShot = _engine.createEntity();
-                    auto position = dynamic_cast<Haze::Position *>(newPlayer->getComponent("Position"));
-                    newShot->addComponent(new Haze::Position(position->x + 33 * 3, position->y));
-                    newShot->addComponent(new Haze::Velocity(2, 0));
-                    newShot->addComponent(new Haze::Scale(3, 3));
-                    // TODO add hitbox, collider and send animation...
-                    _entities.push_back(newShot);
-                    // * send shot
-                    sendAll(RType::message::createEntity(newShot->getId()));
-                    sendAll(RType::message::addComponent(newShot->getId(), "Position", new Haze::PositionData{position->x + 33 * 3, position->y}, sizeof(Haze::PositionData)));
-                    sendAll(RType::message::addComponent(newShot->getId(), "Scale", new Haze::ScaleData{3, 3}, sizeof(Haze::ScaleData)));
-                    sendAll(RType::message::addComponent(newShot->getId(), "Hitbox", new Haze::HitboxData({0, 0, 32, 14}), sizeof(Haze::HitboxData)));
-                    sendAll(RType::message::addComponent(newShot->getId(), "HitboxDisplay", nullptr, 0));
-                    sendAll(RType::message::addComponent(newShot->getId(), "Velocity", new Haze::VelocityData{2, 0}, sizeof(Haze::VelocityData)));
-                    sendAll(RType::message::addComponent(newShot->getId(), "Sprite", new Haze::SpriteData{"assets/shot.png"}, sizeof(Haze::SpriteData)));
-                    std::cout << "[SERVER] SEND SHOT\n";
-                }
-
-                auto currentTime = std::chrono::steady_clock::now();
-                auto lastMoveTime = _players[newPlayer->getId()].lastMove;
-                auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - lastMoveTime);
-                if ((IS_KEY_PRESSED(KEY_Z) || IS_KEY_PRESSED(KEY_Q) || IS_KEY_PRESSED(KEY_S) || IS_KEY_PRESSED(KEY_D)) && (duration >= std::chrono::microseconds(500))) {
-                    // ! This code is for the next usage of Vector
-                    // ! maybe not delet it
-                    //                auto velocity = dynamic_cast<Haze::Velocity *>(newPlayer->getComponent("Velocity"));
-                    //                if (velocity == nullptr)
-                    //                    newPlayer->addComponent(new Haze::Velocity(0, 0));
-                    //                velocity->x = 0;
-                    _players[newPlayer->getId()].lastMove = std::chrono::steady_clock::now();
-                    //                velocity->y = 0;
-                    auto position = dynamic_cast<Haze::Position *>(newPlayer->getComponent("Position"));
-
-                    if (IS_KEY_PRESSED(KEY_Z)) {
-                        std::cout << "pressed Z\n";
-                        sendAll(RType::message::addComponent(newPlayer->getId(), "Position", new Haze::PositionData{position->x, position->y + 5}, sizeof(Haze::PositionData)));
-                        position->y -= 5;
-                        //                    velocity->y += -5;
-                    }
-                    if (IS_KEY_PRESSED(KEY_Q)) {
-                        std::cout << "pressed Q\n";
-                        sendAll(RType::message::addComponent(newPlayer->getId(), "Position", new Haze::PositionData{position->x - 5, position->y}, sizeof(Haze::PositionData)));
-                        position->x += -5;
-                        //                    velocity->x += -5;
-                    }
-                    if (IS_KEY_PRESSED(KEY_S)) {
-                        std::cout << "pressed S\n";
-                        sendAll(RType::message::addComponent(newPlayer->getId(), "Position", new Haze::PositionData{position->x, position->y - 5}, sizeof(Haze::PositionData)));
-                        position->y += 5;
-                        //                    velocity->y += 5;
-                    }
-                    if (IS_KEY_PRESSED(KEY_D)) {
-                        std::cout << "pressed D\n";
-                        sendAll(RType::message::addComponent(newPlayer->getId(), "Position", new Haze::PositionData{position->x + 5, position->y}, sizeof(Haze::PositionData)));
-                        position->x += 5;
-                        //                    velocity->x += 5;
-                    }
-                    newPlayer->addComponent(new Haze::Position(position->x, position->y));
-                    //                if (velocity->x != 0 || velocity->y != 0) {
-                    //                    std::cout << "velocity: " << velocity->x << ", " << velocity->y << std::endl;
-                    //                    sendAll(RType::message::addComponent(newPlayer->getId(), "Velocity", new Haze::VelocityData{velocity->x, velocity->y}, sizeof(Haze::VelocityData)));
-                    //                }
-                }
-            }));
-    // ! This code is for the next usage of Vector
-    // ! maybe not delet it
-    // newPlayer->addComponent(new Haze::OnKeyReleased(
-    //         [this, newPlayer](int i, std::vector<Haze::InputType> components) {
-    //             //                    auto velocity = dynamic_cast<Haze::Velocity *>(newPlayer->getComponent("Velocity"));
-    //             //                    if (velocity != nullptr && (velocity->x != 0 || velocity->y != 0)) {
-    //             //                        if ((IS_KEY_PRESSED(KEY_Z)) || (IS_KEY_PRESSED(KEY_Q)) || (IS_KEY_PRESSED(KEY_S)) || (IS_KEY_PRESSED(KEY_D))) {
-    //             //                            std::cout << "velocity reset\n";
-    //             //                            sendAll(RType::message::addComponent(newPlayer->getId(), "Velocity", new Haze::VelocityData{velocity->x, velocity->y}, sizeof(Haze::VelocityData)));
-    //             //                        }
-    //             //                    }
-    //             auto position = dynamic_cast<Haze::Position *>(newPlayer->getComponent("Position"));
-
-    //             if (IS_KEY_PRESSED(KEY_Z) || IS_KEY_PRESSED(KEY_Q) || IS_KEY_PRESSED(KEY_S) || IS_KEY_PRESSED(KEY_D)) {
-    //                 // sendAll(RType::message::addComponent(newPlayer->getId(), "Position", new Haze::PositionData{position->x, position->y + 5}, sizeof(Haze::PositionData)));
-    //                 // position->y += 5;
-    //             }
-    //             newPlayer->addComponent(new Haze::Position(position->x, position->y));
-    //         }));
-
-    client.entity = newPlayer;
+uint32_t Rtype::findPlayerIndex(const udp::endpoint &endpoint)
+{
+    uint32_t index = 1;
+    for (auto &player: _players) {
+        if (player.remote && player.remote->endpoint == endpoint)
+            return index;
+        index++;
+    }
+    return 0;
 }
 
 void Rtype::sendEverything(udp::endpoint &to)
@@ -210,10 +113,14 @@ void Rtype::sendEverything(udp::endpoint &to)
         if (player.remote && player.entity) {
             std::cout << "\x1B[32m"
                       << "SEND PLAYER " << player.entity->getId() << "\n\x1B[0m";
+            auto pos = dynamic_cast<Haze::Position *>(player.entity->getComponent("Position"));
+            auto scale = dynamic_cast<Haze::Scale *>(player.entity->getComponent("Scale"));
+            auto hitbox = dynamic_cast<Haze::Hitbox *>(player.entity->getComponent("Hitbox"))->hitbox.front();
+
             sendTo(RType::message::createEntity(player.entity->getId()), to);
-            sendTo(RType::message::addComponent(player.entity->getId(), "Position", player.entity->getComponent("Position"), sizeof(Haze::PositionData)), to);
-            sendTo(RType::message::addComponent(player.entity->getId(), "Scale", player.entity->getComponent("Scale"), sizeof(Haze::ScaleData)), to);
-            sendTo(RType::message::addComponent(player.entity->getId(), "Hitbox", player.entity->getComponent("Hitbox"), sizeof(Haze::HitboxData)), to);
+            sendTo(RType::message::addComponent(player.entity->getId(), "Position", new Haze::PositionData{pos->x, pos->y}, sizeof(Haze::PositionData)), to);
+            sendTo(RType::message::addComponent(player.entity->getId(), "Scale", new Haze::ScaleData{scale->x, scale->y}, sizeof(Haze::ScaleData)), to);
+            sendTo(RType::message::addComponent(player.entity->getId(), "Hitbox", new Haze::HitboxData{hitbox}, sizeof(Haze::HitboxData)), to);
             sendTo(RType::message::addComponent(player.entity->getId(), "Sprite", new Haze::SpriteData{"assets/r-typesheet30a.gif"}, sizeof(Haze::SpriteData)), to);
             sendTo(RType::message::addComponent(player.entity->getId(), "HitboxDisplay", nullptr, 0), to);
         }
@@ -236,6 +143,13 @@ void Rtype::sendEverything(udp::endpoint &to)
 
 void Rtype::onReceive(udp::endpoint from, network::datagram<protocol::data> content)
 {
+    // refresh player's activity
+    for (auto &player: _players) {
+        if (player.remote && player.remote->endpoint == from)
+            player.remote->activityCd.Activate();
+    }
+
+    // process datagram
     switch (content.header.id) {
         case protocol::data::join: {
             std::cout << "[SERVER] RECEIVE JOIN\n";
@@ -245,33 +159,38 @@ void Rtype::onReceive(udp::endpoint from, network::datagram<protocol::data> cont
                     return;// refuse the connection
             }
             // * if didn't exist
+            uint8_t id = 1;
             for (auto &player: _players) {
                 if (!player.remote) {
-                    player.remote = std::make_unique<Remote>(from);
+                    player.remote = std::make_unique<Player::Remote>(from);
                     sendEverything(from);
-                    createPlayer(player);
+                    if (!player.entity) {
+                        player.id = id;
+                        createPlayer(player);
+                    }
                     return;
                 }
+                id++;
             }
             // ! Client was refused
             return;
         }
 
         case protocol::data::input: {
-            std::cout << "\x1B[32m[SERVER] INPUT RECEIVE\n";
+            // std::cout << "\x1B[32m[SERVER] INPUT RECEIVE\n";
             Haze::info_inputs_weak info{};
             std::memcpy(&info, content.body.data(), content.header.size);
             Haze::info_inputs inputs;
             for (auto &key: info.pressedInputs) {
                 if (key != Haze::NO) {
                     inputs.inputsPressed.push_back(key);
-                    std::cout << "pressed " << 'a' + key << std::endl;
+                    // std::cout << "pressed " << 'a' + key << std::endl;
                 }
             }
             for (auto &key: info.releasedInputs) {
                 if (key != Haze::NO) {
                     inputs.inputsReleased.push_back(key);
-                    std::cout << "released " << key << std::endl;
+                    // std::cout << "released " << key << std::endl;
                 }
             }
             inputs.mouseType = info.mouseType;
@@ -288,13 +207,7 @@ void Rtype::onReceive(udp::endpoint from, network::datagram<protocol::data> cont
             uint32_t id = findPlayerIndex(from);
             if (id == 0)
                 return;
-            _engine.setInfoInputs(inputs, id - 1);
-            break;
-        }
-        case protocol::data::alive: {
-            auto &player = findPlayer(from);
-            std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
-            player.remote->lastActivity = now;
+            _engine.setInfoInputs(inputs, id);
             break;
         }
         default: {
@@ -303,22 +216,76 @@ void Rtype::onReceive(udp::endpoint from, network::datagram<protocol::data> cont
     }
 }
 
-// TODO: change the return type to a shared_ptr
-Rtype::Player &Rtype::findPlayer(const udp::endpoint &endpoint)
+void Rtype::createPlayer(Player &player)
 {
-    for (auto &player: _players) {
-        if (player.remote && player.remote->endpoint == endpoint)
-            return player;
-    }
-}
+    std::cout << "\x1B[31m"
+              << "CREATE PLAYER"
+              << "\n\x1B[0m";
+    player.entity = player.entity = _engine.createEntity();
+    player.entity->addComponent(new Haze::Velocity(0, 0));
+    player.entity->addComponent(new Haze::Position(100, 200));
+    player.entity->addComponent(new Haze::Scale(3, 3));
+    player.entity->addComponent(new Haze::Hitbox({{0, 0, 32, 14}}));
 
-uint32_t Rtype::findPlayerIndex(const udp::endpoint &endpoint)
-{
-    uint32_t index = 1;
-    for (auto &player: _players) {
-        if (player.remote && player.remote->endpoint == endpoint)
-            return index;
-        index++;
-    }
-    return 0;
+    // TODO: Free allocated Data created with new
+    sendAll(RType::message::createEntity(player.entity->getId()));
+    sendAll(RType::message::addComponent(player.entity->getId(), "Position", new Haze::PositionData{100, 200}, sizeof(Haze::PositionData)));
+    sendAll(RType::message::addComponent(player.entity->getId(), "Scale", new Haze::ScaleData{3, 3}, sizeof(Haze::ScaleData)));
+    sendAll(RType::message::addComponent(player.entity->getId(), "Hitbox", new Haze::HitboxData({0, 0, 32, 14}), sizeof(Haze::HitboxData)));
+    sendAll(RType::message::addComponent(player.entity->getId(), "HitboxDisplay", nullptr, 0));
+    sendAll(RType::message::addComponent(player.entity->getId(), "Sprite", new Haze::SpriteData{"assets/r-typesheet30a.gif"}, sizeof(Haze::SpriteData)));
+
+    // ! animation didn't work, receive {0, 0, 0, 0}
+    //    sendAll(RType::message::addComponent(client.entity->getId(), "Animation", new Haze::AnimationData({
+    //        {
+    //        {0, 0, 34, 34},
+    //        {34, 0, 34, 34},
+    //        {68, 0, 34, 34}
+    //        },
+    //        Haze::Animation::AnimationType::LOOP,
+    //        true, 0.2
+    //        }), sizeof(Haze::AnimationData)));
+
+    player.entity->addComponent(new Haze::OnKeyPressed(
+            [this, &player](int id, std::vector<Haze::InputType> components) {
+                if (IS_KEY_PRESSED(KEY_F) && player.missileCd.IsReady()) {
+                    player.missileCd.Activate();
+                    Haze::Entity *newShot = _engine.createEntity();
+                    auto position = dynamic_cast<Haze::Position *>(player.entity->getComponent("Position"));
+                    newShot->addComponent(new Haze::Position(position->x + 33 * 3, position->y));
+                    newShot->addComponent(new Haze::Velocity(2, 0));
+                    newShot->addComponent(new Haze::Scale(3, 3));
+                    // TODO add hitbox, collider and send animation...
+                    _entities.push_back(newShot);
+                    // * send shot
+                    sendAll(RType::message::createEntity(newShot->getId()));
+                    sendAll(RType::message::addComponent(newShot->getId(), "Position", new Haze::PositionData{position->x + 33 * 3, position->y}, sizeof(Haze::PositionData)));
+                    sendAll(RType::message::addComponent(newShot->getId(), "Scale", new Haze::ScaleData{3, 3}, sizeof(Haze::ScaleData)));
+                    sendAll(RType::message::addComponent(newShot->getId(), "Hitbox", new Haze::HitboxData({0, 0, 32, 14}), sizeof(Haze::HitboxData)));
+                    sendAll(RType::message::addComponent(newShot->getId(), "HitboxDisplay", nullptr, 0));
+                    sendAll(RType::message::addComponent(newShot->getId(), "Velocity", new Haze::VelocityData{2, 0}, sizeof(Haze::VelocityData)));
+                    sendAll(RType::message::addComponent(newShot->getId(), "Sprite", new Haze::SpriteData{"assets/shot.png"}, sizeof(Haze::SpriteData)));
+                    std::cout << "[SERVER] SEND SHOT\n";
+                }
+
+                auto velocity = dynamic_cast<Haze::Velocity *>(player.entity->getComponent("Velocity"));
+                if (velocity == nullptr)
+                    player.entity->addComponent(new Haze::Velocity(0, 0));
+                velocity->x = 0;
+                velocity->y = 0;
+
+                if (IS_KEY_PRESSED(KEY_Z)) {
+                    velocity->y += -10;
+                }
+                if (IS_KEY_PRESSED(KEY_Q)) {
+                    velocity->x += -10;
+                }
+                if (IS_KEY_PRESSED(KEY_S)) {
+                    velocity->y += 10;
+                }
+                if (IS_KEY_PRESSED(KEY_D)) {
+                    velocity->x += 10;
+                }
+            },
+            player.id));
 }

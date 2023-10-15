@@ -36,7 +36,6 @@ namespace RType {
             std::strcat(info.name, type.data());
             std::memcpy(info.data.data(), bodyData, size);
             std::memcpy(msg.body.data(), &info, sizeof(Haze::component_info));
-            delete bodyData;
             return msg;
         };
 

@@ -22,10 +22,13 @@ namespace Haze {
             }
             sprite.setTexture(texture);
         }
+
         std::string path;
         sf::Sprite sprite;
         sf::Texture texture;
+
         std::string getType() const override { return "Sprite"; }
+
         void show() const override { std::cout << "flm" << path << std::endl; }
     };
 
@@ -35,27 +38,32 @@ namespace Haze {
             BOOMERANG,
             ONCE
         };
+
         struct intRect {
             int x;
             int y;
             int width;
             int height;
         };
+
         Animation(std::vector<intRect> frames, AnimationType type, bool direction, double tics) : frames(frames), type(type), tics(tics), direction(direction)
         {
         }
+
         std::vector<intRect> frames;
         AnimationType type = AnimationType::LOOP;
         double tics;
         size_t currentFrame = 0;
         bool direction = true;
         std::chrono::time_point<std::chrono::high_resolution_clock> lastAnimation = std::chrono::high_resolution_clock::now();
+
         std::string getType() const override { return "Animation"; }
+
         void show() const override { std::cout << "Animation: " << std::endl; }
     };
 
     struct Window : public Component {
-        Window(int width, int height) : width(width), height(height)
+        Window(int width, int height) : width(width), height(height), active(false)
         {
             window.create(sf::VideoMode(width, height), "R-Type");
             window.setFramerateLimit(60);
@@ -64,12 +72,16 @@ namespace Haze {
             view.setViewport(sf::FloatRect(0, 0, 1.0f, 1.0f));
             window.setView(view);
         }
+
         int width;
         int height;
+        bool active;
         sf::RenderWindow window;
         sf::View view;
         sf::Event event;
+
         std::string getType() const override { return "Window"; }
+
         void show() const override { std::cout << "Window: " << width << ", " << height << std::endl; }
     };
 
@@ -80,10 +92,12 @@ namespace Haze {
             rect.setOutlineColor(sf::Color::Red);
             rect.setOutlineThickness(5);
         }
+
         sf::Color color = sf::Color::Red;
         sf::RectangleShape rect;
 
         std::string getType() const override { return "HitboxDisplay"; }
+
         void show() const override { std::cout << "HitboxDisplay: " << std::endl; }
     };
 
@@ -100,6 +114,7 @@ namespace Haze {
             TRANSPARENT,
             COLOR_COUNT
         };
+
         Text(const std::string &text, colorHaze color, const std::string &fontname = "arial.ttf") : text(text), color(color)
         {
             font.loadFromFile("assets/fonts/" + fontname);
@@ -137,11 +152,14 @@ namespace Haze {
                     break;
             }
         }
+
         std::string text;
         sf::Color color;
         sf::Font font;
         sf::Text textObj;
+
         std::string getType() const override { return "Text"; }
+
         void show() const override { std::cout << "Text: " << text << std::endl; }
     };
 }// namespace Haze

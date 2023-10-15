@@ -10,6 +10,8 @@ game::game(asio::io_context &context, Haze::Engine &engine)
       _inputGrabber(_engine.createEntity())
 {
     _inputGrabber->addComponent(new Haze::OnKeyPressed([this](int id, std::vector<Haze::InputType> keys) {
+        auto win = dynamic_cast<Haze::Window *>(_engine.getComponentList()->getComponent("Window", 0));
+        if (!win || !win->active) return;
         Haze::info_inputs_weak info{};
         uint32_t i = 0;
         for (auto &key: keys) {

@@ -14,12 +14,11 @@
 
 #pragma onces
 
+#include "../../Client/json.hpp"
 #include <haze-core.hpp>
 #include <haze-graphics.hpp>
-#include "json.hpp"
 
-class wall
-{
+class wall {
 private:
 public:
     void changeSpriteBack(Haze::Entity *E);
