@@ -25,7 +25,7 @@ void client::start()
         }
 
         if (_game) {
-            std::cout << "[INBOX] " << _game->getIncoming().count() << std::endl;
+            //            std::cout << "[INBOX] " << _game->getIncoming().count() << std::endl;
             _game->update(50, false);
         }
 

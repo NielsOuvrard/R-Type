@@ -23,6 +23,8 @@ Rtype::Rtype(asio::io_context &context)
     _engine.setInfoInputs({std::vector<Haze::InputType>(), std::vector<Haze::InputType>(), Haze::MouseType::NOTHING, 0, 0}, 2);
     _engine.setInfoInputs({std::vector<Haze::InputType>(), std::vector<Haze::InputType>(), Haze::MouseType::NOTHING, 0, 0}, 3);
     _engine.setInfoInputs({std::vector<Haze::InputType>(), std::vector<Haze::InputType>(), Haze::MouseType::NOTHING, 0, 0}, 4);
+
+    _background = std::make_unique<Paralax>(_engine, _channel);
 }
 
 Rtype::~Rtype() = default;
@@ -76,13 +78,16 @@ void Rtype::sendEverything(udp::endpoint &to)
     for (auto &player: _players) {
         player->send();
     }
+    _background->send();
 }
 
 void Rtype::start()
 {
     _running = true;
-        std::chrono::steady_clock::time_point previousTime = std::chrono::steady_clock::now();
-        const std::chrono::milliseconds targetFrameTime(1000 / 60);// 60 FPS
+    std::chrono::steady_clock::time_point previousTime = std::chrono::steady_clock::now();
+    const std::chrono::milliseconds targetFrameTime(1000 / 60);// 60 FPS
+
+    _background->build();
 
     //    std::ifstream inputFile("assets/AnimationJSON/ground.json");
     //    nlohmann::json jsonData;
@@ -119,8 +124,6 @@ void Rtype::start()
       * Update Cycle
       */
     while (_running) {
-        checkInactiveClients();
-
         // Process messages
         size_t count = 0;
         while (count < 5 && !_channel.getIncoming().empty()) {
@@ -128,14 +131,17 @@ void Rtype::start()
             onReceive(msg.target, msg.data);
             count++;
         }
+        checkInactiveClients();
 
         // Process the input received
         _engine.update();
 
+        // Update the state of the non player entity
+        update();
+
         // Send all entities update to clients
         sendUpdate();
 
-        // moveBackground(); // necessary for collision
 
         // Calculate time taken in this loop
         std::chrono::steady_clock::time_point currentTime = std::chrono::steady_clock::now();
@@ -219,4 +225,10 @@ void Rtype::sendUpdate()
     for (auto &player: _players) {
         player->sendUpdate();
     }
+    _background->sendUpdate();
+}
+
+void Rtype::update()
+{
+    _background->update();
 }
