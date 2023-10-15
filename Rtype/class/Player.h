@@ -29,7 +29,7 @@ public:
     void send();
     void sendUpdate();
 
-public:// public members
+public:
     std::unique_ptr<Remote> _remote = nullptr;
     Haze::Entity *_entity = nullptr;
 
