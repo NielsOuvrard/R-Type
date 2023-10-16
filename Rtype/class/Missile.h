@@ -17,7 +17,7 @@ public:
     void send();
     void sendUpdate();
 
-    Haze::Entity *entity = nullptr;
+    Haze::Entity *_entity = nullptr;
 
 private:
     Haze::Engine &_engine;

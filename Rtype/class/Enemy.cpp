@@ -25,6 +25,9 @@ void Enemy::build()
             Haze::Collision::LAMBDA,
             0.1,
             [this](int a, int b) {
+                if (!_entity) {
+                    return;
+                }
                 auto damage = dynamic_cast<Haze::Damage *>(_engine.getEntity(b)->getComponent("Damage"));
                 if (damage == nullptr) {
                     std::cout << "Error: Damage component not found" << std::endl;
@@ -34,10 +37,25 @@ void Enemy::build()
                 if (_hp - damage->damage < 0) {
                     _channel.sendAll(RType::message::deleteEntity(_entity->getId()));
                     _entity->addComponent(new Haze::Destroy());
-                    std::cout << "Enemy died" << std::endl;
+                    _entity = nullptr;
                 } else {
                     _hp -= damage->damage;
                 }
+                std::cout << "Enemy not die 2, the come back\n";
+            }};
+
+    mapCollision["player"] = {
+            Haze::Collision::LAMBDA,
+            0.1,
+            [this](int a, int b) {
+                if (!_entity) {
+                    return;
+                }
+                std::cout << "enemy die by tutching player\n";
+                _channel.sendAll(RType::message::deleteEntity(_entity->getId()));
+                _entity->addComponent(new Haze::Destroy());
+                _entity = nullptr;
+                std::cout << "Enemy not die 2, the come back\n";
             }};
     _entity->addComponent(new Haze::Collision("enemy", mapCollision));
     send();
