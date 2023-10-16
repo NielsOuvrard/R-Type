@@ -227,5 +227,7 @@ void Rtype::sendUpdate()
 
 void Rtype::update()
 {
+    for (auto &enemies: _enemies)
+        enemies->shoot();
     _background->update();
 }

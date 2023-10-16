@@ -27,7 +27,7 @@ void Player::build()
                 if (IS_KEY_PRESSED(KEY_F) && _missileCd.IsReady()) {
                     _missileCd.Activate();
                     auto position = dynamic_cast<Haze::Position *>(this->_entity->getComponent("Position"));
-                    _missiles.emplace_back(_engine, _channel, position);
+                    _missiles.emplace_back(_engine, _channel, position, true);
                     _missiles.back().build();
                 }
 

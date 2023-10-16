@@ -11,8 +11,20 @@ Enemy::Enemy(Haze::Engine &engine, network::data_channel<protocol::data> &channe
 {
 }
 
+void Enemy::shoot()
+{
+    if (_missileCd.IsReady()) {
+        std::cout << "Enemy shoot" << std::endl;
+        auto position = dynamic_cast<Haze::Position *>(this->_entity->getComponent("Position"));
+        _missiles.emplace_back(_engine, _channel, position, false);
+        _missiles.back().build();
+        _missileCd.Activate();
+    }
+}
+
 void Enemy::build()
 {
+    _missileCd.Activate();
     _entity = _engine.createEntity();
     _entity->addComponent(new Haze::Position(500, 300));
     //    _entity->addComponent(new Haze::Velocity(-2, 0));

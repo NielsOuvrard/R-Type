@@ -4,8 +4,8 @@
 
 #include "Missile.h"
 
-Missile::Missile(Haze::Engine &engine, network::data_channel<protocol::data> &channel, Haze::Position *pos)
-    : _engine(engine), _channel(channel), _pos(pos)
+Missile::Missile(Haze::Engine &engine, network::data_channel<protocol::data> &channel, Haze::Position *pos, bool isPlayer)
+    : _engine(engine), _channel(channel), _pos(pos), _isPlayer(isPlayer)
 {
 }
 

@@ -12,15 +12,16 @@
 
 class Missile {
 public:
-    Missile(Haze::Engine &engine, network::data_channel<protocol::data> &channel, Haze::Position *pos);
-    void build();
-    void send();
-    void sendUpdate();
+        Missile(Haze::Engine &engine, network::data_channel<protocol::data> &channel, Haze::Position *pos, bool isPlayer);
+        void build();
+        void send();
+        void sendUpdate();
 
     Haze::Entity *_entity = nullptr;
 
-private:
-    Haze::Engine &_engine;
-    network::data_channel<protocol::data> &_channel;
-    Haze::Position *_pos;
+    private:
+        bool _isPlayer;
+        Haze::Engine &_engine;
+        network::data_channel<protocol::data> &_channel;
+        Haze::Position *_pos;
 };

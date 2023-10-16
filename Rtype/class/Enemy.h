@@ -20,6 +20,7 @@ public:
     Enemy(Haze::Engine &engine, network::data_channel<protocol::data> &channel);
     void build();
     void send();
+    void shoot();
 //    void sendUpdate();
 
 public:// public members
@@ -27,6 +28,8 @@ public:// public members
     Haze::Entity *_entity = nullptr;
 
 private:
+    std::vector<Missile> _missiles;
     Haze::Engine &_engine;
     network::data_channel<protocol::data> &_channel;
+    Cooldown _missileCd{3000ms};
 };
