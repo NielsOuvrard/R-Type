@@ -49,11 +49,9 @@ void Paralax::send()
 
 void Paralax::sendUpdate()
 {
-    _channel.sendGroup(RType::message::createEntity(_bg1->getId()));
     auto pos = dynamic_cast<Haze::Position *>(_bg1->getComponent("Position"));
     _channel.sendGroup(RType::message::addComponent(_bg1->getId(), "Position", new Haze::PositionData{pos->x, pos->y}, sizeof(Haze::PositionData)));
 
-    _channel.sendGroup(RType::message::createEntity(_bg2->getId()));
     pos = dynamic_cast<Haze::Position *>(_bg2->getComponent("Position"));
     _channel.sendGroup(RType::message::addComponent(_bg2->getId(), "Position", new Haze::PositionData{pos->x, pos->y}, sizeof(Haze::PositionData)));
 }

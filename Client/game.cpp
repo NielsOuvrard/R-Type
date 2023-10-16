@@ -53,6 +53,7 @@ void game::onReceive(udp::endpoint from, network::datagram<data> content)
             Haze::entity_id id = {0};
             std::memcpy(&id, content.body.data(), content.header.size);
             createEntity(id);
+            std::cout << "create entity " << id.id << std::endl;
             break;
         }
         case data::delete_entity: {

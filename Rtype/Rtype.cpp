@@ -74,6 +74,9 @@ uint32_t Rtype::getPlayerID(const udp::endpoint &endpoint)
 
 void Rtype::sendEverything(udp::endpoint &to)
 {
+    static int i = 0;
+    std::cout << "[" << i << "] SEND EVERYHING\n";
+    i++;
     _background->send();
     for (auto &wall: _walls) {
         wall->send();
