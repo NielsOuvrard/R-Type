@@ -57,6 +57,32 @@ void Player::build()
                 }
             },
             _id));
+    std::map<std::string, Haze::Collision::CollisionInfo> mapCollision;
+
+    // no colision, never called
+    mapCollision["enemy"] = {
+            Haze::Collision::LAMBDA,
+            0.1,
+            [this](int a, int b) {
+                if (!_entity) {
+                    return;
+                }
+                std::cout << "enemy die by tutching player\n";
+                int damage = 20;
+                std::cout << "hp = " << _hp << " - " << damage << " = " << _hp - damage << std::endl;
+                if (_hp - damage < 0) {
+                    _channel.sendAll(RType::message::deleteEntity(_entity->getId()));
+                    _entity->addComponent(new Haze::Destroy());
+                    _entity = nullptr;
+                } else {
+                    _hp -= damage;
+                }
+                _channel.sendAll(RType::message::deleteEntity(_entity->getId()));
+                _entity->addComponent(new Haze::Destroy());
+                _entity = nullptr;
+                std::cout << "Enemy not die 2, the come back\n";
+            }};
+    _entity->addComponent(new Haze::Collision("player", mapCollision));
 
     send();
 }

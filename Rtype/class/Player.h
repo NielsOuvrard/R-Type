@@ -34,7 +34,7 @@ public:
     Haze::Entity *_entity = nullptr;
 
     uint32_t _id = 0;
-    uint32_t _hp = 20;
+    uint32_t _hp = 50;
     uint32_t _score = 0;
 
     std::vector<Missile> _missiles;
