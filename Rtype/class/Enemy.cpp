@@ -47,7 +47,7 @@ void Enemy::build()
                 }
                 std::cout << "hp = " << _hp << " - " << damage->damage << " = " << _hp - damage->damage << std::endl;
                 if (_hp - damage->damage < 0) {
-                    _channel.sendAll(RType::message::deleteEntity(_entity->getId()));
+                    _channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
                     _entity->addComponent(new Haze::Destroy());
                     _entity = nullptr;
                 } else {
@@ -64,7 +64,7 @@ void Enemy::build()
                     return;
                 }
                 std::cout << "enemy die by tutching player\n";
-                _channel.sendAll(RType::message::deleteEntity(_entity->getId()));
+                _channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
                 _entity->addComponent(new Haze::Destroy());
                 _entity = nullptr;
                 std::cout << "Enemy not die 2, the come back\n";

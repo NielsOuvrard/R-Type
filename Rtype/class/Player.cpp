@@ -78,6 +78,18 @@ void Player::build()
                 }
                 std::cout << "Enemy not die 2, the come back\n";
             }};
+    mapCollision["missile-enemy"] = {
+            Haze::Collision::LAMBDA,
+            0.1,
+            [this](int a, int b) {
+                std::cout << "player touched\n";
+                if (!_entity) {
+                    return;
+                }
+                _channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
+                _entity->addComponent(new Haze::Destroy());
+                _entity = nullptr;
+            }};
     _entity->addComponent(new Haze::Collision("player", mapCollision));
 
     send();
