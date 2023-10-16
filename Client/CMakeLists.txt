@@ -18,10 +18,11 @@ set(SOURCES
         Elements/Element.h
         game.cpp
         game.h
+        Cooldown.h
+        Cooldown.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})
-target_include_directories(${PROJECT_NAME} PUBLIC inc)
 target_link_libraries(${PROJECT_NAME} PRIVATE
         haze-graphics
         Network
