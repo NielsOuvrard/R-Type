@@ -73,13 +73,9 @@ void Player::build()
                 if (_hp - damage < 0) {
                     _channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
                     _entity->addComponent(new Haze::Destroy());
-                    _entity = nullptr;
                 } else {
                     _hp -= damage;
                 }
-                _channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
-                _entity->addComponent(new Haze::Destroy());
-                _entity = nullptr;
                 std::cout << "Enemy not die 2, the come back\n";
             }};
     _entity->addComponent(new Haze::Collision("player", mapCollision));
@@ -113,7 +109,15 @@ void Player::send()
 
 void Player::sendUpdate()
 {
+    if (_entity == nullptr) {
+        std::cout << "no _entity of player\n";
+        return;
+    }
     auto pos = dynamic_cast<Haze::Position *>(_entity->getComponent("Position"));
+    if (pos == nullptr) {
+        std::cout << "no position of player\n";
+        return;
+    }
     //    auto scale = dynamic_cast<Haze::Scale *>(_entity->getComponent("Scale"));
     //    auto hitbox = dynamic_cast<Haze::Hitbox *>(_entity->getComponent("Hitbox"))->hitbox.front();
 

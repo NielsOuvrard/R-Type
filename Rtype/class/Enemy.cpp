@@ -63,9 +63,7 @@ void Enemy::build()
 
 void Enemy::send()
 {
-
     _channel.sendGroup(RType::message::createEntity(_entity->getId()));
-
 
     _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Health", new Haze::HealthData{50}, sizeof(Haze::HealthData)));
     _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Position", new Haze::PositionData{500, 300}, sizeof(Haze::PositionData)));
