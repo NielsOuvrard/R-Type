@@ -70,7 +70,7 @@ namespace Haze {
         char path[128];
     };
 
-    struct SpriteCropedData {
+    struct SpriteCroppedData {
         uint8_t id;
     };
 
