@@ -56,5 +56,5 @@ void Missile::send()
     _channel.sendAll(RType::message::addComponent(_entity->getId(), "Velocity", new Haze::VelocityData{2, 0}, sizeof(Haze::VelocityData)));
     _channel.sendAll(RType::message::addComponent(_entity->getId(), "Sprite", new Haze::SpriteData{"assets/sprites/shot.png"}, sizeof(Haze::SpriteData)));
     _channel.sendAll(RType::message::addComponent(_entity->getId(), "Animation", new Haze::AnimationData{"assets/AnimationJSON/shot.json"}, sizeof(Haze::AnimationData)));
-    _channel.sendAll(RType::message::addComponent(_entity->getId(), "SpriteCroped", new Haze::SpriteCropedData{2}, sizeof(Haze::SpriteCropedData)));
+    _channel.sendAll(RType::message::addComponent(_entity->getId(), "SpriteCropped", new Haze::SpriteCroppedData{2}, sizeof(Haze::SpriteCroppedData)));
 }

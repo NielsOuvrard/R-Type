@@ -71,13 +71,13 @@ void Player::build()
                 int damage = 20;
                 std::cout << "hp = " << _hp << " - " << damage << " = " << _hp - damage << std::endl;
                 if (_hp - damage < 0) {
-                    _channel.sendAll(RType::message::deleteEntity(_entity->getId()));
+                    _channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
                     _entity->addComponent(new Haze::Destroy());
                     _entity = nullptr;
                 } else {
                     _hp -= damage;
                 }
-                _channel.sendAll(RType::message::deleteEntity(_entity->getId()));
+                _channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
                 _entity->addComponent(new Haze::Destroy());
                 _entity = nullptr;
                 std::cout << "Enemy not die 2, the come back\n";

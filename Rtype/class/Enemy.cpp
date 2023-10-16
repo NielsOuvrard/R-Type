@@ -64,15 +64,15 @@ void Enemy::build()
 void Enemy::send()
 {
 
-    _channel.sendAll(RType::message::createEntity(_entity->getId()));
+    _channel.sendGroup(RType::message::createEntity(_entity->getId()));
 
 
-    _channel.sendAll(RType::message::addComponent(_entity->getId(), "Health", new Haze::HealthData{50}, sizeof(Haze::HealthData)));
-    _channel.sendAll(RType::message::addComponent(_entity->getId(), "Position", new Haze::PositionData{500, 300}, sizeof(Haze::PositionData)));
-    //    _channel.sendAll(RType::message::addComponent(_entity->getId(), "Velocity", new Haze::VelocityData{-2, 0}, sizeof(Haze::VelocityData)));
-    _channel.sendAll(RType::message::addComponent(_entity->getId(), "Scale", new Haze::ScaleData{3, 3}, sizeof(Haze::ScaleData)));
-    _channel.sendAll(RType::message::addComponent(_entity->getId(), "Hitbox", new Haze::HitboxData{5, 5, 33 - 10, 36 - 10}, sizeof(Haze::HitboxData)));
-    _channel.sendAll(RType::message::addComponent(_entity->getId(), "HitboxDisplay", nullptr, 0));
-    _channel.sendAll(RType::message::addComponent(_entity->getId(), "Sprite", new Haze::SpriteData{"assets/sprites/enemy.gif"}, sizeof(Haze::SpriteData)));
-    _channel.sendAll(RType::message::addComponent(_entity->getId(), "Animation", new Haze::AnimationData{"assets/AnimationJSON/enemy.json"}, sizeof(Haze::AnimationData)));
+    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Health", new Haze::HealthData{50}, sizeof(Haze::HealthData)));
+    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Position", new Haze::PositionData{500, 300}, sizeof(Haze::PositionData)));
+    //    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Velocity", new Haze::VelocityData{-2, 0}, sizeof(Haze::VelocityData)));
+    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Scale", new Haze::ScaleData{3, 3}, sizeof(Haze::ScaleData)));
+    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Hitbox", new Haze::HitboxData{5, 5, 33 - 10, 36 - 10}, sizeof(Haze::HitboxData)));
+    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "HitboxDisplay", nullptr, 0));
+    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Sprite", new Haze::SpriteData{"assets/sprites/enemy.gif"}, sizeof(Haze::SpriteData)));
+    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Animation", new Haze::AnimationData{"assets/AnimationJSON/enemy.json"}, sizeof(Haze::AnimationData)));
 }
