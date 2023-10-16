@@ -12,6 +12,10 @@ Missile::Missile(Haze::Engine &engine, network::data_channel<protocol::data> &ch
 void Missile::build()
 {
     _entity = _engine.createEntity();
+    std::cout << "["
+              << _entity->getId()
+              << "] Missile Created"
+              << std::endl;
     Haze::Position *position = _pos;
     if (_pos == nullptr) {
         position = new Haze::Position(0, 0);
@@ -37,7 +41,6 @@ void Missile::build()
                 Haze::Collision::LAMBDA,
                 0.1,
                 [this](int a, int b) {
-                    std::cout << "Missile hit enemy" << std::endl;
                     if (!_entity) {
                         return;
                     }
@@ -48,12 +51,10 @@ void Missile::build()
         _entity->addComponent(new Haze::Collision("missile", mapCollision));
     } else {
         std::map<std::string, Haze::Collision::CollisionInfo> mapCollision;
-        std::cout << "Missile enemy" << std::endl;
         mapCollision["player"] = {
                 Haze::Collision::LAMBDA,
                 0.1,
                 [this](int a, int b) {
-                    std::cout << "Missile hit player" << std::endl;
                     if (!_entity) {
                         return;
                     }
@@ -63,7 +64,6 @@ void Missile::build()
                 }};
         _entity->addComponent(new Haze::Collision("missile-enemy", mapCollision));
     }
-
     send();
 }
 

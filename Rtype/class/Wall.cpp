@@ -30,6 +30,10 @@ void Wall::build(uint8_t frameIndex)
 {
     _frameIndex = frameIndex;
     _entity = _engine.createEntity();
+    std::cout << "["
+              << _entity->getId()
+              << "] Wall Created"
+              << std::endl;
     _entity->addComponent(new Haze::Position(_x, _y));
     _entity->addComponent(new Haze::Scale(4, -4));
     //    _entity->addComponent(new Haze::Velocity(1, 0));
@@ -38,7 +42,6 @@ void Wall::build(uint8_t frameIndex)
             Haze::Collision::LAMBDA,
             0.1,
             [this](int a, int b) {
-                std::cout << "Collision\n";
             }};
     std::map<std::string, Haze::Collision::CollisionInfo> infos = {
             {"player", collisionInfo},

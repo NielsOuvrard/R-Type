@@ -50,31 +50,31 @@ void game::onReceive(udp::endpoint from, network::datagram<data> content)
 {
     switch (content.header.id) {
         case data::create_entity: {
-            //std::cout << "[GAME] creating entity\n";
             Haze::entity_id id = {0};
             std::memcpy(&id, content.body.data(), content.header.size);
+            std::cout << "[" << id.id << "] Created\n";
             createEntity(id);
-            std::cout << "create entity " << id.id << std::endl;
             break;
         }
         case data::delete_entity: {
-            //std::cout << "[GAME] deleting entity\n";
             Haze::entity_id id = {0};
             std::memcpy(&id, content.body.data(), content.header.size);
+            std::cout << "[" << id.id << "] Deleted\n";
             deleteEntity(id);
             break;
         }
         case data::add_component: {
-            //std::cout << "[GAME] adding component\n";
             Haze::component_info info = {0};
             std::memcpy(&info, content.body.data(), content.header.size);
+            std::cout << "[" << info.id << "] " << info.name << " added\n";
             addComponent(info);
             break;
         }
         case data::remove_component: {
-            //std::cout << "[GAME] removing component\n";
+            std::cout << "[GAME] removing component\n";
             Haze::component_id info = {0};
             std::memcpy(&info, content.body.data(), content.header.size);
+            std::cout << "[" << info.id << "] " << info.name << " removed\n";
             removeComponent(info);
             break;
         }
@@ -84,18 +84,18 @@ void game::onReceive(udp::endpoint from, network::datagram<data> content)
     }
 }
 
-void game::createEntity(Haze::entity_id id)
+void game::createEntity(Haze::entity_id info)
 {
     _entities.insert({
-            id.id,
+            info.id,
             _engine.createEntity(),
     });
 }
 
-void game::deleteEntity(Haze::entity_id id)
+void game::deleteEntity(Haze::entity_id info)
 {
-    _engine.removeEntity(id.id);
-    _entities.erase(id.id);
+    _entities[info.id]->addComponent(new Haze::Destroy);
+    _entities.erase(info.id);
 }
 
 void game::addComponent(Haze::component_info info)
@@ -103,7 +103,7 @@ void game::addComponent(Haze::component_info info)
     _entities[info.id]->addComponent(Haze::Factory::createComponent(std::string(info.name), info.data));
 }
 
-void game::removeComponent(Haze::component_id id)
+void game::removeComponent(Haze::component_id info)
 {
-    _entities[id.id]->removeComponent(id.name);
+    _entities[info.id]->removeComponent(info.name);
 }

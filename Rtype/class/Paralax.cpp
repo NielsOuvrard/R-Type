@@ -11,10 +11,18 @@ Paralax::Paralax(Haze::Engine &engine, network::data_channel<protocol::data> &ch
 void Paralax::build()
 {
     _bg1 = _engine.createEntity();
+    std::cout << "["
+              << _bg1->getId()
+              << "] Background 1 Created"
+              << std::endl;
     _bg1->addComponent(new Haze::Position(0, 0));
     _bg1->addComponent(new Haze::Velocity(-0.8, 0));
 
     _bg2 = _engine.createEntity();
+    std::cout << "["
+              << _bg2->getId()
+              << "] Background 2 Created"
+              << std::endl;
     _bg2->addComponent(new Haze::Position(562, 0));
     _bg2->addComponent(new Haze::Velocity(-0.8, 0));
     send();

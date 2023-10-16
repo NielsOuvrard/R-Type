@@ -31,7 +31,6 @@ Rtype::~Rtype() = default;
 
 void printInfoInputs(const Haze::info_inputs_weak &info)
 {
-    std::cout << "Pressed Inputs: ";
     for (const auto &input: info.pressedInputs) {
         std::cout << static_cast<int>(input) << " ";
     }
@@ -51,7 +50,6 @@ void Rtype::checkInactiveClients()
 {
     for (auto &player: _players) {
         if (player->_remote && player->_remote->activityCd.IsReady()) {
-            std::cout << "[RType] Player " << player->_id << " Timeout!" << std::endl;
             player->_remote = nullptr;
         }
     }
@@ -74,18 +72,35 @@ uint32_t Rtype::getPlayerID(const udp::endpoint &endpoint)
 
 void Rtype::sendEverything(udp::endpoint &to)
 {
-    static int i = 0;
-    std::cout << "[" << i << "] SEND EVERYHING\n";
-    i++;
     _background->send();
     for (auto &wall: _walls) {
         wall->send();
     }
+
+    /**
+     * Checking for missiles entity may be useless as it is
+     * cleaned up in the player and enemy's update method
+     * cf: here
+     */
     for (auto &player: _players) {
-        player->send();
+        if (player->_entity) {
+            player->send();
+        }
+        for (auto &missile: player->_missiles) {
+            if (missile->_entity) {// <-- here
+                missile->send();
+            }
+        }
     }
     for (auto &enemy: _enemies) {
-        enemy->send();
+        if (enemy->_entity) {
+            enemy->send();
+        }
+        for (auto &missile: enemy->_missiles) {
+            if (missile->_entity) {// <-- here
+                missile->send();
+            }
+        }
     }
 }
 
@@ -107,13 +122,11 @@ void Rtype::start()
     inputFile >> jsonData;
     inputFile.close();
 
-    for (int i = 0; i < 8; i++) {
-        _walls.emplace_back(std::make_unique<Wall>(_engine, _channel, jsonData, 250 * i, 600));
-        _walls.back()->build(i);
-    }
+    //    for (int i = 0; i < 8; i++) {
+    //        _walls.emplace_back(std::make_unique<Wall>(_engine, _channel, jsonData, 250 * i, 600));
+    //        _walls.back()->build(i);
+    //    }
 
-    _enemies.emplace_back(std::make_unique<Enemy>(_engine, _channel));
-    _enemies.back()->build();
     _enemies.emplace_back(std::make_unique<Enemy>(_engine, _channel));
     _enemies.back()->build();
 
@@ -139,7 +152,6 @@ void Rtype::start()
         // Send all entities update to clients
         sendUpdate();
 
-
         // Calculate time taken in this loop
         std::chrono::steady_clock::time_point currentTime = std::chrono::steady_clock::now();
         std::chrono::milliseconds elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - previousTime);
@@ -163,7 +175,6 @@ void Rtype::onReceive(udp::endpoint from, network::datagram<protocol::data> cont
     // process datagram
     switch (content.header.id) {
         case protocol::data::join: {
-            std::cout << "[SERVER] RECEIVE JOIN\n";
             for (auto &player: _players) {
                 if (!player->_remote) {
                     player->_remote = std::make_unique<Player::Remote>(from);
@@ -190,13 +201,13 @@ void Rtype::onReceive(udp::endpoint from, network::datagram<protocol::data> cont
             for (auto &key: info.pressedInputs) {
                 if (key != Haze::NO) {
                     inputs.inputsPressed.push_back(key);
-                    std::cout << "pressed " << char('a' + key - 1) << std::endl;
+                    //                    std::cout << "pressed " << char('a' + key - 1) << std::endl;
                 }
             }
             for (auto &key: info.releasedInputs) {
                 if (key != Haze::NO) {
                     inputs.inputsReleased.push_back(key);
-                    std::cout << "released " << char('a' + key - 1) << std::endl;
+                    //                    std::cout << "released " << char('a' + key - 1) << std::endl;
                 }
             }
             inputs.mouseType = info.mouseType;
@@ -221,10 +232,12 @@ asio::ip::udp::endpoint Rtype::getEndpoint() const
 
 void Rtype::sendUpdate()
 {
-    for (auto &player: _players) {
-        player->sendUpdate();
-    }
     _background->sendUpdate();
+    for (auto &player: _players) {
+        if (player->_entity) {
+            player->sendUpdate();
+        }
+    }
     for (auto &wall: _walls) {
         wall->sendUpdate();
     }
@@ -234,7 +247,14 @@ void Rtype::update()
 {
     for (auto &Enemy: _enemies)
         Enemy->update();
-    for (auto &enemies: _enemies)
-        enemies->shoot();
+    for (auto &player: _players) {
+        player->update();
+    }
+    for (auto &enemy: _enemies) {
+        enemy->update();
+        if (enemy->_entity) {
+            enemy->shoot();
+        }
+    }
     _background->update();
 }

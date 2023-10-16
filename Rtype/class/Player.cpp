@@ -13,11 +13,11 @@ Player::Player(Haze::Engine &engine, network::data_channel<protocol::data> &chan
 
 void Player::build()
 {
-    std::cout << "\x1B[31m"
-              << "CREATE PLAYER"
-              << _id
-              << "\n\x1B[0m";
     _entity = _engine.createEntity();
+    std::cout << "["
+              << _entity->getId()
+              << "] Player Created"
+              << std::endl;
     _entity->addComponent(new Haze::Velocity(0, 0));
     _entity->addComponent(new Haze::Position(100, 200));
     _entity->addComponent(new Haze::Scale(3, 3));
@@ -27,8 +27,8 @@ void Player::build()
                 if (IS_KEY_PRESSED(KEY_F) && _missileCd.IsReady()) {
                     _missileCd.Activate();
                     auto position = dynamic_cast<Haze::Position *>(this->_entity->getComponent("Position"));
-                    _missiles.emplace_back(_engine, _channel, position, true);
-                    _missiles.back().build();
+                    _missiles.emplace_back(std::make_unique<Missile>(_engine, _channel, position, true));
+                    _missiles.back()->build();
                 }
 
                 auto velocity = dynamic_cast<Haze::Velocity *>(_entity->getComponent("Velocity"));
@@ -67,22 +67,19 @@ void Player::build()
                 if (!_entity) {
                     return;
                 }
-                std::cout << "enemy die by tutching player\n";
                 int damage = 20;
-                std::cout << "hp = " << _hp << " - " << damage << " = " << _hp - damage << std::endl;
                 if (_hp - damage < 0) {
                     _channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
                     _entity->addComponent(new Haze::Destroy());
+                    _entity = nullptr;
                 } else {
                     _hp -= damage;
                 }
-                std::cout << "Enemy not die 2, the come back\n";
             }};
     mapCollision["missile-enemy"] = {
             Haze::Collision::LAMBDA,
             0.1,
             [this](int a, int b) {
-                std::cout << "player touched\n";
                 if (!_entity) {
                     return;
                 }
@@ -121,19 +118,20 @@ void Player::send()
 
 void Player::sendUpdate()
 {
-    if (_entity == nullptr) {
-        std::cout << "no _entity of player\n";
-        return;
-    }
     auto pos = dynamic_cast<Haze::Position *>(_entity->getComponent("Position"));
-    if (pos == nullptr) {
-        std::cout << "no position of player\n";
-        return;
-    }
-    //    auto scale = dynamic_cast<Haze::Scale *>(_entity->getComponent("Scale"));
-    //    auto hitbox = dynamic_cast<Haze::Hitbox *>(_entity->getComponent("Hitbox"))->hitbox.front();
-
     _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Position", new Haze::PositionData{pos->x, pos->y}, sizeof(Haze::PositionData)));
-    //    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Scale", new Haze::ScaleData{scale->x, scale->y}, sizeof(Haze::ScaleData)));
-    //    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Hitbox", new Haze::HitboxData{hitbox}, sizeof(Haze::HitboxData)));
+}
+
+void Player::update()
+{
+    // clears the destroyed missiles from the vector
+    bool invalidMissileExists = false;
+    for (auto &missile: _missiles) {
+        if (!missile->_entity) {
+            missile.reset();
+            invalidMissileExists = true;
+        }
+    }
+    if (invalidMissileExists)
+        _missiles.erase(std::remove(_missiles.begin(), _missiles.end(), nullptr), _missiles.end());
 }

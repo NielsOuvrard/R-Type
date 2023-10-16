@@ -22,15 +22,15 @@ public:
     void send();
     void shoot();
     void update();
-//    void sendUpdate();
+    //    void sendUpdate();
 
-public:// public members
-    uint32_t _hp = 50; // useless
+public:               // public members
+    uint32_t _hp = 50;// useless
     Haze::Entity *_entity = nullptr;
 
+    std::list<std::unique_ptr<Missile>> _missiles;
+
 private:
-    std::vector<Missile> _missiles;
-    int x_pos = 0;
     Haze::Engine &_engine;
     network::data_channel<protocol::data> &_channel;
     Cooldown _missileCd{3000ms};

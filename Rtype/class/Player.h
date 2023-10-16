@@ -26,6 +26,7 @@ public:
 
     Player(Haze::Engine &engine, network::data_channel<protocol::data> &channel, uint32_t id);
     void build();
+    void update();
     void send();
     void sendUpdate();
 
@@ -37,7 +38,7 @@ public:
     uint32_t _hp = 50;
     uint32_t _score = 0;
 
-    std::vector<Missile> _missiles;
+    std::list<std::unique_ptr<Missile>> _missiles;
     Cooldown _missileCd{300ms};
 
 private:

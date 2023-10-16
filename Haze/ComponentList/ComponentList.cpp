@@ -55,7 +55,6 @@ namespace Haze {
         for (auto &it: _componentList) {
             it.second.push_back(nullptr);
         }
-        std::cout << "Number of entities: " << _size << std::endl;
         _size++;
     }
 
