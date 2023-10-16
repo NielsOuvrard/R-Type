@@ -46,6 +46,7 @@ void Missile::build()
                     }
                     _channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
                     _entity->addComponent(new Haze::Destroy());
+                    _entity = nullptr;
                 }};
         _entity->addComponent(new Haze::Collision("missile", mapCollision));
     } else {
@@ -59,6 +60,7 @@ void Missile::build()
                     }
                     _channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
                     _entity->addComponent(new Haze::Destroy());
+                    _entity = nullptr;
                 }};
         _entity->addComponent(new Haze::Collision("missile-enemy", mapCollision));
     }
@@ -67,7 +69,10 @@ void Missile::build()
 
 void Missile::send()
 {
-    auto position = dynamic_cast<Haze::Position *>(_entity->getComponent("Position"));
+    Haze::Position *position = _pos;
+    if (_pos == nullptr) {
+        position = new Haze::Position(0, 0);
+    }
     _channel.sendGroup(RType::message::createEntity(_entity->getId()));
     //_channel.sendGroup(RType::message::addComponent(_entity->getId(), "Damage", new Haze::DamageData{20}, sizeof(Haze::PositionData)));
     if (_isPlayer) {

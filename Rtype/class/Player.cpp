@@ -19,7 +19,7 @@ void Player::build()
               << "] Player Created"
               << std::endl;
     _entity->addComponent(new Haze::Velocity(0, 0));
-    _entity->addComponent(new Haze::Position(100, 200));
+    _entity->addComponent(new Haze::Position(100, 300));
     _entity->addComponent(new Haze::Scale(3, 3));
     _entity->addComponent(new Haze::Hitbox({{0, 0, 32, 14}}));
     _entity->addComponent(new Haze::OnKeyPressed(
@@ -73,6 +73,7 @@ void Player::build()
                 if (_hp - damage < 0) {
                     _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Destroy", nullptr, 0));
                     _entity->addComponent(new Haze::Destroy());
+                    _entity = nullptr;
                 } else {
                     _hp -= damage;
                 }
@@ -90,6 +91,7 @@ void Player::build()
                 if (_hp - damage->damage < 0) {
                     _channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
                     _entity->addComponent(new Haze::Destroy());
+                    _entity = nullptr;
                 } else {
                     _hp -= damage->damage;
                 }
