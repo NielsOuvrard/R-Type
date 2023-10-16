@@ -21,6 +21,7 @@ public:
     void build();
     void send();
     void shoot();
+    void update();
 //    void sendUpdate();
 
 public:// public members
@@ -29,6 +30,7 @@ public:// public members
 
 private:
     std::vector<Missile> _missiles;
+    int x_pos = 0;
     Haze::Engine &_engine;
     network::data_channel<protocol::data> &_channel;
     Cooldown _missileCd{3000ms};

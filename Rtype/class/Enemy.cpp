@@ -16,6 +16,7 @@ void Enemy::shoot()
     if (_missileCd.IsReady()) {
         std::cout << "Enemy shoot" << std::endl;
         auto position = dynamic_cast<Haze::Position *>(this->_entity->getComponent("Position"));
+        // position->x = float(x_pos);
         _missiles.emplace_back(_engine, _channel, position, false);
         _missiles.back().build();
         _missileCd.Activate();
@@ -24,10 +25,11 @@ void Enemy::shoot()
 
 void Enemy::build()
 {
+    x_pos = std::rand() % 480 + 10;
     _missileCd.Activate();
     _entity = _engine.createEntity();
-    _entity->addComponent(new Haze::Position(500, 300));
-    //    _entity->addComponent(new Haze::Velocity(-2, 0));
+    _entity->addComponent(new Haze::Position(800, x_pos));
+    _entity->addComponent(new Haze::Velocity(-1, 0));
     _entity->addComponent(new Haze::Scale(3, 3));
     _entity->addComponent(new Haze::Hitbox({{5, 5, 33 - 10, 36 - 10}}));
 
@@ -78,11 +80,21 @@ void Enemy::send()
     _channel.sendGroup(RType::message::createEntity(_entity->getId()));
 
     _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Health", new Haze::HealthData{50}, sizeof(Haze::HealthData)));
-    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Position", new Haze::PositionData{500, 300}, sizeof(Haze::PositionData)));
-    //    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Velocity", new Haze::VelocityData{-2, 0}, sizeof(Haze::VelocityData)));
+    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Position", new Haze::PositionData{800, float(x_pos)}, sizeof(Haze::PositionData)));
+    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Velocity", new Haze::VelocityData{-1, 0}, sizeof(Haze::VelocityData)));
     _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Scale", new Haze::ScaleData{3, 3}, sizeof(Haze::ScaleData)));
     _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Hitbox", new Haze::HitboxData{5, 5, 33 - 10, 36 - 10}, sizeof(Haze::HitboxData)));
     _channel.sendGroup(RType::message::addComponent(_entity->getId(), "HitboxDisplay", nullptr, 0));
     _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Sprite", new Haze::SpriteData{"assets/sprites/enemy.gif"}, sizeof(Haze::SpriteData)));
     _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Animation", new Haze::AnimationData{"assets/AnimationJSON/enemy.json"}, sizeof(Haze::AnimationData)));
+}
+
+void Enemy::update()
+{
+    auto position = dynamic_cast<Haze::Position *>(_entity->getComponent("Position"));
+    if (position->x == -100) {
+        x_pos = std::rand() % 480 + 10;
+        _entity->addComponent(new Haze::Position(800, x_pos));
+        _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Position", new Haze::PositionData{800, float(x_pos)}, sizeof(Haze::PositionData)));
+    }
 }
