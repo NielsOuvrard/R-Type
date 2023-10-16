@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(
         SOURCES
         Rtype.cpp
-        class/wall.cpp
+        class/Wall.cpp
         protocol.h
         class/Player.cpp
         class/Player.h

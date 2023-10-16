@@ -15,19 +15,28 @@
 #pragma onces
 
 #include "../../Haze/inc/json.hpp"
+#include <Factory.hpp>
 #include <haze-core.hpp>
 #include <haze-graphics.hpp>
+#include <net_data_channel.h>
+#include <protocol.h>
 
-class wall {
-private:
+class Wall {
 public:
-    void changeSpriteBack(Haze::Entity *E);
-    Haze::Sprite *_wallSprite = new Haze::Sprite("assets/sprites/wall.png");
-    Haze::Entity *_entityWallBottom;
-    nlohmann::json _sheet;
-    nlohmann::json _jsonData;
-    u_int8_t idSprite;
+    Wall(Haze::Engine &engine, network::data_channel<protocol::data> &channel, nlohmann::json dataJSON, float x, float y);
+    void build(uint8_t frameIndex = 0);
+    void send();
+    void sendUpdate();
 
-    wall(Haze::Engine &engine, nlohmann::json _jsonData, int x, int y);
-    ~wall();
+private:
+    Haze::Engine &_engine;
+    network::data_channel<protocol::data> &_channel;
+
+    std::vector<Haze::Animation::intRect> _frames;
+    uint8_t _frameIndex = 0;
+    float _x;
+    float _y;
+
+    Haze::Entity *_entity = nullptr;
+    nlohmann::json _dataJSON;
 };

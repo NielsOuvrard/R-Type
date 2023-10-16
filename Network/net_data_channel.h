@@ -21,7 +21,6 @@ namespace network {
 
         virtual ~data_channel() = default;
 
-
     public:// Receiving information
         void startListening()
         {
@@ -45,7 +44,6 @@ namespace network {
 
         void sendAll(const datagram<T> &datagram)
         {
-
             for (auto &to: _peers) {
                 sendTo(datagram, to);
             }
@@ -53,8 +51,14 @@ namespace network {
 
         void sendSome(const datagram<T> &datagram, std::vector<udp::endpoint> some)
         {
-
             for (auto &to: some) {
+                sendTo(datagram, to);
+            }
+        }
+
+        void sendGroup(const datagram<T> &datagram)
+        {
+            for (auto &to: _group) {
                 sendTo(datagram, to);
             }
         }
@@ -76,6 +80,7 @@ namespace network {
 
         ThreadSafeQueue<owned_datagram<T>> &getIncoming() { return _inbox; }
 
+        std::set<udp::endpoint> &getGroup() { return _group; };
 
     public:// Async Actions
         void asyncReceive()
@@ -122,6 +127,7 @@ namespace network {
         udp::socket _socket;
 
         std::set<udp::endpoint> _peers;
+        std::set<udp::endpoint> _group;
 
         ThreadSafeQueue<owned_datagram<T>> _inbox;
         ThreadSafeQueue<owned_datagram<T>> _outbox;

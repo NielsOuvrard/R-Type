@@ -38,7 +38,7 @@ public:
     uint32_t _score = 0;
 
     std::vector<Missile> _missiles;
-    Cooldown _missileCd{100ms};
+    Cooldown _missileCd{300ms};
 
 private:
     Haze::Engine &_engine;

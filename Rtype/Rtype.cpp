@@ -75,7 +75,9 @@ uint32_t Rtype::getPlayerID(const udp::endpoint &endpoint)
 void Rtype::sendEverything(udp::endpoint &to)
 {
     _background->send();
-    // * send to the new player all players data
+    for (auto &wall: _walls) {
+        wall->send();
+    }
     for (auto &player: _players) {
         player->send();
     }
@@ -92,40 +94,23 @@ void Rtype::start()
 
     _background->build();
 
+    std::ifstream inputFile("assets/AnimationJSON/ground.json");
+    nlohmann::json jsonData;
+
+    if (!inputFile.is_open()) {
+        std::cerr << "Error: Could not open file for reading" << std::endl;
+        return;
+    }
+    inputFile >> jsonData;
+    inputFile.close();
+
+    for (int i = 0; i < 8; i++) {
+        _walls.emplace_back(std::make_unique<Wall>(_engine, _channel, jsonData, 250 * i, 600));
+        _walls.back()->build(i);
+    }
+
     _enemies.emplace_back(std::make_unique<Enemy>(_engine, _channel));
     _enemies.back()->build();
-
-
-    //    std::ifstream inputFile("assets/AnimationJSON/ground.json");
-    //    nlohmann::json jsonData;
-    //
-    //    if (!inputFile.is_open()) {
-    //        std::cerr << "Error: Could not open file for reading" << std::endl;
-    //        return;
-    //    }
-    //    inputFile >> jsonData;
-    //    inputFile.close();
-    //
-    //    for (int i = 0; i < 8; i++) {
-    //        _walls.push_back(new wall(_engine, jsonData, 250 * i, 600));
-    //        _channel.sendAll(RType::message::createEntity(_walls.back()->_entityWallBottom->getId()));
-    //        auto pos = dynamic_cast<Haze::Position *>(_walls.back()->_entityWallBottom->getComponent("Position"));
-    //        auto scale = dynamic_cast<Haze::Scale *>(_walls.back()->_entityWallBottom->getComponent("Scale"));
-    //        auto hitbox = dynamic_cast<Haze::Hitbox *>(_walls.back()->_entityWallBottom->getComponent("Hitbox"))->hitbox.front();
-    //
-    //        _channel.sendAll(RType::message::addComponent(_walls.back()->_entityWallBottom->getId(), "Position", new Haze::PositionData{pos->x, pos->y},
-    //                                                      sizeof(Haze::PositionData)));
-    //        _channel.sendAll(RType::message::addComponent(_walls.back()->_entityWallBottom->getId(), "Scale", new Haze::ScaleData{scale->x, scale->y},
-    //                                                      sizeof(Haze::ScaleData)));
-    //        _channel.sendAll(RType::message::addComponent(_walls.back()->_entityWallBottom->getId(), "Hitbox", new Haze::HitboxData{hitbox},
-    //                                                      sizeof(Haze::HitboxData)));
-    //        _channel.sendAll(RType::message::addComponent(_walls.back()->_entityWallBottom->getId(), "Sprite", new Haze::SpriteData{"assets/sprites/wall.png"}, sizeof(Haze::SpriteData)));
-    //        _channel.sendAll(RType::message::addComponent(_walls.back()->_entityWallBottom->getId(), "HitboxDisplay", nullptr, 0));
-    //        _channel.sendAll(RType::message::addComponent(_walls.back()->_entityWallBottom->getId(), "Animation", new Haze::AnimationData{"assets/AnimationJSON/ground.json"},
-    //                                                      sizeof(Haze::AnimationData)));
-    //        _channel.sendAll(RType::message::addComponent(_walls.back()->_entityWallBottom->getId(), "SpriteCroped", new Haze::SpriteCropedData{_walls.back()->idSprite},
-    //                                                      sizeof(Haze::SpriteCropedData)));
-    //    }
 
     /**
       * Update Cycle
@@ -177,10 +162,12 @@ void Rtype::onReceive(udp::endpoint from, network::datagram<protocol::data> cont
             for (auto &player: _players) {
                 if (!player->_remote) {
                     player->_remote = std::make_unique<Player::Remote>(from);
+                    _channel.getGroup().insert(from);
                     sendEverything(from);
                 }
             }
             if (_players.size() < 4) {
+                _channel.getGroup().insert(from);
                 sendEverything(from);
                 _players.emplace_back(std::make_unique<Player>(_engine, _channel, _players.size() + 1));
                 _players.back()->_remote = std::make_unique<Player::Remote>(from);
@@ -233,6 +220,9 @@ void Rtype::sendUpdate()
         player->sendUpdate();
     }
     _background->sendUpdate();
+    for (auto &wall: _walls) {
+        wall->sendUpdate();
+    }
 }
 
 void Rtype::update()

@@ -17,12 +17,12 @@
 #include "../Client/json.hpp"
 #include "Paralax.h"
 #include "Player.h"
+#include "Wall.hpp"
 #include "Enemy.h"
 #include "data.h"
 #include "net_data_channel.h"
 #include "net_server.h"
 #include "protocol.h"
-#include "wall.hpp"
 #include <Factory.hpp>
 #include <cstdlib>
 #include <ctime>
@@ -55,7 +55,7 @@ private:
     network::data_channel<protocol::data> _channel;
 
     std::unique_ptr<Paralax> _background;
-    std::vector<wall *> _walls;
+    std::vector<std::unique_ptr<Wall>> _walls;
     std::vector<Haze::Entity *> _entities;
     std::vector<std::unique_ptr<Player>> _players;
     std::vector<std::unique_ptr<Enemy>> _enemies;
