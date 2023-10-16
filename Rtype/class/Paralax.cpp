@@ -34,26 +34,26 @@ void Paralax::update()
 
 void Paralax::send()
 {
-    _channel.sendAll(RType::message::createEntity(_bg1->getId()));
+    _channel.sendGroup(RType::message::createEntity(_bg1->getId()));
     auto pos = dynamic_cast<Haze::Position *>(_bg1->getComponent("Position"));
-    _channel.sendAll(RType::message::addComponent(_bg1->getId(), "Position", new Haze::PositionData{pos->x, pos->y}, sizeof(Haze::PositionData)));
-    _channel.sendAll(RType::message::addComponent(_bg1->getId(), "Scale", new Haze::ScaleData{1.9, 1.9}, sizeof(Haze::ScaleData)));
-    _channel.sendAll(RType::message::addComponent(_bg1->getId(), "Sprite", new Haze::SpriteData{"assets/sprites/space.jpg"}, sizeof(Haze::SpriteData)));
+    _channel.sendGroup(RType::message::addComponent(_bg1->getId(), "Position", new Haze::PositionData{pos->x, pos->y}, sizeof(Haze::PositionData)));
+    _channel.sendGroup(RType::message::addComponent(_bg1->getId(), "Scale", new Haze::ScaleData{1.9, 1.9}, sizeof(Haze::ScaleData)));
+    _channel.sendGroup(RType::message::addComponent(_bg1->getId(), "Sprite", new Haze::SpriteData{"assets/sprites/space.jpg"}, sizeof(Haze::SpriteData)));
 
-    _channel.sendAll(RType::message::createEntity(_bg2->getId()));
+    _channel.sendGroup(RType::message::createEntity(_bg2->getId()));
     pos = dynamic_cast<Haze::Position *>(_bg2->getComponent("Position"));
-    _channel.sendAll(RType::message::addComponent(_bg2->getId(), "Position", new Haze::PositionData{pos->x, pos->y}, sizeof(Haze::PositionData)));
-    _channel.sendAll(RType::message::addComponent(_bg2->getId(), "Scale", new Haze::ScaleData{1.9, 1.9}, sizeof(Haze::ScaleData)));
-    _channel.sendAll(RType::message::addComponent(_bg2->getId(), "Sprite", new Haze::SpriteData{"assets/sprites/space.jpg"}, sizeof(Haze::SpriteData)));
+    _channel.sendGroup(RType::message::addComponent(_bg2->getId(), "Position", new Haze::PositionData{pos->x, pos->y}, sizeof(Haze::PositionData)));
+    _channel.sendGroup(RType::message::addComponent(_bg2->getId(), "Scale", new Haze::ScaleData{1.9, 1.9}, sizeof(Haze::ScaleData)));
+    _channel.sendGroup(RType::message::addComponent(_bg2->getId(), "Sprite", new Haze::SpriteData{"assets/sprites/space.jpg"}, sizeof(Haze::SpriteData)));
 }
 
 void Paralax::sendUpdate()
 {
-    _channel.sendAll(RType::message::createEntity(_bg1->getId()));
+    _channel.sendGroup(RType::message::createEntity(_bg1->getId()));
     auto pos = dynamic_cast<Haze::Position *>(_bg1->getComponent("Position"));
-    _channel.sendAll(RType::message::addComponent(_bg1->getId(), "Position", new Haze::PositionData{pos->x, pos->y}, sizeof(Haze::PositionData)));
+    _channel.sendGroup(RType::message::addComponent(_bg1->getId(), "Position", new Haze::PositionData{pos->x, pos->y}, sizeof(Haze::PositionData)));
 
-    _channel.sendAll(RType::message::createEntity(_bg2->getId()));
+    _channel.sendGroup(RType::message::createEntity(_bg2->getId()));
     pos = dynamic_cast<Haze::Position *>(_bg2->getComponent("Position"));
-    _channel.sendAll(RType::message::addComponent(_bg2->getId(), "Position", new Haze::PositionData{pos->x, pos->y}, sizeof(Haze::PositionData)));
+    _channel.sendGroup(RType::message::addComponent(_bg2->getId(), "Position", new Haze::PositionData{pos->x, pos->y}, sizeof(Haze::PositionData)));
 }

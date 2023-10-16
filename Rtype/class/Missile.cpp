@@ -26,13 +26,13 @@ void Missile::build()
 void Missile::send()
 {
     auto position = dynamic_cast<Haze::Position *>(entity->getComponent("Position"));
-    _channel.sendAll(RType::message::createEntity(entity->getId()));
-    _channel.sendAll(RType::message::addComponent(entity->getId(), "Position", new Haze::PositionData{position->x + 33 * 3, position->y}, sizeof(Haze::PositionData)));
-    _channel.sendAll(RType::message::addComponent(entity->getId(), "Scale", new Haze::ScaleData{3, 3}, sizeof(Haze::ScaleData)));
-    _channel.sendAll(RType::message::addComponent(entity->getId(), "Hitbox", new Haze::HitboxData({0, 0, 32, 14}), sizeof(Haze::HitboxData)));
-    _channel.sendAll(RType::message::addComponent(entity->getId(), "HitboxDisplay", nullptr, 0));
-    _channel.sendAll(RType::message::addComponent(entity->getId(), "Velocity", new Haze::VelocityData{2, 0}, sizeof(Haze::VelocityData)));
-    _channel.sendAll(RType::message::addComponent(entity->getId(), "Sprite", new Haze::SpriteData{"assets/sprites/shot.png"}, sizeof(Haze::SpriteData)));
-    _channel.sendAll(RType::message::addComponent(entity->getId(), "Animation", new Haze::AnimationData{"assets/AnimationJSON/shot.json"}, sizeof(Haze::AnimationData)));
-    _channel.sendAll(RType::message::addComponent(entity->getId(), "SpriteCropped", new Haze::SpriteCroppedData{2}, sizeof(Haze::SpriteCroppedData)));
+    _channel.sendGroup(RType::message::createEntity(entity->getId()));
+    _channel.sendGroup(RType::message::addComponent(entity->getId(), "Position", new Haze::PositionData{position->x + 33 * 3, position->y}, sizeof(Haze::PositionData)));
+    _channel.sendGroup(RType::message::addComponent(entity->getId(), "Scale", new Haze::ScaleData{3, 3}, sizeof(Haze::ScaleData)));
+    _channel.sendGroup(RType::message::addComponent(entity->getId(), "Hitbox", new Haze::HitboxData({0, 0, 32, 14}), sizeof(Haze::HitboxData)));
+    _channel.sendGroup(RType::message::addComponent(entity->getId(), "HitboxDisplay", nullptr, 0));
+    _channel.sendGroup(RType::message::addComponent(entity->getId(), "Velocity", new Haze::VelocityData{2, 0}, sizeof(Haze::VelocityData)));
+    _channel.sendGroup(RType::message::addComponent(entity->getId(), "Sprite", new Haze::SpriteData{"assets/sprites/shot.png"}, sizeof(Haze::SpriteData)));
+    _channel.sendGroup(RType::message::addComponent(entity->getId(), "Animation", new Haze::AnimationData{"assets/AnimationJSON/shot.json"}, sizeof(Haze::AnimationData)));
+    _channel.sendGroup(RType::message::addComponent(entity->getId(), "SpriteCropped", new Haze::SpriteCroppedData{2}, sizeof(Haze::SpriteCroppedData)));
 }
