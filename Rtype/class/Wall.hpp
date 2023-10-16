@@ -23,7 +23,7 @@
 
 class Wall {
 public:
-    Wall(Haze::Engine &engine, network::data_channel<protocol::data> &channel, nlohmann::json dataJSON, float x, float y);
+    Wall(Haze::Engine &engine, network::data_channel<protocol::data> &channel, nlohmann::json dataJSON, float x, float y, bool isGround);
     void build(uint8_t frameIndex = 0);
     void send();
     void sendUpdate();
@@ -36,6 +36,8 @@ private:
     uint8_t _frameIndex = 0;
     float _x;
     float _y;
+    uint32_t _id;
+    bool _isGround;
 
     Haze::Entity *_entity = nullptr;
     nlohmann::json _dataJSON;

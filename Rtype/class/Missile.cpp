@@ -46,7 +46,6 @@ void Missile::build()
                     }
                     _channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
                     _entity->addComponent(new Haze::Destroy());
-                    _entity = nullptr;
                 }};
         _entity->addComponent(new Haze::Collision("missile", mapCollision));
     } else {
@@ -60,7 +59,6 @@ void Missile::build()
                     }
                     _channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
                     _entity->addComponent(new Haze::Destroy());
-                    _entity = nullptr;
                 }};
         _entity->addComponent(new Haze::Collision("missile-enemy", mapCollision));
     }

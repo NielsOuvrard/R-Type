@@ -35,8 +35,8 @@ public:
     Haze::Entity *_entity = nullptr;
 
     uint32_t _id = 0;
-    uint32_t _hp = 50;
     uint32_t _score = 0;
+    int32_t _hp = 50;
 
     std::list<std::unique_ptr<Missile>> _missiles;
     Cooldown _missileCd{300ms};

@@ -122,10 +122,26 @@ void Rtype::start()
     inputFile >> jsonData;
     inputFile.close();
 
-    //    for (int i = 0; i < 8; i++) {
-    //        _walls.emplace_back(std::make_unique<Wall>(_engine, _channel, jsonData, 250 * i, 600));
-    //        _walls.back()->build(i);
-    //    }
+    std::ifstream mapFile("assets/AnimationJSON/map.json");
+    nlohmann::json jsonMapData;
+    if (!mapFile.is_open()) {
+        std::cerr << "Error: Could not open map for reading" << std::endl;
+        return;
+    }
+    mapFile >> jsonMapData;
+    mapFile.close();
+
+    std::cout << "Open map\n";
+    nlohmann::json map_tiles = jsonMapData["map"];
+    uint16_t i = 0;
+    for (const auto &tile: map_tiles) {
+        _walls.emplace_back(std::make_unique<Wall>(_engine, _channel, jsonData, (48 * 3) * i, 0, false));
+        _walls.back()->build(tile["tile_top"]);
+        _walls.emplace_back(std::make_unique<Wall>(_engine, _channel, jsonData, (48 * 3) * i, 600, true));
+        _walls.back()->build(tile["tile_bottom"]);
+        i++;
+    }
+    std::cout << "Map Opened\n";
 
     _enemies.emplace_back(std::make_unique<Enemy>(_engine, _channel));
     _enemies.back()->build();
@@ -201,13 +217,13 @@ void Rtype::onReceive(udp::endpoint from, network::datagram<protocol::data> cont
             for (auto &key: info.pressedInputs) {
                 if (key != Haze::NO) {
                     inputs.inputsPressed.push_back(key);
-                    //                    std::cout << "pressed " << char('a' + key - 1) << std::endl;
+//                    std::cout << "pressed " << char('a' + key - 1) << std::endl;
                 }
             }
             for (auto &key: info.releasedInputs) {
                 if (key != Haze::NO) {
                     inputs.inputsReleased.push_back(key);
-                    //                    std::cout << "released " << char('a' + key - 1) << std::endl;
+//                    std::cout << "released " << char('a' + key - 1) << std::endl;
                 }
             }
             inputs.mouseType = info.mouseType;
@@ -238,6 +254,7 @@ void Rtype::sendUpdate()
             player->sendUpdate();
         }
     }
+    _background->sendUpdate();
     for (auto &wall: _walls) {
         wall->sendUpdate();
     }

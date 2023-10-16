@@ -18,6 +18,9 @@ namespace Haze {
 
     void Entity::addComponent(Component *component)
     {
+        if (component == nullptr) {
+            return;
+        }
         _componentList->addComponent(component, _id);
     }
 

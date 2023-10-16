@@ -18,6 +18,9 @@ namespace Haze {
 
     void ComponentList::addComponent(Component *component, size_t id)
     {
+//        if (_componentName.empty()) {
+//            return;
+//        }
         if (find(_componentName.begin(), _componentName.end(), component->getType()) == _componentName.end()) {
             addList(component->getType());
         }

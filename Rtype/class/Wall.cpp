@@ -16,8 +16,8 @@
 #include <haze-graphics.hpp>
 #include <utility>
 
-Wall::Wall(Haze::Engine &engine, network::data_channel<protocol::data> &channel, nlohmann::json dataJSON, float x, float y)
-    : _engine(engine), _channel(channel), _dataJSON(std::move(dataJSON)), _x(x), _y(y)
+Wall::Wall(Haze::Engine &engine, network::data_channel<protocol::data> &channel, nlohmann::json dataJSON, float x, float y, bool isGround)
+    : _engine(engine), _channel(channel), _dataJSON(std::move(dataJSON)), _x(x), _y(y), _isGround(isGround)
 {
     // Create the frames
     nlohmann::json animation = _dataJSON["animation"];
@@ -30,13 +30,15 @@ void Wall::build(uint8_t frameIndex)
 {
     _frameIndex = frameIndex;
     _entity = _engine.createEntity();
+    _id = _entity->getId();
     std::cout << "["
               << _entity->getId()
               << "] Wall Created"
               << std::endl;
     _entity->addComponent(new Haze::Position(_x, _y));
-    _entity->addComponent(new Haze::Scale(4, -4));
-    //    _entity->addComponent(new Haze::Velocity(1, 0));
+    auto scale_y = (float)((_isGround ? -1.0 : 1.0) * 3.0);
+    _entity->addComponent(new Haze::Scale(3, scale_y));
+    _entity->addComponent(new Haze::Velocity(-1, 0));
 
     Haze::Collision::CollisionInfo collisionInfo = {
             Haze::Collision::LAMBDA,
@@ -49,30 +51,27 @@ void Wall::build(uint8_t frameIndex)
 
     auto frame = _frames[_frameIndex];
     _entity->addComponent(new Haze::Collision("wall", infos));
-    _entity->addComponent(new Haze::Hitbox({{frame.x, frame.y, frame.width, frame.height}}));
+    _entity->addComponent(new Haze::Hitbox({{0, 0, frame.width, frame.height}}));
     send();
 }
 
 void Wall::send()
 {
-    auto id = _entity->getId();
-    auto pos = dynamic_cast<Haze::Position *>(_entity->getComponent("Position"));
-    auto scale = dynamic_cast<Haze::Scale *>(_entity->getComponent("Scale"));
-    auto hitbox = dynamic_cast<Haze::Hitbox *>(_entity->getComponent("Hitbox"))->hitbox.front();
+    auto frame = _frames[_frameIndex];
 
-    _channel.sendGroup(RType::message::createEntity(id));
-    _channel.sendGroup(RType::message::addComponent(id, "Position", new Haze::PositionData{pos->x, pos->y}, sizeof(Haze::PositionData)));
-    _channel.sendGroup(RType::message::addComponent(id, "Scale", new Haze::ScaleData{scale->x, scale->y}, sizeof(Haze::ScaleData)));
-    _channel.sendGroup(RType::message::addComponent(id, "Hitbox", new Haze::HitboxData{hitbox}, sizeof(Haze::HitboxData)));
-    _channel.sendGroup(RType::message::addComponent(id, "Sprite", new Haze::SpriteData{"assets/sprites/wall.png"}, sizeof(Haze::SpriteData)));
-    _channel.sendGroup(RType::message::addComponent(id, "Animation", new Haze::AnimationData{"assets/AnimationJSON/ground.json"}, sizeof(Haze::AnimationData)));
-    _channel.sendGroup(RType::message::addComponent(id, "SpriteCropped", new Haze::SpriteCroppedData{_frameIndex}, sizeof(Haze::SpriteCroppedData)));
-    _channel.sendGroup(RType::message::addComponent(id, "HitboxDisplay", nullptr, 0));
+    _channel.sendGroup(RType::message::createEntity(_id));
+    _channel.sendGroup(RType::message::addComponent(_id, "Position", new Haze::PositionData{_x, _y}, sizeof(Haze::PositionData)));
+    _channel.sendGroup(RType::message::addComponent(_id, "Velocity", new Haze::VelocityData{-1, 0}, sizeof(Haze::VelocityData)));
+    auto scale_y = (float)((_isGround ? -1.0 : 1.0) * 3.0);
+    _channel.sendGroup(RType::message::addComponent(_id, "Scale", new Haze::ScaleData{3, scale_y}, sizeof(Haze::ScaleData)));
+    _channel.sendGroup(RType::message::addComponent(_id, "Hitbox", new Haze::HitboxData{{0, 0, frame.width, frame.height}}, sizeof(Haze::HitboxData)));
+    _channel.sendGroup(RType::message::addComponent(_id, "Sprite", new Haze::SpriteData{"assets/sprites/wall.png"}, sizeof(Haze::SpriteData)));
+    _channel.sendGroup(RType::message::addComponent(_id, "Animation", new Haze::AnimationData{"assets/AnimationJSON/ground.json"}, sizeof(Haze::AnimationData)));
+    _channel.sendGroup(RType::message::addComponent(_id, "SpriteCropped", new Haze::SpriteCroppedData{_frameIndex}, sizeof(Haze::SpriteCroppedData)));
+    _channel.sendGroup(RType::message::addComponent(_id, "HitboxDisplay", nullptr, 0));
 }
 
 void Wall::sendUpdate()
 {
-    auto id = _entity->getId();
-    auto pos = dynamic_cast<Haze::Position *>(_entity->getComponent("Position"));
-    _channel.sendGroup(RType::message::addComponent(id, "Position", new Haze::PositionData{pos->x, pos->y}, sizeof(Haze::PositionData)));
+//    _channel.sendGroup(RType::message::addComponent(_id, "Position", new Haze::PositionData{_x, _y}, sizeof(Haze::PositionData)));
 }

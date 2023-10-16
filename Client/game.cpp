@@ -96,6 +96,7 @@ void game::deleteEntity(Haze::entity_id info)
 {
     _entities[info.id]->addComponent(new Haze::Destroy);
     _entities.erase(info.id);
+//    std::cout << ""
 }
 
 void game::addComponent(Haze::component_info info)

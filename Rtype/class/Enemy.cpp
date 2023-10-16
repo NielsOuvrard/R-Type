@@ -13,7 +13,7 @@ Enemy::Enemy(Haze::Engine &engine, network::data_channel<protocol::data> &channe
 
 void Enemy::shoot()
 {
-    if (_missileCd.IsReady()) {
+    if (_missileCd.IsReady() && _entity) {
         auto position = dynamic_cast<Haze::Position *>(this->_entity->getComponent("Position"));
         _missiles.emplace_back(std::make_unique<Missile>(_engine, _channel, position, false));
         _missiles.back()->build();
@@ -44,11 +44,12 @@ void Enemy::build()
                 if (damage == nullptr) {
                     return;
                 }
-                if (_hp - damage->damage < 0) {
+                if (int(int(_hp) - int(damage->damage)) <= 0) {
+                    std::cout << "enemy die by missile player\n";
                     _channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
                     _entity->addComponent(new Haze::Destroy());
-                    _entity = nullptr;
                 } else {
+                    std::cout << "enemy damage by missile player: " << damage->damage << " hp: " << _hp << "\n";
                     _hp -= damage->damage;
                 }
             }};
@@ -60,6 +61,7 @@ void Enemy::build()
                 if (!_entity) {
                     return;
                 }
+                std::cout << "enemy die by touching player\n";
                 _channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
                 _entity->addComponent(new Haze::Destroy());
                 _entity = nullptr;

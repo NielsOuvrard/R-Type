@@ -68,10 +68,11 @@ void Player::build()
                     return;
                 }
                 int damage = 20;
+                std::cout << "enemy die by touching player (player side)\n";
+                std::cout << "hp = " << _hp << " - " << damage << " = " << _hp - damage << std::endl;
                 if (_hp - damage < 0) {
-                    _channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
+                    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Destroy", nullptr, 0));
                     _entity->addComponent(new Haze::Destroy());
-                    _entity = nullptr;
                 } else {
                     _hp -= damage;
                 }
@@ -83,9 +84,15 @@ void Player::build()
                 if (!_entity) {
                     return;
                 }
-                _channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
-                _entity->addComponent(new Haze::Destroy());
-                _entity = nullptr;
+                auto damage = dynamic_cast<Haze::Damage *>(_engine.getEntity(b)->getComponent("Damage"));
+                std::cout << "enemy die by touching player (player side)\n";
+                std::cout << "hp = " << _hp << " - " << damage->damage << " = " << _hp - damage->damage << std::endl;
+                if (_hp - damage->damage < 0) {
+                    _channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
+                    _entity->addComponent(new Haze::Destroy());
+                } else {
+                    _hp -= damage->damage;
+                }
             }};
     _entity->addComponent(new Haze::Collision("player", mapCollision));
 
