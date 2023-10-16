@@ -114,6 +114,8 @@ void Rtype::start()
 
     _enemies.emplace_back(std::make_unique<Enemy>(_engine, _channel));
     _enemies.back()->build();
+    _enemies.emplace_back(std::make_unique<Enemy>(_engine, _channel));
+    _enemies.back()->build();
 
     /**
       * Update Cycle
