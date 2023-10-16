@@ -27,8 +27,8 @@ void Player::build()
                 if (IS_KEY_PRESSED(KEY_F) && _missileCd.IsReady()) {
                     _missileCd.Activate();
                     auto position = dynamic_cast<Haze::Position *>(this->_entity->getComponent("Position"));
-                    _missiles.emplace_back(std::make_unique<Missile>(_engine, _channel, position, true));
-                    _missiles.back()->build();
+                    _missiles.emplace_back(std::make_unique<Missile>(_engine, _channel, true));
+                    _missiles.back()->build(position->x, position->y);
                 }
 
                 auto velocity = dynamic_cast<Haze::Velocity *>(_entity->getComponent("Velocity"));
@@ -39,27 +39,25 @@ void Player::build()
                 velocity->x = 0;
                 velocity->y = 0;
 
-                if (IS_KEY_PRESSED(KEY_Z)) {
+                if (IS_KEY_PRESSED(KEY_Z) || IS_KEY_PRESSED(KEY_UP_ARROW)) {
                     velocity->y += -10;
                     sendUpdate();
                 }
-                if (IS_KEY_PRESSED(KEY_Q)) {
+                if (IS_KEY_PRESSED(KEY_Q) || IS_KEY_PRESSED(KEY_LEFT_ARROW)) {
                     velocity->x += -10;
                     sendUpdate();
                 }
-                if (IS_KEY_PRESSED(KEY_S)) {
+                if (IS_KEY_PRESSED(KEY_S) || IS_KEY_PRESSED(KEY_DOWN_ARROW)) {
                     velocity->y += 10;
                     sendUpdate();
                 }
-                if (IS_KEY_PRESSED(KEY_D)) {
+                if (IS_KEY_PRESSED(KEY_D) || IS_KEY_PRESSED(KEY_RIGHT_ARROW)) {
                     velocity->x += 10;
                     sendUpdate();
                 }
             },
             _id));
     std::map<std::string, Haze::Collision::CollisionInfo> mapCollision;
-
-    // no colision, never called
     mapCollision["enemy"] = {
             Haze::Collision::LAMBDA,
             0.1,
@@ -67,14 +65,11 @@ void Player::build()
                 if (!_entity) {
                     return;
                 }
-                int damage = 20;
-                std::cout << "enemy die by touching player (player side)\n";
-                std::cout << "hp = " << _hp << " - " << damage << " = " << _hp - damage << std::endl;
-                if (_hp - damage < 0) {
-                    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Destroy", nullptr, 0));
+                _hp -= 20;
+                if (_hp <= 0) {
+                    _channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
                     _entity->addComponent(new Haze::Destroy());
-                } else {
-                    _hp -= damage;
+                    _entity = nullptr;
                 }
             }};
     mapCollision["missile-enemy"] = {
@@ -85,17 +80,14 @@ void Player::build()
                     return;
                 }
                 auto damage = dynamic_cast<Haze::Damage *>(_engine.getEntity(b)->getComponent("Damage"));
-                std::cout << "enemy die by touching player (player side)\n";
-                std::cout << "hp = " << _hp << " - " << damage->damage << " = " << _hp - damage->damage << std::endl;
-                if (_hp - damage->damage < 0) {
+                _hp -= damage->damage;
+                if (_hp <= 0) {
                     _channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
                     _entity->addComponent(new Haze::Destroy());
-                } else {
-                    _hp -= damage->damage;
+                    _entity = nullptr;
                 }
             }};
     _entity->addComponent(new Haze::Collision("player", mapCollision));
-
     send();
 }
 
@@ -131,9 +123,16 @@ void Player::sendUpdate()
 
 void Player::update()
 {
-    // clears the destroyed missiles from the vector
     bool invalidMissileExists = false;
     for (auto &missile: _missiles) {
+        if (missile->_entity) {
+            auto pos = dynamic_cast<Haze::Position *>(missile->_entity->getComponent("Position"));
+            if (pos->x >= 800) {
+                _channel.sendGroup(RType::message::deleteEntity(missile->_entity->getId()));
+                missile->_entity->addComponent(new Haze::Destroy());
+                missile->_entity = nullptr;
+            }
+        }
         if (!missile->_entity) {
             missile.reset();
             invalidMissileExists = true;

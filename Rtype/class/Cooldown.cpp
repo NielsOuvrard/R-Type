@@ -20,6 +20,11 @@ void Cooldown::Activate()
     _lastActivation = std::chrono::steady_clock::now();
 }
 
+void Cooldown::setDuration(std::chrono::milliseconds duration)
+{
+    _duration = duration;
+}
+
 bool Cooldown::IsReady()
 {
     auto now = std::chrono::steady_clock::now();

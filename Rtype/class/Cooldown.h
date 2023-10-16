@@ -10,6 +10,7 @@
 class Cooldown {
 public:
     Cooldown(std::chrono::milliseconds duration);
+    void setDuration(std::chrono::milliseconds duration);
     bool IsReady();
     void Activate();
     void Reset();

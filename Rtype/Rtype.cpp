@@ -17,6 +17,7 @@
 Rtype::Rtype(asio::io_context &context)
     : _channel(context)
 {
+    std::srand(std::time(0));
     _engine.init();
     _engine.setInfoInputs({std::vector<Haze::InputType>(), std::vector<Haze::InputType>(), Haze::MouseType::NOTHING, 0, 0}, 0);
     _engine.setInfoInputs({std::vector<Haze::InputType>(), std::vector<Haze::InputType>(), Haze::MouseType::NOTHING, 0, 0}, 1);
@@ -217,13 +218,13 @@ void Rtype::onReceive(udp::endpoint from, network::datagram<protocol::data> cont
             for (auto &key: info.pressedInputs) {
                 if (key != Haze::NO) {
                     inputs.inputsPressed.push_back(key);
-//                    std::cout << "pressed " << char('a' + key - 1) << std::endl;
+                    //                    std::cout << "pressed " << char('a' + key - 1) << std::endl;
                 }
             }
             for (auto &key: info.releasedInputs) {
                 if (key != Haze::NO) {
                     inputs.inputsReleased.push_back(key);
-//                    std::cout << "released " << char('a' + key - 1) << std::endl;
+                    //                    std::cout << "released " << char('a' + key - 1) << std::endl;
                 }
             }
             inputs.mouseType = info.mouseType;
@@ -262,16 +263,74 @@ void Rtype::sendUpdate()
 
 void Rtype::update()
 {
-    for (auto &Enemy: _enemies)
-        Enemy->update();
-    for (auto &player: _players) {
-        player->update();
-    }
+    /**
+     * Enemy & Missiles' cleanup cycle
+     */
+    bool enemyToCleanup = false;
     for (auto &enemy: _enemies) {
+        // Cleanup unreachable missiles
         enemy->update();
+
+        // Cleanup unreachable enemies
+        if (enemy->_entity) {
+            auto enemyPos = dynamic_cast<Haze::Position *>(enemy->_entity->getComponent("Position"));
+            if (enemyPos->x <= -50) {
+                _channel.sendGroup(RType::message::deleteEntity(enemy->_entity->getId()));
+                enemy->_entity->addComponent(new Haze::Destroy());
+                enemy->_entity = nullptr;
+            }
+        }
+
+        // Cleanup enemy Instance if it contains nothing
+        if (!enemy->_entity && enemy->_missiles.empty()) {
+            enemy.reset();
+            enemyToCleanup = true;
+        }
+    }
+    if (enemyToCleanup)
+        _enemies.erase(std::remove(_enemies.begin(), _enemies.end(), nullptr), _enemies.end());
+
+    // Trigger enemy actions
+    for (auto &enemy: _enemies) {
         if (enemy->_entity) {
             enemy->shoot();
         }
     }
+
+    /**
+     * Enemy & Missiles' cleanup cycle
+     */
+    bool playerToCleanup = false;
+    for (auto &player: _players) {
+        // Cleanup unreachable missiles
+        player->update();
+
+        // Cleanup player Instance if it contains nothing
+        if (!player->_entity && player->_missiles.empty()) {
+            player.reset();
+            playerToCleanup = true;
+        }
+    }
+    if (playerToCleanup)
+        _players.erase(std::remove(_players.begin(), _players.end(), nullptr), _players.end());
+
+    /**
+     * Background's motion cycle
+     */
     _background->update();
+
+    /**
+     * Spawn random enemies
+     */
+    if (_enemySpawnCD.IsReady()) {
+        std::chrono::milliseconds newDuration((std::rand() % 6 + 3) * 1000);
+        _enemySpawnCD.setDuration(newDuration);
+        _enemySpawnCD.Activate();
+
+        int32_t enemyNb = std::rand() % 3 + 1;
+        for (int32_t i = 0; i < enemyNb; i++) {
+            _enemies.emplace_back(std::make_unique<Enemy>(_engine, _channel));
+            _enemies.back()->build();
+        }
+    }
 }

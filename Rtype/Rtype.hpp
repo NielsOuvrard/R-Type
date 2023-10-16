@@ -13,12 +13,11 @@
 */
 
 #pragma once
-
 #include "../Client/json.hpp"
+#include "Enemy.h"
 #include "Paralax.h"
 #include "Player.h"
 #include "Wall.hpp"
-#include "Enemy.h"
 #include "data.h"
 #include "net_data_channel.h"
 #include "net_server.h"
@@ -53,6 +52,8 @@ public:
 private:
     Haze::Engine _engine;
     network::data_channel<protocol::data> _channel;
+
+    Cooldown _enemySpawnCD{5s};
 
     std::unique_ptr<Paralax> _background;
     std::vector<std::unique_ptr<Wall>> _walls;
