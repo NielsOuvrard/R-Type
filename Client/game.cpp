@@ -25,6 +25,7 @@ game::game(asio::io_context &context, Haze::Engine &engine)
             std::memcpy(msg.body.data(), &info, sizeof(Haze::info_inputs_weak));
             msg.header.size = sizeof(Haze::info_inputs_weak);
             sendAll(msg);
+            aliveCD.Activate();
         }
     }));
     _inputGrabber->addComponent(new Haze::OnKeyReleased([this](int id, std::vector<Haze::InputType> keys) {

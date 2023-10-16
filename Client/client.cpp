@@ -27,6 +27,11 @@ void client::start()
         if (_game) {
             //            std::cout << "[INBOX] " << _game->getIncoming().count() << std::endl;
             _game->update(50, false);
+            if (_game->aliveCD.IsReady()) {
+                _game->aliveCD.Activate();
+                _game->sendAll(network::datagram<protocol::data>(protocol::data::alive));
+                std::cout << "[GAME] sent Alive" << std::endl;
+            }
         }
 
         // TCP Events

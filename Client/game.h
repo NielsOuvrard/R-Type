@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "Cooldown.h"
 #include "Factory.hpp"
 #include "data.h"
 #include "haze-core.hpp"
@@ -11,6 +12,7 @@
 #include "net_data_channel.h"
 
 using namespace protocol;
+using namespace std::chrono_literals;
 
 class game : public network::data_channel<data> {
 public:
@@ -26,6 +28,8 @@ public:
     //    void infoComponent();
     //    void infoEntity();
     //    void infoEntities();
+
+    Cooldown aliveCD{5s};
 
 private:
     Haze::Engine &_engine;
