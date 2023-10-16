@@ -16,6 +16,8 @@ set(
         class/Cooldown.h
         class/Missile.cpp
         class/Missile.h
+        class/Enemy.cpp
+        class/Enemy.h
         class/Paralax.cpp
         class/Paralax.h
 )

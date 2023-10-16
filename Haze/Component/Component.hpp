@@ -164,4 +164,10 @@ namespace Haze {
         std::string getType() const override { return "Hide"; }
         void show() const override { std::cout << "Hide" << std::endl; }
     };
+
+    struct Destroy : public Component {
+        Destroy() {}
+        std::string getType() const override { return "Destroy"; }
+        void show() const override { std::cout << "Destroy" << std::endl; }
+    };
 }// namespace Haze

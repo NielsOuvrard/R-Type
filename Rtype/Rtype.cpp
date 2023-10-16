@@ -75,11 +75,14 @@ uint32_t Rtype::getPlayerID(const udp::endpoint &endpoint)
 void Rtype::sendEverything(udp::endpoint &to)
 {
     _background->send();
+    for (auto &wall: _walls) {
+        wall->send();
+    }
     for (auto &player: _players) {
         player->send();
     }
-    for (auto &wall: _walls) {
-        wall->send();
+    for (auto &enemy: _enemies) {
+        enemy->send();
     }
 }
 
@@ -105,6 +108,9 @@ void Rtype::start()
         _walls.emplace_back(std::make_unique<Wall>(_engine, _channel, jsonData, 250 * i, 600));
         _walls.back()->build(i);
     }
+
+    _enemies.emplace_back(std::make_unique<Enemy>(_engine, _channel));
+    _enemies.back()->build();
 
     /**
       * Update Cycle

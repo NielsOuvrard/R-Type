@@ -220,6 +220,10 @@ namespace Haze
                     componentList->removeEntity(i);
                 }
             }
+            if (componentList->getComponent("Destroy", i) != nullptr)
+            {
+                componentList->removeEntity(i);
+            }
         }
     }
 }
