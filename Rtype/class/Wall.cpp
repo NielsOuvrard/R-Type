@@ -40,13 +40,13 @@ void Wall::build(uint8_t frameIndex)
     _entity->addComponent(new Haze::Scale(3, scale_y));
     _entity->addComponent(new Haze::Velocity(-1, 0));
 
-    // std::map<std::string, Haze::Collision::CollisionInfo> mapCollision;
-    // mapCollision["player"] = {
-    //         Haze::Collision::LAMBDA,
-    //         0.1,
-    //         [this](int a, int b) {
-    //         }};
-    // _entity->addComponent(new Haze::Collision("wall", mapCollision));
+    std::map<std::string, Haze::Collision::CollisionInfo> mapCollision;
+    mapCollision["player"] = {
+            Haze::Collision::LAMBDA,
+            0.1,
+            [this](int a, int b) {
+            }};
+    _entity->addComponent(new Haze::Collision("wall", mapCollision));
 
     auto frame = _frames[_frameIndex];
     // _entity->addComponent(new Haze::Collision("wall", infos));
