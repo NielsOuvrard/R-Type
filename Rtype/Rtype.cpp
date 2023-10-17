@@ -137,7 +137,7 @@ void Rtype::createMap()
     uint16_t tileIndex = 0;
 
     // Iterate through each tile in the map
-    for (const auto &tile : mapTiles) {
+    for (const auto &tile: mapTiles) {
         // Create and position the top wall
         _walls.emplace_back(std::make_unique<Wall>(_engine, _channel, groundData, (48 * 3) * tileIndex, 0, false));
         _walls.back()->build(tile["tile_top"]);
@@ -273,17 +273,6 @@ void Rtype::sendUpdate()
             player->sendUpdate();
         }
     }
-    for (auto &enemy: _enemies) {
-        if (enemy->_isDead) {
-            // * create explosion
-
-            _explosions.emplace_back(std::make_unique<Explosion>(_engine, _channel, enemy->_pos_x, enemy->_pos_y));
-            _explosions.back()->build();
-            _explosions.back()->send();
-            std::cout << "Explosion created" << std::endl;
-            enemy->_isDead = false;
-        }
-    }
     //_background->sendUpdate();
     for (auto &wall: _walls) {
         wall->sendUpdate();
@@ -299,7 +288,15 @@ void Rtype::update()
     for (auto &enemy: _enemies) {
         // Cleanup unreachable missiles
         enemy->update();
+        if (enemy->_isDead) {
+            // * create explosion
 
+            _explosions.emplace_back(std::make_unique<Explosion>(_engine, _channel, enemy->_pos_x, enemy->_pos_y));
+            _explosions.back()->build();
+            _explosions.back()->send();
+            std::cout << "Explosion created" << std::endl;
+            enemy->_isDead = false;
+        }
         // Cleanup unreachable enemies
         if (enemy->_entity) {
             auto enemyPos = dynamic_cast<Haze::Position *>(enemy->_entity->getComponent("Position"));
