@@ -17,7 +17,8 @@ public:
     void send();
 
     Haze::Entity *_entity = nullptr;
-
+    float _x;
+    float _y;
 private:
     bool _fromPlayer;
     Haze::Engine &_engine;

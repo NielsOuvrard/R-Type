@@ -16,7 +16,8 @@ void Missile::build(float x, float y)
               << _entity->getId()
               << "] Missile Created"
               << std::endl;
-
+    _x = x;
+    _y = y;
     _entity->addComponent(new Haze::Position(x, y));
     if (_fromPlayer) {
         _entity->addComponent(new Haze::Position(x + 20, y));
@@ -67,19 +68,15 @@ void Missile::build(float x, float y)
 
 void Missile::send()
 {
-    Haze::Position *position = _pos;
-    if (_pos == nullptr) {
-        position = new Haze::Position(0, 0);
-    }
     _channel.sendGroup(RType::message::createEntity(_entity->getId()));
     //_channel.sendGroup(RType::message::addComponent(_entity->getId(), "Damage", new Haze::DamageData{20}, sizeof(Haze::PositionData)));
     if (_fromPlayer) {
-        _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Position", new Haze::PositionData{position->x + 28, position->y}, sizeof(Haze::PositionData)));
+        _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Position", new Haze::PositionData{_x + 28, _y}, sizeof(Haze::PositionData)));
         _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Scale", new Haze::ScaleData{3, 3}, sizeof(Haze::ScaleData)));
         _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Velocity", new Haze::VelocityData{2, 0}, sizeof(Haze::VelocityData)));
         _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Sprite", new Haze::SpriteData{"assets/sprites/shot.png"}, sizeof(Haze::SpriteData)));
     } else {
-        _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Position", new Haze::PositionData{position->x, position->y + 15}, sizeof(Haze::PositionData)));
+        _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Position", new Haze::PositionData{_x, _y + 15}, sizeof(Haze::PositionData)));
         _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Scale", new Haze::ScaleData{-3, 3}, sizeof(Haze::ScaleData)));
         _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Velocity", new Haze::VelocityData{-2, 0}, sizeof(Haze::VelocityData)));
         _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Sprite", new Haze::SpriteData{"assets/sprites/shot-enemy.png"}, sizeof(Haze::SpriteData)));
