@@ -67,7 +67,10 @@ void Missile::build(float x, float y)
 
 void Missile::send()
 {
-    auto position = dynamic_cast<Haze::Position *>(_entity->getComponent("Position"));
+    Haze::Position *position = _pos;
+    if (_pos == nullptr) {
+        position = new Haze::Position(0, 0);
+    }
     _channel.sendGroup(RType::message::createEntity(_entity->getId()));
     //_channel.sendGroup(RType::message::addComponent(_entity->getId(), "Damage", new Haze::DamageData{20}, sizeof(Haze::PositionData)));
     if (_fromPlayer) {

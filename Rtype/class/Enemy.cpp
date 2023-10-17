@@ -45,11 +45,22 @@ void Enemy::build()
                 //                    return;
                 //                }
                 auto damage = dynamic_cast<Haze::Damage *>(_engine.getEntity(b)->getComponent("Damage"));
+                if (damage == nullptr) {
+                    return;
+                }
                 _hp -= damage->damage;
                 if (_hp <= 0) {
+                    auto position = dynamic_cast<Haze::Position *>(_entity->getComponent("Position"));
+                    _pos_x = position->x;
+                    _pos_y = position->y;
+                    std::cout << "enemy die by missile player\n";
                     _channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
                     _entity->addComponent(new Haze::Destroy());
                     _entity = nullptr;
+                    this->_isDead = true;
+                } else {
+                    std::cout << "enemy damage by missile player: " << damage->damage << " hp: " << _hp << "\n";
+                    _hp -= damage->damage;
                 }
             }};
 

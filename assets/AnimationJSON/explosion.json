@@ -1,6 +1,6 @@
 {
     "tics": 0.2,
-    "type": "once",
+    "type": "loop_once",
     "animation": [
         {
             "x": 77,

@@ -45,7 +45,8 @@ namespace Haze {
         enum AnimationType {
             LOOP,
             BOOMERANG,
-            ONCE
+            ONCE,
+            LOOP_ONCE,
         };
 
         Animation(std::string path_json)
@@ -69,6 +70,8 @@ namespace Haze {
                 type = AnimationType::BOOMERANG;
             else if (jsonData["type"] == "once")
                 type = AnimationType::ONCE;
+            else if (jsonData["type"] == "loop_once")
+                type = AnimationType::LOOP_ONCE;
             else
                 type = AnimationType::LOOP;
             nlohmann::json animation = jsonData["animation"];

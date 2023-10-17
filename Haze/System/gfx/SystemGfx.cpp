@@ -132,6 +132,14 @@ namespace Haze {
                         if (animation->currentFrame == animation->frames.size()) {
                             animation->currentFrame = 0;
                         }
+                    } else if (animation->type == Animation::LOOP_ONCE) {
+                        if (animation->currentFrame == animation->frames.size())
+                            continue;
+                        if (animation->direction == true) {
+                            animation->currentFrame++;
+                        } else {
+                            animation->currentFrame--;
+                        }
                     }
                 }
                 sprite->sprite.setTextureRect(sf::IntRect(animation->frames[animation->currentFrame].x,

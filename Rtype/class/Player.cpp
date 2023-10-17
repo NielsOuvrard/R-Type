@@ -19,7 +19,7 @@ void Player::build()
               << "] Player Created"
               << std::endl;
     _entity->addComponent(new Haze::Velocity(0, 0));
-    _entity->addComponent(new Haze::Position(100, 200));
+    _entity->addComponent(new Haze::Position(100, 300));
     _entity->addComponent(new Haze::Scale(3, 3));
     _entity->addComponent(new Haze::Hitbox({{0, 0, 32, 14}}));
     _entity->addComponent(new Haze::OnKeyPressed(
@@ -65,11 +65,16 @@ void Player::build()
                 if (!_entity) {
                     return;
                 }
+                int damage = 20;
+                std::cout << "enemy die by touching player (player side)\n";
+                std::cout << "hp = " << _hp << " - " << damage << " = " << _hp - damage << std::endl;
                 _hp -= 20;
                 if (_hp <= 0) {
                     _channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
                     _entity->addComponent(new Haze::Destroy());
                     _entity = nullptr;
+                } else {
+                    _hp -= damage;
                 }
             }};
     mapCollision["missile-enemy"] = {
@@ -85,6 +90,8 @@ void Player::build()
                     _channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
                     _entity->addComponent(new Haze::Destroy());
                     _entity = nullptr;
+                } else {
+                    _hp -= damage->damage;
                 }
             }};
     _entity->addComponent(new Haze::Collision("player", mapCollision));

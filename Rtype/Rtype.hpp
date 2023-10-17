@@ -15,6 +15,7 @@
 #pragma once
 #include "../Client/json.hpp"
 #include "Enemy.h"
+#include "Explosion.h"
 #include "Paralax.h"
 #include "Player.h"
 #include "Wall.hpp"
@@ -45,6 +46,8 @@ public:
     void sendEverything(udp::endpoint &to);
     [[nodiscard]] asio::ip::udp::endpoint getEndpoint() const;
 
+    void updateMap();// TODO : map who generate itself and destroy itself
+    void createMap();
     void checkInactiveClients();
 
     uint32_t getPlayerID(const asio::ip::udp::endpoint &endpoint);
@@ -59,6 +62,7 @@ private:
     std::vector<std::unique_ptr<Wall>> _walls;
     std::vector<Haze::Entity *> _entities;
     std::vector<std::unique_ptr<Player>> _players;
+    std::vector<std::unique_ptr<Explosion>> _explosions;
     std::vector<std::unique_ptr<Enemy>> _enemies;
     bool _running = false;
 };

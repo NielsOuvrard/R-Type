@@ -105,6 +105,55 @@ void Rtype::sendEverything(udp::endpoint &to)
     }
 }
 
+void Rtype::updateMap()
+{
+}
+
+void Rtype::createMap()
+{
+    // Load sprite data for the walls from "ground.json"
+    std::ifstream groundFile("assets/AnimationJSON/ground.json");
+    nlohmann::json groundData;
+
+    if (!groundFile.is_open()) {
+        std::cerr << "Error: Could not open 'ground.json' for reading" << std::endl;
+        return;
+    }
+    groundFile >> groundData;
+    groundFile.close();
+
+    // Load map data from "map.json"
+    std::ifstream mapFile("assets/AnimationJSON/map.json");
+    nlohmann::json mapData;
+    if (!mapFile.is_open()) {
+        std::cerr << "Error: Could not open 'map.json' for reading" << std::endl;
+        return;
+    }
+    mapFile >> mapData;
+    mapFile.close();
+
+    // Retrieve the array of tiles from the map data
+    nlohmann::json mapTiles = mapData["map"];
+    uint16_t tileIndex = 0;
+
+    // Iterate through each tile in the map
+    for (const auto &tile : mapTiles) {
+        // Create and position the top wall
+        _walls.emplace_back(std::make_unique<Wall>(_engine, _channel, groundData, (48 * 3) * tileIndex, 0, false));
+        _walls.back()->build(tile["tile_top"]);
+
+        // Create and position the bottom wall
+        _walls.emplace_back(std::make_unique<Wall>(_engine, _channel, groundData, (48 * 3) * tileIndex, 600, true));
+        _walls.back()->build(tile["tile_bottom"]);
+
+        // Print the tile index
+        std::cout << "Tile " << tileIndex << " created." << std::endl;
+        tileIndex++;
+    }
+
+    std::cout << "Map successfully created." << std::endl;
+}
+
 void Rtype::start()
 {
     _running = true;
@@ -113,36 +162,7 @@ void Rtype::start()
 
     _background->build();
 
-    std::ifstream inputFile("assets/AnimationJSON/ground.json");
-    nlohmann::json jsonData;
-
-    if (!inputFile.is_open()) {
-        std::cerr << "Error: Could not open file for reading" << std::endl;
-        return;
-    }
-    inputFile >> jsonData;
-    inputFile.close();
-
-    std::ifstream mapFile("assets/AnimationJSON/map.json");
-    nlohmann::json jsonMapData;
-    if (!mapFile.is_open()) {
-        std::cerr << "Error: Could not open map for reading" << std::endl;
-        return;
-    }
-    mapFile >> jsonMapData;
-    mapFile.close();
-
-    std::cout << "Open map\n";
-    nlohmann::json map_tiles = jsonMapData["map"];
-    uint16_t i = 0;
-    for (const auto &tile: map_tiles) {
-        _walls.emplace_back(std::make_unique<Wall>(_engine, _channel, jsonData, (48 * 3) * i, 0, false));
-        _walls.back()->build(tile["tile_top"]);
-        _walls.emplace_back(std::make_unique<Wall>(_engine, _channel, jsonData, (48 * 3) * i, 600, true));
-        _walls.back()->build(tile["tile_bottom"]);
-        i++;
-    }
-    std::cout << "Map Opened\n";
+    createMap();
 
     _enemies.emplace_back(std::make_unique<Enemy>(_engine, _channel));
     _enemies.back()->build();
@@ -218,13 +238,11 @@ void Rtype::onReceive(udp::endpoint from, network::datagram<protocol::data> cont
             for (auto &key: info.pressedInputs) {
                 if (key != Haze::NO) {
                     inputs.inputsPressed.push_back(key);
-                    //                    std::cout << "pressed " << char('a' + key - 1) << std::endl;
                 }
             }
             for (auto &key: info.releasedInputs) {
                 if (key != Haze::NO) {
                     inputs.inputsReleased.push_back(key);
-                    //                    std::cout << "released " << char('a' + key - 1) << std::endl;
                 }
             }
             inputs.mouseType = info.mouseType;
@@ -255,7 +273,18 @@ void Rtype::sendUpdate()
             player->sendUpdate();
         }
     }
-    _background->sendUpdate();
+    for (auto &enemy: _enemies) {
+        if (enemy->_isDead) {
+            // * create explosion
+
+            _explosions.emplace_back(std::make_unique<Explosion>(_engine, _channel, enemy->_pos_x, enemy->_pos_y));
+            _explosions.back()->build();
+            _explosions.back()->send();
+            std::cout << "Explosion created" << std::endl;
+            enemy->_isDead = false;
+        }
+    }
+    //_background->sendUpdate();
     for (auto &wall: _walls) {
         wall->sendUpdate();
     }
@@ -296,6 +325,19 @@ void Rtype::update()
             enemy->shoot();
         }
     }
+
+    for (auto &explosion: _explosions) {
+        if (explosion->_time_to_destroyCd.IsReady()) {
+            explosion->destroy();
+            explosion = nullptr;
+            std::cout << "explosion->_time_to_destroyCd.IsReady == true\n";
+        }
+    }
+    // * remove explosions null
+    _explosions.erase(std::remove_if(_explosions.begin(), _explosions.end(), [](const std::unique_ptr<Explosion> &explosion) {
+                          return explosion == nullptr;
+                      }),
+                      _explosions.end());
 
     /**
      * Enemy & Missiles' cleanup cycle
