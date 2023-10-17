@@ -1,6 +1,6 @@
 {
     "tics": 0.2,
-    "type": "boomerang",
+    "type": "loop_once",
     "animation": [
         {
             "x": 77,
