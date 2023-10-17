@@ -94,6 +94,23 @@ void Player::build()
                     _hp -= damage->damage;
                 }
             }};
+    // mapCollision["wall"] = {
+    //         Haze::Collision::LAMBDA,
+    //         0.1,
+    //         [this](int a, int b) {
+    //             if (!_entity) {
+    //                 return;
+    //             }
+    //             auto damage = dynamic_cast<Haze::Damage *>(_engine.getEntity(b)->getComponent("Damage"));
+    //             _hp -= damage->damage;
+    //             if (_hp <= 0) {
+    //                 _channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
+    //                 _entity->addComponent(new Haze::Destroy());
+    //                 _entity = nullptr;
+    //             } else {
+    //                 _hp -= damage->damage;
+    //             }
+    //         }};
     _entity->addComponent(new Haze::Collision("player", mapCollision));
     send();
 }
