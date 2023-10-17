@@ -58,4 +58,14 @@ namespace element {
             _validate.getEntity().removeComponent("Hide");
         }
     }
+
+    const std::string &Login::getIp() const
+    {
+        return _ip.getValue();
+    }
+
+    const std::string &Login::getPort() const
+    {
+        return _port.getValue();
+    }
 }// namespace element

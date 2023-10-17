@@ -42,6 +42,8 @@ void client::start()
                     if (!_game) {
                         asio::ip::udp::endpoint peer;
                         msg >> peer;
+                        peer = udp::endpoint(asio::ip::make_address(_login->getIp()), peer.port());
+                        std::cout << "[PEER]: " << peer << std::endl;
                         _game = std::make_unique<game>(_context, _engine);
                         _game->addPeer(peer);
                         _startButton->getEntity().addComponent(new Haze::Hide);
