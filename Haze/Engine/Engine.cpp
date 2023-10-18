@@ -25,10 +25,10 @@ namespace Haze
     void Engine::init()
     {
         _componentList = new ComponentList();
-        _pipelines.push_back(std::make_unique<CorePipeline>(this));
         #ifdef USE_SFML
         _pipelines.push_back(std::make_unique<GfxPipeline>(this));
         #endif
+        _pipelines.push_back(std::make_unique<CorePipeline>(this));
     }
 
     void Engine::update()

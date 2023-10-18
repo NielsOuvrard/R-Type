@@ -26,6 +26,7 @@ namespace element {
 
     private:
         Haze::Engine &_engine;
+
         struct {
             float x;
             float y;
@@ -36,6 +37,12 @@ namespace element {
         };
 
         TextInput _ip;
+
+    public:
+        const std::string &getIp() const;
+        const std::string &getPort() const;
+
+    private:
         TextInput _port;
         Button _validate;
 

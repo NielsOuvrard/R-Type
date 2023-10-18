@@ -7,8 +7,7 @@
 
 #include "ComponentList.hpp"
 
-namespace Haze
-{
+namespace Haze {
     ComponentList::ComponentList()
     {
     }
@@ -19,6 +18,9 @@ namespace Haze
 
     void ComponentList::addComponent(Component *component, size_t id)
     {
+//        if (_componentName.empty()) {
+//            return;
+//        }
         if (find(_componentName.begin(), _componentName.end(), component->getType()) == _componentName.end()) {
             addList(component->getType());
         }
@@ -28,10 +30,8 @@ namespace Haze
     void ComponentList::removeComponent(std::string type, size_t id)
     {
         _componentList[type][id] = nullptr;
-        for (size_t i = 0; i < _componentName.size(); i++)
-        {
-            if (_componentName[i] == type)
-            {
+        for (size_t i = 0; i < _componentName.size(); i++) {
+            if (_componentName[i] == type) {
                 _componentName.erase(_componentName.begin() + i);
                 break;
             }
@@ -44,7 +44,7 @@ namespace Haze
             addList(type);
             return nullptr;
         }
-        return std::move(_componentList[type][id].get());
+        return _componentList[type][id].get();
     }
 
     void ComponentList::addList(std::string type)
@@ -55,8 +55,7 @@ namespace Haze
 
     void ComponentList::addEntity()
     {
-        for (auto &it : _componentList)
-        {
+        for (auto &it: _componentList) {
             it.second.push_back(nullptr);
         }
         _size++;
@@ -64,23 +63,19 @@ namespace Haze
 
     void ComponentList::removeEntity(size_t id)
     {
-        for (auto &it : _componentList)
-        {
+        for (auto &it: _componentList) {
             it.second[id] = nullptr;
         }
     }
 
     void ComponentList::showComponents()
     {
-        for (auto &it : _componentList)
-        {
+        for (auto &it: _componentList) {
             std::cout << it.first << "   \t";
-            for (auto &it2 : it.second)
-            {
+            for (auto &it2: it.second) {
                 if (it2 != nullptr)
                     std::cout << "\tvalue";
-                else
-                {
+                else {
                     std::cout << "\tnull";
                 }
             }
@@ -88,4 +83,4 @@ namespace Haze
         }
         std::cout << std::endl;
     }
-}
+}// namespace Haze

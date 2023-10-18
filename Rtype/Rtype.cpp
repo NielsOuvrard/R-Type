@@ -9,317 +9,367 @@
 **                                    .o..P'       888
 **                                    `Y8P'       o888o
 **
-** Rtype
+** R-Type
 */
 
 #include "Rtype.hpp"
-#include "data.h"
-#include "data.h"
-#include "net_data_channel.h"
-#include "net_server.h"
 
-Rtype::Rtype(asio::io_context &context) : network::data_channel<protocol::data>(context)
+Rtype::Rtype(asio::io_context &context)
+    : _channel(context)
 {
-    engine.init();
-    engine.setInfoInputs({std::vector<Haze::InputType>(), std::vector<Haze::InputType>(), Haze::MouseType::NOTHING, 0, 0}, 0);
-    engine.setInfoInputs({std::vector<Haze::InputType>(), std::vector<Haze::InputType>(), Haze::MouseType::NOTHING, 0, 0}, 1);
-    engine.setInfoInputs({std::vector<Haze::InputType>(), std::vector<Haze::InputType>(), Haze::MouseType::NOTHING, 0, 0}, 2);
-    engine.setInfoInputs({std::vector<Haze::InputType>(), std::vector<Haze::InputType>(), Haze::MouseType::NOTHING, 0, 0}, 3);
-    engine.setInfoInputs({std::vector<Haze::InputType>(), std::vector<Haze::InputType>(), Haze::MouseType::NOTHING, 0, 0}, 4);
+    std::srand(std::time(0));
+    _engine.init();
+    _engine.setInfoInputs({std::vector<Haze::InputType>(), std::vector<Haze::InputType>(), Haze::MouseType::NOTHING, 0, 0}, 0);
+    _engine.setInfoInputs({std::vector<Haze::InputType>(), std::vector<Haze::InputType>(), Haze::MouseType::NOTHING, 0, 0}, 1);
+    _engine.setInfoInputs({std::vector<Haze::InputType>(), std::vector<Haze::InputType>(), Haze::MouseType::NOTHING, 0, 0}, 2);
+    _engine.setInfoInputs({std::vector<Haze::InputType>(), std::vector<Haze::InputType>(), Haze::MouseType::NOTHING, 0, 0}, 3);
+    _engine.setInfoInputs({std::vector<Haze::InputType>(), std::vector<Haze::InputType>(), Haze::MouseType::NOTHING, 0, 0}, 4);
 
-    asio::ip::udp::endpoint defaultEndpoint;
-
-    playersId.insert({defaultEndpoint, {1, false}});
-    playersId.insert({defaultEndpoint, {2, false}});
-    playersId.insert({defaultEndpoint, {3, false}});
-    playersId.insert({defaultEndpoint, {4, false}});
-
-    std::ifstream inputFile("Rtype/SpritesMooves/ground.json");
-    if (inputFile.is_open()) {
-        inputFile >> jsonData;
-        inputFile.close();
-        sheet = jsonData["sheet1"];
-    } else {
-        std::cout << "Impossible d'ouvrir le fichier !" << std::endl;
-        exit(84);
-    }
-
-    Haze::Velocity *velocityPlayer = new Haze::Velocity(0, 0);
-    // Haze::Sprite *vortexSprite = new Haze::Sprite("assets/r-typesheet30a.gif");  // ? useless
-    // Haze::Sprite *shotSprite = new Haze::Sprite("assets/shot.png");              // ? useless
-    // Haze::Sprite *spaceshipSprite = new Haze::Sprite("assets/r-typesheet1.gif"); // ? useless
-    // Haze::Sprite *ennemySprite = new Haze::Sprite("assets/r-typesheet5.gif");    // ? useless
-    // Haze::Window *window = new Haze::Window(800, 600);
-
-    Haze::Collision::CollisionInfo colisionInfo;
-    colisionInfo.type = Haze::Collision::LAMBDA;
-    colisionInfo.tics = 1;
-    colisionInfo.onCollision = [](int x, int y) {
-        std::cout << "collision!" << std::endl;
-    };
-    std::map<std::string, Haze::Collision::CollisionInfo> infos = {
-            {"wall", colisionInfo},
-    };
-    // infos["ennemy"] = Haze::Collision::CollisionInfo(0, 0, 33, 36);
-
-    for (int i = 0; i < 7; i++)// from VORTEX to BACKGROUND
-    {
-        entities.push_back(engine.createEntity());
-    }
-
-    entities[VORTEX]->addComponent(new Haze::Position(120, 200));
-    entities[VORTEX]->addComponent(new Haze::Velocity(2, 0));
-    entities[VORTEX]->addComponent(new Haze::Scale(3, 3));
-    // entities[VORTEX]->addComponent(vortexSprite);
-    // entities[VORTEX]->addComponent(new Haze::Animation({{0, 0, 34, 34},
-    //                                                     {34, 0, 34, 34},
-    //                                                     {68, 0, 34, 34}},
-    //                                                    Haze::Animation::AnimationType::LOOP, true, 0.2));
-
-    entities[SHOT]->addComponent(new Haze::Position(100, 200));
-    entities[SHOT]->addComponent(new Haze::Velocity(2, 0));
-    entities[SHOT]->addComponent(new Haze::Scale(3, 3));
-    // x = 3 * 16
-    // y = 1 * 14
-    // entities[SHOT]->addComponent(new Haze::Animation({{0, 0, 16, 14},
-    //                                                   {16, 0, 16, 14},
-    //                                                   {32, 0, 16, 14}},
-    //                                                  Haze::Animation::AnimationType::LOOP, true, 0.2));
-    // entities[SHOT]->addComponent(shotSprite);
-
-    entities[SPACESHIP]->addComponent(velocityPlayer);
-    entities[SPACESHIP]->addComponent(new Haze::Position(100, 200));
-    entities[SPACESHIP]->addComponent(new Haze::Scale(3, 3));
-    // entities[SPACESHIP]->addComponent(spaceshipSprite);
-    // entities[SPACESHIP]->addComponent(new Haze::Animation({{100, 0, 33, 18},
-    //                                                        {133, 0, 33, 18},
-    //                                                        {166, 0, 33, 18},
-    //                                                        {199, 0, 33, 18},
-    //                                                        {232, 0, 33, 18}},
-    //                                                       Haze::Animation::AnimationType::BOOMERANG, true, 0.2));
-    entities[SPACESHIP]->addComponent(new Haze::Hitbox({{0, 0, 32, 14}}));
-    entities[SPACESHIP]->addComponent(new Haze::HitboxDisplay());
-    entities[SPACESHIP]->addComponent(new Haze::Collision("player", infos));
-    entities[SPACESHIP]->addComponent(new Haze::OnKeyPressed(
-        [this](int i, std::vector<Haze::InputType> components)
-        {
-            if (std::find(components.begin(), components.end(), Haze::InputType::KEY_ENTER_INPUT) != components.end())
-            {
-                Haze::Entity *newShot = engine.createEntity();
-                auto position = static_cast<Haze::Position *>(entities[SPACESHIP]->getComponent("Position"));
-                newShot->addComponent(new Haze::Position(position->x + 33 * 3, position->y));
-                newShot->addComponent(new Haze::Velocity(2, 0));
-                newShot->addComponent(static_cast<Haze::Sprite *>(entities[SHOT]->getComponent("Sprite")));
-                // newShot->addComponent(new Haze::Animation({{0, 0, 16, 14},
-                //                                            {16, 0, 16, 14},
-                //                                            {32, 0, 16, 14}},
-                //                                           Haze::Animation::AnimationType::LOOP, true, 0.2));
-            }
-
-            auto velocity = static_cast<Haze::Velocity *>(entities[SPACESHIP]->getComponent("Velocity"));
-            if (velocity == nullptr)
-                entities[SPACESHIP]->addComponent(new Haze::Velocity(0, 0));
-            velocity->x = 0;
-            velocity->y = 0;
-
-            if (std::find(components.begin(), components.end(), Haze::InputType::KEY_UP_ARROW) != components.end())
-            {
-                velocity->y += -5;
-            }
-            if (std::find(components.begin(), components.end(), Haze::InputType::KEY_LEFT_ARROW) != components.end())
-            {
-                velocity->x += -5;
-            }
-            if (std::find(components.begin(), components.end(), Haze::InputType::KEY_DOWN_ARROW) != components.end())
-            {
-                velocity->y += 5;
-            }
-            if (std::find(components.begin(), components.end(), Haze::InputType::KEY_RIGHT_ARROW) != components.end())
-            {
-                velocity->x += 5;
-            }
-        }));
-
-    walls.push_back(new wall(&engine, jsonData, 0, 600));
-    walls.push_back(new wall(&engine, jsonData, 192, 600));
-    walls.push_back(new wall(&engine, jsonData, 384, 600));
-    walls.push_back(new wall(&engine, jsonData, 576, 600));
-    walls.push_back(new wall(&engine, jsonData, 768, 600));
-    walls.push_back(new wall(&engine, jsonData, 950, 600));
-
-    entities[ENNEMY]->addComponent(new Haze::Position(500, 200));
-    entities[ENNEMY]->addComponent(new Haze::Velocity(0, 0));
-    entities[ENNEMY]->addComponent(new Haze::Scale(3, 3));
-    // entities[ENNEMY]->addComponent(new Haze::Animation({{0, 0, 33, 36},
-    //                                                     {33, 0, 33, 36},
-    //                                                     {66, 0, 33, 36},
-    //                                                     {99, 0, 33, 36},
-    //                                                     {132, 0, 33, 36},
-    //                                                     {165, 0, 33, 36},
-    //                                                     {198, 0, 33, 36},
-    //                                                     {231, 0, 33, 36}},
-    //                                                    Haze::Animation::AnimationType::BOOMERANG, true, 0.2));
-    // entities[ENNEMY]->addComponent(ennemySprite);
-
-    // entities[WINDOW]->addComponent(window);
-
-#ifdef USE_SFML
-    // window->window.setFramerateLimit(60);
-#endif
+    _background = std::make_unique<Paralax>(_engine, _channel);
 }
 
-Rtype::~Rtype()
+Rtype::~Rtype() = default;
+
+void printInfoInputs(const Haze::info_inputs_weak &info)
 {
+    for (const auto &input: info.pressedInputs) {
+        std::cout << static_cast<int>(input) << " ";
+    }
+    std::cout << std::endl;
+
+    std::cout << "Released Inputs: ";
+    for (const auto &input: info.releasedInputs) {
+        std::cout << static_cast<int>(input) << " ";
+    }
+    std::cout << std::endl;
+
+    std::cout << "Mouse Type: " << static_cast<int>(info.mouseType) << std::endl;
+    std::cout << "Mouse Coordinates: (" << info.x << ", " << info.y << ")" << std::endl;
 }
 
-void Rtype::keyPress()
+void Rtype::checkInactiveClients()
 {
-    if (event.type == sf::Event::KeyPressed) {
-        if (event.key.code == sf::Keyboard::Up) {
-            isMoving = 'U';
-        }
-        if (event.key.code == sf::Keyboard::Left) {
-            isMoving = 'L';
-        }
-        if (event.key.code == sf::Keyboard::Down) {
-            isMoving = 'D';
-        }
-        if (event.key.code == sf::Keyboard::Right) {
-            isMoving = 'R';
+    for (auto &player: _players) {
+        if (player->_remote && player->_remote->activityCd.IsReady()) {
+            player->_remote = nullptr;
         }
     }
 }
 
-void Rtype::keyRelease()
+void Rtype::stop()
 {
-    if (event.type == sf::Event::KeyReleased) {
-        if (event.key.code == sf::Keyboard::Up)
-            isMoving = '\0';
-        if (event.key.code == sf::Keyboard::Left)
-            isMoving = '\0';
-        if (event.key.code == sf::Keyboard::Down)
-            isMoving = '\0';
-        if (event.key.code == sf::Keyboard::Right)
-            isMoving = '\0';
-    }
+    _running = false;
 }
 
-void Rtype::moveBackground()
+uint32_t Rtype::getPlayerID(const udp::endpoint &endpoint)
 {
-    for (int i = 0; i < 6; ++i) {
-        Haze::Position *position = static_cast<Haze::Position *>(walls[i]->_entityWallBottom->getComponent("Position"));
+    for (auto &player: _players) {
+        if (player->_remote && player->_remote->endpoint == endpoint) {
+            return player->_id;
+        }
+    }
+    return 0;
+}
 
-        if (position->x <= -200) {
-            position->x = 800;
-            walls[i]->changeSpriteBack(walls[i]->_entityWallBottom);
+void Rtype::sendEverything(udp::endpoint &to)
+{
+    _background->send();
+    for (auto &wall: _walls) {
+        wall->send();
+    }
+
+    /**
+     * Checking for missiles entity may be useless as it is
+     * cleaned up in the player and enemy's update method
+     * cf: here
+     */
+    for (auto &player: _players) {
+        if (player->_entity) {
+            player->send();
+        }
+        for (auto &missile: player->_missiles) {
+            if (missile->_entity) {// <-- here
+                missile->send();
+            }
+        }
+    }
+    for (auto &enemy: _enemies) {
+        if (enemy->_entity) {
+            enemy->send();
+        }
+        for (auto &missile: enemy->_missiles) {
+            if (missile->_entity) {// <-- here
+                missile->send();
+            }
         }
     }
 }
 
-void Rtype::run()
+void Rtype::updateMap()
 {
-    while (engine.isOpen()) {
-        Rtype::moveBackground();
-        engine.update();
+}
+
+void Rtype::createMap()
+{
+    // Load sprite data for the walls from "ground.json"
+    std::ifstream groundFile("assets/AnimationJSON/ground.json");
+    nlohmann::json groundData;
+
+    if (!groundFile.is_open()) {
+        std::cerr << "Error: Could not open 'ground.json' for reading" << std::endl;
+        return;
     }
-    std::cout << "engine closed!" << std::endl;
+    groundFile >> groundData;
+    groundFile.close();
+
+    // Load map data from "map.json"
+    std::ifstream mapFile("assets/AnimationJSON/map.json");
+    nlohmann::json mapData;
+    if (!mapFile.is_open()) {
+        std::cerr << "Error: Could not open 'map.json' for reading" << std::endl;
+        return;
+    }
+    mapFile >> mapData;
+    mapFile.close();
+
+    // Retrieve the array of tiles from the map data
+    nlohmann::json mapTiles = mapData["map"];
+    uint16_t tileIndex = 0;
+
+    // Iterate through each tile in the map
+    for (const auto &tile: mapTiles) {
+        // Create and position the top wall
+        _walls.emplace_back(std::make_unique<Wall>(_engine, _channel, groundData, (48 * 3) * tileIndex, 0, false));
+        _walls.back()->build(tile["tile_top"]);
+
+        // Create and position the bottom wall
+        _walls.emplace_back(std::make_unique<Wall>(_engine, _channel, groundData, (48 * 3) * tileIndex, 600, true));
+        _walls.back()->build(tile["tile_bottom"]);
+
+        // Print the tile index
+        std::cout << "Tile " << tileIndex << " created." << std::endl;
+        tileIndex++;
+    }
+
+    std::cout << "Map successfully created." << std::endl;
+}
+
+void Rtype::start()
+{
+    _running = true;
+    std::chrono::steady_clock::time_point previousTime = std::chrono::steady_clock::now();
+    const std::chrono::milliseconds targetFrameTime(1000 / 60);// 60 FPS
+
+    _background->build();
+
+    createMap();
+
+    _enemies.emplace_back(std::make_unique<Enemy>(_engine, _channel));
+    _enemies.back()->build();
+
+    /**
+      * Update Cycle
+      */
+    while (_running) {
+        // Process messages
+        size_t count = 0;
+        while (count < 5 && !_channel.getIncoming().empty()) {
+            auto msg = _channel.getIncoming().pop_front();
+            onReceive(msg.target, msg.data);
+            count++;
+        }
+        checkInactiveClients();
+
+        // Process the input received
+        _engine.update();
+
+        // Update the state of the non player entity
+        update();
+
+        // Send all entities update to clients
+        sendUpdate();
+
+        // Calculate time taken in this loop
+        std::chrono::steady_clock::time_point currentTime = std::chrono::steady_clock::now();
+        std::chrono::milliseconds elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - previousTime);
+
+        // Sleep to achieve the target frame rate
+        if (elapsedTime < targetFrameTime) {
+            std::this_thread::sleep_for(targetFrameTime - elapsedTime);
+        }
+        previousTime = std::chrono::steady_clock::now();
+    }
 }
 
 void Rtype::onReceive(udp::endpoint from, network::datagram<protocol::data> content)
 {
-    switch (content.header.id)
-    {
-
-        // | ID            | Body         | Response ID    |
-        // | ------------- | ------------ | -------------- |
-        // | INPUT         | info_inputs  | NONE           |
-        // | GET_ENTITY    | id_entity    | INFO_ENTITY    |
-        // | GET_ENTITIES  | NONE         | INFO_ENTITIES  |
-        // | GET_COMPONENT | id_component | INFO_COMPONENT |
-        // | ALIVE         | NONE         | NONE           |
-
-        // TODO : join & cie
-
-    case protocol::data::input: // TODO : could be many players, see about that
-    {
-        Haze::info_inputs_weak info;
-        std::memcpy(&info, content.body.data(), content.header.size);
-        Haze::info_inputs inputs;
-        inputs.inputsPressed = std::vector<Haze::InputType>(info.pressedInputs.begin(), info.pressedInputs.end());
-        inputs.inputsReleased = std::vector<Haze::InputType>(info.releasedInputs.begin(), info.releasedInputs.end());
-        inputs.mouseType = info.mouseType;
-        inputs.x = info.x;
-        inputs.y = info.y;
-
-        clientData data = playersId[from];
-
-        engine.setInfoInputs(inputs, data.id); // TODO
-
-        break;
+    // refresh player's activity
+    for (auto &player: _players) {
+        if (player->_remote && player->_remote->endpoint == from)
+            player->_remote->activityCd.Activate();
     }
-    case protocol::data::get_entity:
-    {
-        Haze::id_entity info;
-        std::memcpy(&info, content.body.data(), content.header.size);
-        // entities.push_back(engine.createEntity());
-        // tell to every client to create an entity, with the id of the entity
-        break;
-    }
-    case protocol::data::get_entities:
-    {
-        // tell to every client to delete an entity, with the id of the entity
-        break;
-    }
-    case protocol::data::get_component:
-    {
-        Haze::id_component info;
-        std::memcpy(&info, content.body.data(), content.header.size);
-        // addComponent();
-        break;
-    }
-    case protocol::data::alive:
-    {
-        // TODO
-        break;
-    }
-    default:
-        break;
+
+    // process datagram
+    switch (content.header.id) {
+        case protocol::data::join: {
+            for (auto &player: _players) {
+                if (!player->_remote) {
+                    player->_remote = std::make_unique<Player::Remote>(from);
+                    _channel.getGroup().insert(from);
+                    sendEverything(from);
+                }
+            }
+            if (_players.size() < 4) {
+                _channel.getGroup().insert(from);
+                sendEverything(from);
+                _players.emplace_back(std::make_unique<Player>(_engine, _channel, _players.size() + 1));
+                _players.back()->_remote = std::make_unique<Player::Remote>(from);
+                _players.back()->build();
+            }
+            return;
+        }
+
+        case protocol::data::input: {
+            Haze::info_inputs_weak info{};
+            std::memcpy(&info, content.body.data(), content.header.size);
+            //            printInfoInputs(info);
+
+            Haze::info_inputs inputs;
+            for (auto &key: info.pressedInputs) {
+                if (key != Haze::NO) {
+                    inputs.inputsPressed.push_back(key);
+                }
+            }
+            for (auto &key: info.releasedInputs) {
+                if (key != Haze::NO) {
+                    inputs.inputsReleased.push_back(key);
+                }
+            }
+            inputs.mouseType = info.mouseType;
+            inputs.x = info.x;
+            inputs.y = info.y;
+
+            uint32_t id = getPlayerID(from);
+            if (!id) return;
+            _engine.setInfoInputs(inputs, id);
+            break;
+        }
+        default: {
+            break;
+        }
     }
 }
 
-uint32_t Rtype::getClientId(asio::ip::udp::endpoint endpoint)
+asio::ip::udp::endpoint Rtype::getEndpoint() const
 {
-    auto it = playersId.find(endpoint);
-    if (it != playersId.end() && it->second.isAlive)
-    {
-        return it->second.id;
-    }
-    return -1;
+    return _channel.getEndpoint();
 }
 
-/*
+void Rtype::sendUpdate()
+{
+    _background->sendUpdate();
+    for (auto &player: _players) {
+        if (player->_entity) {
+            player->sendUpdate();
+        }
+    }
+    //_background->sendUpdate();
+    for (auto &wall: _walls) {
+        wall->sendUpdate();
+    }
+}
 
-write this when sending to a client
+void Rtype::update()
+{
+    /**
+     * Enemy & Missiles' cleanup cycle
+     */
+    bool enemyToCleanup = false;
+    for (auto &enemy: _enemies) {
+        // Cleanup unreachable missiles
+        enemy->update();
+        if (enemy->_isDead) {
+            // * create explosion
 
-case protocol::data::create_entity:
+            _explosions.emplace_back(std::make_unique<Explosion>(_engine, _channel, enemy->_pos_x, enemy->_pos_y));
+            _explosions.back()->build();
+            _explosions.back()->send();
+            std::cout << "Explosion created" << std::endl;
+            enemy->_isDead = false;
+        }
+        // Cleanup unreachable enemies
+        if (enemy->_entity) {
+            auto enemyPos = dynamic_cast<Haze::Position *>(enemy->_entity->getComponent("Position"));
+            if (enemyPos->x <= -50) {
+                _channel.sendGroup(RType::message::deleteEntity(enemy->_entity->getId()));
+                enemy->_entity->addComponent(new Haze::Destroy());
+                enemy->_entity = nullptr;
+            }
+        }
 
-    Haze::info_entity info;
-    // cast content.body to info_entity
-    std::memcpy(&info, content.body.data(), content.header.size);
+        // Cleanup enemy Instance if it contains nothing
+        if (!enemy->_entity && enemy->_missiles.empty()) {
+            enemy.reset();
+            enemyToCleanup = true;
+        }
+    }
+    if (enemyToCleanup)
+        _enemies.erase(std::remove(_enemies.begin(), _enemies.end(), nullptr), _enemies.end());
 
-    entities.push_back(engine.createEntity());
+    // Trigger enemy actions
+    for (auto &enemy: _enemies) {
+        if (enemy->_entity) {
+            enemy->shoot();
+        }
+    }
 
+    for (auto &explosion: _explosions) {
+        if (explosion->_time_to_destroyCd.IsReady()) {
+            explosion->destroy();
+            explosion = nullptr;
+            std::cout << "explosion->_time_to_destroyCd.IsReady == true\n";
+        }
+    }
+    // * remove explosions null
+    _explosions.erase(std::remove_if(_explosions.begin(), _explosions.end(), [](const std::unique_ptr<Explosion> &explosion) {
+                          return explosion == nullptr;
+                      }),
+                      _explosions.end());
 
-    // tell to every client to create an entity, with the id of the entity
-    break;
-case protocol::data::delete_entity:
-    // tell to every client to delete an entity, with the id of the entity
-    break;
-case protocol::data::add_component:
-    // Haze::info_component info;
-    // std::memcpy(&info, content.body.data(), content.header.size);
-    // addComponent();
-    break;
-case protocol::data::remove_component:
-    break;
-*/
+    /**
+     * Enemy & Missiles' cleanup cycle
+     */
+    bool playerToCleanup = false;
+    for (auto &player: _players) {
+        // Cleanup unreachable missiles
+        player->update();
+
+        // Cleanup player Instance if it contains nothing
+        if (!player->_entity && player->_missiles.empty()) {
+            player.reset();
+            playerToCleanup = true;
+        }
+    }
+    if (playerToCleanup)
+        _players.erase(std::remove(_players.begin(), _players.end(), nullptr), _players.end());
+
+    /**
+     * Background's motion cycle
+     */
+    _background->update();
+
+    /**
+     * Spawn random enemies
+     */
+    if (_enemySpawnCD.IsReady()) {
+        std::chrono::milliseconds newDuration((std::rand() % 6 + 3) * 1000);
+        _enemySpawnCD.setDuration(newDuration);
+        _enemySpawnCD.Activate();
+
+        int32_t enemyNb = std::rand() % 3 + 1;
+        for (int32_t i = 0; i < enemyNb; i++) {
+            _enemies.emplace_back(std::make_unique<Enemy>(_engine, _channel));
+            _enemies.back()->build();
+        }
+    }
+}

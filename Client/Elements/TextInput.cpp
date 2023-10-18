@@ -9,7 +9,8 @@ namespace element {
     TextInput::TextInput(Haze::Engine &engine, std::string placeHolder)
         : _engine(engine),
           _entity(_engine.createEntity()),
-          _placeHolder(std::move(placeHolder)) {
+          _placeHolder(std::move(placeHolder))
+    {
         _entity->addComponent(new Haze::Text(_placeHolder, Haze::Text::WHITE, "NotoMono.ttf"));
         _entity->addComponent(new Haze::Scale(1, 1));
         _entity->addComponent(new Haze::HitboxDisplay);
@@ -21,7 +22,6 @@ namespace element {
         _entity->addComponent(new Haze::OnKeyReleased([this](int id, std::vector<Haze::InputType> stroke) {
             if (!_isFocused || stroke.empty()) return;
             for (auto key: stroke) {
-                std::cout << "KEY=" << key << std::endl;
                 if (key <= Haze::KEY_Z) {
                     _value += static_cast<char>(key + 'a');
                 } else if (key <= Haze::NUMKEY_9) {
@@ -46,14 +46,30 @@ namespace element {
                 textComponent->text = _value;
         }));
     }
-    Haze::Entity &TextInput::getEntity() const {
+
+    Haze::Entity &TextInput::getEntity() const
+    {
         return *_entity;
     }
-    const std::string &TextInput::getValue() const {
+
+    const std::string &TextInput::getValue() const
+    {
         return _value;
     }
-    void TextInput::setFocus(bool isFocused) {
+
+    void TextInput::setFocus(bool isFocused)
+    {
         _isFocused = isFocused;
+    }
+
+    void TextInput::setValue(const std::string &val)
+    {
+        _value = val;
+        Haze::Text *textComponent = dynamic_cast<Haze::Text *>(_entity->getComponent("Text"));
+        if (_value.empty())
+            textComponent->text = _placeHolder;
+        else
+            textComponent->text = _value;
     }
 
 }// namespace element

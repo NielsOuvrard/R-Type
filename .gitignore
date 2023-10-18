@@ -1,5 +1,4 @@
 .idea
-.clang-format
 .vscode/
 build/
 cmake-build-debug

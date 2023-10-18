@@ -12,14 +12,20 @@ namespace element {
           _port(_engine, "port"),
           _validate(_engine, "connect"),
           _position({x, y}),
-          _onValidateFnc(std::move(callback)) {
+          _onValidateFnc(std::move(callback))
+    {
         setPosition(_position.x, _position.y);
-
+        // _ip.setValue("88.120.142.2");
+        // _port.setValue("3001");
+        _ip.setValue("127.0.0.1");
+        _port.setValue("3030");
         _validate.onClick([this](int id) {
             _onValidateFnc(_ip.getValue(), std::stoi(_port.getValue()));
         });
     }
-    void Login::setPosition(float x, float y) {
+
+    void Login::setPosition(float x, float y)
+    {
         auto ip_pos = dynamic_cast<Haze::Position *>(_ip.getEntity().getComponent("Position"));
         auto port_pos = dynamic_cast<Haze::Position *>(_port.getEntity().getComponent("Position"));
         auto button_pos = dynamic_cast<Haze::Position *>(_validate.getEntity().getComponent("Position"));
@@ -33,10 +39,14 @@ namespace element {
         button_pos->x = x;
         button_pos->y = y + 200;
     }
-    void Login::onValidate(std::function<void(const std::string &, uint16_t)> callback) {
+
+    void Login::onValidate(std::function<void(const std::string &, uint16_t)> callback)
+    {
         _onValidateFnc = std::move(callback);
     }
-    void Login::setHide(bool state) {
+
+    void Login::setHide(bool state)
+    {
         _hidden = state;
         if (state) {
             _ip.getEntity().addComponent(new Haze::Hide);
@@ -47,5 +57,15 @@ namespace element {
             _port.getEntity().removeComponent("Hide");
             _validate.getEntity().removeComponent("Hide");
         }
+    }
+
+    const std::string &Login::getIp() const
+    {
+        return _ip.getValue();
+    }
+
+    const std::string &Login::getPort() const
+    {
+        return _port.getValue();
     }
 }// namespace element

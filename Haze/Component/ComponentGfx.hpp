@@ -8,49 +8,106 @@
 #pragma once
 #include "Component.hpp"
 #include "inputs.hpp"
+#include "json.hpp"
 #include <SFML/Graphics.hpp>
+#include <fstream>
 #include <iostream>
 #include <thread>
 
 namespace Haze {
     struct Sprite : public Component {
-        Sprite(std::string path) : path(path) {
-            texture.loadFromFile(path);
+        Sprite(std::string path) : path(path)
+        {
+            if (!texture.loadFromFile(path)) {
+                std::cout << "Error loading texture" << std::endl;
+                return;
+            }
             sprite.setTexture(texture);
         }
+
         std::string path;
         sf::Sprite sprite;
         sf::Texture texture;
-        std::string getType() const override {return "Sprite";}
+
+        std::string getType() const override { return "Sprite"; }
+
         void show() const override { std::cout << "flm" << path << std::endl; }
     };
 
     struct Animation : public Component {
-        enum AnimationType {
-            LOOP,
-            BOOMERANG,
-            ONCE
-        };
         struct intRect {
             int x;
             int y;
             int width;
             int height;
         };
-        Animation(std::vector<intRect> frames, AnimationType type, bool direction, double tics) : frames(frames), type(type), tics(tics), direction(direction) {
+
+        enum AnimationType {
+            LOOP,
+            BOOMERANG,
+            ONCE,
+            LOOP_ONCE,
+        };
+
+        Animation(std::string path_json)
+        {
+            std::ifstream inputFile(path_json);
+            if (!inputFile.is_open()) {
+                std::cout << "Impossible d'ouvrir le fichier !" << std::endl;
+                return;
+            }
+
+            // * put the json file in a string
+            nlohmann::json jsonData;
+            inputFile >> jsonData;
+            inputFile.close();
+
+            // * parse the json string into variables
+            tics = jsonData["tics"];
+            if (jsonData["type"] == "loop")
+                type = AnimationType::LOOP;
+            else if (jsonData["type"] == "boomerang")
+                type = AnimationType::BOOMERANG;
+            else if (jsonData["type"] == "once")
+                type = AnimationType::ONCE;
+            else if (jsonData["type"] == "loop_once")
+                type = AnimationType::LOOP_ONCE;
+            else
+                type = AnimationType::LOOP;
+            nlohmann::json animation = jsonData["animation"];
+
+            for (const auto &frame: animation) {
+                frames.push_back(intRect({frame["x"], frame["y"], frame["width"], frame["height"]}));
+            }
         }
+
         std::vector<intRect> frames;
         AnimationType type = AnimationType::LOOP;
         double tics;
         size_t currentFrame = 0;
         bool direction = true;
         std::chrono::time_point<std::chrono::high_resolution_clock> lastAnimation = std::chrono::high_resolution_clock::now();
+
         std::string getType() const override { return "Animation"; }
+
         void show() const override { std::cout << "Animation: " << std::endl; }
     };
 
+    struct SpriteCropped : public Component {
+        SpriteCropped(uint8_t id) : frameId(id)
+        {
+        }
+
+        uint8_t frameId;
+
+        std::string getType() const override { return "SpriteCropped"; }
+
+        void show() const override { std::cout << "SpriteCropped: " << std::endl; }
+    };
+
     struct Window : public Component {
-        Window(int width, int height) : width(width), height(height) {
+        Window(int width, int height) : width(width), height(height), active(false)
+        {
             window.create(sf::VideoMode(width, height), "R-Type");
             window.setFramerateLimit(60);
             window.setKeyRepeatEnabled(true);
@@ -58,25 +115,32 @@ namespace Haze {
             view.setViewport(sf::FloatRect(0, 0, 1.0f, 1.0f));
             window.setView(view);
         }
+
         int width;
         int height;
+        bool active;
         sf::RenderWindow window;
         sf::View view;
         sf::Event event;
-        std::string getType() const override {return "Window";}
+
+        std::string getType() const override { return "Window"; }
+
         void show() const override { std::cout << "Window: " << width << ", " << height << std::endl; }
     };
 
     struct HitboxDisplay : public Component {
-        HitboxDisplay() {
+        HitboxDisplay()
+        {
             rect.setFillColor(sf::Color::Transparent);
             rect.setOutlineColor(sf::Color::Red);
             rect.setOutlineThickness(5);
         }
+
         sf::Color color = sf::Color::Red;
         sf::RectangleShape rect;
 
-        std::string getType() const override {return "HitboxDisplay";}
+        std::string getType() const override { return "HitboxDisplay"; }
+
         void show() const override { std::cout << "HitboxDisplay: " << std::endl; }
     };
 
@@ -93,8 +157,10 @@ namespace Haze {
             TRANSPARENT,
             COLOR_COUNT
         };
-        Text(const std::string &text, colorHaze color, const std::string &fontname = "arial.ttf") : text(text), color(color) {
-            font.loadFromFile("../assets/fonts/" + fontname);
+
+        Text(const std::string &text, colorHaze color, const std::string &fontname = "arial.ttf") : text(text), color(color)
+        {
+            font.loadFromFile("assets/fonts/" + fontname);
             textObj.setFont(font);
             textObj.setString(text);
             switch (color) {
@@ -129,11 +195,14 @@ namespace Haze {
                     break;
             }
         }
+
         std::string text;
         sf::Color color;
         sf::Font font;
         sf::Text textObj;
-        std::string getType() const override {return "Text";}
+
+        std::string getType() const override { return "Text"; }
+
         void show() const override { std::cout << "Text: " << text << std::endl; }
     };
 }// namespace Haze

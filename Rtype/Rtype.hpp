@@ -13,68 +13,56 @@
 */
 
 #pragma once
-
+#include "../Client/json.hpp"
+#include "Enemy.h"
+#include "Explosion.h"
+#include "Paralax.h"
+#include "Player.h"
+#include "Wall.hpp"
 #include "data.h"
-#include "data.h"
-#include "json.hpp"
 #include "net_data_channel.h"
-#include "wall.hpp"
+#include "net_server.h"
+#include "protocol.h"
+#include <Factory.hpp>
 #include <cstdlib>
 #include <ctime>
 #include <fstream>
 #include <haze-core.hpp>
-#include <haze-graphics.hpp> // ? sure about this ?
+#include <haze-graphics.hpp>// ? sure about this ?
 #include <iostream>
 
-// Haze::Engine
-#define VORTEX 0
-#define SPACESHIP 1
-#define SHOT 2
-#define WINDOW 3
-#define WALL_TOP 4
-#define ENNEMY 5
-#define BACKGROUND 6
-
-
-class Rtype : public network::data_channel<protocol::data>
-{
-    struct clientData
-    {
-        uint32_t id;
-        bool isAlive;
-    };
-protected:
-    Haze::Engine engine;
-
-    std::vector<Haze::Entity *> entities;
-    std::vector<wall *> walls; // c'est quoi ça ? map ?
-
-    std::vector<Haze::Entity *> players;
-
-    std::map<asio::ip::udp::endpoint, clientData> playersId;
-
-    Haze::Sprite *wallSprite = new Haze::Sprite("assets/wall.png");// ? sure about this ?
-
-    nlohmann::json jsonData;
-    nlohmann::json sheet;
-
-    sf::Event event;
-
-    char isMoving = '\0';
-    void keyPress();
-    void keyRelease();
-    void moveBackground();
-
+class Rtype {
 public:
     Rtype(asio::io_context &context);
     ~Rtype();
 
-    void run(std::shared_ptr<network::data_channel<protocol::data>> _dataChannel);
-    // void moveUp(void *component);
-    // void moveDown(void *component);
-    // void moveLeft(void *component);
-    // void moveRight(void *component);
-    void onReceive(udp::endpoint from, network::datagram<protocol::data> content) override;
+public:
+    void start();
+    void stop();
+    void update();
+    void sendUpdate();
 
-    uint32_t getClientId(asio::ip::udp::endpoint endpoint);
+    void onReceive(udp::endpoint from, network::datagram<protocol::data> content);
+    void sendEverything(udp::endpoint &to);
+    [[nodiscard]] asio::ip::udp::endpoint getEndpoint() const;
+
+    void updateMap();// TODO : map who generate itself and destroy itself
+    void createMap();
+    void checkInactiveClients();
+
+    uint32_t getPlayerID(const asio::ip::udp::endpoint &endpoint);
+
+private:
+    Haze::Engine _engine;
+    network::data_channel<protocol::data> _channel;
+
+    Cooldown _enemySpawnCD{5s};
+
+    std::unique_ptr<Paralax> _background;
+    std::vector<std::unique_ptr<Wall>> _walls;
+    std::vector<Haze::Entity *> _entities;
+    std::vector<std::unique_ptr<Player>> _players;
+    std::vector<std::unique_ptr<Explosion>> _explosions;
+    std::vector<std::unique_ptr<Enemy>> _enemies;
+    bool _running = false;
 };

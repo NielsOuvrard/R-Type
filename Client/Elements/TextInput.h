@@ -12,6 +12,7 @@ namespace element {
     class TextInput {
     public:
         explicit TextInput(Haze::Engine &engine, std::string placeHolder);
+        void setValue(const std::string &val);
         [[nodiscard]] Haze::Entity &getEntity() const;
         [[nodiscard]] const std::string &getValue() const;
         void setFocus(bool isFocused);

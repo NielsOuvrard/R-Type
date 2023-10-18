@@ -17,8 +17,12 @@ namespace Haze
                 continue;
             if (componentList->getComponent("OnKeyPressed", i) != nullptr) {
                 auto onKeyPressed = static_cast<OnKeyPressed *>(componentList->getComponent("OnKeyPressed", i));
-                if (onKeyPressed->player < inputs->size())
-                    onKeyPressed->callback(i, inputs->at(onKeyPressed->player).inputsPressed);
+                if (onKeyPressed->player < inputs->size()) {
+                    if (std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - onKeyPressed->timer).count() > 0.05) {
+                        onKeyPressed->timer = std::chrono::high_resolution_clock::now();
+                        onKeyPressed->callback(i, inputs->at(onKeyPressed->player).inputsPressed);
+                    }
+                }
             }
             if (componentList->getComponent("OnKeyReleased", i) != nullptr) {
                 auto onKeyReleased = static_cast<OnKeyReleased *>(componentList->getComponent("OnKeyReleased", i));
@@ -212,8 +216,13 @@ namespace Haze
                 lifeTime->tics++;
                 if (lifeTime->tics >= lifeTime->lifeTime)
                 {
+                    lifeTime->callback(i);
                     componentList->removeEntity(i);
                 }
+            }
+            if (componentList->getComponent("Destroy", i) != nullptr)
+            {
+                componentList->removeEntity(i);
             }
         }
     }

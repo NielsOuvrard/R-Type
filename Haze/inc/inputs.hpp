@@ -10,6 +10,7 @@
 namespace Haze
 {
     enum InputType {
+        NO,
         KEY_A,
         KEY_B,
         KEY_C,
