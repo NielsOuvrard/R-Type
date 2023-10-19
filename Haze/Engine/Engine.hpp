@@ -33,7 +33,6 @@ namespace Haze
         void removeEntity(Entity *entity);
         bool isOpen();
         void setInfoInputs(info_inputs info, size_t id);
-        uint8_t getTick() { return _tick; }
         ComponentList *getComponentList() { return _componentList; }
         std::vector<info_inputs> *getInfoInputs() { return &_infoInputs; }
 
@@ -44,9 +43,7 @@ namespace Haze
         ComponentList *_componentList;
         std::vector<info_inputs> _infoInputs;
         int _framerate = 60;
-        std::thread _ticThread;
-        std::mutex _mutex;
-        uint8_t _tick;
+        std::chrono::time_point<std::chrono::system_clock> _lastTime;
     };
 
     void ticThread(Haze::Engine *engine);
