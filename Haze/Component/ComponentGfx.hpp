@@ -109,7 +109,6 @@ namespace Haze {
         Window(int width, int height) : width(width), height(height), active(false)
         {
             window.create(sf::VideoMode(width, height), "R-Type");
-            window.setFramerateLimit(60);
             window.setKeyRepeatEnabled(true);
             view.reset(sf::FloatRect(0, 0, width, height));
             view.setViewport(sf::FloatRect(0, 0, 1.0f, 1.0f));

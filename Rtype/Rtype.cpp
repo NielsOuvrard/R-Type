@@ -15,7 +15,7 @@
 #include "Rtype.hpp"
 
 Rtype::Rtype(asio::io_context &context)
-    : _channel(context)
+    : _channel(context), _engine(60)
 {
     std::srand(std::time(0));
     _engine.init();
@@ -157,9 +157,6 @@ void Rtype::createMap()
 void Rtype::start()
 {
     _running = true;
-    std::chrono::steady_clock::time_point previousTime = std::chrono::steady_clock::now();
-    const std::chrono::milliseconds targetFrameTime(1000 / 60);// 60 FPS
-
     _background->build();
 
     createMap();
@@ -188,16 +185,6 @@ void Rtype::start()
 
         // Send all entities update to clients
         sendUpdate();
-
-        // Calculate time taken in this loop
-        std::chrono::steady_clock::time_point currentTime = std::chrono::steady_clock::now();
-        std::chrono::milliseconds elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - previousTime);
-
-        // Sleep to achieve the target frame rate
-        if (elapsedTime < targetFrameTime) {
-            std::this_thread::sleep_for(targetFrameTime - elapsedTime);
-        }
-        previousTime = std::chrono::steady_clock::now();
     }
 }
 

@@ -66,7 +66,7 @@ void spectator::onReceive(udp::endpoint from, network::datagram<data> content)
         case data::add_component: {
             Haze::component_info info = {0};
             std::memcpy(&info, content.body.data(), content.header.size);
-            std::cout << "[" << info.id << "] " << info.name << " added\n";
+            // std::cout << "[" << info.id << "] " << info.name << " added\n";
             addComponent(info);
             break;
         }

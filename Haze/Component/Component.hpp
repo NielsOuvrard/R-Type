@@ -41,9 +41,11 @@ namespace Haze {
     };
 
     struct Velocity : public Component {
-        Velocity(float x, float y) : x(x), y(y) {}
+        Velocity(float x, float y, float time) : x(x), y(y), tick(time) {}
         float x;
         float y;
+        float tick;
+        std::chrono::time_point<std::chrono::high_resolution_clock> lastUpdate = std::chrono::high_resolution_clock::now();
         std::string getType() const override { return "Velocity"; }
         void show() const override { std::cout << "Velocity: " << x << ", " << y << std::endl; }
     };

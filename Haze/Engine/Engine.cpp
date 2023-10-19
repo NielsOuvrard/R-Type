@@ -11,15 +11,20 @@
 #ifdef USE_SFML
 #include "GfxPipeline.hpp"
 #endif
+#include <iostream>
+#include <unistd.h>
+
 
 namespace Haze
 {
-    Engine::Engine()
+    Engine::Engine(int framerate)
     {
+        _framerate = framerate;
     }
 
     Engine::~Engine()
     {
+        _ticThread.join();
     }
 
     void Engine::init()
@@ -29,6 +34,7 @@ namespace Haze
         _pipelines.push_back(std::make_unique<GfxPipeline>(this));
         #endif
         _pipelines.push_back(std::make_unique<CorePipeline>(this));
+        std::cout << "Engine init" << std::endl;
     }
 
     void Engine::update()
@@ -45,12 +51,14 @@ namespace Haze
             {
                 #ifdef USE_SFML
                 auto window = static_cast<Window *>(_componentList->getComponent("Window", i));
+                if (window == nullptr)
+                    return true;
                 return window->window.isOpen();
                 #endif
                 return true;
             }
         }
-        return false;
+        return true;
     }
 
     Entity *Engine::createEntity()

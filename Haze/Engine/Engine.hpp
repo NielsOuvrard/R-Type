@@ -9,6 +9,10 @@
 #include <iostream>
 #include <vector>
 #include <map>
+#include <memory>
+#include <chrono>
+#include <mutex>
+#include <thread>
 #include "Entity.hpp"
 #include "ComponentList.hpp"
 #include "IPipeline.hpp"
@@ -19,7 +23,7 @@ namespace Haze
     class Engine
     {
     public:
-        Engine();
+        Engine(int framerate);
         ~Engine();
         void init();
         void update();
@@ -29,6 +33,7 @@ namespace Haze
         void removeEntity(Entity *entity);
         bool isOpen();
         void setInfoInputs(info_inputs info, size_t id);
+        uint8_t getTick() { return _tick; }
         ComponentList *getComponentList() { return _componentList; }
         std::vector<info_inputs> *getInfoInputs() { return &_infoInputs; }
 
@@ -38,5 +43,11 @@ namespace Haze
         std::vector<std::unique_ptr<IPipeline>> _pipelines;
         ComponentList *_componentList;
         std::vector<info_inputs> _infoInputs;
+        int _framerate = 60;
+        std::thread _ticThread;
+        std::mutex _mutex;
+        uint8_t _tick;
     };
+
+    void ticThread(Haze::Engine *engine);
 }
