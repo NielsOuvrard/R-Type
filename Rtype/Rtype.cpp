@@ -15,7 +15,7 @@
 #include "Rtype.hpp"
 
 Rtype::Rtype(asio::io_context &context)
-    : _channel(context), _engine(10)
+    : _channel(context), _engine(60)
 {
     std::srand(std::time(0));
     _engine.init();
