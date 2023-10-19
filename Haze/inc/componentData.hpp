@@ -28,6 +28,7 @@ namespace Haze {
     struct VelocityData {
         float x;
         float y;
+        float time;
     };
 
     struct MoveData {

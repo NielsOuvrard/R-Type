@@ -9,7 +9,6 @@
 
 namespace Haze
 {
-
     void useInputs(ComponentList *componentList, std::vector<info_inputs> *inputs)
     {
         for (int i = 0; i < componentList->getSize(); i++) {
@@ -81,8 +80,10 @@ namespace Haze
             {
                 auto position = static_cast<Position *>(componentList->getComponent("Position", i));
                 auto velocity = static_cast<Velocity *>(componentList->getComponent("Velocity", i));
-                position->x += velocity->x;
-                position->y += velocity->y;
+                float gap = std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - velocity->lastUpdate).count();
+                position->x += (velocity->x * gap) / velocity->tick;
+                position->y += (velocity->y * gap) / velocity->tick;
+                velocity->lastUpdate = std::chrono::high_resolution_clock::now();
             }
             if (componentList->getComponent("Position", i) != nullptr && componentList->getComponent("Move", i) != nullptr)
             {

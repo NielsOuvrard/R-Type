@@ -18,7 +18,7 @@ void Player::build()
               << _entity->getId()
               << "] Player Created"
               << std::endl;
-    _entity->addComponent(new Haze::Velocity(0, 0));
+    _entity->addComponent(new Haze::Velocity(0, 0, 0.05));
     _entity->addComponent(new Haze::Position(100, 300));
     _entity->addComponent(new Haze::Scale(3, 3));
     _entity->addComponent(new Haze::Hitbox({{0, 0, 32, 14}}));
@@ -33,26 +33,26 @@ void Player::build()
 
                 auto velocity = dynamic_cast<Haze::Velocity *>(_entity->getComponent("Velocity"));
                 if (velocity == nullptr) {
-                    _entity->addComponent(new Haze::Velocity(0, 0));
+                    _entity->addComponent(new Haze::Velocity(0, 0, 0.05));
                     velocity = dynamic_cast<Haze::Velocity *>(_entity->getComponent("Velocity"));
                 }
                 velocity->x = 0;
                 velocity->y = 0;
 
                 if (IS_KEY_PRESSED(KEY_Z) || IS_KEY_PRESSED(KEY_UP_ARROW)) {
-                    velocity->y += -10;
+                    velocity->y += -15;
                     sendUpdate();
                 }
                 if (IS_KEY_PRESSED(KEY_Q) || IS_KEY_PRESSED(KEY_LEFT_ARROW)) {
-                    velocity->x += -10;
+                    velocity->x += -15;
                     sendUpdate();
                 }
                 if (IS_KEY_PRESSED(KEY_S) || IS_KEY_PRESSED(KEY_DOWN_ARROW)) {
-                    velocity->y += 10;
+                    velocity->y += 15;
                     sendUpdate();
                 }
                 if (IS_KEY_PRESSED(KEY_D) || IS_KEY_PRESSED(KEY_RIGHT_ARROW)) {
-                    velocity->x += 10;
+                    velocity->x += 15;
                     sendUpdate();
                 }
             },

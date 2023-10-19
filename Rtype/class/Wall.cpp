@@ -38,7 +38,7 @@ void Wall::build(uint8_t frameIndex)
     _entity->addComponent(new Haze::Position(_x, _y));
     auto scale_y = (float)((_isGround ? -1.0 : 1.0) * 3.0);
     _entity->addComponent(new Haze::Scale(3, scale_y));
-    _entity->addComponent(new Haze::Velocity(-1, 0));
+    _entity->addComponent(new Haze::Velocity(-5, 0, 0.05));
 
     std::map<std::string, Haze::Collision::CollisionInfo> mapCollision;
     mapCollision["player"] = {
@@ -60,7 +60,7 @@ void Wall::send()
 
     _channel.sendGroup(RType::message::createEntity(_id));
     _channel.sendGroup(RType::message::addComponent(_id, "Position", new Haze::PositionData{_x, _y}, sizeof(Haze::PositionData)));
-    _channel.sendGroup(RType::message::addComponent(_id, "Velocity", new Haze::VelocityData{-1, 0}, sizeof(Haze::VelocityData)));
+    _channel.sendGroup(RType::message::addComponent(_id, "Velocity", new Haze::VelocityData{-5, 0, 0.05}, sizeof(Haze::VelocityData)));
     auto scale_y = (float)((_isGround ? -1.0 : 1.0) * 3.0);
     _channel.sendGroup(RType::message::addComponent(_id, "Scale", new Haze::ScaleData{3, scale_y}, sizeof(Haze::ScaleData)));
     _channel.sendGroup(RType::message::addComponent(_id, "Hitbox", new Haze::HitboxData{{0, 0, frame.width, frame.height}}, sizeof(Haze::HitboxData)));

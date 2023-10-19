@@ -30,7 +30,7 @@ void Explosion::build()
 
     // Add Position, Velocity, and Scale components to the entity
     _entity->addComponent(new Haze::Position(_x, _y));
-    _entity->addComponent(new Haze::Velocity(0, 0));
+    _entity->addComponent(new Haze::Velocity(0, 0, 0.1));
     _entity->addComponent(new Haze::Scale(3, 3));
 }
 
