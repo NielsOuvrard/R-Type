@@ -31,30 +31,47 @@ void Player::build()
                     _missiles.back()->build(position->x, position->y);
                 }
 
-                auto velocity = dynamic_cast<Haze::Velocity *>(_entity->getComponent("Velocity"));
-                if (velocity == nullptr) {
-                    _entity->addComponent(new Haze::Velocity(0, 0, 0.05));
-                    velocity = dynamic_cast<Haze::Velocity *>(_entity->getComponent("Velocity"));
-                }
-                velocity->x = 0;
-                velocity->y = 0;
+                // auto velocity = dynamic_cast<Haze::Velocity *>(_entity->getComponent("Velocity"));
+                // if (velocity == nullptr) {
+                //     _entity->addComponent(new Haze::Velocity(0, 0, 0.05));
+                //     velocity = dynamic_cast<Haze::Velocity *>(_entity->getComponent("Velocity"));
+                // }
+                // velocity->x = 0;
+                // velocity->y = 0;
+
+                // if (IS_KEY_PRESSED(KEY_Z) || IS_KEY_PRESSED(KEY_UP_ARROW)) {
+                //     velocity->y += -15;
+                //     sendUpdate();
+                // }
+                // if (IS_KEY_PRESSED(KEY_Q) || IS_KEY_PRESSED(KEY_LEFT_ARROW)) {
+                //     velocity->x += -15;
+                //     sendUpdate();
+                // }
+                // if (IS_KEY_PRESSED(KEY_S) || IS_KEY_PRESSED(KEY_DOWN_ARROW)) {
+                //     velocity->y += 15;
+                //     sendUpdate();
+                // }
+                // if (IS_KEY_PRESSED(KEY_D) || IS_KEY_PRESSED(KEY_RIGHT_ARROW)) {
+                //     velocity->x += 15;
+                //     sendUpdate();
+                // }
+
+                auto position = dynamic_cast<Haze::Position *>(_entity->getComponent("Position"));
 
                 if (IS_KEY_PRESSED(KEY_Z) || IS_KEY_PRESSED(KEY_UP_ARROW)) {
-                    velocity->y += -15;
-                    sendUpdate();
+                    position->y += -15;
                 }
                 if (IS_KEY_PRESSED(KEY_Q) || IS_KEY_PRESSED(KEY_LEFT_ARROW)) {
-                    velocity->x += -15;
-                    sendUpdate();
+                    position->x += -15;
                 }
                 if (IS_KEY_PRESSED(KEY_S) || IS_KEY_PRESSED(KEY_DOWN_ARROW)) {
-                    velocity->y += 15;
-                    sendUpdate();
+                    position->y += 15;
                 }
                 if (IS_KEY_PRESSED(KEY_D) || IS_KEY_PRESSED(KEY_RIGHT_ARROW)) {
-                    velocity->x += 15;
-                    sendUpdate();
+                    position->x += 15;
                 }
+                sendUpdate();
+                std::cout << "key pressed++++++++++++++++++" << std::endl;
             },
             _id));
     std::map<std::string, Haze::Collision::CollisionInfo> mapCollision;
@@ -137,6 +154,7 @@ void Player::sendUpdate()
 {
     auto pos = dynamic_cast<Haze::Position *>(_entity->getComponent("Position"));
     _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Position", new Haze::PositionData{pos->x, pos->y}, sizeof(Haze::PositionData)));
+    std::cout << "send update player" << std::endl;
 }
 
 void Player::update()

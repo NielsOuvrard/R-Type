@@ -24,7 +24,6 @@ namespace Haze
 
     Engine::~Engine()
     {
-        _ticThread.join();
     }
 
     void Engine::init()
@@ -36,9 +35,41 @@ namespace Haze
         _pipelines.push_back(std::make_unique<CorePipeline>(this));
         std::cout << "Engine init" << std::endl;
     }
-
+// _ticThread = std::thread([this]() {
+//             auto start = std::chrono::high_resolution_clock::now();
+//             auto end = std::chrono::high_resolution_clock::now();
+//             auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+//             auto lastSecond = std::chrono::high_resolution_clock::now();
+//             int frameCount = 0;
+//             while (1)
+//             {
+//                 start = std::chrono::high_resolution_clock::now();
+//                 if (!isOpen()) {
+//                     std::cout << "Engine closed" << std::endl;
+//                     break;
+//                 }
+//                 _tick++;
+//                 frameCount++;
+//                 end = std::chrono::high_resolution_clock::now();
+//                 duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+//                 // if (std::chrono::duration_cast<std::chrono::milliseconds>(end - lastSecond).count() >= 1000)
+//                 // {
+//                 //     std::cout << "FPS: " << frameCount << std::endl;
+//                 //     frameCount = 0;
+//                 //     lastSecond = std::chrono::high_resolution_clock::now();
+//                 // }
+//                 if (duration.count() < 1000 / _framerate) {
+//                     std::this_thread::sleep_for(std::chrono::milliseconds(1000 / _framerate - duration.count()));
+//                 }
+//             }
+//         });
     void Engine::update()
     {
+        std::chrono::time_point<std::chrono::system_clock> now = std::chrono::system_clock::now();
+        std::chrono::duration<double> elapsed_seconds = now - _lastTime;
+        if (elapsed_seconds.count() < 1.0 / _framerate)
+            return;
+        _lastTime = now;
         for (int i = 0; i < _pipelines.size(); i++)
             _pipelines[i]->runSystem(_componentList);
     }

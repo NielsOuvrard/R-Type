@@ -17,16 +17,17 @@ namespace Haze
             if (componentList->getComponent("OnKeyPressed", i) != nullptr) {
                 auto onKeyPressed = static_cast<OnKeyPressed *>(componentList->getComponent("OnKeyPressed", i));
                 if (onKeyPressed->player < inputs->size()) {
-                    if (std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - onKeyPressed->timer).count() > 0.05) {
-                        onKeyPressed->timer = std::chrono::high_resolution_clock::now();
+                    if (inputs->at(onKeyPressed->player).inputsPressed.size() > 0)
                         onKeyPressed->callback(i, inputs->at(onKeyPressed->player).inputsPressed);
-                    }
                 }
             }
             if (componentList->getComponent("OnKeyReleased", i) != nullptr) {
                 auto onKeyReleased = static_cast<OnKeyReleased *>(componentList->getComponent("OnKeyReleased", i));
-                if (onKeyReleased->player < inputs->size())
-                    onKeyReleased->callback(i, inputs->at(onKeyReleased->player).inputsReleased);
+                if (onKeyReleased->player < inputs->size()) {
+                    if (inputs->at(onKeyReleased->player).inputsReleased.size() > 0)
+                        onKeyReleased->callback(i, inputs->at(onKeyReleased->player).inputsReleased);
+
+                }
             }
             if (componentList->getComponent("OnMousePressed", i) != nullptr &&
                 componentList->getComponent("Position", i) != nullptr &&
@@ -67,6 +68,10 @@ namespace Haze
                     }
                 }
             }
+        }
+        for (int i = 0; i < inputs->size(); i++) {
+            inputs->at(i).inputsPressed.clear();
+            inputs->at(i).inputsReleased.clear();
         }
     }
 

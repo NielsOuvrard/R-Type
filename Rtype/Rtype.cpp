@@ -15,7 +15,7 @@
 #include "Rtype.hpp"
 
 Rtype::Rtype(asio::io_context &context)
-    : _channel(context), _engine(60)
+    : _channel(context), _engine(10)
 {
     std::srand(std::time(0));
     _engine.init();
@@ -238,6 +238,10 @@ void Rtype::onReceive(udp::endpoint from, network::datagram<protocol::data> cont
 
             uint32_t id = getPlayerID(from);
             if (!id) return;
+            std::cout << "Registered inputs from player " << id << std::endl;
+            Haze::info_inputs playerInputs = _engine.getInfoInputs()->at(id);
+            inputs.inputsPressed.insert(inputs.inputsPressed.end(), playerInputs.inputsPressed.begin(), playerInputs.inputsPressed.end());
+            inputs.inputsReleased.insert(inputs.inputsReleased.end(), playerInputs.inputsReleased.begin(), playerInputs.inputsReleased.end());
             _engine.setInfoInputs(inputs, id);
             break;
         }
@@ -254,16 +258,16 @@ asio::ip::udp::endpoint Rtype::getEndpoint() const
 
 void Rtype::sendUpdate()
 {
-    _background->sendUpdate();
-    for (auto &player: _players) {
-        if (player->_entity) {
-            player->sendUpdate();
-        }
-    }
-    //_background->sendUpdate();
-    for (auto &wall: _walls) {
-        wall->sendUpdate();
-    }
+    // _background->sendUpdate();
+    // for (auto &player: _players) {
+    //     if (player->_entity) {
+    //         player->sendUpdate();
+    //     }
+    // }
+    // _background->sendUpdate();
+    // for (auto &wall: _walls) {
+    //     wall->sendUpdate();
+    // }
 }
 
 void Rtype::update()
