@@ -6,6 +6,8 @@ add_compile_options(-Wno-unused-command-line-argument)
 set(SOURCES
         main.cpp
         server.cpp
+        Room.cpp
+        Room.h
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})

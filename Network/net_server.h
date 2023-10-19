@@ -17,7 +17,8 @@ namespace network {
         virtual ~server_interface() { stop(); }
 
     public:
-        void start() {
+        void start()
+        {
             try {
                 asyncWaitForClientsConnection();
                 _contextThread = std::thread([this]() { _context.run(); });
@@ -26,7 +27,8 @@ namespace network {
             }
         }
 
-        void stop() {
+        void stop()
+        {
             _context.stop();
             if (_contextThread.joinable())
                 _contextThread.join();
@@ -36,9 +38,10 @@ namespace network {
         bool isRunning() { return false; }
 
     public:
-        void messageClient(std::shared_ptr<connection<T>> client, const message<T> &msg) {
+        void messageClient(std::shared_ptr<connection<T>> client, const message<T> &msg)
+        {
             if (client && client->isConnected()) {
-                client->send(msg);
+                client->asyncSend(msg);
             } else {
                 onClientDisconnect(client);
                 client.reset();
@@ -46,7 +49,8 @@ namespace network {
             }
         }
 
-        void messageAllClient(const message<T> &msg) {
+        void messageAllClient(const message<T> &msg)
+        {
             bool invalidClientExists = false;
 
             for (std::shared_ptr<connection<T>> &client: _clients) {
@@ -64,7 +68,8 @@ namespace network {
         }
 
     public:
-        void asyncWaitForClientsConnection() {
+        void asyncWaitForClientsConnection()
+        {
             _acceptor.async_accept([this](std::error_code ec,
                                           asio::ip::tcp::socket socket) {
                 if (!ec) {
@@ -88,7 +93,8 @@ namespace network {
         }
 
     public:
-        void update(size_t maxMessage = -1, bool wait = false) {
+        void update(size_t maxMessage = -1, bool wait = false)
+        {
             if (wait) _inbox.wait();
 
             size_t msgCount = 0;
@@ -101,7 +107,9 @@ namespace network {
 
     protected:
         virtual bool onClientConnection(std::shared_ptr<connection<T>> client) { return false; }
+
         virtual void onClientDisconnect(std::shared_ptr<connection<T>> client) {}
+
         virtual void onMessage(std::shared_ptr<connection<T>> from, message<T> &msg) {}
 
     protected:

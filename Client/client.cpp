@@ -16,8 +16,6 @@ void client::start()
 {
     if (!_isBuild)
         build();
-    std::chrono::steady_clock::time_point previousTime = std::chrono::steady_clock::now();
-    const std::chrono::milliseconds targetFrameTime(1000 / 60);// 60 FPS
     while (_engine.isOpen()) {
         if (!_login->isHidden() && isConnected()) {
             _startButton->getEntity().removeComponent("Hide");
