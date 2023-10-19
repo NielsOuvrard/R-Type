@@ -15,7 +15,7 @@
 #include "Rtype.hpp"
 
 Rtype::Rtype(asio::io_context &context)
-    : _channel(context)
+    : _channel(context), _engine(60)
 {
     std::srand(std::time(0));
     _engine.init();
@@ -157,9 +157,6 @@ void Rtype::createMap()
 void Rtype::start()
 {
     _running = true;
-    std::chrono::steady_clock::time_point previousTime = std::chrono::steady_clock::now();
-    const std::chrono::milliseconds targetFrameTime(1000 / 60);// 60 FPS
-
     _background->build();
 
     createMap();
@@ -188,16 +185,6 @@ void Rtype::start()
 
         // Send all entities update to clients
         sendUpdate();
-
-        // Calculate time taken in this loop
-        std::chrono::steady_clock::time_point currentTime = std::chrono::steady_clock::now();
-        std::chrono::milliseconds elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - previousTime);
-
-        // Sleep to achieve the target frame rate
-        if (elapsedTime < targetFrameTime) {
-            std::this_thread::sleep_for(targetFrameTime - elapsedTime);
-        }
-        previousTime = std::chrono::steady_clock::now();
     }
 }
 
@@ -251,6 +238,10 @@ void Rtype::onReceive(udp::endpoint from, network::datagram<protocol::data> cont
 
             uint32_t id = getPlayerID(from);
             if (!id) return;
+            std::cout << "Registered inputs from player " << id << std::endl;
+            Haze::info_inputs playerInputs = _engine.getInfoInputs()->at(id);
+            inputs.inputsPressed.insert(inputs.inputsPressed.end(), playerInputs.inputsPressed.begin(), playerInputs.inputsPressed.end());
+            inputs.inputsReleased.insert(inputs.inputsReleased.end(), playerInputs.inputsReleased.begin(), playerInputs.inputsReleased.end());
             _engine.setInfoInputs(inputs, id);
             break;
         }
@@ -267,16 +258,16 @@ asio::ip::udp::endpoint Rtype::getEndpoint() const
 
 void Rtype::sendUpdate()
 {
-    _background->sendUpdate();
-    for (auto &player: _players) {
-        if (player->_entity) {
-            player->sendUpdate();
-        }
-    }
-    //_background->sendUpdate();
-    for (auto &wall: _walls) {
-        wall->sendUpdate();
-    }
+    // _background->sendUpdate();
+    // for (auto &player: _players) {
+    //     if (player->_entity) {
+    //         player->sendUpdate();
+    //     }
+    // }
+    // _background->sendUpdate();
+    // for (auto &wall: _walls) {
+    //     wall->sendUpdate();
+    // }
 }
 
 void Rtype::update()

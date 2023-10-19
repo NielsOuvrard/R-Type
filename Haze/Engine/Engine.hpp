@@ -9,6 +9,10 @@
 #include <iostream>
 #include <vector>
 #include <map>
+#include <memory>
+#include <chrono>
+#include <mutex>
+#include <thread>
 #include "Entity.hpp"
 #include "ComponentList.hpp"
 #include "IPipeline.hpp"
@@ -19,7 +23,7 @@ namespace Haze
     class Engine
     {
     public:
-        Engine();
+        Engine(int framerate);
         ~Engine();
         void init();
         void update();
@@ -38,5 +42,9 @@ namespace Haze
         std::vector<std::unique_ptr<IPipeline>> _pipelines;
         ComponentList *_componentList;
         std::vector<info_inputs> _infoInputs;
+        int _framerate = 60;
+        std::chrono::time_point<std::chrono::system_clock> _lastTime;
     };
+
+    void ticThread(Haze::Engine *engine);
 }

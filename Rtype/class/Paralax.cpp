@@ -16,7 +16,7 @@ void Paralax::build()
               << "] Background 1 Created"
               << std::endl;
     _bg1->addComponent(new Haze::Position(0, 0));
-    _bg1->addComponent(new Haze::Velocity(-0.8, 0));
+    _bg1->addComponent(new Haze::Velocity(-0.8, 0, 0.1));
 
     _bg2 = _engine.createEntity();
     std::cout << "["
@@ -24,7 +24,7 @@ void Paralax::build()
               << "] Background 2 Created"
               << std::endl;
     _bg2->addComponent(new Haze::Position(562, 0));
-    _bg2->addComponent(new Haze::Velocity(-0.8, 0));
+    _bg2->addComponent(new Haze::Velocity(-0.8, 0, 0.1));
     send();
 }
 

@@ -28,7 +28,7 @@ namespace Haze {
         }
         if (type == "Velocity") {
             VelocityData *velocity = reinterpret_cast<VelocityData *>(data.data());
-            return new Velocity(velocity->x, velocity->y);
+            return new Velocity(velocity->x, velocity->y, velocity->time);
         }
         if (type == "Move") {
             MoveData *move = reinterpret_cast<MoveData *>(data.data());

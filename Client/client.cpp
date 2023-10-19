@@ -5,7 +5,7 @@
 #include "client.h"
 #include "net_message.h"
 
-client::client()
+client::client() : _engine(60)
 {
     _engine.init();
 }
@@ -16,8 +16,6 @@ void client::start()
 {
     if (!_isBuild)
         build();
-    std::chrono::steady_clock::time_point previousTime = std::chrono::steady_clock::now();
-    const std::chrono::milliseconds targetFrameTime(1000 / 60);// 60 FPS
     while (_engine.isOpen()) {
         if (!_login->isHidden() && isConnected()) {
             _startButton->getEntity().removeComponent("Hide");
@@ -33,7 +31,6 @@ void client::start()
                 std::cout << "[GAME] sent Alive" << std::endl;
             }
         }
-
         // TCP Events
         while (!getIncoming().empty()) {
             network::message<lobby> msg = getIncoming().pop_front().content;
@@ -46,7 +43,7 @@ void client::start()
                         std::cout << "[PEER]: " << peer << std::endl;
                         _game = std::make_unique<game>(_context, _engine);
                         _game->addPeer(peer);
-                        _startButton->getEntity().addComponent(new Haze::Hide);
+                        _startButton->getEntity().addComponent(new Haze::Destroy);
 
                         network::datagram<protocol::data> data(protocol::data::join);
                         _game->sendTo(data, peer);
@@ -68,14 +65,6 @@ void client::start()
             std::cout << "send join" << std::endl;
         }
         _engine.update();
-
-        std::chrono::steady_clock::time_point currentTime = std::chrono::steady_clock::now();
-        std::chrono::milliseconds elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - previousTime);
-        // Sleep to achieve the target frame rate
-        if (elapsedTime < targetFrameTime) {
-            std::this_thread::sleep_for(targetFrameTime - elapsedTime);
-        }
-        previousTime = std::chrono::steady_clock::now();
     }
     std::cout << "engine closed!" << std::endl;
 }
