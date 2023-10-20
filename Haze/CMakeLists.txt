@@ -40,6 +40,7 @@ set(
     ComponentList/ComponentList.cpp
     Pipeline/core/CorePipeline.cpp
     Pipeline/gfx/GfxPipeline.cpp
+    IDisplay/sfDisplay.cpp
 )
 add_library(haze-graphics STATIC ${SOURCES_GRAPHICS})
 target_compile_definitions(haze-graphics PUBLIC USE_SFML=1)
@@ -54,4 +55,5 @@ target_include_directories(haze-graphics PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Pipe
 target_include_directories(haze-graphics PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Pipeline/gfx)
 target_include_directories(haze-graphics PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Factory)
 target_include_directories(haze-graphics PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Pipeline/core)
+target_include_directories(haze-graphics PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/IDisplay)
 target_link_libraries(haze-graphics PUBLIC sfml-graphics sfml-window sfml-system)
