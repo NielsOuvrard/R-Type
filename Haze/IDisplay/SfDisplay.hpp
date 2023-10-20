@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <memory>
+#include "AssetManager.hpp"
 
 namespace Haze
 {

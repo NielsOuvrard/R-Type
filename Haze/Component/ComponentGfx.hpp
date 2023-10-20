@@ -10,23 +10,10 @@
 
 namespace Haze {
     struct Sprite : public Component {
-        Sprite(std::string path) : path(path), sprite(path)
-        {
-            // if (!texture.loadFromFile(path)) {
-            //     std::cout << "Error loading texture" << std::endl;
-            //     return;
-            // }
-            // sprite.setTexture(texture);
-        }
-
+        Sprite(std::string path) : path(path), sprite(path) {}
         std::string path;
-        // sf::Sprite sprite;
-        // sf::Texture texture;
-
         SfSprite sprite;
-
         std::string getType() const override { return "Sprite"; }
-
         void show() const override { std::cout << "flm" << path << std::endl; }
     };
 
@@ -102,23 +89,11 @@ namespace Haze {
     };
 
     struct Window : public Component {
-        Window(int width, int height) : width(width), height(height), active(false),
-                                        window(width, height, "R-Type")
-        {
-            // window.create(sf::VideoMode(width, height), "R-Type");
-            // window.setKeyRepeatEnabled(true);
-            // view.reset(sf::FloatRect(0, 0, width, height));
-            // view.setViewport(sf::FloatRect(0, 0, 1.0f, 1.0f));
-            // window.setView(view);
-        }
+        Window(int width, int height) : width(width), height(height), active(false), window(width, height, "R-Type") {}
 
         int width;
         int height;
         bool active;
-        // sf::RenderWindow window;
-        // sf::View view;
-        // sf::Event event;
-
         SfWindow window;
 
         std::string getType() const override { return "Window"; }
@@ -133,13 +108,8 @@ namespace Haze {
             rect.setOutlineColor(SfColor::RED);
             rect.setOutlineThickness(5);
         }
-
-        // sf::Color color = sf::Color::Red;
-        // sf::RectangleShape rect;
         SfRect rect;
-
         std::string getType() const override { return "HitboxDisplay"; }
-
         void show() const override { std::cout << "HitboxDisplay: " << std::endl; }
     };
 

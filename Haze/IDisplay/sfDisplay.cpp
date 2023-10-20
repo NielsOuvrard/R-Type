@@ -2,9 +2,10 @@
 
 namespace Haze
 {
+    static AssetManager<SfTexture> assetManager;
     SfSprite::SfSprite(std::string path)
     {
-        _texture = std::shared_ptr<SfTexture>(new SfTexture(path));
+        _texture = assetManager.loadTexture(path);
         _sprite.setTexture(*_texture->getTexture());
     }
 
