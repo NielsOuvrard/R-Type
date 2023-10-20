@@ -32,17 +32,19 @@ void Player::build()
                 }
                 auto position = dynamic_cast<Haze::Position *>(_entity->getComponent("Position"));
 
-                if (IS_KEY_PRESSED(KEY_Z) || IS_KEY_PRESSED(KEY_UP_ARROW)) {
-                    position->y += -15;
-                }
-                if (IS_KEY_PRESSED(KEY_Q) || IS_KEY_PRESSED(KEY_LEFT_ARROW)) {
-                    position->x += -15;
-                }
-                if (IS_KEY_PRESSED(KEY_S) || IS_KEY_PRESSED(KEY_DOWN_ARROW)) {
-                    position->y += 15;
-                }
-                if (IS_KEY_PRESSED(KEY_D) || IS_KEY_PRESSED(KEY_RIGHT_ARROW)) {
-                    position->x += 15;
+                for (auto &component: components) {
+                    if (component == Haze::InputType::KEY_Z) {
+                        position->y += -10;
+                    }
+                    if (component == Haze::InputType::KEY_Q) {
+                        position->x += -10;
+                    }
+                    if (component == Haze::InputType::KEY_S) {
+                        position->y += 10;
+                    }
+                    if (component == Haze::InputType::KEY_D) {
+                        position->x += 10;
+                    }
                 }
                 sendUpdate();
             },
