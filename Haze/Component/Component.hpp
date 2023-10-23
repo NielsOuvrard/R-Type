@@ -61,6 +61,17 @@ namespace Haze {
         void show() const override { std::cout << "SinVelocity: " << x << ", " << tick << std::endl; }
     };
 
+    struct CircleVelocity : public Component {
+        CircleVelocity(float x, float time, float radius) : x(x), tick(time), radius(radius) {}
+        float x;
+        float tick;
+        float radius;
+        float t = 0;
+        std::chrono::time_point<std::chrono::high_resolution_clock> lastUpdate = std::chrono::high_resolution_clock::now();
+        std::string getType() const override { return "CircleVelocity"; }
+        void show() const override { std::cout << "CircleVelocity: " << std::endl; }
+    };
+
     struct Move : public Component {
         Move(float x, float y) : x(x), y(y) {}
         float x;

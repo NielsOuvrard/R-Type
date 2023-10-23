@@ -34,6 +34,10 @@ namespace Haze {
             SinVelocityData *sinVelocity = reinterpret_cast<SinVelocityData *>(data.data());
             return new SinVelocity(sinVelocity->x, sinVelocity->time, sinVelocity->amplitude, sinVelocity->frequency);
         }
+        if (type == "CircleVelocity") {
+            CircleVelocityData *circleVelocity = reinterpret_cast<CircleVelocityData *>(data.data());
+            return new CircleVelocity(circleVelocity->x, circleVelocity->time, circleVelocity->radius);
+        }
         if (type == "Move") {
             MoveData *move = reinterpret_cast<MoveData *>(data.data());
             return new Move(move->x, move->y);
