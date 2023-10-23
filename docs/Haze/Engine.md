@@ -65,7 +65,7 @@ Entity *createEntity();
 Entity *getEntity(size_t _id);
 ```
 
-`getEntity` is used to get an **_entity** from the engine. Returns `nullptr` if the _entity doesn't exits.
+`getEntity` is used to comp an **_entity** from the engine. Returns `nullptr` if the _entity doesn't exits.
 
 ```cpp
 void removeEntity(size_t _id);

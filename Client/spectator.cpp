@@ -2,9 +2,9 @@
 // Created by erwan on 10/10/23.
 //
 
-#include "game.h"
+#include "spectator.h"
 
-game::game(asio::io_context &context, Haze::Engine &engine)
+spectator::spectator(asio::io_context &context, Haze::Engine &engine)
     : network::data_channel<data>(context),
       _engine(engine),
       _inputGrabber(_engine.createEntity())
@@ -46,7 +46,7 @@ game::game(asio::io_context &context, Haze::Engine &engine)
     }));
 }
 
-void game::onReceive(udp::endpoint from, network::datagram<data> content)
+void spectator::onReceive(udp::endpoint from, network::datagram<data> content)
 {
     switch (content.header.id) {
         case data::create_entity: {
@@ -84,7 +84,7 @@ void game::onReceive(udp::endpoint from, network::datagram<data> content)
     }
 }
 
-void game::createEntity(Haze::entity_id info)
+void spectator::createEntity(Haze::entity_id info)
 {
     _entities.insert({
             info.id,
@@ -92,19 +92,19 @@ void game::createEntity(Haze::entity_id info)
     });
 }
 
-void game::deleteEntity(Haze::entity_id info)
+void spectator::deleteEntity(Haze::entity_id info)
 {
     _entities[info.id]->addComponent(new Haze::Destroy);
     _entities.erase(info.id);
-//    std::cout << ""
+    //    std::cout << ""
 }
 
-void game::addComponent(Haze::component_info info)
+void spectator::addComponent(Haze::component_info info)
 {
     _entities[info.id]->addComponent(Haze::Factory::createComponent(std::string(info.name), info.data));
 }
 
-void game::removeComponent(Haze::component_id info)
+void spectator::removeComponent(Haze::component_id info)
 {
     _entities[info.id]->removeComponent(info.name);
 }

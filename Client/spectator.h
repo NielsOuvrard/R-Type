@@ -14,9 +14,9 @@
 using namespace protocol;
 using namespace std::chrono_literals;
 
-class game : public network::data_channel<data> {
+class spectator : public network::data_channel<data> {
 public:
-    explicit game(asio::io_context &context, Haze::Engine &engine);
+    explicit spectator(asio::io_context &context, Haze::Engine &engine);
     void onReceive(udp::endpoint from, network::datagram<data> content) override;
 
 public:
