@@ -34,7 +34,7 @@ void Enemy::build()
     _entity->addComponent(new Haze::Position(800 + x, y));
     _entity->addComponent(new Haze::Velocity(-5, 0, 0.05));
     // _entity->addComponent(new Haze::SinVelocity(-7, 0.05, 50, 0.01));
-    _entity->addComponent(new Haze::CircleVelocity(0.1, 0.05, 100));
+    _entity->addComponent(new Haze::CircleVelocity(0.2, 0.1, 100));
     _entity->addComponent(new Haze::Scale(3, 3));
     _entity->addComponent(new Haze::Hitbox({{5, 5, 33 - 10, 36 - 10}}));
 
@@ -89,7 +89,7 @@ void Enemy::send()
     _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Position", new Haze::PositionData{pos->x, pos->y}, sizeof(Haze::PositionData)));
     _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Velocity", new Haze::VelocityData{-5, 0, 0.05}, sizeof(Haze::VelocityData)));
     // _channel.sendGroup(RType::message::addComponent(_entity->getId(), "SinVelocity", new Haze::SinVelocityData{-7, 0.05, 50, 0.01}, sizeof(Haze::SinVelocityData)));
-    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "CircleVelocity", new Haze::CircleVelocityData{0.1, 0.05, 100}, sizeof(Haze::CircleVelocityData)));
+    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "CircleVelocity", new Haze::CircleVelocityData{0.2, 0.1, 100}, sizeof(Haze::CircleVelocityData)));
     _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Scale", new Haze::ScaleData{3, 3}, sizeof(Haze::ScaleData)));
     _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Hitbox", new Haze::HitboxData{5, 5, 33 - 10, 36 - 10}, sizeof(Haze::HitboxData)));
     _channel.sendGroup(RType::message::addComponent(_entity->getId(), "HitboxDisplay", nullptr, 0));
