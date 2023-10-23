@@ -31,6 +31,13 @@ namespace Haze {
         float time;
     };
 
+    struct SinVelocityData {
+        float x;
+        float time;
+        float amplitude;
+        float frequency;
+    };
+
     struct MoveData {
         float x;
         float y;
