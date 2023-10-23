@@ -107,9 +107,20 @@ namespace Haze
                 position->x += (sinVelocity->x * gap) / sinVelocity->tick;
                 position->y -= sin(sinVelocity->frequency * oldX) * sinVelocity->amplitude;
                 position->y += sin(sinVelocity->frequency * position->x) * sinVelocity->amplitude;
-
-
                 sinVelocity->lastUpdate = std::chrono::high_resolution_clock::now();
+            }
+            if (componentList->getComponent("Position", i) != nullptr && componentList->getComponent("CircleVelocity", i) != nullptr)
+            {
+                auto position = static_cast<Position *>(componentList->getComponent("Position", i));
+                auto circleVelocity = static_cast<CircleVelocity *>(componentList->getComponent("CircleVelocity", i));
+                float gap = std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - circleVelocity->lastUpdate).count();
+                float oldT = circleVelocity->t;
+                circleVelocity->t += (circleVelocity->x * gap) / circleVelocity->tick;
+                position->x -= cos(oldT) * circleVelocity->radius;
+                position->y -= sin(oldT) * circleVelocity->radius;
+                position->x += cos(circleVelocity->t) * circleVelocity->radius;
+                position->y += sin(circleVelocity->t) * circleVelocity->radius;
+                circleVelocity->lastUpdate = std::chrono::high_resolution_clock::now();
             }
         }
     }
