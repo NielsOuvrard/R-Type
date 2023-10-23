@@ -11,6 +11,7 @@
 #include "protocol.hpp"
 #include <chrono>
 #include <vector>
+#include <math.h>
 
 namespace Haze
 {

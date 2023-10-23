@@ -98,6 +98,19 @@ namespace Haze
                 position->y += move->y;
                 componentList->removeComponent("Move", i);
             }
+            if (componentList->getComponent("Position", i) != nullptr && componentList->getComponent("SinVelocity", i) != nullptr)
+            {
+                auto position = static_cast<Position *>(componentList->getComponent("Position", i));
+                auto sinVelocity = static_cast<SinVelocity *>(componentList->getComponent("SinVelocity", i));
+                float gap = std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - sinVelocity->lastUpdate).count();
+                float oldX = position->x;
+                position->x += (sinVelocity->x * gap) / sinVelocity->tick;
+                position->y -= sin(sinVelocity->frequency * oldX) * sinVelocity->amplitude;
+                position->y += sin(sinVelocity->frequency * position->x) * sinVelocity->amplitude;
+
+
+                sinVelocity->lastUpdate = std::chrono::high_resolution_clock::now();
+            }
         }
     }
 
