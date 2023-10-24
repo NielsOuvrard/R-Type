@@ -18,9 +18,9 @@ namespace Haze {
 
     void ComponentList::addComponent(Component *component, size_t id)
     {
-//        if (_componentName.empty()) {
-//            return;
-//        }
+        //        if (_componentName.empty()) {
+        //            return;
+        //        }
         if (find(_componentName.begin(), _componentName.end(), component->getType()) == _componentName.end()) {
             addList(component->getType());
         }
@@ -30,12 +30,6 @@ namespace Haze {
     void ComponentList::removeComponent(std::string type, size_t id)
     {
         _componentList[type][id] = nullptr;
-        for (size_t i = 0; i < _componentName.size(); i++) {
-            if (_componentName[i] == type) {
-                _componentName.erase(_componentName.begin() + i);
-                break;
-            }
-        }
     }
 
     Component *ComponentList::getComponent(std::string type, size_t id)

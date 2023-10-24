@@ -36,13 +36,16 @@ void client::build()
         auto port = _login->get<TextInput>("port")->getValue();
         if (name.empty() || ip.empty() || port.empty()) return;
         connect(ip, static_cast<uint16_t>(std::stoul(port)));
+        _login->setHide(true);
+        _lobbyList->setHide(false);
     });
-    //    _login->build();
+    _login->build();
 
     _lobbyList = std::make_unique<LobbyList>(_engine, [this](int) {
         std::cout << "Join" << std::endl;
     });
     _lobbyList->build();
+    _lobbyList->setHide(true);
 
     _build = true;
     std::cout << "[CLIENT] Build completed!" << std::endl;
