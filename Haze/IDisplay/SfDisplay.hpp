@@ -87,6 +87,7 @@ namespace Haze
     public:
         ~SfColor() = default;
         static sf::Color getColor(colorEnum ccolor);
+        static sf::Color getColor(int r, int g, int b, int a);
     };
 
     class SfText : public IText
@@ -99,6 +100,7 @@ namespace Haze
         ~SfText() = default;
         void setPosition(int x, int y) override;
         void setColor(SfColor::colorEnum color);
+        void setColor(sf::Color color);
         sf::Text getText() const { return _text; }
         void setString(std::string string) override;
         void setScale(float x, float y) override;

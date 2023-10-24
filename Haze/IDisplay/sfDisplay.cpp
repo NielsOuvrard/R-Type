@@ -398,6 +398,11 @@ namespace Haze
                 return sf::Color::White;
         }
     }
+
+    sf::Color SfColor::getColor(int r, int g, int b, int a)
+    {
+        return sf::Color(r, g, b, a);
+    }
 }
 
 namespace Haze
@@ -428,6 +433,11 @@ namespace Haze
     void SfText::setColor(SfColor::colorEnum color)
     {
         _text.setFillColor(SfColor::getColor(color));
+    }
+
+    void SfText::setColor(sf::Color color)
+    {
+        _text.setFillColor(color);
     }
 }
 

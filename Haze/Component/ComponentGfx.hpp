@@ -156,6 +156,12 @@ namespace Haze {
             }
         }
 
+        Text(const std::string &text, int r, int g, int b, int a, const std::string &fontname = "arial.ttf") : text(text),
+            textObj(text, SfColor::RED, fontname)
+        {
+            textObj.setColor(SfColor::getColor(r, g, b, a));
+        }
+
         std::string text;
         SfText textObj;
 
