@@ -5,6 +5,7 @@
 #include "client.h"
 #include "Elements/Image.h"
 #include "Scenes/Background.h"
+#include "Scenes/LobbyList.h"
 #include "Scenes/Login.h"
 #include "net_message.h"
 
@@ -36,7 +37,13 @@ void client::build()
         if (name.empty() || ip.empty() || port.empty()) return;
         connect(ip, static_cast<uint16_t>(std::stoul(port)));
     });
-    _login->build();
+    //    _login->build();
+
+    _lobbyList = std::make_unique<LobbyList>(_engine, [this](int) {
+        std::cout << "Join" << std::endl;
+    });
+    _lobbyList->build();
+
     _build = true;
     std::cout << "[CLIENT] Build completed!" << std::endl;
 }

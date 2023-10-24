@@ -30,6 +30,7 @@ private:
     Haze::Entity *_window = nullptr;
     std::unique_ptr<Element> _bg;
     std::unique_ptr<Element> _login;
+    std::unique_ptr<Element> _lobbyList;
 
     std::unique_ptr<spectator> _spectator;
 };

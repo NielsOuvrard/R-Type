@@ -15,8 +15,7 @@ TextInput::TextInput(Haze::Engine &engine, std::string placeholder, AxisPair pos
 void TextInput::build()
 {
     buildEntity();
-    // todo: set to placeholder color
-    _entity->addComponent(new Haze::Text(_placeholder, _fontColor, _fontFile));
+    _entity->addComponent(new Haze::Text(_placeholder, 200, 200, 200, 100, _fontFile));
     _entity->addComponent(new Haze::HitboxDisplay);
     _entity->addComponent(new Haze::Hitbox({{-10, -5, 200, 50}}));
     _entity->addComponent(new Haze::OnMouseReleased([this](int id) {
@@ -42,13 +41,10 @@ void TextInput::build()
             }
         }
 
-        Haze::Text *textComponent = dynamic_cast<Haze::Text *>(_entity->getComponent("Text"));
         if (_value.empty()) {
-            textComponent->text = _placeholder;
-            // Todo: Set color to gray
+            _entity->addComponent(new Haze::Text(_placeholder, 200, 200, 200, 100, _fontFile));
         } else {
-            textComponent->text = _value;
-            // Todo: Set color to chosen color
+            _entity->addComponent(new Haze::Text(_value, Haze::Text::colorHaze::WHITE, _fontFile));
         }
     }));
 }
