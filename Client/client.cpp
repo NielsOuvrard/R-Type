@@ -29,19 +29,14 @@ void client::build()
     _bg = std::make_unique<Background>(_engine);
     _bg->build();
 
-    _login = std::make_unique<Login>(_engine);
+    _login = std::make_unique<Login>(_engine, [this](int) {
+        auto name = _login->get<TextInput>("name")->getValue();
+        auto ip = _login->get<TextInput>("ip")->getValue();
+        auto port = _login->get<TextInput>("port")->getValue();
+        if (name.empty() || ip.empty() || port.empty()) return;
+        connect(ip, static_cast<uint16_t>(std::stoul(port)));
+    });
     _login->build();
-
-    //    _login = std::make_unique<element::Login>(_engine, 100, 300, [this](const std::string &ip, uint16_t port) {
-    //        std::cout << "Ip: " << ip << ":" << port << std::endl;
-    //        connect(ip, port); });
-    //
-    //    _startButton = std::make_unique<element::Button>(_engine, "Start Game", [this](int id) {
-    //        network::message<protocol::lobby> msg(protocol::lobby::start_room);
-    //        send(msg); });
-    //    _startButton->getEntity().addComponent(new Haze::Hide);
-    //    _startButton->getEntity().addComponent(new Haze::Position(200, 200));
-
     _build = true;
     std::cout << "[CLIENT] Build completed!" << std::endl;
 }

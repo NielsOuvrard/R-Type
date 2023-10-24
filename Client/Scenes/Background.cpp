@@ -11,11 +11,11 @@ void Background::build()
 {
     _children["bg1"] = std::make_shared<Image>(_engine, "assets/sprites/client_bg.png", AxisPair{0, 0}, AxisPair{0.74, 0.74});
     _children["bg1"]->build();
-    _children["bg1"]->add(new Haze::Velocity(0, -0.5));
+    _children["bg1"]->add(new Haze::Velocity(0.0, -100, 1));
 
     _children["bg2"] = std::make_shared<Image>(_engine, "assets/sprites/client_bg.png", AxisPair{0, 1080}, AxisPair{0.74, 0.74});
     _children["bg2"]->build();
-    _children["bg2"]->add(new Haze::Velocity(0, -0.5));
+    _children["bg2"]->add(new Haze::Velocity(0.0, -100, 1));
 }
 
 void Background::update()

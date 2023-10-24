@@ -1,6 +1,6 @@
 //
 // Created by erwan on 10/20/23.
-//
+//a
 
 #pragma once
 
@@ -9,7 +9,10 @@
 
 class Login : public Element {
 public:
-    explicit Login(Haze::Engine &engine);
+    Login(Haze::Engine &engine, std::function<void(int)> connect);
     void build() override;
     void update() override;
+
+private:
+    std::function<void(int)> _connect;
 };

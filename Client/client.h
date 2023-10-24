@@ -24,7 +24,7 @@ public:
     void start();
 
 private:
-    Haze::Engine _engine;
+    Haze::Engine _engine{60};
     bool _build = false;
 
     Haze::Entity *_window = nullptr;
