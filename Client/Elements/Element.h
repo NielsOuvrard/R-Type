@@ -23,7 +23,13 @@ public:
     virtual ~Element() = default;
 
     virtual void build() = 0;
-    virtual void update() = 0;
+
+    virtual void update()
+    {
+        for (auto &[name, child]: _children) {
+            child->update();
+        }
+    }
 
 public:
     template<typename T>
@@ -32,8 +38,11 @@ public:
         return std::dynamic_pointer_cast<T>(_children[idx]);
     };
 
+    [[nodiscard]] bool getHide() { return _hide; }
+
     void setHide(bool state = true)
     {
+        _hide = state;
         if (_entity) {
             if (state) {
                 _entity->addComponent(new Haze::Hide);
@@ -93,6 +102,7 @@ protected:
     Haze::Engine &_engine;
     Haze::Entity *_entity = nullptr;
 
+    bool _hide = false;
     AxisPair _position;
     AxisPair _scale;
     std::string _id;

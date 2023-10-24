@@ -16,7 +16,11 @@ void client::start()
     }
     while (_engine.isOpen()) {
         _engine.update();
-        _bg->update();
+        for (auto &[name, element]: _elements) {
+            if (!element->getHide()) {
+                element->update();
+            }
+        }
     }
 }
 
@@ -27,25 +31,30 @@ void client::build()
     _window = _engine.createEntity();
     _window->addComponent(new Haze::Window(800, 600));
 
-    _bg = std::make_unique<Background>(_engine);
-    _bg->build();
+    _elements["bg"] = std::make_unique<Background>(_engine);
+    _elements["bg"]->build();
 
-    _login = std::make_unique<Login>(_engine, [this](int) {
-        auto name = _login->get<TextInput>("name")->getValue();
-        auto ip = _login->get<TextInput>("ip")->getValue();
-        auto port = _login->get<TextInput>("port")->getValue();
+    _elements["login"] = std::make_unique<Login>(_engine, [this](int) {
+        auto name = _elements["login"]->get<TextInput>("name")->getValue();
+        auto ip = _elements["login"]->get<TextInput>("ip")->getValue();
+        auto port = _elements["login"]->get<TextInput>("port")->getValue();
         if (name.empty() || ip.empty() || port.empty()) return;
         connect(ip, static_cast<uint16_t>(std::stoul(port)));
-        _login->setHide(true);
-        _lobbyList->setHide(false);
+        _elements["login"]->setHide(true);
+        _elements["lobbyList"]->setHide(false);
     });
-    _login->build();
+    _elements["login"]->build();
 
-    _lobbyList = std::make_unique<LobbyList>(_engine, [this](int) {
-        std::cout << "Join" << std::endl;
-    });
-    _lobbyList->build();
-    _lobbyList->setHide(true);
+    _elements["lobbyList"] = std::make_unique<LobbyList>(
+            _engine,
+            [this](int) {
+                std::cout << "Join" << std::endl;
+            },
+            [this](int) {
+                std::cout << "Disconnect" << std::endl;
+            });
+    _elements["lobbyList"]->build();
+    _elements["lobbyList"]->setHide(true);
 
     _build = true;
     std::cout << "[CLIENT] Build completed!" << std::endl;

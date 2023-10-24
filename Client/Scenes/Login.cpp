@@ -45,7 +45,3 @@ void Login::build()
     _children["start"]->rm("HitboxDisplay");
     get<Button>("start")->setHitbox(10, 10, 82, 82);
 }
-
-void Login::update()
-{
-}

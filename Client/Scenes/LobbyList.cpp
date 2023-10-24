@@ -7,8 +7,8 @@
 #include "../Elements/Image.h"
 #include "../Elements/Text.h"
 
-LobbyList::LobbyList(Haze::Engine &engine, std::function<void(int)> join)
-    : Element(engine), _join(std::move(join)) {}
+LobbyList::LobbyList(Haze::Engine &engine, std::function<void(int)> join, std::function<void(int)> disconnect)
+    : Element(engine), _join(std::move(join)), _disconnect(std::move(disconnect)) {}
 
 void LobbyList::build()
 {
@@ -22,9 +22,13 @@ void LobbyList::build()
     _children["join_img"]->build();
     _children["join"] = std::make_shared<Button>(_engine, _join, AxisPair{670, 480});
     _children["join"]->build();
+    _children["join"]->rm("HitboxDisplay");
     get<Button>("join")->setHitbox(10, 10, 82, 82);
-}
 
-void LobbyList::update()
-{
+    _children["disconnect_img"] = std::make_shared<Image>(_engine, "assets/sprites/close_btn.png", AxisPair{550, 484}, AxisPair{0.48, 0.48});
+    _children["disconnect_img"]->build();
+    _children["disconnect"] = std::make_shared<Button>(_engine, _disconnect, AxisPair{550, 480});
+    _children["disconnect"]->build();
+    _children["disconnect"]->rm("HitboxDisplay");
+    get<Button>("disconnect")->setHitbox(10, 10, 82, 82);
 }

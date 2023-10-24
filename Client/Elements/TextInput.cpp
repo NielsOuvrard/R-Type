@@ -61,6 +61,9 @@ void TextInput::setValue(const std::string &newValue)
 
 void TextInput::update()
 {
+    if (_focus) {
+        _entity->addComponent(new Haze::Text(_value + "|", Haze::Text::colorHaze::WHITE, _fontFile));
+    }
 }
 
 void TextInput::setHitbox(int x, int y, int width, int height)
