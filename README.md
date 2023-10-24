@@ -59,7 +59,7 @@ Client:
       <img src="https://avatars.githubusercontent.com/u/91875893?v=4" width="200" height="200">
       <p>Clovis</p>
       <p><a href="mailto:clovis.rabot@epitech.eu">clovis.rabot@epitech.eu</a></p>
-    </div>1
+    </div>
     <div style="text-align: center; margin: 10px;">
       <img src="https://media.licdn.com/dms/image/C4E03AQF6AIitN8q7cg/profile-displayphoto-shrink_400_400/0/1651531289334?e=1703721600&v=beta&t=nCsDz0wBgls-nLvLAzpAZqELOfTItPVJtoWJwRtmSGk" width="200" height="200">
       <p>Erwan</p>
