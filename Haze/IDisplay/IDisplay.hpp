@@ -12,7 +12,6 @@ namespace Haze
     class IWindow;
     class IInput;
     class IRect;
-    class IVector2f;
     class IColor;
 }
 
@@ -89,13 +88,6 @@ namespace Haze
         virtual ~IRect() = default;
         virtual void setPosition(int x, int y) = 0;
         virtual void setSize(int width, int height) = 0;
-    };
-
-    class IVector2f
-    {
-    private:
-    public:
-        virtual ~IVector2f() = default;
     };
 
     class IColor
