@@ -1,5 +1,4 @@
 ## Component core:
-
 ```cpp
 #include "inputs.hpp"
 
@@ -33,8 +32,7 @@ struct Position : public Component
 	void show() const override { std::cout << "Position: " << x << ", " << y << std::endl; }
 };
 ```
-
-`Position` is used to set the position of the _entity
+`Position` is used to set the position of the entity
 
 ```cpp
 struct Scale : public Component
@@ -46,8 +44,7 @@ struct Scale : public Component
 	void show() const override { std::cout << "Scale: " << x << ", " << y << std::endl; }
 };
 ```
-
-`Scale` sets the scale of the _entity. This is applied to the `Hitbox`
+`Scale` sets the scale of the entity. This is applied to the `Hitbox` 
 
 ```cpp
 struct Velocity : public Component
@@ -59,8 +56,7 @@ struct Velocity : public Component
 	void show() const override { std::cout << "Velocity: " << x << ", " << y << std::endl; }
 };
 ```
-
-`Velocity` is the movement applied to the _entity every frame
+`Velocity` is the movement applied to the entity every frame
 
 ```cpp
 struct Move : public Component
@@ -72,8 +68,7 @@ struct Move : public Component
 	void show() const override { std::cout << "Move: " << x << ", " << y << std::endl; }
 };
 ```
-
-`Move` is a movement applied only once to the _entity, it is automatically destroyed after use
+`Move` is a movement applied only once to the entity, it is automatically destroyed after use
 
 ```cpp
 struct Health : public Component
@@ -84,8 +79,7 @@ struct Health : public Component
 	void show() const override { std::cout << "Health: " << health << std::endl; }
 };
 ```
-
-`Health` can be use to setup the health of an _entity
+`Health` can be use to setup the health of an entity
 
 ```cpp
 struct Damage : public Component
@@ -96,8 +90,7 @@ struct Damage : public Component
 	void show() const override { std::cout << "Damage: " << damage << std::endl; }
 };
 ```
-
-`Damage` can be used to setup the damage of an _entity
+`Damage` can be used to setup the damage of an entity
 
 ```cpp
 struct Collision : public Component
@@ -125,12 +118,10 @@ struct Collision : public Component
 	void show() const override { std::cout << "Collision: " << scene << std::endl; }
 };
 ```
-
-`Collision` is the component that will define the collision behavior of an _entity.
+`Collision` is the component that will define the collision behavior of an entity.
 It takes :
-
-- a **scene** that will be use as an identification tag for a group of _entity
-- and a map of **behavior** that will define what happens on collision between two _entity of certain scene.
+- a **scene** that will be use as an identification tag for a group of entity
+- and a map of **behavior** that will define what happens on collision between two entity of certain scene.
 
 ```cpp
 struct Hitbox : public Component
@@ -148,8 +139,7 @@ struct Hitbox : public Component
 	void show() const override { std::cout << "Hitbox: " << std::endl; }
 };
 ```
-
-`Hitbox` is used to set the hitbox of an _entity
+`Hitbox` is used to set the hitbox of an entity
 it is defined as a vector of `intRect` which allows to have a hitbox composed of multiples rectangles.
 
 ```cpp
@@ -162,72 +152,63 @@ struct LifeTime : public Component
 	void show() const override { std::cout << "LifeTime: " << lifeTime << std::endl; }
 };
 ```
-
-`LifeTime` can be used to set a lifetime limit for an _entity
+`LifeTime` can be used to set a lifetime limit for an entity
 This lifetime is expressed in tics.
 
 ```cpp
 struct OnKeyPressed : public Component
 {
-	OnKeyPressed(std::function<void(int, std::vector<InputType>)> callback, size_t Player = 0) : callback(callback), Player(Player) {}
+	OnKeyPressed(std::function<void(int, std::vector<InputType>)> callback, size_t player = 0) : callback(callback), player(player) {}
 	std::function<void(int, std::vector<InputType>)> callback;
-	size_t Player;
+	size_t player;
 	std::string getType() const override {return "OnKeyPressed";}
 	void show() const override { std::cout << "OnKeyPressed" << std::endl; }
 };
 ```
-
-`OnKeyPressed` can be used to set a **callback** to execute, with as an argument every simultaneous key pressed in the
-engine.
-The `size_t` **Player** is the _id of the inputs.
+`OnKeyPressed` can be used to set a **callback** to execute, with as an argument every simultaneous key pressed in the engine.
+The `size_t` **player** is the id of the inputs.
 The engine can have multiple list of inputs if used as a server.
 
 ```cpp
 struct OnKeyReleased : public Component
 {
-	OnKeyReleased(std::function<void(int, std::vector<InputType>)> callback, size_t Player = 0) : callback(callback), Player(Player) {}
+	OnKeyReleased(std::function<void(int, std::vector<InputType>)> callback, size_t player = 0) : callback(callback), player(player) {}
 	std::function<void(int, std::vector<InputType>)> callback;
-	size_t Player;
+	size_t player;
 	std::string getType() const override{return "OnKeyReleased";}
 	void show() const override { std::cout << "OnKeyReleased" << std::endl; }
 };
 ```
-
-`OnKeyReleased` can be used to set a **callback** to execute, with as an argument every simultaneous key released in the
-engine.
-The `size_t` **Player** is the _id of the inputs.
+`OnKeyReleased` can be used to set a **callback** to execute, with as an argument every simultaneous key released in the engine.
+The `size_t` **player** is the id of the inputs.
 The engine can have multiple list of inputs if used as a server.
 
 ```cpp
 struct OnMousePressed : public Component
 {
-	OnMousePressed(std::function<void(int)> callback, size_t Player = 0) : callback(callback), Player(Player) {}
+	OnMousePressed(std::function<void(int)> callback, size_t player = 0) : callback(callback), player(player) {}
 	std::function<void(int)> callback;
-	size_t Player;
+	size_t player;
 	std::string getType() const override{return "OnMousePressed";}
 	void show() const override { std::cout << "OnMousePressed" << std::endl; }
 };
 ```
-
-`OnMousePressed` can be used to set a **callback** to execute every time the mouse is pressed and is intersecting the *
-*hitbox** of the _entity.
-The `size_t` **Player** is the _id of the inputs.
+`OnMousePressed` can be used to set a **callback** to execute every time the mouse is pressed and is intersecting the **hitbox** of the entity.
+The `size_t` **player** is the id of the inputs.
 The engine can have multiple list of inputs if used as a server.
 
 ```cpp
 struct OnMouseReleased : public Component
 {
-	OnMouseReleased(std::function<void(int)> callback, size_t Player = 0) : callback(callback), Player(Player) {}
+	OnMouseReleased(std::function<void(int)> callback, size_t player = 0) : callback(callback), player(player) {}
 	std::function<void(int)> callback;
-	size_t Player;
+	size_t player;
 	std::string getType() const override{return "OnMouseReleased";}
 	void show() const override { std::cout << "OnMouseReleased" << std::endl; }
 };
 ```
-
-`OnMouseReleased` can be used to set a **callback** to execute every time the mouse is released and is intersecting the
-**hitbox** of the _entity.
-The `size_t` **Player** is the _id of the inputs.
+`OnMouseReleased` can be used to set a **callback** to execute every time the mouse is released and is intersecting the **hitbox** of the entity.
+The `size_t` **player** is the id of the inputs.
 The engine can have multiple list of inputs if used as a server.
 
 ```cpp
@@ -238,6 +219,5 @@ struct Hide : public Component
 	void show() const override { std::cout << "Hide" << std::endl; }
 };
 ```
-
-`Hide` is used to disable an _entity.
-When in this state, the _entity in not displayed nor can receive inputs or move. 
+`Hide` is used to disable an entity.
+When in this state, the entity in not displayed nor can receive inputs or move. 

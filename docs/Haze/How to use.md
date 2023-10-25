@@ -1,8 +1,3 @@
-> [!abstract] Haze for
-> **H**aze
-> **A**tomic
-> **Z**izi
-> **E**ngine
 ## Getting Started
 To get started with the Haze Engine, follow these steps:
 
@@ -53,10 +48,14 @@ while (engine.isOpen())
 
 ## Components
 Component of the **haze-core** lib are at:
-[[Component]]
+[[ComponentCore Technical]]
 
 Component of the **haze-graphics** lib are at:
-[[ComponentGfx]]
+[[ComponentGfx Technical]]
+
+## Entity
+Entity are defined at
+[[Entity Technical]]
 
 ## Example Usage
 Here's an example of how to use the Haze Engine to create a simple game loop:
