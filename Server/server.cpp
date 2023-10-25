@@ -70,8 +70,8 @@ void server::onMessage(std::shared_ptr<network::connection<lobby>> from, network
         case lobby::create_room: {
             char nickname[32] = {0};
             msg >> nickname;
-            _rooms[_idCounter++] = std::make_unique<Room>();
-            _rooms[_idCounter]->addConnection(from, nickname, Room::privileges::owner);
+            _rooms[_idCounter] = std::make_unique<Room>();
+            _rooms[_idCounter++]->addConnection(from, nickname, Room::privileges::owner);
             break;
         }
         case lobby::start_room: {

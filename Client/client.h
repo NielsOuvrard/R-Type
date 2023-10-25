@@ -23,7 +23,22 @@ public:
     void build();
     void start();
     void receive();
-    void send();
+    void emit();
+
+private:
+    enum class state {
+        ok,
+        w_cr_room,
+        w_rooms,
+        w_room,
+        w_join,
+        w_start,
+    };
+
+    void handleOk();
+    void handleKo();
+    void handleNewChat();
+    void handleDataSocket();
 
 private:
     Haze::Engine _engine{60};
@@ -34,4 +49,5 @@ private:
     std::string selected;
 
     std::unique_ptr<spectator> _spectator;
+    state _state = state::ok;
 };

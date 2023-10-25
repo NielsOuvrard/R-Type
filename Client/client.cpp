@@ -9,6 +9,8 @@
 #include "Scenes/Login.h"
 #include "net_message.h"
 
+namespace net = network;
+
 void client::start()
 {
     if (!_build) {
@@ -17,6 +19,7 @@ void client::start()
     while (_engine.isOpen()) {
         _engine.update();
 
+        emit();
         receive();
 
         for (auto &[name, element]: _elements) {
@@ -57,7 +60,14 @@ void client::build()
                 std::cout << "Join" << std::endl;
             },
             [this]() {
+                if (_state != state::ok) return;
                 std::cout << "Create" << std::endl;
+                char name[32] = {0};
+                std::strncpy(name, _elements["login"]->get<TextInput>("name")->getValue().data(), 32);
+                net::message<lobby> msg(lobby::create_room);
+                msg << name;
+                send(msg);
+                _state = state::w_cr_room;
             },
             [this]() {
                 std::cout << "Disconnect" << std::endl;
@@ -75,10 +85,26 @@ void client::receive()
     while (!getIncoming().empty()) {
         network::message<lobby> msg = getIncoming().pop_front().content;
         switch (msg.header.id) {
+            case lobby::ok: {
+                handleOk();
+                break;
+            }
         }
     }
 }
 
-void client::send()
+void client::emit()
 {
+}
+
+void client::handleOk()
+{
+    switch (_state) {
+        case state::w_cr_room: {
+            std::cout << "Room created" << std::endl;
+            _elements["lobbyList"]->setHide(true);
+            _state = state::ok;
+            break;
+        }
+    }
 }
