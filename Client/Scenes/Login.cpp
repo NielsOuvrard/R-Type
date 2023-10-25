@@ -6,9 +6,38 @@
 #include "../Elements/Button.h"
 #include "../Elements/Image.h"
 
-Login::Login(Haze::Engine &engine, std::function<void(int)> connect)
+Login::Login(Haze::Engine &engine, std::function<void()> connect)
     : Element(engine), _connect(std::move(connect))
 {
+}
+
+void Login::update()
+{
+
+    static bool nameFocus = get<TextInput>("name")->_focus;
+    static bool ipFocus = get<TextInput>("ip")->_focus;
+    static bool portFocus = get<TextInput>("port")->_focus;
+
+    if (get<TextInput>("name")->_focus && !nameFocus) {
+        get<TextInput>("port")->_focus = false;
+        get<TextInput>("ip")->_focus = false;
+    }
+
+    if (get<TextInput>("ip")->_focus && !ipFocus) {
+        get<TextInput>("port")->_focus = false;
+        get<TextInput>("name")->_focus = false;
+    }
+
+    if (get<TextInput>("port")->_focus && !portFocus) {
+        get<TextInput>("name")->_focus = false;
+        get<TextInput>("ip")->_focus = false;
+    }
+
+    nameFocus = get<TextInput>("name")->_focus;
+    ipFocus = get<TextInput>("ip")->_focus;
+    portFocus = get<TextInput>("port")->_focus;
+
+    Element::update();
 }
 
 void Login::build()
@@ -37,10 +66,10 @@ void Login::build()
     _children["port"]->rm("HitboxDisplay");
     get<TextInput>("port")->setHitbox(-20, -20, 320, 81);
 
-
     _children["start_img"] = std::make_shared<Image>(_engine, "assets/sprites/play_btn.png", AxisPair{600, 424}, AxisPair{0.48, 0.48});
     _children["start_img"]->build();
-    _children["start"] = std::make_shared<Button>(_engine, _connect, AxisPair{600, 420});
+    _children["start"] = std::make_shared<Button>(
+            _engine, [this](int) { _connect(); }, AxisPair{600, 420});
     _children["start"]->build();
     _children["start"]->rm("HitboxDisplay");
     get<Button>("start")->setHitbox(10, 10, 82, 82);

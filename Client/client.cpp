@@ -16,6 +16,9 @@ void client::start()
     }
     while (_engine.isOpen()) {
         _engine.update();
+
+        receive();
+
         for (auto &[name, element]: _elements) {
             if (!element->getHide()) {
                 element->update();
@@ -34,7 +37,7 @@ void client::build()
     _elements["bg"] = std::make_unique<Background>(_engine);
     _elements["bg"]->build();
 
-    _elements["login"] = std::make_unique<Login>(_engine, [this](int) {
+    _elements["login"] = std::make_unique<Login>(_engine, [this]() {
         auto name = _elements["login"]->get<TextInput>("name")->getValue();
         auto ip = _elements["login"]->get<TextInput>("ip")->getValue();
         auto port = _elements["login"]->get<TextInput>("port")->getValue();
@@ -44,53 +47,38 @@ void client::build()
         _elements["lobbyList"]->setHide(false);
     });
     _elements["login"]->build();
+    _elements["login"]->get<TextInput>("name")->setValue("Toto");
+    _elements["login"]->get<TextInput>("ip")->setValue("127.0.0.1");
+    _elements["login"]->get<TextInput>("port")->setValue("3030");
 
     _elements["lobbyList"] = std::make_unique<LobbyList>(
             _engine,
-            [this](int) {
+            [this]() {
                 std::cout << "Join" << std::endl;
             },
-            [this](int) {
+            [this]() {
+                std::cout << "Create" << std::endl;
+            },
+            [this]() {
                 std::cout << "Disconnect" << std::endl;
             });
     _elements["lobbyList"]->build();
     _elements["lobbyList"]->setHide(true);
 
+    selected = "login";
     _build = true;
     std::cout << "[CLIENT] Build completed!" << std::endl;
 }
 
-//// TCP Events
-//while (!getIncoming().empty()) {
-//    network::message<lobby> msg = getIncoming().pop_front().content;
-//    switch (msg.header.id) {
-//        case lobby::data_channel: {
-//            if (!_spectator) {
-//                asio::ip::udp::endpoint peer;
-//                msg >> peer;
-//                peer = udp::endpoint(asio::ip::make_address(_login->getIp()), peer.port());
-//                std::cout << "[PEER]: " << peer << std::endl;
-//                _spectator = std::make_unique<spectator>(_context, _engine);
-//                _spectator->addPeer(peer);
-//                _startButton->getEntity().addComponent(new Haze::Hide);
-//
-//                network::datagram<protocol::data> data(protocol::data::join);
-//                _spectator->sendTo(data, peer);
-//
-//                std::cout << "send join" << std::endl;
-//            }
-//            break;
-//        }
-//    }
-//}
+void client::receive()
+{
+    while (!getIncoming().empty()) {
+        network::message<lobby> msg = getIncoming().pop_front().content;
+        switch (msg.header.id) {
+        }
+    }
+}
 
-
-//if (_spectator) {
-//    //            std::cout << "[INBOX] " << _game->getIncoming().count() << std::endl;
-//    _spectator->update(50, false);
-//    if (_spectator->aliveCD.IsReady()) {
-//        _spectator->aliveCD.Activate();
-//        _spectator->sendAll(network::datagram<protocol::data>(protocol::data::alive));
-//        std::cout << "[GAME] sent Alive" << std::endl;
-//    }
-//}
+void client::send()
+{
+}

@@ -9,9 +9,10 @@
 
 class Login : public Element {
 public:
-    Login(Haze::Engine &engine, std::function<void(int)> connect);
+    Login(Haze::Engine &engine, std::function<void()> connect);
     void build() override;
+    void update() override;
 
 private:
-    std::function<void(int)> _connect;
+    std::function<void()> _connect;
 };

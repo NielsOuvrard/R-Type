@@ -19,10 +19,11 @@ public:
     void setHitbox(int x, int y, int width, int height);
     [[nodiscard]] const std::string &getValue() const;
 
+    bool _focus = false;
+
 private:
     std::string _value;
     std::string _placeholder;
     std::string _fontFile = "NotoMono.ttf";
     Haze::Text::colorHaze _fontColor = Haze::Text::WHITE;
-    bool _focus = false;
 };

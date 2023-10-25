@@ -8,10 +8,12 @@
 
 class LobbyList : public Element {
 public:
-    LobbyList(Haze::Engine &engine, std::function<void(int)> join, std::function<void(int)> disconnect);
+    LobbyList(Haze::Engine &engine, std::function<void()> join, std::function<void()> create, std::function<void()> disconnect);
 
 public:
+    void update() override;
     void build() override;
-    std::function<void(int)> _join;
-    std::function<void(int)> _disconnect;
+    std::function<void()> _join;
+    std::function<void()> _create;
+    std::function<void()> _disconnect;
 };

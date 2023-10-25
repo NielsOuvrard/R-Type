@@ -41,28 +41,26 @@ void TextInput::build()
             }
         }
 
-        if (_value.empty()) {
-            _entity->addComponent(new Haze::Text(_placeholder, 200, 200, 200, 100, _fontFile));
-        } else {
-            _entity->addComponent(new Haze::Text(_value, Haze::Text::colorHaze::WHITE, _fontFile));
-        }
+        setValue(_value);
     }));
 }
 
 void TextInput::setValue(const std::string &newValue)
 {
     _value = newValue;
-    Haze::Text *textComponent = dynamic_cast<Haze::Text *>(_entity->getComponent("Text"));
-    if (_value.empty())
-        textComponent->text = _placeholder;
-    else
-        textComponent->text = _value;
+    if (_value.empty()) {
+        _entity->addComponent(new Haze::Text(_placeholder, 200, 200, 200, 100, _fontFile));
+    } else {
+        _entity->addComponent(new Haze::Text(_value, Haze::Text::colorHaze::WHITE, _fontFile));
+    }
 }
 
 void TextInput::update()
 {
     if (_focus) {
         _entity->addComponent(new Haze::Text(_value + "|", Haze::Text::colorHaze::WHITE, _fontFile));
+    } else {
+        _entity->addComponent(new Haze::Text(_value, Haze::Text::colorHaze::WHITE, _fontFile));
     }
 }
 

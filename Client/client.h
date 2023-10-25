@@ -22,6 +22,8 @@ public:
 public:
     void build();
     void start();
+    void receive();
+    void send();
 
 private:
     Haze::Engine _engine{60};
@@ -29,6 +31,7 @@ private:
 
     Haze::Entity *_window = nullptr;
     std::map<std::string, std::unique_ptr<Element>> _elements;
+    std::string selected;
 
     std::unique_ptr<spectator> _spectator;
 };
