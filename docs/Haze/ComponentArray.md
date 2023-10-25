@@ -1,4 +1,4 @@
-# What is a ComponentArray
+## What is a ComponentArray
 
 The component array in Haze is where is stored all of the data of the engine.
 It contains all of the components in a two dimensional sparse array. Each entity being a simple id in this array. (for more details about entity: [Entity](Entity%20Technical.md))

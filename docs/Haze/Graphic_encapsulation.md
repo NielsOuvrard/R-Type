@@ -1,4 +1,4 @@
-# How does the graphic encapsulation work in Haze ?
+## How does the graphic encapsulation work in Haze ?
 
 The graphic encapsulation exists to allows to change easily the graphic library of the engine.
 

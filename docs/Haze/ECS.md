@@ -1,4 +1,4 @@
-# Understanding the Entity-Component-System (ECS) Architecture
+## Understanding the Entity-Component-System (ECS) Architecture
 
 The Entity-Component-System (ECS) architecture is a design pattern commonly used in game development and simulation systems. It separates the game logic into three distinct parts: entities, components, and systems. This separation promotes modularity, flexibility, and performance in managing complex systems.
 
