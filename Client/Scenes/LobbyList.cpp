@@ -34,13 +34,13 @@ void LobbyList::build()
     _children["disconnect"]->rm("HitboxDisplay");
     get<Button>("disconnect")->setHitbox(10, 10, 82, 82);
 
-    _children["create_img"] = std::make_shared<Image>(_engine, "assets/sprites/new_btn.png", AxisPair{550, 484}, AxisPair{0.48, 0.48});
+    _children["create_img"] = std::make_shared<Image>(_engine, "assets/sprites/new_btn.png", AxisPair{430, 25}, AxisPair{0.27, 0.27});
     _children["create_img"]->build();
     _children["create"] = std::make_shared<Button>(
-            _engine, [this](int) { _create(); }, AxisPair{550, 480});
+            _engine, [this](int) { _create(); }, AxisPair{430, 25});
     _children["create"]->build();
     _children["create"]->rm("HitboxDisplay");
-    get<Button>("create")->setHitbox(10, 10, 82, 82);
+    get<Button>("create")->setHitbox(6, 6, 43, 43);
 }
 
 void LobbyList::update()
