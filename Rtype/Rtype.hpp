@@ -58,6 +58,11 @@ private:
 
     Cooldown _enemySpawnCD{5s};
 
+    // * walls
+    nlohmann::json _mapTiles;
+    nlohmann::json _hitboxWalls;
+    uint16_t _index_map;
+
     std::unique_ptr<Paralax> _background;
     std::vector<std::unique_ptr<Wall>> _walls;
     std::vector<Haze::Entity *> _entities;

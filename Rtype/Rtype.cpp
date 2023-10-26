@@ -14,8 +14,10 @@
 
 #include "Rtype.hpp"
 
+#define NBR_TILES_ON_SCREEN 6
+
 Rtype::Rtype(asio::io_context &context)
-    : _channel(context), _engine(60)
+    : _channel(context), _engine(60), _index_map(0)
 {
     std::srand(std::time(0));
     _engine.init();
@@ -113,13 +115,12 @@ void Rtype::createMap()
 {
     // Load sprite data for the walls from "ground.json"
     std::ifstream groundFile("assets/AnimationJSON/ground.json");
-    nlohmann::json groundData;
 
     if (!groundFile.is_open()) {
         std::cerr << "Error: Could not open 'ground.json' for reading" << std::endl;
         return;
     }
-    groundFile >> groundData;
+    groundFile >> _hitboxWalls;
     groundFile.close();
 
     // Load map data from "map.json"
@@ -133,22 +134,24 @@ void Rtype::createMap()
     mapFile.close();
 
     // Retrieve the array of tiles from the map data
-    nlohmann::json mapTiles = mapData["map"];
-    uint16_t tileIndex = 0;
+    _mapTiles = mapData["map"];
 
     // Iterate through each tile in the map
-    for (const auto &tile: mapTiles) {
+    for (const auto &tile: _mapTiles) {
+        if (_index_map > NBR_TILES_ON_SCREEN) {
+            break;
+        }
         // Create and position the top wall
-        _walls.emplace_back(std::make_unique<Wall>(_engine, _channel, groundData, (48 * 3) * tileIndex, 0, false));
+        _walls.emplace_back(std::make_unique<Wall>(_engine, _channel, _hitboxWalls, (48 * 3) * _index_map, 0, false));
         _walls.back()->build(tile["tile_top"]);
 
         // Create and position the bottom wall
-        _walls.emplace_back(std::make_unique<Wall>(_engine, _channel, groundData, (48 * 3) * tileIndex, 600, true));
+        _walls.emplace_back(std::make_unique<Wall>(_engine, _channel, _hitboxWalls, (48 * 3) * _index_map, 600, true));
         _walls.back()->build(tile["tile_bottom"]);
 
         // Print the tile index
-        std::cout << "Tile " << tileIndex << " created." << std::endl;
-        tileIndex++;
+        std::cout << "Tile " << _index_map << " created." << std::endl;
+        _index_map++;
     }
 
     std::cout << "Map successfully created." << std::endl;
@@ -272,6 +275,30 @@ void Rtype::sendUpdate()
 
 void Rtype::update()
 {
+    /**
+     * remove and add wall
+     */
+     if (_walls.front()->get_x_position() < -48 * 3/* -48 * 3  (48 * 3) * 5*/) {
+        std::cout << "_walls.front()->destroy\n";
+        // destroy
+        _walls.front()->destroy();
+        _walls.erase(_walls.begin());
+        _walls.front()->destroy();
+        _walls.erase(_walls.begin());
+
+         float pos_wall_back =_walls.back()->get_x_position();
+
+        // Create and position the top wall
+        _walls.emplace_back(std::make_unique<Wall>(_engine, _channel, _hitboxWalls, pos_wall_back + (48 * 3), 0, false));
+        _walls.back()->build(_mapTiles[_index_map]["tile_top"]);
+
+        // Create and position the bottom wall
+        _walls.emplace_back(std::make_unique<Wall>(_engine, _channel, _hitboxWalls, pos_wall_back + (48 * 3), 600, true));
+        _walls.back()->build(_mapTiles[_index_map]["tile_bottom"]);
+        _index_map++;
+
+        std::cout << "\033[0;31m map i = " << _index_map << " and walls are " << _walls.size() << "\033[0;0m" << std::endl;
+     }
     /**
      * Enemy & Missiles' cleanup cycle
      */

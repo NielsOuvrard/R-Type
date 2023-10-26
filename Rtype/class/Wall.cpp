@@ -67,10 +67,34 @@ void Wall::send()
     _channel.sendGroup(RType::message::addComponent(_id, "Sprite", new Haze::SpriteData{"assets/sprites/wall.png"}, sizeof(Haze::SpriteData)));
     _channel.sendGroup(RType::message::addComponent(_id, "Animation", new Haze::AnimationData{"assets/AnimationJSON/ground.json"}, sizeof(Haze::AnimationData)));
     _channel.sendGroup(RType::message::addComponent(_id, "SpriteCropped", new Haze::SpriteCroppedData{_frameIndex}, sizeof(Haze::SpriteCroppedData)));
-    _channel.sendGroup(RType::message::addComponent(_id, "HitboxDisplay", nullptr, 0));
+//    _channel.sendGroup(RType::message::addComponent(_id, "HitboxDisplay", nullptr, 0));
 }
 
 void Wall::sendUpdate()
 {
 //    _channel.sendGroup(RType::message::addComponent(_id, "Position", new Haze::PositionData{_x, _y}, sizeof(Haze::PositionData)));
+}
+
+/**
+ * @brief Send a message to destroy the explosion entity.
+ */
+void Wall::destroy()
+{
+    // Send a message to initiate the destruction of the wall entity
+    _channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
+
+    // Add a Destroy component to the entity
+    _entity->addComponent(new Haze::Destroy());
+
+    // Set the entity to nullptr
+    _entity = nullptr;
+}
+
+float Wall::get_x_position() const
+{
+    auto wallPos = dynamic_cast<Haze::Position *>(_entity->getComponent("Position"));
+    if (wallPos == nullptr) {
+        return -1.0;
+    }
+    return  wallPos->x;
 }
