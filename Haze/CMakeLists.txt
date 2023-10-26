@@ -57,4 +57,4 @@ target_include_directories(haze-graphics PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Fact
 target_include_directories(haze-graphics PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Pipeline/core)
 target_include_directories(haze-graphics PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/IDisplay)
 target_include_directories(haze-graphics PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/AssetManager)
-target_link_libraries(haze-graphics PUBLIC sfml-graphics sfml-window sfml-system)
+target_link_libraries(haze-graphics PUBLIC sfml-graphics sfml-window sfml-system sfml-audio)

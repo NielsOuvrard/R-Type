@@ -14,7 +14,7 @@ jobs:
 
       - name: Push to Destination Repository
         env:
-          DESTINATION_REPO_TOKEN: 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
+          DESTINATION_REPO_TOKEN: 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
         run: |
           git config --global user.email "clovis.rabot@epitech.eu"
           git config --global user.name "rclovis"
@@ -28,4 +28,4 @@ jobs:
 
           git add .
           git commit -m "Update from source repository"
-          git push https://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@github.com/rclovis/R-Type-Documentation.git HEAD:main
+          git push https://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@github.com/rclovis/R-Type-Documentation.git HEAD:main

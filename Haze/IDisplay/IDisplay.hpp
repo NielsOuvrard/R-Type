@@ -10,7 +10,6 @@ namespace Haze
     class IText;
     class IAudio;
     class IWindow;
-    class IInput;
     class IRect;
     class IColor;
 }
@@ -51,6 +50,11 @@ namespace Haze
     private:
     public:
         virtual ~IAudio() = default;
+        virtual void play() = 0;
+        virtual void stop() = 0;
+        virtual void setLoop(bool loop) = 0;
+        virtual bool isPlaying() const = 0;
+        virtual bool isStopped() const = 0;
     };
 
     class IWindow
@@ -72,13 +76,6 @@ namespace Haze
         virtual void fillFocus(bool *focus) = 0;
         virtual void fillMousePosition(int *x, int *y) = 0;
         virtual bool pollEvent() = 0;
-    };
-
-    class IInput
-    {
-    private:
-    public:
-        virtual ~IInput() = default;
     };
 
     class IRect

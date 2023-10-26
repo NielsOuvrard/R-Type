@@ -37,6 +37,41 @@ namespace Haze
 
 namespace Haze
 {
+    SfAudio::SfAudio(std::string path)
+    {
+        if (!_buffer.loadFromFile(path))
+            std::cerr << "Error: could not load audio" << std::endl;
+        _sound.setBuffer(_buffer);
+    }
+
+    void SfAudio::play()
+    {
+        _sound.play();
+    }
+
+    void SfAudio::stop()
+    {
+        _sound.stop();
+    }
+
+    void SfAudio::setLoop(bool loop)
+    {
+        _sound.setLoop(loop);
+    }
+
+    bool SfAudio::isPlaying() const
+    {
+        return _sound.getStatus() == sf::Sound::Playing;
+    }
+
+    bool SfAudio::isStopped() const
+    {
+        return _sound.getStatus() == sf::Sound::Stopped;
+    }
+}
+
+namespace Haze
+{
     SfTexture::SfTexture(std::string path)
     {
         if (!_texture.loadFromFile(path))
