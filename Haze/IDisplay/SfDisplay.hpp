@@ -1,5 +1,6 @@
 #include "IDisplay.hpp"
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <iostream>
 #include <memory>
 #include "AssetManager.hpp"
@@ -11,10 +12,28 @@ namespace Haze
     class SfWindow;
     class SfText;
     class SfColor;
+    class SfIAudio;
+    class SfRect;
 }
 
 namespace Haze
 {
+
+    class SfAudio : public IAudio
+    {
+    private:
+        sf::SoundBuffer _buffer;
+        sf::Sound _sound;
+    public:
+        SfAudio(std::string path);
+        ~SfAudio() = default;
+        void play() override;
+        void stop() override;
+        void setLoop(bool loop) override;
+        bool isPlaying() const override;
+        bool isStopped() const override;
+    };
+
     class SfTexture : public ITexture
     {
     private:
