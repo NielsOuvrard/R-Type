@@ -14,7 +14,7 @@ jobs:
 
       - name: Push to Destination Repository
         env:
-          DESTINATION_REPO_TOKEN: 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
+          DESTINATION_REPO_TOKEN: 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
         run: |
           git config --global user.email "clovis.rabot@epitech.eu"
           git config --global user.name "rclovis"
