@@ -115,9 +115,6 @@ void Rtype::start()
     _background->build();
     _mapHandler->createMap();
 
-    _enemies.emplace_back(std::make_unique<Enemy>(_engine, _channel));
-    _enemies.back()->build();
-
     /**
       * Update Cycle
       */
@@ -240,7 +237,7 @@ void Rtype::update()
         if (enemy->_isDead) {
             // * create explosion
 
-            _explosions.emplace_back(std::make_unique<Explosion>(_engine, _channel, enemy->_pos_x, enemy->_pos_y));
+            _explosions.emplace_back(std::make_unique<Explosion>(_engine, _channel, enemy->_data.x, enemy->_data.y));
             _explosions.back()->build();
             _explosions.back()->send();
             std::cout << "Explosion created" << std::endl;
@@ -310,15 +307,16 @@ void Rtype::update()
     /**
      * Spawn random enemies
      */
-    if (_enemySpawnCD.IsReady()) {
-        std::chrono::milliseconds newDuration((std::rand() % 6 + 3) * 1000);
-        _enemySpawnCD.setDuration(newDuration);
-        _enemySpawnCD.Activate();
-
-        int32_t enemyNb = std::rand() % 3 + 1;
-        for (int32_t i = 0; i < enemyNb; i++) {
-            _enemies.emplace_back(std::make_unique<Enemy>(_engine, _channel));
-            _enemies.back()->build();
-        }
-    }
+    // * In comment because load in map
+    //    if (_enemySpawnCD.IsReady()) {
+    //        std::chrono::milliseconds newDuration((std::rand() % 6 + 3) * 1000);
+    //        _enemySpawnCD.setDuration(newDuration);
+    //        _enemySpawnCD.Activate();
+    //
+    //        int32_t enemyNb = std::rand() % 3 + 1;
+    //        for (int32_t i = 0; i < enemyNb; i++) {
+    //            _enemies.emplace_back(std::make_unique<Enemy>(_engine, _channel));
+    //            _enemies.back()->build();
+    //        }
+    //    }
 }

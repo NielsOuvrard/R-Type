@@ -34,45 +34,27 @@
       "enemies": [
         {
           "type": 0,
-          "life": 3,
           "x": 24,
-          "y": 0
+          "y": 200,
+          "velocity_x": -2,
+          "move": "circular",
+          "radius": 100
         },
         {
           "type": 0,
-          "life": 3,
           "x": 24,
-          "y": 100
+          "y": 300,
+          "velocity_x": -2,
+          "move": "circular",
+          "radius": 100
         },
         {
           "type": 0,
-          "life": 3,
           "x": 24,
-          "y": 200
-        },
-        {
-          "type": 0,
-          "life": 3,
-          "x": 24,
-          "y": 300
-        },
-        {
-          "type": 0,
-          "life": 3,
-          "x": 24,
-          "y": 400
-        },
-        {
-          "type": 0,
-          "life": 3,
-          "x": 24,
-          "y": 500
-        },
-        {
-          "type": 0,
-          "life": 3,
-          "x": 24,
-          "y": 600
+          "y": 400,
+          "velocity_x": -2,
+          "move": "circular",
+          "radius": 100
         }
       ]
     },
@@ -90,7 +72,33 @@
     },
     {
       "tile_top": 0,
-      "tile_bottom": 5
+      "tile_bottom": 5,
+      "enemies": [
+        {
+          "type": 0,
+          "x": 24,
+          "y": 200,
+          "velocity_x": -2,
+          "move": "sinusoidal",
+          "radius": 50
+        },
+        {
+          "type": 0,
+          "x": 24,
+          "y": 300,
+          "velocity_x": -2,
+          "move": "sinusoidal",
+          "radius": 50
+        },
+        {
+          "type": 0,
+          "x": 24,
+          "y": 400,
+          "velocity_x": -2,
+          "move": "sinusoidal",
+          "radius": 50
+        }
+      ]
     },
     {
       "tile_top": 9,

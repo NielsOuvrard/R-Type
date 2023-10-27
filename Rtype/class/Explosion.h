@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "../config.h"
 #include "../protocol.h"
 #include "Cooldown.h"
 #include <componentData.hpp>
@@ -47,6 +48,7 @@ public:
     Cooldown _time_to_destroyCd{2s};///< Cooldown timer for destruction.
 
 private:
+    //    Haze::SfAudio &_sound;
     Haze::Engine &_engine;                          ///< The game engine.
     network::data_channel<protocol::data> &_channel;///< The network data channel.
     float _x;                                       ///< The x-coordinate of the explosion.

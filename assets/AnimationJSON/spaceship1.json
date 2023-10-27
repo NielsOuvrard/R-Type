@@ -1,6 +1,6 @@
 {
-    "tics": 0.5,
-    "type": "boomerang",
+    "animation_tics": 0.5,
+    "animation_type": "boomerang",
     "animation": [
         {
             "x": 0,

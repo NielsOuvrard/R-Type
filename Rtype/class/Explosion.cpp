@@ -32,7 +32,7 @@ void Explosion::build()
     // Add Position, Velocity, and Scale components to the entity
     _entity->addComponent(new Haze::Position(_x, _y));
     _entity->addComponent(new Haze::Velocity(0, 0, 0.1));
-    _entity->addComponent(new Haze::Scale(3, 3));
+    _entity->addComponent(new Haze::Scale(UNIVERSAL_SCALE, UNIVERSAL_SCALE));
 }
 
 /**
@@ -45,7 +45,7 @@ void Explosion::send()
     //    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Audio", new Haze::SfAudio("assets/sounds/pluck_001.ogg"), sizeof(Haze::SfAudio)));
     // Send messages to add Position, Scale, Sprite, and Animation components
     _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Position", new Haze::PositionData{_x, _y}, sizeof(Haze::PositionData)));
-    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Scale", new Haze::ScaleData{3, 3}, sizeof(Haze::ScaleData)));
+    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Scale", new Haze::ScaleData{UNIVERSAL_SCALE, UNIVERSAL_SCALE}, sizeof(Haze::ScaleData)));
     _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Sprite", new Haze::SpriteData{"assets/sprites/spaceship.gif"}, sizeof(Haze::SpriteData)));
     _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Animation", new Haze::AnimationData{"assets/AnimationJSON/explosion.json"}, sizeof(Haze::AnimationData)));
 }

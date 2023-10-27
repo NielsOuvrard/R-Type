@@ -4,14 +4,63 @@
 
 #include "MapHandling.h"
 
-#define NBR_TILES_ON_SCREEN 6
+void fill_EnemyData(EnemyData &data, nlohmann::json jsonData)
+{
+    data.damage = 0;
+    data.type = 0;
+    data.life = 0;
+    data.path_sprite = "";
+
+    if (jsonData.contains("type")) {
+        data.type = jsonData["type"];
+    }
+    if (jsonData.contains("damage")) {
+        data.damage = jsonData["damage"];
+    }
+    if (jsonData.contains("life")) {
+        data.life = jsonData["life"];
+    }
+    if (jsonData.contains("path_sprite")) {
+        data.path_sprite = jsonData["path_sprite"];
+    }
+}
 
 MapHandling::MapHandling(Haze::Engine &engine,
                          network::data_channel<protocol::data> &channel,
                          std::vector<std::unique_ptr<Wall>> &walls,
                          std::vector<std::unique_ptr<Enemy>> &enemies)
-    : _engine(engine), _channel(channel), _walls(walls), _enemies(enemies)
+    : _engine(engine), _channel(channel), _walls(walls), _enemies(enemies), _index_map(0)
 {
+    const std::string directoryPath = "assets/enemies";
+
+    for (const auto &entry: std::filesystem::directory_iterator(directoryPath)) {
+        if (entry.is_regular_file() && entry.path().extension() == ".json") {
+            std::string filePath = entry.path().string();
+            std::ifstream fileStream(filePath);
+
+            if (fileStream.is_open()) {
+                try {
+                    std::cout << "begin parsing file: " << filePath << std::endl;
+
+                    nlohmann::json jsonData;
+                    fileStream >> jsonData;
+
+                    EnemyData new_enemy_type;
+                    fill_EnemyData(new_enemy_type, jsonData);
+
+                    new_enemy_type.path_json = filePath;
+                    _enemies_type.push_back(new_enemy_type);
+                } catch (nlohmann::json::parse_error &e) {
+                    std::cerr << "Error parsing JSON file: " << filePath << std::endl;
+                    std::cerr << e.what() << std::endl;
+                }
+
+                fileStream.close();
+            } else {
+                std::cerr << "Failed to open file: " << filePath << std::endl;
+            }
+        }
+    }
 }
 
 void MapHandling::createMap()
@@ -38,18 +87,17 @@ void MapHandling::createMap()
 
     // Retrieve the array of tiles from the map data
     _mapTiles = mapData["map"];
-
     // Iterate through each tile in the map
     for (const auto &tile: _mapTiles) {
-        if (_index_map > NBR_TILES_ON_SCREEN) {
+        if (_index_map - 1 > WINDOW_WIDTH / (UNIVERSAL_SCALE * 48)) {
             break;
         }
         // Create and position the top wall
-        _walls.emplace_back(std::make_unique<Wall>(_engine, _channel, _hitboxWalls, (48 * 3) * _index_map, 0, false));
+        _walls.emplace_back(std::make_unique<Wall>(_engine, _channel, _hitboxWalls, (48 * UNIVERSAL_SCALE) * _index_map, 0, false));
         _walls.back()->build(tile["tile_top"]);
 
         // Create and position the bottom wall
-        _walls.emplace_back(std::make_unique<Wall>(_engine, _channel, _hitboxWalls, (48 * 3) * _index_map, 600, true));
+        _walls.emplace_back(std::make_unique<Wall>(_engine, _channel, _hitboxWalls, (48 * UNIVERSAL_SCALE) * _index_map, WINDOW_HEIGHT, true));
         _walls.back()->build(tile["tile_bottom"]);
 
         // Print the tile index
@@ -78,24 +126,19 @@ void MapHandling::update()
 
         if (enemies_tile != nullptr) {
             for (auto &enemy_tile: enemies_tile) {
-                std::cout << "\u001B[0;31m! NEW ENEMY\u001B[0;0m\n";
-                int16_t pos_x = enemy_tile["x"];
-                int16_t pos_y = enemy_tile["y"];
+                std::cout << "\u001B[0;31mNEW ENEMY !\u001B[0;0m\n";
+                int16_t type_enemy_found = enemy_tile["type"];
                 _enemies.emplace_back(std::make_unique<Enemy>(_engine, _channel));
-                _enemies.back()->build(pos_x, pos_y);
-                std::cout << "\u001B[0;31m! NEW ENEMY DONE\u001B[0;0m\n";
+                _enemies.back()->build(_enemies_type.back(), enemy_tile);// TODO put the good type, with map
             }
         }
 
         // Create and position the top wall
-        _walls.emplace_back(std::make_unique<Wall>(_engine, _channel, _hitboxWalls, pos_wall_back + (48 * 3), 0, false));
+        _walls.emplace_back(std::make_unique<Wall>(_engine, _channel, _hitboxWalls, pos_wall_back + (48 * UNIVERSAL_SCALE), 0, false));
         _walls.back()->build(_mapTiles[_index_map]["tile_top"]);
         // Create and position the bottom wall
-        _walls.emplace_back(std::make_unique<Wall>(_engine, _channel, _hitboxWalls, pos_wall_back + (48 * 3), 600, true));
+        _walls.emplace_back(std::make_unique<Wall>(_engine, _channel, _hitboxWalls, pos_wall_back + (48 * UNIVERSAL_SCALE), WINDOW_HEIGHT, true));
         _walls.back()->build(_mapTiles[_index_map]["tile_bottom"]);
         _index_map++;
     }
 }
-
-// [0;31m
-// [0;0m
