@@ -96,11 +96,17 @@ void game::deleteEntity(Haze::entity_id info)
 {
     _entities[info.id]->addComponent(new Haze::Destroy);
     _entities.erase(info.id);
-//    std::cout << ""
 }
 
 void game::addComponent(Haze::component_info info)
 {
+    // * if didn't exist
+    if (_entities.find(info.id) == _entities.end()) {
+        _entities.insert({
+                info.id,
+                _engine.createEntity(),
+        });
+    }
     _entities[info.id]->addComponent(Haze::Factory::createComponent(std::string(info.name), info.data));
 }
 
