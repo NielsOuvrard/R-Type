@@ -121,12 +121,12 @@ namespace network {
 
         void asyncWriteHeader()
         {
-            std::cout << "writing\n";
+            //            std::cout << "writing\n";
             asio::async_write(
                     _socket, asio::buffer(&_outbox.front().header, sizeof(message_header<T>)),
                     [this](std::error_code ec, std::size_t length) {
                         if (!ec) {
-                            std::cout << length << "bytes were written successfully" << std::endl;
+                            //                            std::cout << length << "bytes were written successfully" << std::endl;
                             if (_outbox.front().body.size() > 0) {
                                 asyncWriteBody();
                             } else {

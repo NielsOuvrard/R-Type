@@ -31,6 +31,8 @@ void Button::update()
 void Button::setLabel(std::string label)
 {
     _label = std::move(label);
+    auto t = dynamic_cast<Haze::Text *>(_entity->getComponent("Text"));
+    t->text = _label;
 }
 
 void Button::setHitbox(int x, int y, int width, int height)

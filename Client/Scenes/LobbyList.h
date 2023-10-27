@@ -5,10 +5,14 @@
 #pragma once
 
 #include "../Elements/Element.h"
+#include "LobbyItem.h"
 
 class LobbyList : public Element {
 public:
     LobbyList(Haze::Engine &engine, std::function<void()> join, std::function<void()> create, std::function<void()> disconnect);
+
+    std::map<uint32_t, std::unique_ptr<LobbyItem>> _items;
+    uint32_t selected = 0;
 
 public:
     void update() override;

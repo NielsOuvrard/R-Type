@@ -37,7 +37,7 @@ public:
 
 private:
     uint32_t maxSize;
-    bool _open = false;
+    bool _open = true;
     std::list<chat_message> _chats;
     std::map<std::shared_ptr<network::connection<protocol::lobby>>, std::tuple<std::string, privileges>> _members;
 };

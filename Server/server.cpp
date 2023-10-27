@@ -21,11 +21,11 @@ void server::onMessage(std::shared_ptr<network::connection<lobby>> from, network
                     ids.emplace_back(pair.first, pair.second->size());
                 }
             }
-            res << ids.size();
             for (auto &pair: ids) {
-                res << std::get<0>(pair)
-                    << std::get<1>(pair);
+                res << std::get<1>(pair)
+                    << std::get<0>(pair);
             }
+            res << static_cast<uint32_t>(ids.size());
             break;
         }
         case lobby::get_room: {
@@ -71,7 +71,9 @@ void server::onMessage(std::shared_ptr<network::connection<lobby>> from, network
             char nickname[32] = {0};
             msg >> nickname;
             _rooms[_idCounter] = std::make_unique<Room>();
-            _rooms[_idCounter++]->addConnection(from, nickname, Room::privileges::owner);
+            _rooms[_idCounter]->addConnection(from, nickname, Room::privileges::owner);
+            res << _idCounter;
+            _idCounter++;
             break;
         }
         case lobby::start_room: {

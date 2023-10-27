@@ -35,19 +35,20 @@ private:
         w_start,
     };
 
-    void handleOk();
-    void handleKo();
-    void handleNewChat();
-    void handleDataSocket();
+    void handleOk(network::message<lobby> &msg);
+    void handleKo(network::message<lobby> &msg);
+    void handleNewChat(network::message<lobby> &msg);
+    void handleDataSocket(network::message<lobby> &msg);
 
 private:
     Haze::Engine _engine{60};
     bool _build = false;
 
     Haze::Entity *_window = nullptr;
-    std::map<std::string, std::unique_ptr<Element>> _elements;
-    std::string selected;
+    std::map<std::string, std::shared_ptr<Element>> _elements;
+    std::string _selected;
 
     std::unique_ptr<spectator> _spectator;
     state _state = state::ok;
+    uint32_t _currentLobby = 0;
 };

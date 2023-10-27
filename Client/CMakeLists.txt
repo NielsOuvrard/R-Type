@@ -29,6 +29,8 @@ set(SOURCES
         Elements/Text.cpp
         Elements/Text.h
         Scenes/LobbyList.cpp
+        Scenes/LobbyItem.cpp
+        Scenes/LobbyItem.h
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})

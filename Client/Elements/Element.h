@@ -90,6 +90,8 @@ public:
         return dynamic_cast<T *>(_entity->getComponent(type));
     }
 
+    Haze::Entity &getEntity() { return *_entity; }
+
 protected:
     void buildEntity()
     {

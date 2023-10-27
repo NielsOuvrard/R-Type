@@ -46,4 +46,12 @@ void LobbyList::build()
 void LobbyList::update()
 {
     Element::update();
+    float offset = 100;
+    float curr_offset = 0;
+    for (auto &[id, item]: _items) {
+        item->update();
+        item->setHide(false);
+        item->setY(115 + curr_offset);
+        curr_offset += offset;
+    }
 }
