@@ -3,7 +3,6 @@
 #include "inputs.hpp"
 #include "json.hpp"
 #include "SfDisplay.hpp"
-#include <SFML/Graphics.hpp>
 #include <fstream>
 #include <iostream>
 #include <thread>
@@ -111,6 +110,21 @@ namespace Haze {
         SfRect rect;
         std::string getType() const override { return "HitboxDisplay"; }
         void show() const override { std::cout << "HitboxDisplay: " << std::endl; }
+    };
+
+    struct Sound : public Component {
+        Sound(std::string path, bool loop = false) : path(path), sound(path)
+        {
+            sound.setLoop(loop);
+        }
+        std::string path;
+        SfAudio sound;
+        void play() { sound.play(); }
+        void stop() { sound.stop(); }
+        bool isPlaying() const { return sound.isPlaying(); }
+        bool isStopped() const { return sound.isStopped(); }
+        std::string getType() const override { return "Sound"; }
+        void show() const override { std::cout << "Sound: " << path << std::endl; }
     };
 
     struct Text : public Component {

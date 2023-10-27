@@ -28,6 +28,10 @@ public:
     void send();
     void sendUpdate();
 
+    void destroy();
+
+    [[nodiscard]] float get_x_position() const;
+
 private:
     Haze::Engine &_engine;
     network::data_channel<protocol::data> &_channel;
