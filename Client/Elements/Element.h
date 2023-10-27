@@ -40,7 +40,7 @@ public:
 
     [[nodiscard]] bool getHide() { return _hide; }
 
-    void setHide(bool state = true)
+    virtual void setHide(bool state = true)
     {
         _hide = state;
         if (_entity) {

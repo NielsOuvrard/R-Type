@@ -13,6 +13,7 @@ public:
 
     std::map<uint32_t, std::unique_ptr<LobbyItem>> _items;
     uint32_t selected = 0;
+    void setHide(bool state) override;
 
 public:
     void update() override;

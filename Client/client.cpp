@@ -122,7 +122,9 @@ void client::handleOk(network::message<lobby> &msg)
     switch (_state) {
         case state::w_cr_room: {
             msg >> _currentLobby;
-            _elements["lobbyList"]->setHide(true);
+            auto l = std::dynamic_pointer_cast<LobbyList>(_elements["lobbyList"]);
+            l->setHide(true);
+
             _selected = "lobby";
             _state = state::ok;
             std::cout << "Room #" << _currentLobby << " created" << std::endl;

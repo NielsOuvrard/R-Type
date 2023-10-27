@@ -55,3 +55,11 @@ void LobbyList::update()
         curr_offset += offset;
     }
 }
+
+void LobbyList::setHide(bool state)
+{
+    Element::setHide(state);
+    for (auto &[id, item]: _items) {
+        item->setHide(true);
+    }
+}
