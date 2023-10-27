@@ -17,6 +17,26 @@ namespace Haze
 
 namespace Haze
 {
+    class IColor
+    {
+    public:
+        enum colorEnum {
+            RED,
+            GREEN,
+            BLUE,
+            YELLOW,
+            BLACK,
+            WHITE,
+            MAGENTA,
+            CYAN,
+            TRANSPARENT,
+            COLOR_COUNT
+        };
+    private:
+    public:
+        virtual ~IColor() = default;
+    };
+
     class ISprite
     {
     private:
@@ -44,6 +64,8 @@ namespace Haze
         virtual void setPosition(int x, int y) = 0;
         virtual void setScale(float x, float y) = 0;
         virtual void setString(std::string string) = 0;
+        virtual void setColor(IColor::colorEnum color) = 0;
+        virtual void setColor(int r, int g, int b, int a) = 0;
     };
 
     class IAudio
@@ -88,12 +110,8 @@ namespace Haze
         virtual ~IRect() = default;
         virtual void setPosition(int x, int y) = 0;
         virtual void setSize(int width, int height) = 0;
-    };
-
-    class IColor
-    {
-    private:
-    public:
-        virtual ~IColor() = default;
+        virtual void setFillColor(IColor::colorEnum color) = 0;
+        virtual void setOutlineColor(IColor::colorEnum color) = 0;
+        virtual void setOutlineThickness(float thickness) = 0;
     };
 }

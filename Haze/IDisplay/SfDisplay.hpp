@@ -15,6 +15,21 @@ namespace Haze
 
 namespace Haze
 {
+    class SfAudio : public IAudio
+    {
+    private:
+        sf::SoundBuffer _buffer;
+        sf::Sound _sound;
+    public:
+        SfAudio(std::string path);
+        ~SfAudio() = default;
+        void play() override;
+        void stop() override;
+        void setLoop(bool loop) override;
+        bool isPlaying() const override;
+        bool isStopped() const override;
+    };
+
     class SfTexture : public ITexture
     {
     private:
@@ -69,24 +84,11 @@ namespace Haze
 
     class SfColor : public IColor
     {
-    public:
-        enum colorEnum {
-            RED,
-            GREEN,
-            BLUE,
-            YELLOW,
-            BLACK,
-            WHITE,
-            MAGENTA,
-            CYAN,
-            TRANSPARENT,
-            COLOR_COUNT
-        };
     private:
         sf::Color _color;
     public:
         ~SfColor() = default;
-        static sf::Color getColor(colorEnum ccolor);
+        static sf::Color getColor(colorEnum color);
         static sf::Color getColor(int r, int g, int b, int a);
     };
 
@@ -96,14 +98,14 @@ namespace Haze
         sf::Text _text;
         sf::Font _font;
     public:
-        SfText(const std::string &text, SfColor::colorEnum color, const std::string &fontname = "arial.ttf");
+        SfText(const std::string &text, IColor::colorEnum color, const std::string &fontname = "arial.ttf");
         ~SfText() = default;
         void setPosition(int x, int y) override;
-        void setColor(SfColor::colorEnum color);
-        void setColor(sf::Color color);
-        sf::Text getText() const { return _text; }
+        void setColor(IColor::colorEnum color) override;
+        void setColor(int r, int g, int b, int a) override;
         void setString(std::string string) override;
         void setScale(float x, float y) override;
+        sf::Text getText() const { return _text; }
     };
 
     class SfRect : public IRect
@@ -111,13 +113,13 @@ namespace Haze
     private:
         sf::RectangleShape _rect;
     public:
-        SfRect(int x, int y, int width, int height, SfColor::colorEnum color);
+        SfRect(int x, int y, int width, int height, IColor::colorEnum color);
         ~SfRect() = default;
         sf::RectangleShape getRect() const { return _rect; }
         void setPosition(int x, int y) override;
         void setSize(int width, int height) override;
-        void setFillColor(SfColor::colorEnum color);
-        void setOutlineColor(SfColor::colorEnum color);
-        void setOutlineThickness(float thickness);
+        void setFillColor(IColor::colorEnum color) override;
+        void setOutlineColor(IColor::colorEnum color) override;
+        void setOutlineThickness(float thickness) override;
     };
 }

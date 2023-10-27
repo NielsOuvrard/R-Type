@@ -373,9 +373,9 @@ namespace Haze
 
 namespace Haze
 {
-    sf::Color SfColor::getColor(colorEnum ccolor)
+    sf::Color SfColor::getColor(colorEnum color)
     {
-        switch (ccolor) {
+        switch (color) {
             case RED:
                 return sf::Color::Red;
             case GREEN:
@@ -407,7 +407,7 @@ namespace Haze
 
 namespace Haze
 {
-    SfText::SfText(const std::string &text, SfColor::colorEnum color, const std::string &fontname)
+    SfText::SfText(const std::string &text, IColor::colorEnum color, const std::string &fontname)
     {
         _font.loadFromFile("assets/fonts/" + fontname);
         _text.setFont(_font);
@@ -430,20 +430,20 @@ namespace Haze
         _text.setString(string);
     }
 
-    void SfText::setColor(SfColor::colorEnum color)
+    void SfText::setColor(IColor::colorEnum color)
     {
         _text.setFillColor(SfColor::getColor(color));
     }
 
-    void SfText::setColor(sf::Color color)
+    void SfText::setColor(int r, int g, int b, int a)
     {
-        _text.setFillColor(color);
+        _text.setFillColor(SfColor::getColor(r, g, b, a));
     }
 }
 
 namespace Haze
 {
-    SfRect::SfRect(int x, int y, int width, int height, SfColor::colorEnum color)
+    SfRect::SfRect(int x, int y, int width, int height, IColor::colorEnum color)
     {
         _rect.setPosition(x, y);
         _rect.setSize(sf::Vector2f(width, height));
@@ -460,12 +460,12 @@ namespace Haze
         _rect.setSize(sf::Vector2f(width, height));
     }
 
-    void SfRect::setFillColor(SfColor::colorEnum color)
+    void SfRect::setFillColor(IColor::colorEnum color)
     {
         _rect.setFillColor(SfColor::getColor(color));
     }
 
-    void SfRect::setOutlineColor(SfColor::colorEnum color)
+    void SfRect::setOutlineColor(IColor::colorEnum color)
     {
         _rect.setOutlineColor(SfColor::getColor(color));
     }

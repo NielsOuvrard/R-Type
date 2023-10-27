@@ -126,40 +126,40 @@ namespace Haze {
         };
 
         Text(const std::string &text, colorHaze color, const std::string &fontname = "arial.ttf") : text(text),
-            textObj(text, SfColor::RED, fontname)
+            textObj(text, IColor::RED, fontname)
         {
             switch (color) {
             case RED:
-                textObj.setColor(SfColor::RED);
+                textObj.setColor(IColor::RED);
                 break;
             case GREEN:
-                textObj.setColor(SfColor::GREEN);
+                textObj.setColor(IColor::GREEN);
                 break;
             case BLUE:
-                textObj.setColor(SfColor::BLUE);
+                textObj.setColor(IColor::BLUE);
                 break;
             case YELLOW:
-                textObj.setColor(SfColor::YELLOW);
+                textObj.setColor(IColor::YELLOW);
                 break;
             case BLACK:
-                textObj.setColor(SfColor::BLACK);
+                textObj.setColor(IColor::BLACK);
                 break;
             case WHITE:
-                textObj.setColor(SfColor::WHITE);
+                textObj.setColor(IColor::WHITE);
                 break;
             case MAGENTA:
-                textObj.setColor(SfColor::MAGENTA);
+                textObj.setColor(IColor::MAGENTA);
                 break;
             case CYAN:
-                textObj.setColor(SfColor::CYAN);
+                textObj.setColor(IColor::CYAN);
                 break;
             }
         }
 
         Text(const std::string &text, int r, int g, int b, int a, const std::string &fontname = "arial.ttf") : text(text),
-            textObj(text, SfColor::RED, fontname)
+            textObj(text, IColor::RED, fontname)
         {
-            textObj.setColor(SfColor::getColor(r, g, b, a));
+            textObj.setColor(r, g, b, a);
         }
 
         std::string text;
