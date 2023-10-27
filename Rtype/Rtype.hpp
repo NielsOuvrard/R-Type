@@ -16,9 +16,9 @@
 #include "../Client/json.hpp"
 #include "Enemy.h"
 #include "Explosion.h"
+#include "MapHandling.h"
 #include "Paralax.h"
 #include "Player.h"
-#include "Wall.hpp"
 #include "data.h"
 #include "net_data_channel.h"
 #include "net_server.h"
@@ -46,8 +46,6 @@ public:
     void sendEverything(udp::endpoint &to);
     [[nodiscard]] asio::ip::udp::endpoint getEndpoint() const;
 
-    void updateMap();// TODO : map who generate itself and destroy itself
-    void createMap();
     void checkInactiveClients();
 
     uint32_t getPlayerID(const asio::ip::udp::endpoint &endpoint);
@@ -58,11 +56,7 @@ private:
 
     Cooldown _enemySpawnCD{5s};
 
-    // * walls
-    nlohmann::json _mapTiles;
-    nlohmann::json _hitboxWalls;
-    uint16_t _index_map;
-
+    std::unique_ptr<MapHandling> _mapHandler;
     std::unique_ptr<Paralax> _background;
     std::vector<std::unique_ptr<Wall>> _walls;
     std::vector<Haze::Entity *> _entities;

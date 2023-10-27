@@ -17,7 +17,7 @@
 #define NBR_TILES_ON_SCREEN 6
 
 Rtype::Rtype(asio::io_context &context)
-    : _channel(context), _engine(60), _index_map(0)
+    : _channel(context), _engine(60)
 {
     std::srand(std::time(0));
     _engine.init();
@@ -28,6 +28,8 @@ Rtype::Rtype(asio::io_context &context)
     _engine.setInfoInputs({std::vector<Haze::InputType>(), std::vector<Haze::InputType>(), Haze::MouseType::NOTHING, 0, 0}, 4);
 
     _background = std::make_unique<Paralax>(_engine, _channel);
+
+    _mapHandler = std::make_unique<MapHandling>(_engine, _channel, _walls, _enemies);
 }
 
 Rtype::~Rtype() = default;
@@ -107,62 +109,11 @@ void Rtype::sendEverything(udp::endpoint &to)
     }
 }
 
-void Rtype::updateMap()
-{
-}
-
-void Rtype::createMap()
-{
-    // Load sprite data for the walls from "ground.json"
-    std::ifstream groundFile("assets/AnimationJSON/ground.json");
-
-    if (!groundFile.is_open()) {
-        std::cerr << "Error: Could not open 'ground.json' for reading" << std::endl;
-        return;
-    }
-    groundFile >> _hitboxWalls;
-    groundFile.close();
-
-    // Load map data from "map.json"
-    std::ifstream mapFile("assets/AnimationJSON/map.json");
-    nlohmann::json mapData;
-    if (!mapFile.is_open()) {
-        std::cerr << "Error: Could not open 'map.json' for reading" << std::endl;
-        return;
-    }
-    mapFile >> mapData;
-    mapFile.close();
-
-    // Retrieve the array of tiles from the map data
-    _mapTiles = mapData["map"];
-
-    // Iterate through each tile in the map
-    for (const auto &tile: _mapTiles) {
-        if (_index_map > NBR_TILES_ON_SCREEN) {
-            break;
-        }
-        // Create and position the top wall
-        _walls.emplace_back(std::make_unique<Wall>(_engine, _channel, _hitboxWalls, (48 * 3) * _index_map, 0, false));
-        _walls.back()->build(tile["tile_top"]);
-
-        // Create and position the bottom wall
-        _walls.emplace_back(std::make_unique<Wall>(_engine, _channel, _hitboxWalls, (48 * 3) * _index_map, 600, true));
-        _walls.back()->build(tile["tile_bottom"]);
-
-        // Print the tile index
-        std::cout << "Tile " << _index_map << " created." << std::endl;
-        _index_map++;
-    }
-
-    std::cout << "Map successfully created." << std::endl;
-}
-
 void Rtype::start()
 {
     _running = true;
     _background->build();
-
-    createMap();
+    _mapHandler->createMap();
 
     _enemies.emplace_back(std::make_unique<Enemy>(_engine, _channel));
     _enemies.back()->build();
@@ -278,27 +229,7 @@ void Rtype::update()
     /**
      * remove and add wall
      */
-     if (_walls.front()->get_x_position() < -48 * 3/* -48 * 3  (48 * 3) * 5*/) {
-        std::cout << "_walls.front()->destroy\n";
-        // destroy
-        _walls.front()->destroy();
-        _walls.erase(_walls.begin());
-        _walls.front()->destroy();
-        _walls.erase(_walls.begin());
-
-         float pos_wall_back =_walls.back()->get_x_position();
-
-        // Create and position the top wall
-        _walls.emplace_back(std::make_unique<Wall>(_engine, _channel, _hitboxWalls, pos_wall_back + (48 * 3), 0, false));
-        _walls.back()->build(_mapTiles[_index_map]["tile_top"]);
-
-        // Create and position the bottom wall
-        _walls.emplace_back(std::make_unique<Wall>(_engine, _channel, _hitboxWalls, pos_wall_back + (48 * 3), 600, true));
-        _walls.back()->build(_mapTiles[_index_map]["tile_bottom"]);
-        _index_map++;
-
-        std::cout << "\033[0;31m map i = " << _index_map << " and walls are " << _walls.size() << "\033[0;0m" << std::endl;
-     }
+    _mapHandler->update();
     /**
      * Enemy & Missiles' cleanup cycle
      */

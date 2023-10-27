@@ -22,6 +22,8 @@ set(
         class/Paralax.h
         class/Explosion.cpp
         class/Explosion.h
+        class/MapHandling.cpp
+        class/MapHandling.h
 )
 
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
