@@ -60,7 +60,7 @@ void server::onMessage(std::shared_ptr<network::connection<lobby>> from, network
             uint32_t room_id = 0;
             char nickname[32] = {0};
             msg >> room_id >> nickname;
-            if (_rooms[room_id]->isOpen() && !_rooms[room_id]->isFull()) {
+            if (_rooms.find(room_id) != _rooms.end() && _rooms[room_id]->isOpen() && !_rooms[room_id]->isFull()) {
                 _rooms[room_id]->addConnection(from, nickname);
             } else {
                 res.header.id = lobby::ko;

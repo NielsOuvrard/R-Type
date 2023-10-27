@@ -9,7 +9,7 @@
 
 class LobbyItem : public Element {
 public:
-    LobbyItem(Haze::Engine &engine, int id, int nbRight, int nbLeft);
+    LobbyItem(Haze::Engine &engine, int id, int nbRight, int nbLeft, std::function<void(uint32_t)> selectLobby);
     void build() override;
     void update() override;
 
@@ -20,4 +20,5 @@ public:
     int _nbLeft;
     int _nbRight;
     bool dead = false;
+    std::function<void(uint32_t)> _selectLobby;
 };

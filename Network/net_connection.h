@@ -80,7 +80,7 @@ namespace network {
                             &_messageBuffer.header, sizeof(message_header<T>)),
                     [this](std::error_code ec, std::size_t length) {
                         if (!ec) {
-                            std::cout << "[" << _id << "] Read " << length << "bytes" << std::endl;
+                            //                            std::cout << "[" << _id << "] Read " << length << "bytes" << std::endl;
                             if (_messageBuffer.header.size > 0) {
                                 _messageBuffer.body.resize(_messageBuffer.header.size);
                                 asyncReadBody();

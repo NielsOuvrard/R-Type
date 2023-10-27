@@ -59,7 +59,15 @@ void client::build()
     _elements["lobbyList"] = std::make_shared<LobbyList>(
             _engine,
             [this]() {
+                if (_state != state::ok) return;
                 std::cout << "Join" << std::endl;
+                char name[32] = {0};
+                std::strncpy(name, _elements["login"]->get<TextInput>("name")->getValue().data(), 32);
+                net::message<lobby> msg(lobby::join_room);
+                auto l = std::dynamic_pointer_cast<LobbyList>(_elements["lobbyList"]);
+                msg << name << _currentLobby;
+                send(msg);
+                _state = state::w_join;
             },
             [this]() {
                 if (_state != state::ok) return;
@@ -101,14 +109,14 @@ void client::emit()
     static Cooldown getRoomCD(2s);
 
     if (_selected == "lobbyList" && _state == state::ok && getRoomsCD.IsReady()) {
-        std::cout << "[EMIT] get all rooms" << std::endl;
+        //        std::cout << "[EMIT] get all rooms" << std::endl;
         net::message<lobby> msg(lobby::get_rooms);
         send(msg);
         _state = state::w_rooms;
         getRoomsCD.Activate();
 
     } else if (_selected == "lobby" && _state == state::ok && getRoomCD.IsReady()) {
-        std::cout << "[EMIT] get single room" << std::endl;
+        //        std::cout << "[EMIT] get single room" << std::endl;
         net::message<lobby> msg(lobby::get_room);
         msg << _currentLobby;
         send(msg);
@@ -147,8 +155,10 @@ void client::handleOk(network::message<lobby> &msg)
                     items[id]->_nbLeft = nbLeft;
                     items[id]->dead = false;
                 } else {
-                    std::cout << "Created new lobby #" << id << std::endl;
-                    items[id] = std::make_unique<LobbyItem>(_engine, id, 4, nbLeft);
+                    //                    std::cout << "Created new lobby #" << id << std::endl;
+                    items[id] = std::make_unique<LobbyItem>(_engine, id, 4, nbLeft, [this](uint32_t id) {
+                        _currentLobby = id;
+                    });
                     items[id]->build();
                     items[id]->setHide(true);
                 }
@@ -158,9 +168,9 @@ void client::handleOk(network::message<lobby> &msg)
             auto it = items.begin();
             while (it != items.end()) {
                 if (it->second->dead) {
-                    if (listElem->selected == it->first) {
+                    if (_currentLobby == it->first) {
                         it = items.erase(it);
-                        listElem->selected = it->first;
+                        _currentLobby = it->first;
                     } else {
                         it = items.erase(it);
                     }
@@ -170,7 +180,14 @@ void client::handleOk(network::message<lobby> &msg)
             }
 
             _state = state::ok;
-            std::cout << "Rooms received" << std::endl;
+            //            std::cout << "Rooms received" << std::endl;
+            break;
+        }
+        case state::w_join: {
+            _elements["lobbyList"]->setHide(true);
+            _selected = "lobby";
+            _state = state::ok;
+            break;
         }
     }
 }

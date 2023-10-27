@@ -25,7 +25,8 @@ void LobbyItem::build()
     _children["btn_img"]->build();
     _children["btn"] = std::make_shared<Button>(
             _engine, [this](int) {
-                std::cout << "Click Lobby" << std::endl;
+                std::cout << "Click Lobby #" << _id << std::endl;
+                _selectLobby(_id);
             },
             AxisPair{80, 300});
     _children["btn"]->build();
@@ -33,8 +34,8 @@ void LobbyItem::build()
     get<Button>("btn")->rm("HitboxDisplay");
 }
 
-LobbyItem::LobbyItem(Haze::Engine &engine, int id, int nbRight, int nbLeft)
-    : Element(engine), _id(id), _nbRight(nbRight), _nbLeft(nbLeft) {}
+LobbyItem::LobbyItem(Haze::Engine &engine, int id, int nbRight, int nbLeft, std::function<void(uint32_t)> selectLobby)
+    : Element(engine), _id(id), _nbRight(nbRight), _nbLeft(nbLeft), _selectLobby(std::move(selectLobby)) {}
 
 void LobbyItem::setX(float x)
 {
