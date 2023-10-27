@@ -14,32 +14,6 @@ MapHandling::MapHandling(Haze::Engine &engine,
 {
 }
 
-void MapHandling::update()
-{
-    if (_walls.front()->get_x_position() < -(48 * 3)) {// * tile = 3 * 48
-        std::cout << "_walls.front()->destroy\n";
-        // destroy
-        _walls.front()->destroy();
-        _walls.erase(_walls.begin());
-        _walls.front()->destroy();
-        _walls.erase(_walls.begin());
-
-        float pos_wall_back = _walls.back()->get_x_position();
-
-
-        // * read "enemies" inside of map
-        // Create and position the top wall
-        _walls.emplace_back(std::make_unique<Wall>(_engine, _channel, _hitboxWalls, pos_wall_back + (48 * 3), 0, false));
-        _walls.back()->build(_mapTiles[_index_map]["tile_top"]);
-        // Create and position the bottom wall
-        _walls.emplace_back(std::make_unique<Wall>(_engine, _channel, _hitboxWalls, pos_wall_back + (48 * 3), 600, true));
-        _walls.back()->build(_mapTiles[_index_map]["tile_bottom"]);
-        _index_map++;
-
-        std::cout << "\033[0;31m map i = " << _index_map << " and _walls are " << _walls.size() << "\033[0;0m" << std::endl;
-    }
-}
-
 void MapHandling::createMap()
 {
     // Load sprite data for the walls from "ground.json"
@@ -85,3 +59,43 @@ void MapHandling::createMap()
 
     std::cout << "Map successfully created." << std::endl;
 }
+
+void MapHandling::update()
+{
+    if (_walls.front()->get_x_position() < -(48 * 3)) {// * tile = 3 * 48
+        // destroy
+        _walls.front()->destroy();
+        _walls.erase(_walls.begin());
+        _walls.front()->destroy();
+        _walls.erase(_walls.begin());
+
+        float pos_wall_back = _walls.back()->get_x_position();
+
+        // * read "enemies" inside of map
+        //        _enemies.
+        std::cout << "\u001B[0;32mNEW ENEMY ?\u001B[0;0m\n";
+        auto &enemies_tile = _mapTiles[_index_map]["enemies"];
+
+        if (enemies_tile != nullptr) {
+            for (auto &enemy_tile: enemies_tile) {
+                std::cout << "\u001B[0;31m! NEW ENEMY\u001B[0;0m\n";
+                int16_t pos_x = enemy_tile["x"];
+                int16_t pos_y = enemy_tile["y"];
+                _enemies.emplace_back(std::make_unique<Enemy>(_engine, _channel));
+                _enemies.back()->build(pos_x, pos_y);
+                std::cout << "\u001B[0;31m! NEW ENEMY DONE\u001B[0;0m\n";
+            }
+        }
+
+        // Create and position the top wall
+        _walls.emplace_back(std::make_unique<Wall>(_engine, _channel, _hitboxWalls, pos_wall_back + (48 * 3), 0, false));
+        _walls.back()->build(_mapTiles[_index_map]["tile_top"]);
+        // Create and position the bottom wall
+        _walls.emplace_back(std::make_unique<Wall>(_engine, _channel, _hitboxWalls, pos_wall_back + (48 * 3), 600, true));
+        _walls.back()->build(_mapTiles[_index_map]["tile_bottom"]);
+        _index_map++;
+    }
+}
+
+// [0;31m
+// [0;0m

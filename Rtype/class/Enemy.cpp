@@ -21,10 +21,10 @@ void Enemy::shoot()
     }
 }
 
-void Enemy::build()
+void Enemy::build(int16_t x, int16_t y)
 {
-    int x = std::rand() % 100 + 10;
-    int y = std::rand() % 550 + 50;
+    x = x < 0 ? std::rand() % 100 + 10 : x;
+    y = y < 0 ? std::rand() % 550 + 50 : y;
     std::chrono::milliseconds d((std::rand() % 10 + 5) * 1000);
     _missileCd.setDuration(d);
 
@@ -92,7 +92,7 @@ void Enemy::send()
     _channel.sendGroup(RType::message::addComponent(_entity->getId(), "CircleVelocity", new Haze::CircleVelocityData{0.2, 0.1, 100}, sizeof(Haze::CircleVelocityData)));
     _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Scale", new Haze::ScaleData{3, 3}, sizeof(Haze::ScaleData)));
     _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Hitbox", new Haze::HitboxData{5, 5, 33 - 10, 36 - 10}, sizeof(Haze::HitboxData)));
-    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "HitboxDisplay", nullptr, 0));
+    //_channel.sendGroup(RType::message::addComponent(_entity->getId(), "HitboxDisplay", nullptr, 0));
     _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Sprite", new Haze::SpriteData{"assets/sprites/enemy.gif"}, sizeof(Haze::SpriteData)));
     _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Animation", new Haze::AnimationData{"assets/AnimationJSON/enemy.json"}, sizeof(Haze::AnimationData)));
 }

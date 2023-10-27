@@ -31,7 +31,7 @@ public:
     /**
      * @brief Build the enemy entity with initial properties.
      */
-    void build();
+    void build(int16_t x = -1, int16_t y = -1);
 
     /**
      * @brief Send the enemy entity to clients.
