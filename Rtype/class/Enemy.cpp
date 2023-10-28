@@ -82,7 +82,7 @@ void Enemy::build(EnemyData data_enemy, nlohmann::json mapData)
     _entity = _engine.createEntity();
     std::cout << "[" << _entity->getId() << "] Enemy Created" << std::endl;
     _entity->addComponent(new Haze::Position(800 + _data.x, _data.y));// ? check if 800 is exactly the good tile
-    _entity->addComponent(new Haze::Velocity(_data.velocity_x, _data.velocity_y, 0.05));
+    _entity->addComponent(new Haze::Velocity(_data.velocity_x, _data.velocity_y, , _data.move_time));
 
     if (_data.move == "sinusoidal" && _data.move_time != -1 && _data.move_amplitude != -1 && _data.move_frequency != -1) {
         _entity->addComponent(new Haze::SinVelocity(_data.move_x, _data.move_time, _data.move_amplitude, _data.move_frequency));
@@ -144,7 +144,7 @@ void Enemy::send()
     _channel.sendGroup(RType::message::createEntity(_entity->getId()));
     _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Health", new Haze::HealthData{_data.life}, sizeof(Haze::HealthData)));
     _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Position", new Haze::PositionData{pos->x, pos->y}, sizeof(Haze::PositionData)));
-    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Velocity", new Haze::VelocityData{_data.velocity_x, _data.velocity_y, 0.05}, sizeof(Haze::VelocityData)));
+    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Velocity", new Haze::VelocityData{_data.velocity_x, _data.velocity_y, _data.move_time}, sizeof(Haze::VelocityData)));
 
     if (_data.move == "sinusoidal") {
         _channel.sendGroup(RType::message::addComponent(_entity->getId(), "SinVelocity", new Haze::SinVelocityData{_data.move_x, _data.move_time, _data.move_amplitude, _data.move_frequency}, sizeof(Haze::SinVelocityData)));
