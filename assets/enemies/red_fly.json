@@ -5,6 +5,12 @@
   "path_sprite": "assets/sprites/enemy.gif",
   "animation_tics": 0.1,
   "animation_type": "loop",
+  "hitbox": {
+    "x": 5,
+    "y": 5,
+    "width": 23,
+    "height": 26
+  },
   "animation": [
     {
       "x": 0,

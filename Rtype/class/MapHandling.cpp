@@ -10,6 +10,7 @@ void fill_EnemyData(EnemyData &data, nlohmann::json jsonData)
     data.type = 0;
     data.life = 0;
     data.path_sprite = "";
+    data.hitBoxData = {};
 
     if (jsonData.contains("type")) {
         data.type = jsonData["type"];
@@ -22,6 +23,12 @@ void fill_EnemyData(EnemyData &data, nlohmann::json jsonData)
     }
     if (jsonData.contains("path_sprite")) {
         data.path_sprite = jsonData["path_sprite"];
+    }
+    if (jsonData.contains("hitbox")) {
+        data.hitBoxData.x = jsonData["hitbox"]["x"];
+        data.hitBoxData.y = jsonData["hitbox"]["y"];
+        data.hitBoxData.width = jsonData["hitbox"]["width"];
+        data.hitBoxData.height = jsonData["hitbox"]["height"];
     }
 }
 
@@ -47,9 +54,10 @@ MapHandling::MapHandling(Haze::Engine &engine,
 
                     EnemyData new_enemy_type;
                     fill_EnemyData(new_enemy_type, jsonData);
+                    uint16_t type = jsonData["type"];
 
                     new_enemy_type.path_json = filePath;
-                    _enemies_type.push_back(new_enemy_type);
+                    _enemies_type[type] = (new_enemy_type);
                 } catch (nlohmann::json::parse_error &e) {
                     std::cerr << "Error parsing JSON file: " << filePath << std::endl;
                     std::cerr << e.what() << std::endl;
@@ -129,7 +137,8 @@ void MapHandling::update()
                 std::cout << "\u001B[0;31mNEW ENEMY !\u001B[0;0m\n";
                 int16_t type_enemy_found = enemy_tile["type"];
                 _enemies.emplace_back(std::make_unique<Enemy>(_engine, _channel));
-                _enemies.back()->build(_enemies_type.back(), enemy_tile);// TODO put the good type, with map
+                // TODO made error handling
+                _enemies.back()->build(_enemies_type[type_enemy_found], enemy_tile);
             }
         }
 

@@ -63,7 +63,7 @@ private:
     nlohmann::json _dataJSON;
     std::vector<std::unique_ptr<Wall>> &_walls;
 
-    std::vector<EnemyData> _enemies_type;
+    std::map<uint16_t, EnemyData> _enemies_type;
 
     nlohmann::json _mapTiles;   ///< JSON data for map tiles.
     nlohmann::json _hitboxWalls;///< JSON data for hitbox walls.

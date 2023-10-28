@@ -15,15 +15,17 @@
 * The `EnemyData` structure stores various attributes and properties related to enemy entities
 * in the game, including their characteristics, movement patterns, and more.
 */
-struct EnemyData {
-    // * For Animation
+struct HitBox {
+    uint16_t x;
+    uint16_t y;
+    uint16_t width;
+    uint16_t height;
+};
+
+struct EnemyData {          // ? maybe 2 types
     std::string path_sprite;///< The path or movement pattern of the enemy.
 
-    // did we need this ?
-    std::string animation_type;/// ? "loop", "boomerang", "once", "loop_once"
-    float animation_tics;
-
-    // TODO hitbox
+    HitBox hitBoxData;
 
     int16_t x;
     int16_t y;
@@ -34,8 +36,12 @@ struct EnemyData {
     float velocity_x;///< The horizontal velocity of the enemy.
     float velocity_y;///< The vertical velocity of the enemy.
 
-    // ? "sinusoidal" ; "circle" ; "line"
+    // ? "sinusoidal" ; "circular" ; "linear"
     std::string move;     ///< The movement description or pattern of the enemy.
+    float move_x;         ///<
+    float move_time;      ///<
+    float move_amplitude; ///<
+    float move_frequency; ///<
+    float move_radius;    ///< The radius
     std::string path_json;///< The movement description or pattern of the enemy.
-    int16_t radius;       ///< The radius or size of the enemy.
 };
