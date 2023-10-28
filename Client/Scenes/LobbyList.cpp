@@ -7,8 +7,8 @@
 #include "../Elements/Image.h"
 #include "../Elements/Text.h"
 
-LobbyList::LobbyList(Haze::Engine &engine, std::function<void()> join, std::function<void()> create, std::function<void()> disconnect)
-    : Element(engine), _join(std::move(join)), _create(std::move(create)), _disconnect(std::move(disconnect)) {}
+LobbyList::LobbyList(Haze::Engine &engine, uint32_t &currentLobby, std::function<void()> join, std::function<void()> create, std::function<void()> disconnect)
+    : Element(engine), _currentLobby(currentLobby), _join(std::move(join)), _create(std::move(create)), _disconnect(std::move(disconnect)) {}
 
 void LobbyList::build()
 {
@@ -49,6 +49,11 @@ void LobbyList::update()
     float offset = 100;
     float curr_offset = 0;
     for (auto &[id, item]: _items) {
+        if (id == _currentLobby) {
+            item->get<Image>("btn_img")->add(new Haze::Sprite("assets/sprites/list_item_selected.png"));
+        } else {
+            item->get<Image>("btn_img")->add(new Haze::Sprite("assets/sprites/list_item.png"));
+        }
         item->update();
         item->setHide(false);
         item->setY(115 + curr_offset);

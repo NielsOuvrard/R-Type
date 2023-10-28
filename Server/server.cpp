@@ -17,9 +17,7 @@ void server::onMessage(std::shared_ptr<network::connection<lobby>> from, network
         case lobby::get_rooms: {
             std::list<std::tuple<uint32_t, uint8_t>> ids;
             for (auto &pair: _rooms) {
-                if (pair.second->isOpen() && !pair.second->isFull()) {
-                    ids.emplace_back(pair.first, pair.second->size());
-                }
+                ids.emplace_back(pair.first, pair.second->size());
             }
             for (auto &pair: ids) {
                 res << std::get<1>(pair)
@@ -31,7 +29,7 @@ void server::onMessage(std::shared_ptr<network::connection<lobby>> from, network
         case lobby::get_room: {
             uint32_t room_id = 0;
             msg >> room_id;
-            if (_rooms[room_id]->isMember(from)) {
+            if (_rooms.find(room_id) != _rooms.end() && _rooms[room_id]->isMember(from)) {
                 const auto &members = _rooms[room_id]->getMembers();
                 res << members.size();
                 for (auto &member: members) {

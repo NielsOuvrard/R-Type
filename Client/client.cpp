@@ -58,6 +58,7 @@ void client::build()
 
     _elements["lobbyList"] = std::make_shared<LobbyList>(
             _engine,
+            _currentLobby,
             [this]() {
                 if (_state != state::ok) return;
                 std::cout << "Join" << std::endl;

@@ -9,7 +9,7 @@
 
 class LobbyList : public Element {
 public:
-    LobbyList(Haze::Engine &engine, std::function<void()> join, std::function<void()> create, std::function<void()> disconnect);
+    LobbyList(Haze::Engine &engine, uint32_t &currentLobby, std::function<void()> join, std::function<void()> create, std::function<void()> disconnect);
 
     std::map<uint32_t, std::unique_ptr<LobbyItem>> _items;
     void setHide(bool state) override;
@@ -20,4 +20,5 @@ public:
     std::function<void()> _join;
     std::function<void()> _create;
     std::function<void()> _disconnect;
+    uint32_t &_currentLobby;
 };
