@@ -20,7 +20,7 @@ void Player::build()
               << std::endl;
     _entity->addComponent(new Haze::Velocity(0, 0, 0.05));
     _entity->addComponent(new Haze::Position(100, 300));
-    _entity->addComponent(new Haze::Scale(3, 3));
+    _entity->addComponent(new Haze::Scale(UNIVERSAL_SCALE, UNIVERSAL_SCALE));
     _entity->addComponent(new Haze::Hitbox({{0, 0, 32, 14}}));
     _entity->addComponent(new Haze::OnKeyPressed(
             [this](int actor, std::vector<Haze::InputType> components) {
@@ -93,7 +93,7 @@ void Player::build()
                 if (!_entity) {
                     return;
                 }
-                 _channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
+                _channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
                 _entity->addComponent(new Haze::Destroy());
                 _entity = nullptr;
             }};
@@ -105,14 +105,14 @@ void Player::send()
 {
     // TODO: Free allocated Data created with new
     auto pos = dynamic_cast<Haze::Position *>(_entity->getComponent("Position"));
-    auto scale = dynamic_cast<Haze::Scale *>(_entity->getComponent("Scale"));
+    //auto scale = dynamic_cast<Haze::Scale *>(_entity->getComponent("Scale"));
     auto hitbox = dynamic_cast<Haze::Hitbox *>(_entity->getComponent("Hitbox"))->hitbox.front();
 
     _channel.sendGroup(RType::message::createEntity(_entity->getId()));
     _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Position", new Haze::PositionData{pos->x, pos->y}, sizeof(Haze::PositionData)));
-    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Scale", new Haze::ScaleData{scale->x, scale->y}, sizeof(Haze::ScaleData)));
+    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Scale", new Haze::ScaleData{UNIVERSAL_SCALE, UNIVERSAL_SCALE}, sizeof(Haze::ScaleData)));
     _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Hitbox", new Haze::HitboxData{hitbox}, sizeof(Haze::HitboxData)));
-    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "HitboxDisplay", nullptr, 0));
+    //_channel.sendGroup(RType::message::addComponent(_entity->getId(), "HitboxDisplay", nullptr, 0));
     _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Sprite", new Haze::SpriteData{"assets/sprites/spaceships.png"}, sizeof(Haze::SpriteData)));
     if (_id == 1) {
         _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Animation", new Haze::AnimationData{"assets/AnimationJSON/spaceship1.json"}, sizeof(Haze::AnimationData)));

@@ -4,8 +4,11 @@
 
 #pragma once
 
+#include "../config.h"
 #include "../protocol.h"
 #include "Cooldown.h"
+#include "EnemyData.h"
+#include "MapHandling.h"
 #include "Missile.h"
 #include <componentData.hpp>
 #include <data.h>
@@ -31,7 +34,7 @@ public:
     /**
      * @brief Build the enemy entity with initial properties.
      */
-    void build();
+    void build(EnemyData data, nlohmann::json mapData);
 
     /**
      * @brief Send the enemy entity to clients.
@@ -50,12 +53,10 @@ public:
 
 
 public:
-    int32_t _hp = 50;///< The enemy's health points.
+    EnemyData _data = {};
 
     Haze::Entity *_entity = nullptr;///< The enemy entity.
     bool _isDead = false;           ///< Indicates whether the enemy is dead.
-    float _pos_x;                   ///< The x-coordinate of the enemy's position.
-    float _pos_y;                   ///< The y-coordinate of the enemy's position.
 
     std::list<std::unique_ptr<Missile>> _missiles;///< List of missiles fired by the enemy.
 
