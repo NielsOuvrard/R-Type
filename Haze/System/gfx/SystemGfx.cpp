@@ -133,8 +133,10 @@ namespace Haze {
                             animation->currentFrame = 0;
                         }
                     } else if (animation->type == Animation::LOOP_ONCE) {
-                        if (animation->currentFrame == animation->frames.size())
+                        if (animation->currentFrame == animation->frames.size() - 1) {
+                            componentList->removeEntity(i);
                             continue;
+                        }
                         if (animation->direction == true) {
                             animation->currentFrame++;
                         } else {
