@@ -82,7 +82,7 @@ void Enemy::build(EnemyData data_enemy, nlohmann::json mapData)
     _entity = _engine.createEntity();
     std::cout << "[" << _entity->getId() << "] Enemy Created" << std::endl;
     _entity->addComponent(new Haze::Position(800 + _data.x, _data.y));// ? check if 800 is exactly the good tile
-    _entity->addComponent(new Haze::Velocity(_data.velocity_x, _data.velocity_y, , _data.move_time));
+    _entity->addComponent(new Haze::Velocity(_data.velocity_x, _data.velocity_y, _data.move_time));
 
     if (_data.move == "sinusoidal" && _data.move_time != -1 && _data.move_amplitude != -1 && _data.move_frequency != -1) {
         _entity->addComponent(new Haze::SinVelocity(_data.move_x, _data.move_time, _data.move_amplitude, _data.move_frequency));
