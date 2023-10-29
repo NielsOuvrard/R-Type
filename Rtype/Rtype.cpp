@@ -113,7 +113,7 @@ void Rtype::start()
 {
     _running = true;
     _background->build();
-    _mapHandler->createMap();
+    _mapHandler->build();
 
     /**
       * Update Cycle
@@ -303,20 +303,4 @@ void Rtype::update()
      * Background's motion cycle
      */
     _background->update();
-
-    /**
-     * Spawn random enemies
-     */
-    // * In comment because load in map
-    //    if (_enemySpawnCD.IsReady()) {
-    //        std::chrono::milliseconds newDuration((std::rand() % 6 + 3) * 1000);
-    //        _enemySpawnCD.setDuration(newDuration);
-    //        _enemySpawnCD.Activate();
-    //
-    //        int32_t enemyNb = std::rand() % 3 + 1;
-    //        for (int32_t i = 0; i < enemyNb; i++) {
-    //            _enemies.emplace_back(std::make_unique<Enemy>(_engine, _channel));
-    //            _enemies.back()->build();
-    //        }
-    //    }
 }

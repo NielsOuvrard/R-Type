@@ -43,14 +43,39 @@ public:
     /**
      * @brief Updates the game's map state.
      *
-     * This function is responsible for updating the game's map, including the position of walls and enemies.
+     * This function is responsible for updating the game's map. Create or not walls and enemies.
      */
     void update();
+
+    /**
+     * @brief Builds the game, ennemies and the map.
+     *
+     * This function builds the game.
+     * In this order : createEnemies() ; loadMaps() ; createMap()
+     */
+    void build();
+
+private:
+    /**
+     * @brief Creates enemy entities from directory.
+     *
+     * This function creates enemy entities according to their types.
+     */
+    void createEnemies();
+
+    /**
+     * @brief Loads all maps paths in vector.
+     *
+     * Loading all maps paths inside a vector<string>.
+     */
+    void loadMaps();
 
     /**
      * @brief Creates the initial map layout.
      *
      * This function creates the initial map layout, including walls and other map elements.
+     * Should be call each times a new map is load.
+     * Open the map from the vector<string> created by loadMaps().
      */
     void createMap();
 
@@ -62,10 +87,12 @@ private:
     Haze::Entity *_entity = nullptr;
     nlohmann::json _dataJSON;
     std::vector<std::unique_ptr<Wall>> &_walls;
+    std::vector<std::string> _maps_paths;
 
     std::map<uint16_t, EnemyData> _enemies_type;
 
     nlohmann::json _mapTiles;   ///< JSON data for map tiles.
     nlohmann::json _hitboxWalls;///< JSON data for hitbox walls.
     uint16_t _index_map;        ///< Index of the map layout.
+    uint16_t _id_map;           ///< Index of the map layout.
 };
