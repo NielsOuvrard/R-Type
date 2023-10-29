@@ -38,11 +38,12 @@ struct EnemyData {          // ? maybe 2 types
     float velocity_y; ///< The vertical velocity of the enemy.
 
     // ? "sinusoidal" ; "circular" ; "linear"
-    std::string move;     ///< The movement description or pattern of the enemy.
-    float move_x;         ///<
-    float move_time;      ///<
-    float move_amplitude; ///<
-    float move_frequency; ///<
+    std::string move;    ///< The movement description or pattern of the enemy.
+    float move_x;        ///<
+    float move_time;     ///<
+    float move_amplitude;///<
+    float move_frequency;///<
+    float move_offset;
     float move_radius;    ///< The radius
     std::string path_json;///< The movement description or pattern of the enemy.
 };

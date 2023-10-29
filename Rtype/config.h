@@ -35,3 +35,8 @@
  * @brief The width of the application window.
  */
 #define WINDOW_WIDTH 800
+
+/**
+ * @brief Width of a tile, in pixel.
+ */
+#define SIZE_TILE 48
