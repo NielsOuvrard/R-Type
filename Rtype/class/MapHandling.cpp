@@ -8,9 +8,11 @@ void fill_EnemyData(EnemyData &data, nlohmann::json jsonData)
 {
     data.damage = 0;
     data.type = 0;
-    data.life = 0;
+    data.life = 1;
     data.path_sprite = "";
     data.hitBoxData = {};
+    data.shot_type = -1;
+
 
     if (jsonData.contains("type")) {
         data.type = jsonData["type"];
@@ -25,10 +27,17 @@ void fill_EnemyData(EnemyData &data, nlohmann::json jsonData)
         data.path_sprite = jsonData["path_sprite"];
     }
     if (jsonData.contains("hitbox")) {
-        data.hitBoxData.x = jsonData["hitbox"]["x"];
-        data.hitBoxData.y = jsonData["hitbox"]["y"];
-        data.hitBoxData.width = jsonData["hitbox"]["width"];
-        data.hitBoxData.height = jsonData["hitbox"]["height"];
+        if (jsonData["hitbox"].contains("x"))
+            data.hitBoxData.x = jsonData["hitbox"]["x"];
+        if (jsonData["hitbox"].contains("y"))
+            data.hitBoxData.y = jsonData["hitbox"]["y"];
+        if (jsonData["hitbox"].contains("width"))
+            data.hitBoxData.width = jsonData["hitbox"]["width"];
+        if (jsonData["hitbox"].contains("height"))
+            data.hitBoxData.height = jsonData["hitbox"]["height"];
+    }
+    if (jsonData.contains("shot_type")) {
+        data.shot_type = jsonData["shot_type"];
     }
 }
 

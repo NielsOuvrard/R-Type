@@ -14,7 +14,7 @@ Enemy::Enemy(Haze::Engine &engine, network::data_channel<protocol::data> &channe
 
 void Enemy::shoot()
 {
-    if (_missileCd.IsReady()) {
+    if (_missileCd.IsReady() && _data.shot_type != -1) {
         _missileCd.Activate();
         auto position = dynamic_cast<Haze::Position *>(_entity->getComponent("Position"));
         _missiles.emplace_back(std::make_unique<Missile>(_engine, _channel, false));
@@ -109,6 +109,9 @@ void Enemy::build(EnemyData data_enemy, nlohmann::json mapData)
                 if (damage == nullptr) {
                     return;
                 }
+                if (_data.life == -1) {// immortal
+                    return;
+                }
                 _data.life -= damage->damage;
                 if (_data.life <= 0) {
                     auto position = dynamic_cast<Haze::Position *>(_entity->getComponent("Position"));
@@ -130,6 +133,9 @@ void Enemy::build(EnemyData data_enemy, nlohmann::json mapData)
             0.1,
             [this](int a, int b) {
                 if (!_entity) {
+                    return;
+                }
+                if (_data.life == -1) {// immortal
                     return;
                 }
                 _channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
