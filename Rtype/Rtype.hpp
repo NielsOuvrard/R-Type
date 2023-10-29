@@ -14,6 +14,7 @@
 
 #pragma once
 #include "../Client/json.hpp"
+#include "Boss.h"
 #include "Enemy.h"
 #include "Explosion.h"
 #include "MapHandling.h"
@@ -131,5 +132,6 @@ private:
     std::vector<std::unique_ptr<Player>> _players;
     std::vector<std::unique_ptr<Explosion>> _explosions;
     std::vector<std::unique_ptr<Enemy>> _enemies;
+    std::unique_ptr<Boss> _boss;
     bool _running = false;
 };

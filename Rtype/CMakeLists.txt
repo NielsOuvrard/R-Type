@@ -26,6 +26,9 @@ set(
         class/MapHandling.h
         config.h
         class/EnemyData.h
+        class/Boss.cpp
+        class/Boss.h
+        class/BossData.h
 )
 
 add_library(${PROJECT_NAME} STATIC ${SOURCES})

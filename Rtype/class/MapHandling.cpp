@@ -44,19 +44,11 @@ void fill_EnemyData(EnemyData &data, nlohmann::json jsonData)
 MapHandling::MapHandling(Haze::Engine &engine,
                          network::data_channel<protocol::data> &channel,
                          std::vector<std::unique_ptr<Wall>> &walls,
-                         std::vector<std::unique_ptr<Enemy>> &enemies)
-    : _engine(engine), _channel(channel), _walls(walls), _enemies(enemies), _index_map(0), _id_map(0)
+                         std::vector<std::unique_ptr<Enemy>> &enemies,
+                         std::unique_ptr<Boss> &boss)
+    : _engine(engine), _channel(channel), _walls(walls), _enemies(enemies), _index_map(0), _id_map(0), _boss(boss)
 {
 }
-
-// MapHandling::MapHandling(Haze::Engine &engine,
-//                          network::data_channel<protocol::data> &channel,
-//                          std::vector<std::unique_ptr<Wall>> &walls,
-//                          std::vector<std::unique_ptr<Enemy>> &enemies,
-//                          std::unique_ptr<Boss> &boss)
-//     : _engine(engine), _channel(channel), _walls(walls), _enemies(enemies), _index_map(0), _id_map(0), _boss(boss)
-// {
-// }
 
 void MapHandling::build()
 {
@@ -125,6 +117,7 @@ void MapHandling::loadMaps()
 
 void MapHandling::createMap()
 {
+    _id_map = _maps_paths.size() - 1;
     bool map_filled = false;
     while (!map_filled) {
         if (_id_map >= _maps_paths.size())
@@ -194,6 +187,7 @@ void MapHandling::update()
             for (auto &enemy: _enemies) {
                 enemy->stopVelocity();
             }
+            _boss->stopVelocity();
             return;
         }
 
@@ -212,6 +206,18 @@ void MapHandling::update()
                 }
             }
         }
+
+        if (_mapTiles[_index_map].contains("boss")) {
+            int16_t type_boss = _mapTiles[_index_map]["boss"];
+            try {
+                _boss = std::make_unique<Boss>(_engine, _channel);
+                _boss->build("assets/AnimationJSON/boss.json");
+            } catch (nlohmann::json::parse_error &e) {
+                std::cerr << "Error parsing JSON file: " << _maps_paths[_id_map] << std::endl;
+                std::cerr << e.what() << std::endl;
+            }
+        }
+
 
         // Create and position the top wall
         try {

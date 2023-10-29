@@ -24,6 +24,7 @@ struct HitBox {
 
 struct EnemyData {          // ? maybe 2 types
     std::string path_sprite;///< The path or movement pattern of the enemy.
+    std::string path_json;  ///< Animation of the sprite
 
     HitBox hitBoxData;
 
@@ -44,6 +45,5 @@ struct EnemyData {          // ? maybe 2 types
     float move_amplitude;///<
     float move_frequency;///<
     float move_offset;
-    float move_radius;    ///< The radius
-    std::string path_json;///< The movement description or pattern of the enemy.
+    float move_radius;///< The radius
 };

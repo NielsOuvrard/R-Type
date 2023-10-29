@@ -6,6 +6,7 @@
 
 #include "../../Haze/inc/json.hpp"
 #include "../config.h"
+#include "Boss.h"
 #include "Enemy.h"
 #include "EnemyData.h"
 #include "Wall.h"
@@ -16,6 +17,7 @@
 #include <protocol.h>
 // list of walls, enemies...
 class Enemy;
+class Boss;
 
 /**
  * @class MapHandling
@@ -38,7 +40,8 @@ public:
     MapHandling(Haze::Engine &engine,
                 network::data_channel<protocol::data> &channel,
                 std::vector<std::unique_ptr<Wall>> &walls,
-                std::vector<std::unique_ptr<Enemy>> &enemies);
+                std::vector<std::unique_ptr<Enemy>> &enemies,
+                std::unique_ptr<Boss> &bosses);
 
     /**
      * @brief Updates the game's map state.
@@ -83,6 +86,7 @@ private:
     Haze::Engine &_engine;
     network::data_channel<protocol::data> &_channel;
     std::vector<std::unique_ptr<Enemy>> &_enemies;
+    std::unique_ptr<Boss> &_boss;
 
     Haze::Entity *_entity = nullptr;
     nlohmann::json _dataJSON;

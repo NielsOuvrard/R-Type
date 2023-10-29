@@ -29,7 +29,7 @@ Rtype::Rtype(asio::io_context &context)
 
     _background = std::make_unique<Paralax>(_engine, _channel);
 
-    _mapHandler = std::make_unique<MapHandling>(_engine, _channel, _walls, _enemies);
+    _mapHandler = std::make_unique<MapHandling>(_engine, _channel, _walls, _enemies, _boss);
 }
 
 Rtype::~Rtype() = default;
@@ -107,6 +107,7 @@ void Rtype::sendEverything(udp::endpoint &to)
             }
         }
     }
+    // TODO add boss
 }
 
 void Rtype::start()

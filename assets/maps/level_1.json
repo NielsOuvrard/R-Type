@@ -30,7 +30,8 @@
     },
     {
       "tile_top": 9,
-      "tile_bottom": 6
+      "tile_bottom": 6,
+      "boss": 1
     },
     {
       "tile_top": 5,
@@ -41,81 +42,8 @@
       "tile_bottom": 5
     },
     {
-      "tile_top": 7,
-      "tile_bottom": 7,
-      "enemies": [
-        {
-          "type": 2,
-          "x": 0,
-          "y": 350,
-          "velocity_x": 0,
-          "move_time": 0.05,
-          "move": "circular",
-          "move_radius": 100,
-          "move_x": 0.2,
-          "move_offset": 0
-        },
-        {
-          "type": 2,
-          "x": 0,
-          "y": 350,
-          "velocity_x": 0,
-          "move_time": 0.05,
-          "move": "circular",
-          "move_radius": 100,
-          "move_x": 0.2,
-          "move_offset": 0.25
-        },
-        {
-          "type": 2,
-          "x": 0,
-          "y": 350,
-          "velocity_x": 0,
-          "move_time": 0.05,
-          "move": "circular",
-          "move_radius": 100,
-          "move_x": 0.2,
-          "move_offset": 0.50
-        },
-        {
-          "type": 2,
-          "x": 0,
-          "y": 350,
-          "velocity_x": 0,
-          "move_time": 0.05,
-          "move": "circular",
-          "move_radius": 100,
-          "move_x": 0.2,
-          "move_offset": 0.75
-        },
-        {
-          "type": 2,
-          "x": 0,
-          "y": 350,
-          "velocity_x": 0,
-          "move_time": 0.05,
-          "move": "circular",
-          "move_radius": 100,
-          "move_x": 0.2,
-          "move_offset": 1
-        },
-        {
-          "type": 2,
-          "x": 0,
-          "y": 350,
-          "velocity_x": 0,
-          "move_time": 0.05,
-          "move": "circular",
-          "move_radius": 100,
-          "move_x": 0.2,
-          "move_offset": 1.25
-        }
-      ]
-    },
-    {
       "tile_top": 8,
-      "tile_bottom": 5,
-      "boss": 1
+      "tile_bottom": 5
     }
   ]
 }

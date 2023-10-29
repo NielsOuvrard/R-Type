@@ -1,0 +1,35 @@
+{
+  "damage": 20,
+  "life": 50,
+  "path_sprite": "assets/sprites/boss.png",
+  "tools_path_sprite": "assets/sprites/boss_tools.png",
+  "tools_path_json": "assets/AnimationJSON/boss_tummy.json",
+  "hitbox": {
+    "x": 5,
+    "y": 5,
+    "width": 157,
+    "height": 198
+  },
+  "animation_tics": 0.8,
+  "animation_type": "boomerang",
+  "animation": [
+    {
+      "x": 27,
+      "y": 0,
+      "width": 156,
+      "height": 208
+    },
+    {
+      "x": 189,
+      "y": 0,
+      "width": 156,
+      "height": 208
+    },
+    {
+      "x": 351,
+      "y": 0,
+      "width": 156,
+      "height": 208
+    }
+  ]
+}

@@ -7,8 +7,8 @@
 
 #include "../config.h"
 #include "../protocol.h"
+#include "BossData.h"
 #include "Cooldown.h"
-#include "EnemyData.h"
 #include "MapHandling.h"
 #include "Missile.h"
 #include <componentData.hpp>
@@ -23,7 +23,7 @@ class Boss {
 public:
     Boss(Haze::Engine &engine, network::data_channel<protocol::data> &channel);
 
-    void build();
+    void build(std::string path);
 
     void send();
 
@@ -34,10 +34,12 @@ public:
     void stopVelocity();
 
 public:
-    EnemyData _data = {};
+    BossData _data = {};
 
-    Haze::Entity *_entity = nullptr;///< The enemy entity.
-    bool _isDead = false;           ///< Indicates whether the enemy is dead.
+    Haze::Entity *_body = nullptr;
+    Haze::Entity *_tummy = nullptr;
+    std::vector<Haze::Entity *> _tail;
+    bool _isDead = false;///< Indicates whether the enemy is dead.
 
     std::list<std::unique_ptr<Missile>> _missiles;///< List of missiles fired by the enemy.
 
