@@ -36,12 +36,14 @@ namespace Haze {
         float time;
         float amplitude;
         float frequency;
+        float offset;
     };
 
     struct CircleVelocityData {
         float x;
         float time;
         float radius;
+        float offset;
     };
 
     struct MoveData {

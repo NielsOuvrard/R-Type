@@ -32,11 +32,11 @@ namespace Haze {
         }
         if (type == "SinVelocity") {
             SinVelocityData *sinVelocity = reinterpret_cast<SinVelocityData *>(data.data());
-            return new SinVelocity(sinVelocity->x, sinVelocity->time, sinVelocity->amplitude, sinVelocity->frequency);
+            return new SinVelocity(sinVelocity->x, sinVelocity->time, sinVelocity->amplitude, sinVelocity->frequency, sinVelocity->offset);
         }
         if (type == "CircleVelocity") {
             CircleVelocityData *circleVelocity = reinterpret_cast<CircleVelocityData *>(data.data());
-            return new CircleVelocity(circleVelocity->x, circleVelocity->time, circleVelocity->radius);
+            return new CircleVelocity(circleVelocity->x, circleVelocity->time, circleVelocity->radius, circleVelocity->offset);
         }
         if (type == "Move") {
             MoveData *move = reinterpret_cast<MoveData *>(data.data());
