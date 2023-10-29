@@ -1,7 +1,8 @@
 {
   "type": 2,
   "damage": 0,
-  "life": 1,
+  "life": -1,
+  "shot_type": -1,
   "path_sprite": "assets/sprites/vortex.gif",
   "animation_tics": 0.1,
   "animation_type": "loop",

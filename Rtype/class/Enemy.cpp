@@ -14,7 +14,7 @@ Enemy::Enemy(Haze::Engine &engine, network::data_channel<protocol::data> &channe
 
 void Enemy::shoot()
 {
-    if (_missileCd.IsReady()) {
+    if (_missileCd.IsReady() && _data.shot_type != -1) {
         _missileCd.Activate();
         auto position = dynamic_cast<Haze::Position *>(_entity->getComponent("Position"));
         _missiles.emplace_back(std::make_unique<Missile>(_engine, _channel, false));
@@ -34,6 +34,7 @@ void fill_data_from_map(EnemyData &data, nlohmann::json jsonData)
     data.move_amplitude = -1;
     data.move_time = -1;
     data.move_x = 0;
+    data.move_offset = 0;
 
     if (jsonData.contains("x")) {
         data.x = jsonData["x"];
@@ -65,6 +66,9 @@ void fill_data_from_map(EnemyData &data, nlohmann::json jsonData)
     if (jsonData.contains("move_x")) {
         data.move_x = jsonData["move_x"];
     }
+    if (jsonData.contains("move_offset")) {
+        data.move_offset = jsonData["move_offset"];
+    }
 }
 
 void Enemy::build(EnemyData data_enemy, nlohmann::json mapData)
@@ -82,7 +86,7 @@ void Enemy::build(EnemyData data_enemy, nlohmann::json mapData)
     _missileCd.Activate();
     _entity = _engine.createEntity();
     std::cout << "[" << _entity->getId() << "] Enemy Created" << std::endl;
-    _entity->addComponent(new Haze::Position(800 + _data.x, _data.y));// ? check if 800 is exactly the good tile
+    _entity->addComponent(new Haze::Position(WINDOW_WIDTH + SIZE_TILE + _data.x, _data.y));
     _entity->addComponent(new Haze::Velocity(_data.velocity_x, _data.velocity_y, _data.move_time));
 
     if (_data.move == "sinusoidal" && _data.move_time != -1 && _data.move_amplitude != -1 && _data.move_frequency != -1) {
@@ -90,7 +94,7 @@ void Enemy::build(EnemyData data_enemy, nlohmann::json mapData)
     }
 
     else if (_data.move == "circular" && _data.move_radius != -1 && _data.move_time != -1) {
-        _entity->addComponent(new Haze::CircleVelocity(_data.move_x, _data.move_time, _data.move_radius));
+        _entity->addComponent(new Haze::CircleVelocity(_data.move_x, _data.move_time, _data.move_radius, _data.move_offset));
         std::cout << "\033[0;31m [" << _entity->getId() << "] Enemy Created\033[0;0m" << std::endl;
     }
 
@@ -107,6 +111,9 @@ void Enemy::build(EnemyData data_enemy, nlohmann::json mapData)
                 //                }
                 auto damage = dynamic_cast<Haze::Damage *>(_engine.getEntity(b)->getComponent("Damage"));
                 if (damage == nullptr) {
+                    return;
+                }
+                if (_data.life == -1) {// immortal
                     return;
                 }
                 _data.life -= damage->damage;
@@ -132,6 +139,9 @@ void Enemy::build(EnemyData data_enemy, nlohmann::json mapData)
                 if (!_entity) {
                     return;
                 }
+                if (_data.life == -1) {// immortal
+                    return;
+                }
                 _channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
                 _entity->addComponent(new Haze::Destroy());
                 _entity = nullptr;
@@ -151,7 +161,7 @@ void Enemy::send()
     if (_data.move == "sinusoidal") {
         _channel.sendGroup(RType::message::addComponent(_entity->getId(), "SinVelocity", new Haze::SinVelocityData{_data.move_x, _data.move_time, _data.move_amplitude, _data.move_frequency}, sizeof(Haze::SinVelocityData)));
     } else if (_data.move == "circular") {
-        _channel.sendGroup(RType::message::addComponent(_entity->getId(), "CircleVelocity", new Haze::CircleVelocityData{_data.move_x, _data.move_time, _data.move_radius}, sizeof(Haze::CircleVelocityData)));
+        _channel.sendGroup(RType::message::addComponent(_entity->getId(), "CircleVelocity", new Haze::CircleVelocityData{_data.move_x, _data.move_time, _data.move_radius, _data.move_offset}, sizeof(Haze::CircleVelocityData)));
     }
     _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Scale", new Haze::ScaleData{UNIVERSAL_SCALE, UNIVERSAL_SCALE}, sizeof(Haze::ScaleData)));
     _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Hitbox", new Haze::HitboxData{_data.hitBoxData.x, _data.hitBoxData.y, _data.hitBoxData.width, _data.hitBoxData.height}, sizeof(Haze::HitboxData)));

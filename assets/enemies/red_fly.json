@@ -2,6 +2,7 @@
   "type": 1,
   "damage": 20,
   "life": 50,
+  "shot_type": 0,
   "path_sprite": "assets/sprites/enemy.gif",
   "animation_tics": 0.1,
   "animation_type": "loop",

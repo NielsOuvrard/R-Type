@@ -29,173 +29,93 @@
       "tile_bottom": 6
     },
     {
-      "tile_top": 8,
-      "tile_bottom": 4,
+      "tile_top": 9,
+      "tile_bottom": 6
+    },
+    {
+      "tile_top": 5,
+      "tile_bottom": 4
+    },
+    {
+      "tile_top": 1,
+      "tile_bottom": 5
+    },
+    {
+      "tile_top": 7,
+      "tile_bottom": 7,
       "enemies": [
         {
-          "type": 1,
-          "x": 24,
-          "y": 200,
-          "velocity_x": -2,
+          "type": 2,
+          "x": 0,
+          "y": 350,
+          "velocity_x": 0,
+          "move_time": 0.05,
           "move": "circular",
           "move_radius": 100,
           "move_x": 0.2,
-          "move_time": 0.1
+          "move_offset": 0
         },
         {
-          "type": 1,
-          "x": 24,
-          "y": 300,
-          "velocity_x": -2,
+          "type": 2,
+          "x": 0,
+          "y": 350,
+          "velocity_x": 0,
+          "move_time": 0.05,
           "move": "circular",
           "move_radius": 100,
           "move_x": 0.2,
-          "move_time": 0.1
+          "move_offset": 0.25
         },
         {
-          "type": 1,
-          "x": 24,
-          "y": 400,
-          "velocity_x": -2,
+          "type": 2,
+          "x": 0,
+          "y": 350,
+          "velocity_x": 0,
+          "move_time": 0.05,
           "move": "circular",
           "move_radius": 100,
           "move_x": 0.2,
-          "move_time": 0.1
+          "move_offset": 0.50
+        },
+        {
+          "type": 2,
+          "x": 0,
+          "y": 350,
+          "velocity_x": 0,
+          "move_time": 0.05,
+          "move": "circular",
+          "move_radius": 100,
+          "move_x": 0.2,
+          "move_offset": 0.75
+        },
+        {
+          "type": 2,
+          "x": 0,
+          "y": 350,
+          "velocity_x": 0,
+          "move_time": 0.05,
+          "move": "circular",
+          "move_radius": 100,
+          "move_x": 0.2,
+          "move_offset": 1
+        },
+        {
+          "type": 2,
+          "x": 0,
+          "y": 350,
+          "velocity_x": 0,
+          "move_time": 0.05,
+          "move": "circular",
+          "move_radius": 100,
+          "move_x": 0.2,
+          "move_offset": 1.25
         }
       ]
     },
     {
-      "tile_top": 2,
-      "tile_bottom": 0
-    },
-    {
-      "tile_top": 3,
-      "tile_bottom": 3
-    },
-    {
-      "tile_top": 4,
-      "tile_bottom": 4
-    },
-    {
-      "tile_top": 0,
+      "tile_top": 8,
       "tile_bottom": 5,
-      "enemies": [
-        {
-          "type": 1,
-          "x": 24,
-          "y": 200,
-          "velocity_x": -2,
-          "move": "sinusoidal",
-          "move_radius": 50,
-          "move_x": -7,
-          "move_time": 0.05,
-          "move_amplitude": 50,
-          "move_frequency": 0.01
-        },
-        {
-          "type": 1,
-          "x": 24,
-          "y": 300,
-          "velocity_x": -2,
-          "move": "sinusoidal",
-          "move_x": -7,
-          "move_time": 0.05,
-          "move_amplitude": 50,
-          "move_frequency": 0.01
-        },
-        {
-          "type": 1,
-          "x": 24,
-          "y": 400,
-          "velocity_x": -2,
-          "move": "sinusoidal",
-          "move_radius": 50,
-          "move_x": -7,
-          "move_time": 0.05,
-          "move_amplitude": 50,
-          "move_frequency": 0.01
-        }
-      ]
-    },
-    {
-      "tile_top": 9,
-      "tile_bottom": 6
-    },
-    {
-      "tile_top": 5,
-      "tile_bottom": 4
-    },
-    {
-      "tile_top": 1,
-      "tile_bottom": 2
-    },
-    {
-      "tile_top": 7,
-      "tile_bottom": 3
-    },
-    {
-      "tile_top": 5,
-      "tile_bottom": 4
-    },
-    {
-      "tile_top": 9,
-      "tile_bottom": 5
-    },
-    {
-      "tile_top": 9,
-      "tile_bottom": 6
-    },
-    {
-      "tile_top": 3,
-      "tile_bottom": 4
-    },
-    {
-      "tile_top": 1,
-      "tile_bottom": 2
-    },
-    {
-      "tile_top": 7,
-      "tile_bottom": 3
-    },
-    {
-      "tile_top": 8,
-      "tile_bottom": 4
-    },
-    {
-      "tile_top": 9,
-      "tile_bottom": 5
-    },
-    {
-      "tile_top": 9,
-      "tile_bottom": 6
-    },
-    {
-      "tile_top": 5,
-      "tile_bottom": 1
-    },
-    {
-      "tile_top": 6,
-      "tile_bottom": 3
-    },
-    {
-      "tile_top": 7,
-      "tile_bottom": 4
-    },
-    {
-      "tile_top": 8,
-      "tile_bottom": 5
-    },
-    {
-      "tile_top": 9,
-      "tile_bottom": 6
-    },
-    {
-      "tile_top": 2,
-      "tile_bottom": 0
-    },
-    {
-      "tile_top": 8,
-      "tile_bottom": 4
+      "boss": 1
     }
   ]
 }
