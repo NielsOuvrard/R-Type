@@ -51,18 +51,19 @@ namespace Haze {
     };
 
     struct SinVelocity : public Component {
-        SinVelocity(float x, float time, float amplitude, float frequency) : x(x), tick(time), amplitude(amplitude), frequency(frequency) {}
+        SinVelocity(float x, float time, float amplitude, float frequency, float offset = 0) : x(x), tick(time), amplitude(amplitude), frequency(frequency), offset(offset) {}
         float x;
         float tick;
         float amplitude;
         float frequency;
+        float offset;
         std::chrono::time_point<std::chrono::high_resolution_clock> lastUpdate = std::chrono::high_resolution_clock::now();
         std::string getType() const override { return "SinVelocity"; }
         void show() const override { std::cout << "SinVelocity: " << x << ", " << tick << std::endl; }
     };
 
     struct CircleVelocity : public Component {
-        CircleVelocity(float x, float time, float radius) : x(x), tick(time), radius(radius) {}
+        CircleVelocity(float x, float time, float radius, float offset = 0) : x(x), tick(time), radius(radius), t(offset) {}
         float x;
         float tick;
         float radius;
