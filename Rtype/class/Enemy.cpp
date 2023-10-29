@@ -3,7 +3,6 @@
 //
 
 #include "Enemy.h"
-
 #include <utility>
 
 #define IS_KEY_PRESSED(key) (std::find(components.begin(), components.end(), Haze::InputType::key) != components.end())
@@ -74,7 +73,9 @@ void Enemy::build(EnemyData data_enemy, nlohmann::json mapData)
     _data = std::move(data_enemy);
     // * copy all data from map
     fill_data_from_map(_data, mapData);
-    //    _data.velocity_x -= VELOCITY_WALL_X;// ? not sure about this
+
+    _data.velocity_x += VELOCITY_WALL_X;
+
     std::chrono::milliseconds d((std::rand() % 10 + 5) * 1000);
     _missileCd.setDuration(d);
 
@@ -90,6 +91,7 @@ void Enemy::build(EnemyData data_enemy, nlohmann::json mapData)
 
     else if (_data.move == "circular" && _data.move_radius != -1 && _data.move_time != -1) {
         _entity->addComponent(new Haze::CircleVelocity(_data.move_x, _data.move_time, _data.move_radius));
+        std::cout << "\033[0;31m [" << _entity->getId() << "] Enemy Created\033[0;0m" << std::endl;
     }
 
     _entity->addComponent(new Haze::Scale(UNIVERSAL_SCALE, UNIVERSAL_SCALE));
@@ -153,9 +155,17 @@ void Enemy::send()
     }
     _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Scale", new Haze::ScaleData{UNIVERSAL_SCALE, UNIVERSAL_SCALE}, sizeof(Haze::ScaleData)));
     _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Hitbox", new Haze::HitboxData{_data.hitBoxData.x, _data.hitBoxData.y, _data.hitBoxData.width, _data.hitBoxData.height}, sizeof(Haze::HitboxData)));
-    //_channel.sendGroup(RType::message::addComponent(_entity->getId(), "HitboxDisplay", nullptr, 0));
-    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Sprite", new Haze::SpriteData{"assets/sprites/enemy.gif"}, sizeof(Haze::SpriteData)));
-    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Animation", new Haze::AnimationData{"assets/enemies/red_fly.json"}, sizeof(Haze::AnimationData)));
+    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "HitboxDisplay", nullptr, 0));
+
+    auto elem_sprite = new Haze::SpriteData();
+    strncpy(elem_sprite->path, _data.path_sprite.c_str(), sizeof(elem_sprite->path));
+    elem_sprite->path[sizeof(elem_sprite->path) - 1] = '\0';
+    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Sprite", elem_sprite, sizeof(Haze::SpriteData)));
+
+    auto elem_animation = new Haze::AnimationData();
+    strncpy(elem_animation->path, _data.path_json.c_str(), sizeof(elem_animation->path));
+    elem_animation->path[sizeof(elem_animation->path) - 1] = '\0';
+    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Animation", elem_animation, sizeof(Haze::AnimationData)));
 }
 
 void Enemy::update()
@@ -178,4 +188,14 @@ void Enemy::update()
     }
     if (invalidMissileExists)
         _missiles.erase(std::remove(_missiles.begin(), _missiles.end(), nullptr), _missiles.end());
+}
+
+void Enemy::stopVelocity()
+{
+    _data.velocity_x -= VELOCITY_WALL_X;
+    _entity->addComponent(new Haze::Velocity(_data.velocity_x, _data.velocity_y, _data.move_time));
+    auto pos = dynamic_cast<Haze::Position *>(_entity->getComponent("Position"));
+
+    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Velocity", new Haze::VelocityData{_data.velocity_x, _data.velocity_y, _data.move_time}, sizeof(Haze::VelocityData)));
+    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Position", new Haze::PositionData{pos->x, pos->y}, sizeof(Haze::PositionData)));
 }

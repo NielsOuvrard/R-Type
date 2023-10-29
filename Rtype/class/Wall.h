@@ -67,6 +67,13 @@ public:
      * This function sends an update for the wall object to clients.
      */
     void sendUpdate();
+    
+    /**
+     * @brief Stop the movement of walls, and send it to client.
+     *
+     * Useful for the end of the map
+     */
+    void stopVelocity();
 
     /**
      * @brief Destroys the wall object.
@@ -81,7 +88,7 @@ public:
      * @return The X-coordinate of the wall's position.
      */
     [[nodiscard]] float get_x_position() const;
-    
+
 private:
     Haze::Engine &_engine;
     network::data_channel<protocol::data> &_channel;

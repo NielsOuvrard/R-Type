@@ -27,11 +27,11 @@ struct EnemyData {          // ? maybe 2 types
 
     HitBox hitBoxData;
 
-    int16_t x;
-    int16_t y;
+    float x;
+    float y;
     int16_t tics;    ///< The number of tics for enemy behavior.
     int16_t type;    ///< The type or category of the enemy.
-    int16_t damage;  ///< The damage dealt by the enemy.
+    int32_t damage;  ///< The damage dealt by the enemy.
     int16_t life;    ///< The remaining life or health of the enemy.
     float velocity_x;///< The horizontal velocity of the enemy.
     float velocity_y;///< The vertical velocity of the enemy.
