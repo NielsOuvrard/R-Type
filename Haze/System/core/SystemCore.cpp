@@ -106,7 +106,7 @@ namespace Haze
                 float oldX = position->x + sinVelocity->offset;
                 position->x += (sinVelocity->x * gap) / sinVelocity->tick;
                 position->y -= sin(sinVelocity->frequency * oldX) * sinVelocity->amplitude;
-                position->y += sin(sinVelocity->frequency * (position->x + sinVelocity->offset)) * sinVelocity->amplitude;
+                position->y += sin(sinVelocity->frequency * position->x) * sinVelocity->amplitude;
                 sinVelocity->lastUpdate = std::chrono::high_resolution_clock::now();
             }
             if (componentList->getComponent("Position", i) != nullptr && componentList->getComponent("CircleVelocity", i) != nullptr)
@@ -116,8 +116,12 @@ namespace Haze
                 float gap = std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - circleVelocity->lastUpdate).count();
                 float oldT = circleVelocity->t;
                 circleVelocity->t += (circleVelocity->x * gap) / circleVelocity->tick;
-                position->x -= cos(oldT) * circleVelocity->radius;
-                position->y -= sin(oldT) * circleVelocity->radius;
+                if (circleVelocity->applied) {
+                    position->x -= cos(oldT) * circleVelocity->radius;
+                    position->y -= sin(oldT) * circleVelocity->radius;
+                } else {
+                    circleVelocity->applied = true;
+                }
                 position->x += cos(circleVelocity->t) * circleVelocity->radius;
                 position->y += sin(circleVelocity->t) * circleVelocity->radius;
                 circleVelocity->lastUpdate = std::chrono::high_resolution_clock::now();

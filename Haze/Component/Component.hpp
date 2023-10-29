@@ -68,6 +68,7 @@ namespace Haze {
         float tick;
         float radius;
         float t = 0;
+        bool applied = false;
         std::chrono::time_point<std::chrono::high_resolution_clock> lastUpdate = std::chrono::high_resolution_clock::now();
         std::string getType() const override { return "CircleVelocity"; }
         void show() const override { std::cout << "CircleVelocity: " << std::endl; }
