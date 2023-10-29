@@ -51,6 +51,7 @@ public:
      */
     void update();
 
+    void stopVelocity();
 
 public:
     EnemyData _data = {};

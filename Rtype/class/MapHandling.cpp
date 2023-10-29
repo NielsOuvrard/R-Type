@@ -168,6 +168,17 @@ void MapHandling::update()
 
         float pos_wall_back = _walls.back()->get_x_position();
 
+        if (_index_map >= _mapTiles.size()) {
+            // * stop scrolling the map
+            for (auto &wall: _walls) {
+                wall->stopVelocity();
+            }
+            for (auto &enemy: _enemies) {
+                enemy->stopVelocity();
+            }
+            return;
+        }
+
         // * read "enemies" inside of map
         auto &enemies_tile = _mapTiles[_index_map]["enemies"];
 
