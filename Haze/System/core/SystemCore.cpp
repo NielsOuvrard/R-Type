@@ -105,7 +105,11 @@ namespace Haze
                 float gap = std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - sinVelocity->lastUpdate).count();
                 float oldX = position->x + sinVelocity->offset;
                 position->x += (sinVelocity->x * gap) / sinVelocity->tick;
-                position->y -= sin(sinVelocity->frequency * oldX) * sinVelocity->amplitude;
+                if (sinVelocity->applied) {
+                    position->y -= sin(sinVelocity->frequency * oldX) * sinVelocity->amplitude;
+                } else {
+                    sinVelocity->applied = true;
+                }
                 position->y += sin(sinVelocity->frequency * position->x) * sinVelocity->amplitude;
                 sinVelocity->lastUpdate = std::chrono::high_resolution_clock::now();
             }

@@ -57,6 +57,7 @@ namespace Haze {
         float amplitude;
         float frequency;
         float offset;
+        bool applied = false;
         std::chrono::time_point<std::chrono::high_resolution_clock> lastUpdate = std::chrono::high_resolution_clock::now();
         std::string getType() const override { return "SinVelocity"; }
         void show() const override { std::cout << "SinVelocity: " << x << ", " << tick << std::endl; }
