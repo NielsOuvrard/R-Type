@@ -14,12 +14,12 @@
 
 #pragma once
 #include "../Client/json.hpp"
-#include "Boss.h"
-#include "Enemy.h"
-#include "Explosion.h"
-#include "MapHandling.h"
-#include "Paralax.h"
-#include "Player.h"
+#include "Boss/Boss.h"
+#include "Enemy/Enemy.h"
+#include "Explosion/Explosion.h"
+#include "MapHandling/MapHandling.h"
+#include "Paralax/Paralax.h"
+#include "Player/Player.h"
 #include "data.h"
 #include "net_data_channel.h"
 #include "net_server.h"

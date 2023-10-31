@@ -8,27 +8,28 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(
         SOURCES
         Rtype.cpp
-        class/Wall.cpp
+        Wall/Wall.cpp
         protocol.h
-        class/Player.cpp
-        class/Player.h
-        class/Cooldown.cpp
-        class/Cooldown.h
-        class/Missile.cpp
-        class/Missile.h
-        class/Enemy.cpp
-        class/Enemy.h
-        class/Paralax.cpp
-        class/Paralax.h
-        class/Explosion.cpp
-        class/Explosion.h
-        class/MapHandling.cpp
-        class/MapHandling.h
+        Player/Player.cpp
+        Player/Player.h
+        Cooldown/Cooldown.cpp
+        Cooldown/Cooldown.h
+        Missile/Missile.cpp
+        Missile/Missile.h
+        Enemy/Enemy.cpp
+        Enemy/Enemy.h
+        Enemy/EnemyData.h
+        Paralax/Paralax.cpp
+        Paralax/Paralax.h
+        Explosion/Explosion.cpp
+        Explosion/Explosion.h
+        MapHandling/MapHandling.cpp
+        MapHandling/MapHandling.h
         config.h
-        class/EnemyData.h
-        class/Boss.cpp
-        class/Boss.h
-        class/BossData.h
+        Boss/Boss.cpp
+        Boss/Boss.h
+        Boss/BossData.h
+        processJsonFilesInDirectory.cpp
 )
 
 add_library(${PROJECT_NAME} STATIC ${SOURCES})

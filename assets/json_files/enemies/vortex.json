@@ -1,0 +1,36 @@
+{
+  "type": 2,
+  "damage": 0,
+  "life": -1,
+  "shot_type": -1,
+  "path_sprite": "assets/sprites/vortex.gif",
+  "hitbox": {
+    "x": 5,
+    "y": 5,
+    "width": 24,
+    "height": 24
+  },
+  "fly": true,
+  "animation_tics": 0.1,
+  "animation_type": "loop",
+  "animation": [
+    {
+      "x": 0,
+      "y": 0,
+      "width": 34,
+      "height": 34
+    },
+    {
+      "x": 34,
+      "y": 0,
+      "width": 34,
+      "height": 34
+    },
+    {
+      "x": 68,
+      "y": 0,
+      "width": 34,
+      "height": 34
+    }
+  ]
+}
