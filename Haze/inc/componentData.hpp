@@ -51,6 +51,10 @@ namespace Haze {
         float y;
     };
 
+    struct InterpolationData {
+        int framerate;
+    };
+
     struct HealthData {
         int health;
     };
