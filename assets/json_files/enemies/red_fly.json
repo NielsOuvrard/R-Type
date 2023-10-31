@@ -2,7 +2,8 @@
   "type": 1,
   "damage": 20,
   "life": 50,
-  "shot_type": 0,
+  "shot_type": 1,
+  "explosion_type": 1,
   "path_sprite": "assets/sprites/enemy.gif",
   "hitbox": {
     "x": 5,

@@ -12,12 +12,12 @@ Enemy::Enemy(Haze::Engine &engine, network::data_channel<protocol::data> &channe
 {
 }
 
-void Enemy::shoot()
+void Enemy::shot()
 {
     if (_missileCd.IsReady() && _data.shot_type != -1) {
         _missileCd.Activate();
         auto position = dynamic_cast<Haze::Position *>(_entity->getComponent("Position"));
-        _missiles.emplace_back(std::make_unique<Missile>(_engine, _channel, false));
+        _missiles.emplace_back(std::make_unique<Shot>(_engine, _channel, false));
         _missiles.back()->build(position->x, position->y);
     }
 }
@@ -198,7 +198,7 @@ void Enemy::send()
 void Enemy::update()
 {
     // clears the destroyed missiles from the vector
-    bool invalidMissileExists = false;
+    bool invalidShotExists = false;
     for (auto &missile: _missiles) {
         if (missile->_entity) {
             auto pos = dynamic_cast<Haze::Position *>(missile->_entity->getComponent("Position"));
@@ -210,10 +210,10 @@ void Enemy::update()
         }
         if (!missile->_entity) {
             missile.reset();
-            invalidMissileExists = true;
+            invalidShotExists = true;
         }
     }
-    if (invalidMissileExists)
+    if (invalidShotExists)
         _missiles.erase(std::remove(_missiles.begin(), _missiles.end(), nullptr), _missiles.end());
 }
 

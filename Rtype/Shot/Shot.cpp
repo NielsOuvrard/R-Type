@@ -2,20 +2,20 @@
 // Created by erwan on 10/15/23.
 //
 
-#include "Missile.h"
+#include "Shot.h"
 #include "../config.h"
 
-Missile::Missile(Haze::Engine &engine, network::data_channel<protocol::data> &channel, bool fromPlayer)
+Shot::Shot(Haze::Engine &engine, network::data_channel<protocol::data> &channel, bool fromPlayer)
     : _engine(engine), _channel(channel), _fromPlayer(fromPlayer)
 {
 }
 
-void Missile::build(float x, float y)
+void Shot::build(float x, float y)
 {
     _entity = _engine.createEntity();
     std::cout << "["
               << _entity->getId()
-              << "] Missile Created"
+              << "] Shot Created"
               << std::endl;
     _x = x;
     _y = y;
@@ -67,7 +67,7 @@ void Missile::build(float x, float y)
     send();
 }
 
-void Missile::send()
+void Shot::send()
 {
     _channel.sendGroup(RType::message::createEntity(_entity->getId()));
     //_channel.sendGroup(RType::message::addComponent(_entity->getId(), "Damage", new Haze::DamageData{20}, sizeof(Haze::PositionData)));
@@ -84,6 +84,6 @@ void Missile::send()
     }
     _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Hitbox", new Haze::HitboxData({0, 6, 16, 4}), sizeof(Haze::HitboxData)));
     _channel.sendGroup(RType::message::addComponent(_entity->getId(), "HitboxDisplay", nullptr, 0));
-    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Animation", new Haze::AnimationData{"assets/json_files/shoots/shot.json"}, sizeof(Haze::AnimationData)));
+    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Animation", new Haze::AnimationData{"assets/json_files/shots/shot.json"}, sizeof(Haze::AnimationData)));
     _channel.sendGroup(RType::message::addComponent(_entity->getId(), "SpriteCropped", new Haze::SpriteCroppedData{2}, sizeof(Haze::SpriteCroppedData)));
 }

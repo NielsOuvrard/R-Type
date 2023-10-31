@@ -27,9 +27,9 @@ Rtype::Rtype(asio::io_context &context)
     _engine.setInfoInputs({std::vector<Haze::InputType>(), std::vector<Haze::InputType>(), Haze::MouseType::NOTHING, 0, 0}, 3);
     _engine.setInfoInputs({std::vector<Haze::InputType>(), std::vector<Haze::InputType>(), Haze::MouseType::NOTHING, 0, 0}, 4);
 
-    _background = std::make_unique<Paralax>(_engine, _channel);
+    _background = std::make_unique<Parallax>(_engine, _channel);
 
-    _mapHandler = std::make_unique<MapHandling>(_engine, _channel, _walls, _enemies, _boss);
+    _mapHandler = std::make_unique<Map>(_engine, _channel, _walls, _enemies, _boss);
 }
 
 Rtype::~Rtype() = default;
@@ -229,7 +229,7 @@ void Rtype::update()
      */
     _mapHandler->update();
     /**
-     * Enemy & Missiles' cleanup cycle
+     * Enemy & Shots' cleanup cycle
      */
     bool enemyToCleanup = false;
     for (auto &enemy: _enemies) {
@@ -238,7 +238,7 @@ void Rtype::update()
         if (enemy->_isDead) {
             // * create explosion
 
-            _explosions.emplace_back(std::make_unique<Explosion>(_engine, _channel, enemy->_data.x, enemy->_data.y));
+            _explosions.emplace_back(std::make_unique<Explosion>(_engine, _channel, enemy->_data.x, enemy->_data.y, enemy->_data.explosion_type));
             _explosions.back()->build();
             _explosions.back()->send();
             std::cout << "Explosion created" << std::endl;
@@ -266,7 +266,7 @@ void Rtype::update()
     // Trigger enemy actions
     for (auto &enemy: _enemies) {
         if (enemy->_entity) {
-            enemy->shoot();
+            enemy->shot();
         }
     }
 
@@ -284,7 +284,7 @@ void Rtype::update()
                       _explosions.end());
 
     /**
-     * Enemy & Missiles' cleanup cycle
+     * Enemy & Shots' cleanup cycle
      */
     bool playerToCleanup = false;
     for (auto &player: _players) {

@@ -19,24 +19,24 @@ class Enemy;
 class Boss;
 
 /**
- * @class MapHandling
+ * @class Map
  *
  * @brief Handles map-related operations in the game.
  *
- * The `MapHandling` class is responsible for managing and updating the game's map, including walls and enemies.
+ * The `Map` class is responsible for managing and updating the game's map, including walls and enemies.
  * It provides functions for updating the map and creating the map layout.
  */
-class MapHandling {
+class Map {
 public:
     /**
-     * @brief Constructs a MapHandling object.
+     * @brief Constructs a Map object.
      *
      * @param engine The game engine.
      * @param channel The data channel for network communication.
      * @param walls A vector of unique pointers to wall objects.
      * @param enemies A vector of unique pointers to enemy objects.
      */
-    MapHandling(Haze::Engine &engine,
+    Map(Haze::Engine &engine,
                 network::data_channel<protocol::data> &channel,
                 std::vector<std::unique_ptr<Wall>> &walls,
                 std::vector<std::unique_ptr<Enemy>> &enemies,

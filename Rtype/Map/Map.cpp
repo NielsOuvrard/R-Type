@@ -2,7 +2,7 @@
 // Created by Niels Ouvrard on 27/10/2023.
 //
 
-#include "MapHandling.h"
+#include "Map.h"
 
 void fill_EnemyData(EnemyData &data, nlohmann::json jsonData)
 {
@@ -44,7 +44,7 @@ void fill_EnemyData(EnemyData &data, nlohmann::json jsonData)
     }
 }
 
-MapHandling::MapHandling(Haze::Engine &engine,
+Map::Map(Haze::Engine &engine,
                          network::data_channel<protocol::data> &channel,
                          std::vector<std::unique_ptr<Wall>> &walls,
                          std::vector<std::unique_ptr<Enemy>> &enemies,
@@ -53,7 +53,7 @@ MapHandling::MapHandling(Haze::Engine &engine,
 {
 }
 
-void MapHandling::build()
+void Map::build()
 {
     // create enemies
     processJsonFilesInDirectory("assets/json_files/enemies", [this](std::ifstream &fileStream, const std::string &filePath) {
@@ -63,7 +63,7 @@ void MapHandling::build()
     createMap();
 }
 
-void MapHandling::createEnemy(std::ifstream &fileStream, const std::string &filePath)
+void Map::createEnemy(std::ifstream &fileStream, const std::string &filePath)
 {
     nlohmann::json jsonData;
     fileStream >> jsonData;
@@ -76,7 +76,7 @@ void MapHandling::createEnemy(std::ifstream &fileStream, const std::string &file
     _enemies_type[type] = (new_enemy_type);
 }
 
-void MapHandling::loadMaps()
+void Map::loadMaps()
 {
     // ? add a type of mapTiles, so we can have infinity of sprites and hitbox
     // Load sprite data for the walls from "ground.json"
@@ -99,7 +99,7 @@ void MapHandling::loadMaps()
     }
 }
 
-void MapHandling::createMap()
+void Map::createMap()
 {
     _id_map = _maps_paths.size() - 1;
     bool map_filled = false;
@@ -152,7 +152,7 @@ void MapHandling::createMap()
     }
 }
 
-void MapHandling::update()
+void Map::update()
 {
     if (_walls.front()->get_x_position() < -(SIZE_TILE * UNIVERSAL_SCALE)) {// * tile = 3 * SIZE_TILE
         // destroy

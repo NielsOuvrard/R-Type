@@ -7,7 +7,7 @@
 #include "../config.h"
 #include "../protocol.h"
 #include "Cooldown/Cooldown.h"
-#include "Missile/Missile.h"
+#include "Shot/Shot.h"
 #include <componentData.hpp>
 #include <data.h>
 #include <haze-core.hpp>
@@ -90,7 +90,7 @@ public:
     uint32_t _score = 0;///< The player's score.
     int32_t _hp = 50;   ///< The player's health points.
 
-    std::list<std::unique_ptr<Missile>> _missiles;///< The list of missiles fired by the player.
+    std::list<std::unique_ptr<Shot>> _missiles;///< The list of missiles fired by the player.
     Cooldown _missileCd{300ms};                   ///< Cooldown for missile firing.
 
 private:

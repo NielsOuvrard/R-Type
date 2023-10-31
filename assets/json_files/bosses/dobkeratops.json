@@ -1,4 +1,5 @@
 {
+  "type": 1,
   "damage": 20,
   "life": 50,
   "path_sprite": "assets/sprites/boss.png",

@@ -17,8 +17,8 @@
 #include "Boss/Boss.h"
 #include "Enemy/Enemy.h"
 #include "Explosion/Explosion.h"
-#include "MapHandling/MapHandling.h"
-#include "Paralax/Paralax.h"
+#include "Map/Map.h"
+#include "Parallax/Parallax.h"
 #include "Player/Player.h"
 #include "data.h"
 #include "net_data_channel.h"
@@ -125,13 +125,21 @@ private:
 
     Cooldown _enemySpawnCD{5s};
 
-    std::unique_ptr<MapHandling> _mapHandler;
-    std::unique_ptr<Paralax> _background;
-    std::vector<std::unique_ptr<Wall>> _walls;
+    std::unique_ptr<Map> _mapHandler;
+    std::unique_ptr<Parallax> _background;
+    std::unique_ptr<Boss> _boss;
+
+    std::map<uint16_t, EnemyData> _enemies_type;
+    //    std::map<uint16_t, ExplosionData> _explosions_type;
+    //    std::map<uint16_t, ShotData> _shots_type;
+    //    std::map<uint16_t, WallData> _walls_type;
+    //    std::map<uint16_t, MapData> _maps_type;
+    std::map<uint16_t, BossData> _bosses_type;
+
     std::vector<Haze::Entity *> _entities;
+    std::vector<std::unique_ptr<Wall>> _walls;
     std::vector<std::unique_ptr<Player>> _players;
     std::vector<std::unique_ptr<Explosion>> _explosions;
     std::vector<std::unique_ptr<Enemy>> _enemies;
-    std::unique_ptr<Boss> _boss;
     bool _running = false;
 };

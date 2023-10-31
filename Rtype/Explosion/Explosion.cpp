@@ -12,8 +12,8 @@
  * @param x The x-coordinate of the explosion.
  * @param y The y-coordinate of the explosion.
  */
-Explosion::Explosion(Haze::Engine &engine, network::data_channel<protocol::data> &channel, float x, float y)
-    : _engine(engine), _channel(channel), _x(x), _y(y)
+Explosion::Explosion(Haze::Engine &engine, network::data_channel<protocol::data> &channel, float x, float y, uint16_t type)
+    : _engine(engine), _channel(channel), _x(x), _y(y), _type(type)
 {
 }
 

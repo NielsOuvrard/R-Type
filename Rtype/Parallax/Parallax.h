@@ -6,30 +6,30 @@
 
 #include "../protocol.h"
 #include "Cooldown/Cooldown.h"
-#include "Missile/Missile.h"
+#include "Shot/Shot.h"
 #include <componentData.hpp>
 #include <data.h>
 #include <haze-core.hpp>
 #include <net_data_channel.h>
 
 /**
- * @class Paralax
+ * @class Parallax
  *
  * @brief Represents a parallax background in the game.
  *
- * The `Paralax` class manages the parallax background in the game, which adds depth and visual interest
+ * The `Parallax` class manages the parallax background in the game, which adds depth and visual interest
  * to the game's environment. It provides functions to build, update, and communicate the background
  * to clients through the network channel.
  */
-class Paralax {
+class Parallax {
 public:
     /**
-     * @brief Constructs a Paralax object.
+     * @brief Constructs a Parallax object.
      *
      * @param engine The game engine.
      * @param channel The data channel for network communication.
      */
-    Paralax(Haze::Engine &engine, network::data_channel<protocol::data> &channel);
+    Parallax(Haze::Engine &engine, network::data_channel<protocol::data> &channel);
 
     /**
      * @brief Builds the parallax background.

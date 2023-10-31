@@ -193,7 +193,7 @@ void Boss::send()
     _channel.sendGroup(RType::message::addComponent(_tummy->getId(), "Animation", tummy_animation, sizeof(Haze::AnimationData)));
 }
 
-void Boss::shoot()
+void Boss::shot()
 {
 }
 

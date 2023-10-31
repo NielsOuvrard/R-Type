@@ -27,7 +27,7 @@ void Player::build()
                 if (IS_KEY_PRESSED(KEY_F) && _missileCd.IsReady()) {
                     _missileCd.Activate();
                     auto position = dynamic_cast<Haze::Position *>(this->_entity->getComponent("Position"));
-                    _missiles.emplace_back(std::make_unique<Missile>(_engine, _channel, true));
+                    _missiles.emplace_back(std::make_unique<Shot>(_engine, _channel, true));
                     _missiles.back()->build(position->x, position->y);
                 }
                 auto position = dynamic_cast<Haze::Position *>(_entity->getComponent("Position"));
@@ -134,7 +134,7 @@ void Player::sendUpdate()
 
 void Player::update()
 {
-    bool invalidMissileExists = false;
+    bool invalidShotExists = false;
     for (auto &missile: _missiles) {
         if (missile->_entity) {
             auto pos = dynamic_cast<Haze::Position *>(missile->_entity->getComponent("Position"));
@@ -146,9 +146,9 @@ void Player::update()
         }
         if (!missile->_entity) {
             missile.reset();
-            invalidMissileExists = true;
+            invalidShotExists = true;
         }
     }
-    if (invalidMissileExists)
+    if (invalidShotExists)
         _missiles.erase(std::remove(_missiles.begin(), _missiles.end(), nullptr), _missiles.end());
 }

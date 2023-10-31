@@ -8,8 +8,8 @@
 #include "../protocol.h"
 #include "Cooldown/Cooldown.h"
 #include "EnemyData.h"
-#include "MapHandling/MapHandling.h"
-#include "Missile/Missile.h"
+#include "Map/Map.h"
+#include "Shot/Shot.h"
 #include <componentData.hpp>
 #include <data.h>
 #include <haze-core.hpp>
@@ -42,9 +42,9 @@ public:
     void send();
 
     /**
-     * @brief Make the enemy shoot a missile.
+     * @brief Make the enemy shot a missile.
      */
-    void shoot();
+    void shot();
 
     /**
      * @brief Update the enemy's state.
@@ -59,7 +59,7 @@ public:
     Haze::Entity *_entity = nullptr;///< The enemy entity.
     bool _isDead = false;           ///< Indicates whether the enemy is dead.
 
-    std::list<std::unique_ptr<Missile>> _missiles;///< List of missiles fired by the enemy.
+    std::list<std::unique_ptr<Shot>> _missiles;///< List of missiles fired by the enemy.
 
 private:
     Haze::Engine &_engine;                          ///< The game engine.

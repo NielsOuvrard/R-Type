@@ -27,7 +27,7 @@ public:
      * @param x The x-coordinate of the explosion.
      * @param y The y-coordinate of the explosion.
      */
-    Explosion(Haze::Engine &engine, network::data_channel<protocol::data> &channel, float x, float y);
+    Explosion(Haze::Engine &engine, network::data_channel<protocol::data> &channel, float x, float y, uint16_t type);
 
     /**
      * @brief Build the explosion entity with initial properties.
@@ -53,4 +53,5 @@ private:
     network::data_channel<protocol::data> &_channel;///< The network data channel.
     float _x;                                       ///< The x-coordinate of the explosion.
     float _y;                                       ///< The y-coordinate of the explosion.
+    uint16_t _type;
 };

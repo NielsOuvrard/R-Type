@@ -11,23 +11,23 @@
 #include <net_data_channel.h>
 
 /**
- * @class Missile
+ * @class Shot
  *
  * @brief Represents a missile in the game.
  *
- * The `Missile` class is responsible for managing missile objects in the game. Missiles can be constructed,
+ * The `Shot` class is responsible for managing missile objects in the game. Shots can be constructed,
  * positioned, and sent through the network to interact with other game entities.
  */
-class Missile {
+class Shot {
 public:
     /**
-     * @brief Constructs a Missile object.
+     * @brief Constructs a Shot object.
      *
      * @param engine The game engine.
      * @param channel The data channel for network communication.
      * @param fromPlayer Indicates whether the missile was fired by a player.
      */
-    Missile(Haze::Engine &engine, network::data_channel<protocol::data> &channel, bool fromPlayer);
+    Shot(Haze::Engine &engine, network::data_channel<protocol::data> &channel, bool fromPlayer);
 
     /**
      * @brief Builds the missile at a specified position.

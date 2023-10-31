@@ -2,13 +2,13 @@
 // Created by erwan on 10/15/23.
 //
 
-#include "Paralax.h"
+#include "Parallax.h"
 
-Paralax::Paralax(Haze::Engine &engine, network::data_channel<protocol::data> &channel)
+Parallax::Parallax(Haze::Engine &engine, network::data_channel<protocol::data> &channel)
     : _engine(engine), _channel(channel)
 {}
 
-void Paralax::build()
+void Parallax::build()
 {
     _bg1 = _engine.createEntity();
     std::cout << "["
@@ -28,7 +28,7 @@ void Paralax::build()
     send();
 }
 
-void Paralax::update()
+void Parallax::update()
 {
     auto pos1 = dynamic_cast<Haze::Position *>(_bg1->getComponent("Position"));
     auto pos2 = dynamic_cast<Haze::Position *>(_bg2->getComponent("Position"));
@@ -40,7 +40,7 @@ void Paralax::update()
     }
 }
 
-void Paralax::send()
+void Parallax::send()
 {
     _channel.sendGroup(RType::message::createEntity(_bg1->getId()));
     auto pos = dynamic_cast<Haze::Position *>(_bg1->getComponent("Position"));
@@ -55,7 +55,7 @@ void Paralax::send()
     _channel.sendGroup(RType::message::addComponent(_bg2->getId(), "Sprite", new Haze::SpriteData{"assets/sprites/space.jpg"}, sizeof(Haze::SpriteData)));
 }
 
-void Paralax::sendUpdate()
+void Parallax::sendUpdate()
 {
     auto pos = dynamic_cast<Haze::Position *>(_bg1->getComponent("Position"));
     _channel.sendGroup(RType::message::addComponent(_bg1->getId(), "Position", new Haze::PositionData{pos->x, pos->y}, sizeof(Haze::PositionData)));

@@ -14,17 +14,17 @@ set(
         Player/Player.h
         Cooldown/Cooldown.cpp
         Cooldown/Cooldown.h
-        Missile/Missile.cpp
-        Missile/Missile.h
+        Shot/Shot.cpp
+        Shot/Shot.h
         Enemy/Enemy.cpp
         Enemy/Enemy.h
         Enemy/EnemyData.h
-        Paralax/Paralax.cpp
-        Paralax/Paralax.h
+        Parallax/Parallax.cpp
+        Parallax/Parallax.h
         Explosion/Explosion.cpp
         Explosion/Explosion.h
-        MapHandling/MapHandling.cpp
-        MapHandling/MapHandling.h
+        Map/Map.cpp
+        Map/Map.h
         config.h
         Boss/Boss.cpp
         Boss/Boss.h
