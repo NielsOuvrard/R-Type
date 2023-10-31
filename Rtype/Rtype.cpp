@@ -17,7 +17,7 @@
 #define NBR_TILES_ON_SCREEN 6
 
 Rtype::Rtype(asio::io_context &context)
-    : _channel(context), _engine(60)
+    : _channel(context), _engine(10)
 {
     std::srand(std::time(0));
     _engine.init();

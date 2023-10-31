@@ -107,7 +107,34 @@ void game::addComponent(Haze::component_info info)
                 _engine.createEntity(),
         });
     }
-    _entities[info.id]->addComponent(Haze::Factory::createComponent(std::string(info.name), info.data));
+    Haze::Component *comp = Haze::Factory::createComponent(std::string(info.name), info.data);
+    if (comp->getType() == "Position") {
+        Haze::Interpolation *interpolation = dynamic_cast<Haze::Interpolation *>(_entities[info.id]->getComponent("Interpolation"));
+        if (interpolation == nullptr) {
+            _entities[info.id]->addComponent(comp);
+            return;
+        }
+        Haze::Position *pos = dynamic_cast<Haze::Position *>(_entities[info.id]->getComponent("Position"));
+        Haze::PositionInterpolation *PosI = dynamic_cast<Haze::PositionInterpolation *>(_entities[info.id]->getComponent("PositionInterpolation"));
+        Haze::Position *newPos = dynamic_cast<Haze::Position *>(comp);
+
+        if (pos == nullptr || PosI == nullptr) {
+            if (pos == nullptr)
+                _entities[info.id]->addComponent(comp);
+            if (PosI == nullptr)
+                _entities[info.id]->addComponent(new Haze::PositionInterpolation(newPos->x, newPos->y, newPos->x, newPos->y));
+        } else {
+            pos->x = PosI->nextX;
+            pos->y = PosI->nextY;
+            PosI->prevX = PosI->nextX;
+            PosI->prevY = PosI->nextY;
+            PosI->nextX = newPos->x;
+            PosI->nextY = newPos->y;
+            _entities[info.id]->addComponent(new Haze::VelocityInterpolation(PosI->nextX - PosI->prevX, PosI->nextY - PosI->prevY, 1.0f / interpolation->framerate));
+        }
+    } else {
+        _entities[info.id]->addComponent(comp);
+    }
 }
 
 void game::removeComponent(Haze::component_id info)
