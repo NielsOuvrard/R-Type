@@ -112,7 +112,7 @@ void Player::send()
     _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Position", new Haze::PositionData{pos->x, pos->y}, sizeof(Haze::PositionData)));
     _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Scale", new Haze::ScaleData{UNIVERSAL_SCALE, UNIVERSAL_SCALE}, sizeof(Haze::ScaleData)));
     _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Hitbox", new Haze::HitboxData{hitbox}, sizeof(Haze::HitboxData)));
-    _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Interpolation", new Haze::InterpolationData{_engine.getFramerate()}, sizeof(Haze::InterpolationData)));
+    _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Interpolation", new Haze::InterpolationData{_dataGame.engine.getFramerate()}, sizeof(Haze::InterpolationData)));
     //_dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "HitboxDisplay", nullptr, 0));
     _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Sprite", new Haze::SpriteData{"assets/sprites/spaceships.png"}, sizeof(Haze::SpriteData)));
     if (_id == 1) {
