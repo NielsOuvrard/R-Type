@@ -16,7 +16,7 @@ void Enemy::shot()
     if (_missileCd.IsReady() && _data.shot_type != -1) {
         _missileCd.Activate();
         auto position = dynamic_cast<Haze::Position *>(_entity->getComponent("Position"));
-        _missiles.emplace_back(std::make_unique<Shot>(_dataGame, _typeEntities, false, _data.shot_type));
+        _missiles.emplace_back(std::make_unique<Shot>(_dataGame, _typeEntities, _data.shot_type, -1, 0, "enemy"));
         _missiles.back()->build(position->x, position->y);
     }
 }

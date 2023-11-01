@@ -1,6 +1,10 @@
 {
   "type": 1,
   "path_sprite": "assets/sprites/shot.png",
+  "damage": 20,
+  "velocity": 10,
+  "bonce": false,
+  "laser": false,
   "hitbox": {
     "x": 0,
     "y": 6,

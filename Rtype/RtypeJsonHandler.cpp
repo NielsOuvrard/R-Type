@@ -74,6 +74,8 @@ void json_fill_ShotData(ShotData &data, nlohmann::json jsonData)
     data.path_sprite = "";
     data.hitBoxData = {};
     data.type = jsonData["type"];
+    data.velocity = 0;
+    data.damage = 0;
 
     if (jsonData.contains("path_sprite")) {
         data.path_sprite = jsonData["path_sprite"];
@@ -87,6 +89,12 @@ void json_fill_ShotData(ShotData &data, nlohmann::json jsonData)
             data.hitBoxData.width = jsonData["hitbox"]["width"];
         if (jsonData["hitbox"].contains("height"))
             data.hitBoxData.height = jsonData["hitbox"]["height"];
+    }
+    if (jsonData.contains("velocity")) {
+        data.velocity = jsonData["velocity"];
+    }
+    if (jsonData.contains("damage")) {
+        data.damage = jsonData["damage"];
     }
 }
 

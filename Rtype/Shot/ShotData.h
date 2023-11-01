@@ -13,6 +13,12 @@ struct ShotData {
     int16_t type;           ///< The type or category of the shot.
     std::string path_sprite;///< The path of the sprite.
     std::string path_json;  ///< The path of the animation of the sprite.
+    float velocity;
+    uint16_t damage;
+
+
+    // Todo: bool bonce;
+    // Todo: bool laser;
 
     HitBox hitBoxData;
 

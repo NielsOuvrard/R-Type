@@ -26,11 +26,8 @@ public:
     /**
      * @brief Constructs a Shot object.
      *
-     * @param engine The game engine.
-     * @param channel The data channel for network communication.
-     * @param fromPlayer Indicates whether the missile was fired by a player.
      */
-    Shot(DataGame _dataGame, TypeEntities _typeEntities, bool fromPlayer, uint16_t type);
+    Shot(DataGame dataGame, TypeEntities typeEntities, uint16_t type, float vector_x, float vector_y, std::string _sender);
 
     /**
      * @brief Builds the missile at a specified position.
@@ -47,6 +44,8 @@ public:
      */
     void send();
 
+    void stopVelocity();
+
     Haze::Entity *_entity = nullptr;///< The entity associated with the missile.
     float _x;                       ///< The X-coordinate of the missile's position.
     float _y;                       ///< The Y-coordinate of the missile's position.
@@ -55,6 +54,8 @@ private:
     DataGame _dataGame;
     TypeEntities _typeEntities;
 
+    std::string _sender;
     uint16_t _type;
-    bool _fromPlayer;///< Indicates whether the missile was fired by a player.
+    float _vector_x;
+    float _vector_y;
 };

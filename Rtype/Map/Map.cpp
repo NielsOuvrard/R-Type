@@ -129,6 +129,9 @@ void Map::update()
             if (_dataGame.boss) {
                 _dataGame.boss->stopVelocity();
             }
+            for (auto &shot: _dataGame.shots) {
+                shot->stopVelocity();
+            }
             return;
         }
 
