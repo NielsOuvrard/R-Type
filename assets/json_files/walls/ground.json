@@ -1,5 +1,6 @@
 {
   "type": 1,
+  "path_sprite": "assets/sprites/wall.png",
   "animation_tics": 0,
   "animation_type": "once",
   "animation": [

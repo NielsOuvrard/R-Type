@@ -17,7 +17,6 @@
 #include "../../Haze/inc/json.hpp"
 #include "../config.h"
 #include "GameStructures.h"
-#include "WallData.h"
 #include <Factory.hpp>
 #include <haze-core.hpp>
 #include <haze-graphics.hpp>

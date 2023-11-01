@@ -22,7 +22,6 @@
 #include "Parallax/Parallax.h"
 #include "Player/Player.h"
 #include "Shot/Shot.h"
-#include "Wall/WallData.h"
 #include "data.h"
 #include "net_data_channel.h"
 #include "net_server.h"
