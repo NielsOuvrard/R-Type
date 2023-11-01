@@ -1,0 +1,67 @@
+{
+  "type": 1,
+  "damage": 20,
+  "life": 50,
+  "shot_type": 2,
+  "explosion_type": 1,
+  "path_sprite": "assets/sprites/enemy.gif",
+  "hitbox": {
+    "x": 5,
+    "y": 5,
+    "width": 23,
+    "height": 26
+  },
+  "fly": true,
+  "animation_tics": 0.1,
+  "animation_type": "loop",
+  "animation": [
+    {
+      "x": 0,
+      "y": 0,
+      "width": 33,
+      "height": 36
+    },
+    {
+      "x": 33,
+      "y": 0,
+      "width": 33,
+      "height": 36
+    },
+    {
+      "x": 66,
+      "y": 0,
+      "width": 33,
+      "height": 36
+    },
+    {
+      "x": 99,
+      "y": 0,
+      "width": 33,
+      "height": 36
+    },
+    {
+      "x": 132,
+      "y": 0,
+      "width": 33,
+      "height": 36
+    },
+    {
+      "x": 165,
+      "y": 0,
+      "width": 33,
+      "height": 36
+    },
+    {
+      "x": 198,
+      "y": 0,
+      "width": 33,
+      "height": 36
+    },
+    {
+      "x": 231,
+      "y": 0,
+      "width": 33,
+      "height": 36
+    }
+  ]
+}

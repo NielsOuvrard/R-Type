@@ -1,0 +1,115 @@
+{
+  "walls": "assets/json_files/walls/ground.json",
+  "map": [
+    {
+      "tile_top": 3,
+      "tile_bottom": 3
+    },
+    {
+      "tile_top": 1,
+      "tile_bottom": 0
+    },
+    {
+      "tile_top": 5,
+      "tile_bottom": 1
+    },
+    {
+      "tile_top": 6,
+      "tile_bottom": 3
+    },
+    {
+      "tile_top": 7,
+      "tile_bottom": 4
+    },
+    {
+      "tile_top": 8,
+      "tile_bottom": 5
+    },
+    {
+      "tile_top": 9,
+      "tile_bottom": 6
+    },
+    {
+      "tile_top": 9,
+      "tile_bottom": 6,
+      "enemies": [
+        {
+          "type": 3,
+          "x": 0,
+          "y": 500,
+          "velocity_x": 0,
+          "move": "linear",
+          "move_time": 0.05
+        },
+        {
+          "type": 3,
+          "x": 50,
+          "y": 500,
+          "velocity_x": 0,
+          "move": "linear",
+          "move_time": 0.05
+        },
+        {
+          "type": 3,
+          "x": 100,
+          "y": 500,
+          "velocity_x": 0,
+          "move": "linear",
+          "move_time": 0.05
+        },
+        {
+          "type": 3,
+          "x": 0,
+          "y": 500,
+          "velocity_x": 0,
+          "move": "linear",
+          "move_time": 0.05
+        },
+        {
+          "type": 3,
+          "x": 30,
+          "y": 0,
+          "velocity_x": 0,
+          "move": "linear",
+          "move_time": 0.05
+        },
+        {
+          "type": 1,
+          "x": 30,
+          "y": 250,
+          "velocity_x": 0,
+          "move": "linear",
+          "move_time": 0.05
+        },
+        {
+          "type": 1,
+          "x": 80,
+          "y": 250,
+          "velocity_x": 0,
+          "move": "linear",
+          "move_time": 0.05
+        },
+        {
+          "type": 1,
+          "x": 130,
+          "y": 250,
+          "velocity_x": 0,
+          "move": "linear",
+          "move_time": 0.05
+        }
+      ]
+    },
+    {
+      "tile_top": 5,
+      "tile_bottom": 4
+    },
+    {
+      "tile_top": 1,
+      "tile_bottom": 5
+    },
+    {
+      "tile_top": 8,
+      "tile_bottom": 5
+    }
+  ]
+}
