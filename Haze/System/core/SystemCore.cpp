@@ -90,6 +90,17 @@ namespace Haze
                 position->y += (velocity->y * gap) / velocity->tick;
                 velocity->lastUpdate = std::chrono::high_resolution_clock::now();
             }
+            if (componentList->getComponent("Position", i) != nullptr && componentList->getComponent("VelocityInterpolation", i) != nullptr)
+            {
+                auto position = static_cast<Position *>(componentList->getComponent("Position", i));
+                auto velocityInterpolation = static_cast<VelocityInterpolation *>(componentList->getComponent("VelocityInterpolation", i));
+                float gap = std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - velocityInterpolation->lastUpdate).count();
+                position->x += (velocityInterpolation->x * gap) / velocityInterpolation->tick;
+                position->y += (velocityInterpolation->y * gap) / velocityInterpolation->tick;
+                velocityInterpolation->lastUpdate = std::chrono::high_resolution_clock::now();
+                if (std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - velocityInterpolation->fullUpdate).count() > velocityInterpolation->tick)
+                    componentList->removeComponent("VelocityInterpolation", i);
+            }
             if (componentList->getComponent("Position", i) != nullptr && componentList->getComponent("Move", i) != nullptr)
             {
                 auto position = static_cast<Position *>(componentList->getComponent("Position", i));

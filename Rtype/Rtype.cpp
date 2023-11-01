@@ -15,7 +15,7 @@
 #include "Rtype.hpp"
 
 Rtype::Rtype(asio::io_context &context)
-    : _channel(context), _engine(60),
+    : _channel(context), _engine(10),
       _typeEntities{_enemies_type, _explosions_type, _shots_type, _bosses_type},
       _dataGame{_engine, _channel, _background, _boss, _shots, _walls, _players, _explosions, _enemies}
 {

@@ -42,6 +42,10 @@ namespace Haze {
             MoveData *move = reinterpret_cast<MoveData *>(data.data());
             return new Move(move->x, move->y);
         }
+        if (type == "Interpolation") {
+            InterpolationData *interpolation = reinterpret_cast<InterpolationData *>(data.data());
+            return new Interpolation(interpolation->framerate);
+        }
         if (type == "Health") {
             HealthData *health = reinterpret_cast<HealthData *>(data.data());
             return new Health(health->health);
