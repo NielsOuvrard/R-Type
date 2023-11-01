@@ -1,10 +1,10 @@
-# Enemy Creation Documentation
+# wall Creation Documentation
 
 This documentation outlines the process of creating wall for the game.
 
-## Enemy Data Structure
+## wall Data Structure
 
-The `wall` files should contain the following attributes for each enemy:
+The `wall` files should contain the following attributes for each wall:
 
 - `type`: An integer representing the type of shot.
 - `path_sprite`: A string representing the file path to the shot's sprite image.
@@ -21,7 +21,7 @@ The `wall` files should contain the following attributes for each enemy:
     - `width`: The width of the animation.
     - `height`: The height of the animation.
 
-### Here's an example JSON data structure for an enemy:
+### Here's an example JSON data structure for an wall:
 
 ```json
 {

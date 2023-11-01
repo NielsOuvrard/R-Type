@@ -1,10 +1,10 @@
-# Enemy Creation Documentation
+# Shot Creation Documentation
 
 This documentation outlines the process of creating shots for the game.
 
-## Enemy Data Structure
+## Shot Data Structure
 
-The `shots` files should contain the following attributes for each enemy:
+The `shots` files should contain the following attributes for each Shot:
 
 - `type`: An integer representing the type of shot.
 - `path_sprite`: A string representing the file path to the shot's sprite image.
@@ -21,7 +21,7 @@ The `shots` files should contain the following attributes for each enemy:
     - `width`: The width of the animation.
     - `height`: The height of the animation.
 
-### Here's an example JSON data structure for an enemy:
+### Here's an example JSON data structure for an Shot:
 
 ```json
 {
