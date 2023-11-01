@@ -12,15 +12,8 @@
  * @param x The x-coordinate of the explosion.
  * @param y The y-coordinate of the explosion.
  */
-//Explosion::Explosion(Haze::Engine &engine, network::data_channel<protocol::data> &channel, float x, float y, uint16_t type)
-Explosion::Explosion(Haze::Engine &engine,
-                     network::data_channel<protocol::data> &channel,
-                     float x,
-                     float y,
-                     uint16_t type,
-                     DataGame dataGame,
-                     TypeEntities typeEntities)
-    : _engine(engine), _channel(channel), _x(x), _y(y), _type(type), _typeEntities(typeEntities), _dataGame(dataGame)
+Explosion::Explosion(DataGame dataGame, TypeEntities typeEntities, float x, float y, uint16_t type)
+    : _dataGame(dataGame), _typeEntities(typeEntities), _x(x), _y(y), _type(type)
 {
 }
 
@@ -33,7 +26,7 @@ void Explosion::build()
     _time_to_destroyCd.Activate();
 
     // Create a new entity
-    _entity = _engine.createEntity();
+    _entity = _dataGame.engine.createEntity();
     //    _sound = Haze::SfAudio("assets/sounds/pluck_001.ogg");
 
     // Add Position, Velocity, and Scale components to the entity
@@ -48,21 +41,21 @@ void Explosion::build()
 void Explosion::send()
 {
     // Send messages to create the explosion entity
-    _channel.sendGroup(RType::message::createEntity(_entity->getId()));
-    //    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Audio", new Haze::SfAudio("assets/sounds/pluck_001.ogg"), sizeof(Haze::SfAudio)));
+    _dataGame.channel.sendGroup(RType::message::createEntity(_entity->getId()));
+    //    _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Audio", new Haze::SfAudio("assets/sounds/pluck_001.ogg"), sizeof(Haze::SfAudio)));
     // Send messages to add Position, Scale, Sprite, and Animation components
-    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Position", new Haze::PositionData{_x, _y}, sizeof(Haze::PositionData)));
-    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Scale", new Haze::ScaleData{UNIVERSAL_SCALE, UNIVERSAL_SCALE}, sizeof(Haze::ScaleData)));
+    _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Position", new Haze::PositionData{_x, _y}, sizeof(Haze::PositionData)));
+    _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Scale", new Haze::ScaleData{UNIVERSAL_SCALE, UNIVERSAL_SCALE}, sizeof(Haze::ScaleData)));
 
     auto elem_sprite = new Haze::SpriteData();
     strncpy(elem_sprite->path, _typeEntities.explosions[_type].path_sprite.c_str(), sizeof(elem_sprite->path));
     elem_sprite->path[sizeof(elem_sprite->path) - 1] = '\0';
-    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Sprite", elem_sprite, sizeof(Haze::SpriteData)));
+    _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Sprite", elem_sprite, sizeof(Haze::SpriteData)));
 
     auto elem_animation = new Haze::AnimationData();
     strncpy(elem_animation->path, _typeEntities.explosions[_type].path_json.c_str(), sizeof(elem_animation->path));
     elem_animation->path[sizeof(elem_animation->path) - 1] = '\0';
-    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Animation", elem_animation, sizeof(Haze::AnimationData)));
+    _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Animation", elem_animation, sizeof(Haze::AnimationData)));
 }
 
 /**
@@ -71,7 +64,7 @@ void Explosion::send()
 void Explosion::destroy()
 {
     // Send a message to initiate the destruction of the explosion entity
-    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Destroy", nullptr, 0));
+    _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Destroy", nullptr, 0));
 
     // Add a Destroy component to the entity
     _entity->addComponent(new Haze::Destroy());

@@ -17,7 +17,7 @@
 Rtype::Rtype(asio::io_context &context)
     : _channel(context), _engine(60),
       _typeEntities{_enemies_type, _explosions_type, _shots_type, _bosses_type},
-      _dataGame{_background, _boss, _shots, _walls, _players, _explosions, _enemies}
+      _dataGame{_engine, _channel, _background, _boss, _shots, _walls, _players, _explosions, _enemies}
 {
     std::srand(std::time(0));
     _engine.init();
@@ -27,9 +27,9 @@ Rtype::Rtype(asio::io_context &context)
     _engine.setInfoInputs({std::vector<Haze::InputType>(), std::vector<Haze::InputType>(), Haze::MouseType::NOTHING, 0, 0}, 3);
     _engine.setInfoInputs({std::vector<Haze::InputType>(), std::vector<Haze::InputType>(), Haze::MouseType::NOTHING, 0, 0}, 4);
 
-    _background = std::make_unique<Parallax>(_engine, _channel);
+    _background = std::make_unique<Parallax>(_dataGame);
 
-    _mapHandler = std::make_unique<Map>(_engine, _channel, _dataGame, _typeEntities);
+    _mapHandler = std::make_unique<Map>(_dataGame, _typeEntities);
 }
 
 Rtype::~Rtype() = default;
@@ -159,7 +159,7 @@ void Rtype::onReceive(udp::endpoint from, network::datagram<protocol::data> cont
             if (_players.size() < 4) {
                 _channel.getGroup().insert(from);
                 sendEverything(from);
-                _players.emplace_back(std::make_unique<Player>(_engine, _channel, _players.size() + 1, _typeEntities));
+                _players.emplace_back(std::make_unique<Player>(_dataGame, _typeEntities, _players.size() + 1));
                 _players.back()->_remote = std::make_unique<Player::Remote>(from);
                 _players.back()->build();
             }
@@ -222,7 +222,7 @@ void Rtype::update()
         if (enemy->_isDead) {
             // * create explosion
 
-            _explosions.emplace_back(std::make_unique<Explosion>(_engine, _channel, enemy->_data.x, enemy->_data.y, enemy->_data.explosion_type, _dataGame, _typeEntities));
+            _explosions.emplace_back(std::make_unique<Explosion>(_dataGame, _typeEntities, enemy->_data.x, enemy->_data.y, enemy->_data.explosion_type));
             _explosions.back()->build();
             _explosions.back()->send();
             std::cout << "Explosion created" << std::endl;

@@ -6,10 +6,8 @@
 
 #define IS_KEY_PRESSED(key) (std::find(components.begin(), components.end(), Haze::InputType::key) != components.end())
 
-Enemy::Enemy(Haze::Engine &engine, network::data_channel<protocol::data> &channel,
-             DataGame dataGame,
-             TypeEntities typeEntities)
-    : _engine(engine), _channel(channel), _typeEntities(typeEntities), _dataGame(dataGame)
+Enemy::Enemy(DataGame dataGame, TypeEntities typeEntities)
+    : _dataGame(dataGame), _typeEntities(typeEntities)
 {
 }
 
@@ -18,7 +16,7 @@ void Enemy::shot()
     if (_missileCd.IsReady() && _data.shot_type != -1) {
         _missileCd.Activate();
         auto position = dynamic_cast<Haze::Position *>(_entity->getComponent("Position"));
-        _missiles.emplace_back(std::make_unique<Shot>(_engine, _channel, false, _data.shot_type, _typeEntities));
+        _missiles.emplace_back(std::make_unique<Shot>(_dataGame, _typeEntities, false, _data.shot_type));
         _missiles.back()->build(position->x, position->y);
     }
 }
@@ -85,7 +83,7 @@ void Enemy::build(EnemyData data_enemy, nlohmann::json mapData)
     _missileCd.setDuration(d);
 
     _missileCd.Activate();
-    _entity = _engine.createEntity();
+    _entity = _dataGame.engine.createEntity();
     std::cout << "[" << _entity->getId() << "] Enemy Created" << std::endl;
 
 
@@ -120,7 +118,7 @@ void Enemy::build(EnemyData data_enemy, nlohmann::json mapData)
                 //                if (!_entity) {
                 //                    return;
                 //                }
-                auto damage = dynamic_cast<Haze::Damage *>(_engine.getEntity(b)->getComponent("Damage"));
+                auto damage = dynamic_cast<Haze::Damage *>(_dataGame.engine.getEntity(b)->getComponent("Damage"));
                 if (damage == nullptr) {
                     return;
                 }
@@ -133,7 +131,7 @@ void Enemy::build(EnemyData data_enemy, nlohmann::json mapData)
                     _data.x = position->x;
                     _data.y = position->y;
                     std::cout << "enemy die by missile player\n";
-                    _channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
+                    _dataGame.channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
                     _entity->addComponent(new Haze::Destroy());
                     _entity = nullptr;
                     this->_isDead = true;
@@ -153,7 +151,7 @@ void Enemy::build(EnemyData data_enemy, nlohmann::json mapData)
                 if (_data.life == -1) {// immortal
                     return;
                 }
-                _channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
+                _dataGame.channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
                 _entity->addComponent(new Haze::Destroy());
                 _entity = nullptr;
             }};
@@ -168,32 +166,32 @@ void Enemy::send()
         reversed = true;
     }
     auto pos = dynamic_cast<Haze::Position *>(_entity->getComponent("Position"));
-    _channel.sendGroup(RType::message::createEntity(_entity->getId()));
-    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Health", new Haze::HealthData{_data.life}, sizeof(Haze::HealthData)));
-    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Position", new Haze::PositionData{pos->x, pos->y}, sizeof(Haze::PositionData)));
-    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Velocity", new Haze::VelocityData{_data.velocity_x, _data.velocity_y, _data.move_time}, sizeof(Haze::VelocityData)));
+    _dataGame.channel.sendGroup(RType::message::createEntity(_entity->getId()));
+    _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Health", new Haze::HealthData{_data.life}, sizeof(Haze::HealthData)));
+    _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Position", new Haze::PositionData{pos->x, pos->y}, sizeof(Haze::PositionData)));
+    _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Velocity", new Haze::VelocityData{_data.velocity_x, _data.velocity_y, _data.move_time}, sizeof(Haze::VelocityData)));
 
     if (_data.move == "sinusoidal") {
-        _channel.sendGroup(RType::message::addComponent(_entity->getId(), "SinVelocity", new Haze::SinVelocityData{_data.move_x, _data.move_time, _data.move_amplitude, _data.move_frequency}, sizeof(Haze::SinVelocityData)));
+        _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "SinVelocity", new Haze::SinVelocityData{_data.move_x, _data.move_time, _data.move_amplitude, _data.move_frequency}, sizeof(Haze::SinVelocityData)));
     } else if (_data.move == "circular") {
-        _channel.sendGroup(RType::message::addComponent(_entity->getId(), "CircleVelocity", new Haze::CircleVelocityData{_data.move_x, _data.move_time, _data.move_radius, _data.move_offset}, sizeof(Haze::CircleVelocityData)));
+        _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "CircleVelocity", new Haze::CircleVelocityData{_data.move_x, _data.move_time, _data.move_radius, _data.move_offset}, sizeof(Haze::CircleVelocityData)));
     }
     auto scale = new Haze::ScaleData();
     scale->x = UNIVERSAL_SCALE;
     scale->y = UNIVERSAL_SCALE * (reversed ? -1 : 1);
-    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Scale", scale, sizeof(Haze::ScaleData)));
-    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Hitbox", new Haze::HitboxData{_data.hitBoxData.x, _data.hitBoxData.y, _data.hitBoxData.width, _data.hitBoxData.height}, sizeof(Haze::HitboxData)));
-    //    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "HitboxDisplay", nullptr, 0));
+    _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Scale", scale, sizeof(Haze::ScaleData)));
+    _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Hitbox", new Haze::HitboxData{_data.hitBoxData.x, _data.hitBoxData.y, _data.hitBoxData.width, _data.hitBoxData.height}, sizeof(Haze::HitboxData)));
+    //    _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "HitboxDisplay", nullptr, 0));
 
     auto elem_sprite = new Haze::SpriteData();
     strncpy(elem_sprite->path, _data.path_sprite.c_str(), sizeof(elem_sprite->path));
     elem_sprite->path[sizeof(elem_sprite->path) - 1] = '\0';
-    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Sprite", elem_sprite, sizeof(Haze::SpriteData)));
+    _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Sprite", elem_sprite, sizeof(Haze::SpriteData)));
 
     auto elem_animation = new Haze::AnimationData();
     strncpy(elem_animation->path, _data.path_json.c_str(), sizeof(elem_animation->path));
     elem_animation->path[sizeof(elem_animation->path) - 1] = '\0';
-    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Animation", elem_animation, sizeof(Haze::AnimationData)));
+    _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Animation", elem_animation, sizeof(Haze::AnimationData)));
 }
 
 void Enemy::update()
@@ -204,7 +202,7 @@ void Enemy::update()
         if (missile->_entity) {
             auto pos = dynamic_cast<Haze::Position *>(missile->_entity->getComponent("Position"));
             if (pos->x <= -50) {
-                _channel.sendGroup(RType::message::deleteEntity(missile->_entity->getId()));
+                _dataGame.channel.sendGroup(RType::message::deleteEntity(missile->_entity->getId()));
                 missile->_entity->addComponent(new Haze::Destroy());
                 missile->_entity = nullptr;
             }
@@ -224,6 +222,6 @@ void Enemy::stopVelocity()
     _entity->addComponent(new Haze::Velocity(_data.velocity_x, _data.velocity_y, _data.move_time));
     auto pos = dynamic_cast<Haze::Position *>(_entity->getComponent("Position"));
 
-    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Velocity", new Haze::VelocityData{_data.velocity_x, _data.velocity_y, _data.move_time}, sizeof(Haze::VelocityData)));
-    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Position", new Haze::PositionData{pos->x, pos->y}, sizeof(Haze::PositionData)));
+    _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Velocity", new Haze::VelocityData{_data.velocity_x, _data.velocity_y, _data.move_time}, sizeof(Haze::VelocityData)));
+    _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Position", new Haze::PositionData{pos->x, pos->y}, sizeof(Haze::PositionData)));
 }

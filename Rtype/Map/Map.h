@@ -38,10 +38,7 @@ public:
      * @param walls A vector of unique pointers to wall objects.
      * @param enemies A vector of unique pointers to enemy objects.
      */
-    Map(Haze::Engine &engine,
-        network::data_channel<protocol::data> &channel,
-        DataGame dataGame,
-        TypeEntities typeEntities);
+    Map(DataGame dataGame, TypeEntities typeEntities);
 
     /**
      * @brief Updates the game's map state.
@@ -76,9 +73,6 @@ private:
     void createMap();
 
 private:
-    Haze::Engine &_engine;
-    network::data_channel<protocol::data> &_channel;
-
     DataGame _dataGame;
     TypeEntities _typeEntities;
 

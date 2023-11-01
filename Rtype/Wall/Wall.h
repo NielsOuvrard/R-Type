@@ -16,6 +16,7 @@
 
 #include "../../Haze/inc/json.hpp"
 #include "../config.h"
+#include "GameStructures.h"
 #include "WallData.h"
 #include <Factory.hpp>
 #include <haze-core.hpp>
@@ -44,7 +45,7 @@ public:
      * @param y The Y-coordinate of the wall's position.
      * @param isGround Specifies whether the wall is a ground object.
      */
-    Wall(Haze::Engine &engine, network::data_channel<protocol::data> &channel, nlohmann::json dataJSON, float x, float y, bool isGround);
+    Wall(DataGame _dataGame, nlohmann::json dataJSON, float x, float y, bool isGround);
 
     /**
      * @brief Builds the wall object.
@@ -84,8 +85,7 @@ public:
     [[nodiscard]] float get_x_position() const;
 
 private:
-    Haze::Engine &_engine;
-    network::data_channel<protocol::data> &_channel;
+    DataGame _dataGame;
 
     std::vector<Haze::Animation::intRect> _frames;
     uint8_t _frameIndex = 0;

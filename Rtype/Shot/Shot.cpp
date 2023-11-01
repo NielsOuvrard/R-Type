@@ -4,14 +4,14 @@
 
 #include "Shot.h"
 
-Shot::Shot(Haze::Engine &engine, network::data_channel<protocol::data> &channel, bool fromPlayer, uint16_t type, TypeEntities typeEntities)
-    : _engine(engine), _channel(channel), _fromPlayer(fromPlayer), _type(type), _typeEntities(typeEntities)
+Shot::Shot(DataGame dataGame, TypeEntities typeEntities, bool fromPlayer, uint16_t type)
+    : _dataGame(dataGame), _typeEntities(typeEntities), _fromPlayer(fromPlayer), _type(type)
 {
 }
 
 void Shot::build(float x, float y)
 {
-    _entity = _engine.createEntity();
+    _entity = _dataGame.engine.createEntity();
     std::cout << "["
               << _entity->getId()
               << "] Shot Created"
@@ -46,7 +46,7 @@ void Shot::build(float x, float y)
                     if (!_entity) {
                         return;
                     }
-                    _channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
+                    _dataGame.channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
                     _entity->addComponent(new Haze::Destroy());
                     _entity = nullptr;
                 }};
@@ -60,7 +60,7 @@ void Shot::build(float x, float y)
                     if (!_entity) {
                         return;
                     }
-                    _channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
+                    _dataGame.channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
                     _entity->addComponent(new Haze::Destroy());
                     _entity = nullptr;
                 }};
@@ -71,29 +71,29 @@ void Shot::build(float x, float y)
 
 void Shot::send()
 {
-    _channel.sendGroup(RType::message::createEntity(_entity->getId()));
-    //_channel.sendGroup(RType::message::addComponent(_entity->getId(), "Damage", new Haze::DamageData{20}, sizeof(Haze::PositionData)));
+    _dataGame.channel.sendGroup(RType::message::createEntity(_entity->getId()));
+    //_dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Damage", new Haze::DamageData{20}, sizeof(Haze::PositionData)));
     if (_fromPlayer) {
-        _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Position", new Haze::PositionData{_x + 20, _y}, sizeof(Haze::PositionData)));
-        _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Scale", new Haze::ScaleData{UNIVERSAL_SCALE, UNIVERSAL_SCALE}, sizeof(Haze::ScaleData)));
-        _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Velocity", new Haze::VelocityData{5, 0, 0.05}, sizeof(Haze::VelocityData)));
+        _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Position", new Haze::PositionData{_x + 20, _y}, sizeof(Haze::PositionData)));
+        _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Scale", new Haze::ScaleData{UNIVERSAL_SCALE, UNIVERSAL_SCALE}, sizeof(Haze::ScaleData)));
+        _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Velocity", new Haze::VelocityData{5, 0, 0.05}, sizeof(Haze::VelocityData)));
     } else {
-        _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Position", new Haze::PositionData{_x - 20, _y}, sizeof(Haze::PositionData)));
-        _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Scale", new Haze::ScaleData{-UNIVERSAL_SCALE, UNIVERSAL_SCALE}, sizeof(Haze::ScaleData)));
-        _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Velocity", new Haze::VelocityData{-5, 0, 0.05}, sizeof(Haze::VelocityData)));
+        _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Position", new Haze::PositionData{_x - 20, _y}, sizeof(Haze::PositionData)));
+        _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Scale", new Haze::ScaleData{-UNIVERSAL_SCALE, UNIVERSAL_SCALE}, sizeof(Haze::ScaleData)));
+        _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Velocity", new Haze::VelocityData{-5, 0, 0.05}, sizeof(Haze::VelocityData)));
     }
 
     auto elem_sprite = new Haze::SpriteData();
     strncpy(elem_sprite->path, _typeEntities.shots[_type].path_sprite.c_str(), sizeof(elem_sprite->path));
     elem_sprite->path[sizeof(elem_sprite->path) - 1] = '\0';
-    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Sprite", elem_sprite, sizeof(Haze::SpriteData)));
+    _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Sprite", elem_sprite, sizeof(Haze::SpriteData)));
 
     auto elem_animation = new Haze::AnimationData();
     strncpy(elem_animation->path, _typeEntities.shots[_type].path_json.c_str(), sizeof(elem_animation->path));
     elem_animation->path[sizeof(elem_animation->path) - 1] = '\0';
-    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Animation", elem_animation, sizeof(Haze::AnimationData)));
+    _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Animation", elem_animation, sizeof(Haze::AnimationData)));
 
-    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Hitbox", new Haze::HitboxData({_typeEntities.shots[_type].hitBoxData.x, _typeEntities.shots[_type].hitBoxData.y, _typeEntities.shots[_type].hitBoxData.width, _typeEntities.shots[_type].hitBoxData.height}), sizeof(Haze::HitboxData)));
-    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "HitboxDisplay", nullptr, 0));
-    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "SpriteCropped", new Haze::SpriteCroppedData{2}, sizeof(Haze::SpriteCroppedData)));
+    _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Hitbox", new Haze::HitboxData({_typeEntities.shots[_type].hitBoxData.x, _typeEntities.shots[_type].hitBoxData.y, _typeEntities.shots[_type].hitBoxData.width, _typeEntities.shots[_type].hitBoxData.height}), sizeof(Haze::HitboxData)));
+    _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "HitboxDisplay", nullptr, 0));
+    _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "SpriteCropped", new Haze::SpriteCroppedData{2}, sizeof(Haze::SpriteCroppedData)));
 }

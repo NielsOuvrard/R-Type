@@ -16,10 +16,11 @@ class Wall;
 #include "Enemy/EnemyData.h"
 #include "Explosion/ExplosionData.h"
 #include "Shot/ShotData.h"
-#include "Wall/WallData.h"
 
 #include <cstdlib>
 #include <map>
+#include <net_data_channel.h>
+#include <protocol.h>
 
 typedef struct typeEntities {
     std::map<uint16_t, EnemyData> &enemies;
@@ -29,8 +30,8 @@ typedef struct typeEntities {
 } TypeEntities;
 
 typedef struct dataGame {
-    //    Haze::Engine &_engine;
-    //    network::data_channel<protocol::data> &_channel;
+    Haze::Engine &engine;
+    network::data_channel<protocol::data> &channel;
     // One by game
     std::unique_ptr<Parallax> &parallax;
     std::unique_ptr<Boss> &boss;

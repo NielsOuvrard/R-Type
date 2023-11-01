@@ -4,11 +4,8 @@
 
 #include "Map.h"
 
-Map::Map(Haze::Engine &engine,
-         network::data_channel<protocol::data> &channel,
-         DataGame dataGame,
-         TypeEntities typeEntities)
-    : _engine(engine), _channel(channel), _typeEntities(typeEntities), _dataGame(dataGame), _index_map(0), _id_map(0)
+Map::Map(DataGame dataGame, TypeEntities typeEntities)
+    : _dataGame(dataGame), _typeEntities(typeEntities), _index_map(0), _id_map(0)
 {
 }
 
@@ -50,7 +47,6 @@ void Map::createMap()
                 fileStream >> jsonData;
                 _mapTiles = jsonData["map"];
                 walls_file_path = jsonData["walls"];
-                //                "walls": "assets/json_files/walls/officials.json",
                 map_filled = true;
             } catch (nlohmann::json::parse_error &e) {
                 std::cerr << "Error parsing JSON file: " << _maps_paths[_id_map] << std::endl;
@@ -92,7 +88,7 @@ void Map::createMap()
         // Create and position the top wall
         try {
             // here
-            _dataGame.walls.emplace_back(std::make_unique<Wall>(_engine, _channel, _hitboxWalls, (SIZE_TILE * UNIVERSAL_SCALE) * _index_map, 0, false));
+            _dataGame.walls.emplace_back(std::make_unique<Wall>(_dataGame, _hitboxWalls, (SIZE_TILE * UNIVERSAL_SCALE) * _index_map, 0, false));
             _dataGame.walls.back()->build(tile["tile_top"]);
         } catch (nlohmann::json::parse_error &e) {
             std::cerr << "Error parsing JSON file: " << _maps_paths[_id_map] << std::endl;
@@ -101,7 +97,7 @@ void Map::createMap()
 
         // Create and position the bottom wall
         try {
-            _dataGame.walls.emplace_back(std::make_unique<Wall>(_engine, _channel, _hitboxWalls, (SIZE_TILE * UNIVERSAL_SCALE) * _index_map, WINDOW_HEIGHT, true));
+            _dataGame.walls.emplace_back(std::make_unique<Wall>(_dataGame, _hitboxWalls, (SIZE_TILE * UNIVERSAL_SCALE) * _index_map, WINDOW_HEIGHT, true));
             _dataGame.walls.back()->build(tile["tile_bottom"]);
         } catch (nlohmann::json::parse_error &e) {
             std::cerr << "Error parsing JSON file: " << _maps_paths[_id_map] << std::endl;
@@ -143,7 +139,7 @@ void Map::update()
             for (auto &enemy_tile: enemies_tile) {
                 // * create enemy
                 try {
-                    _dataGame.enemies.emplace_back(std::make_unique<Enemy>(_engine, _channel, _dataGame, _typeEntities));
+                    _dataGame.enemies.emplace_back(std::make_unique<Enemy>(_dataGame, _typeEntities));
                     _dataGame.enemies.back()->build(_typeEntities.enemies[enemy_tile["type"]], enemy_tile);
                 } catch (nlohmann::json::parse_error &e) {
                     std::cerr << "Error parsing JSON file: " << _maps_paths[_id_map] << std::endl;
@@ -155,7 +151,7 @@ void Map::update()
         if (_mapTiles[_index_map].contains("boss")) {
             int16_t type_boss = _mapTiles[_index_map]["boss"];
             try {
-                _dataGame.boss = std::make_unique<Boss>(_engine, _channel);
+                _dataGame.boss = std::make_unique<Boss>(_dataGame, _typeEntities);
                 _dataGame.boss->build("assets/json_files/bosses/dobkeratops.json");// TODO boss ID
             } catch (nlohmann::json::parse_error &e) {
                 std::cerr << "Error parsing JSON file: " << _maps_paths[_id_map] << std::endl;
@@ -166,7 +162,7 @@ void Map::update()
 
         // Create and position the top wall
         try {
-            _dataGame.walls.emplace_back(std::make_unique<Wall>(_engine, _channel, _hitboxWalls, pos_wall_back + (SIZE_TILE * UNIVERSAL_SCALE), 0, false));
+            _dataGame.walls.emplace_back(std::make_unique<Wall>(_dataGame, _hitboxWalls, pos_wall_back + (SIZE_TILE * UNIVERSAL_SCALE), 0, false));
             _dataGame.walls.back()->build(_mapTiles[_index_map]["tile_top"]);
         } catch (nlohmann::json::parse_error &e) {
             std::cerr << "Error parsing JSON file: " << _maps_paths[_id_map] << std::endl;
@@ -175,7 +171,7 @@ void Map::update()
 
         // Create and position the bottom wall
         try {
-            _dataGame.walls.emplace_back(std::make_unique<Wall>(_engine, _channel, _hitboxWalls, pos_wall_back + (SIZE_TILE * UNIVERSAL_SCALE), WINDOW_HEIGHT, true));
+            _dataGame.walls.emplace_back(std::make_unique<Wall>(_dataGame, _hitboxWalls, pos_wall_back + (SIZE_TILE * UNIVERSAL_SCALE), WINDOW_HEIGHT, true));
             _dataGame.walls.back()->build(_mapTiles[_index_map]["tile_bottom"]);
         } catch (nlohmann::json::parse_error &e) {
             std::cerr << "Error parsing JSON file: " << _maps_paths[_id_map] << std::endl;

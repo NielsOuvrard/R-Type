@@ -4,7 +4,8 @@
 
 #include "Boss.h"
 
-Boss::Boss(Haze::Engine &engine, network::data_channel<protocol::data> &channel) : _engine(engine), _channel(channel)
+Boss::Boss(DataGame dataGame, TypeEntities typeEntities)
+    : _dataGame(dataGame), _typeEntities(typeEntities)
 {
 }
 
@@ -82,13 +83,13 @@ void Boss::build(std::string filePath)
 
     _missileCd.Activate();
 
-    _body = _engine.createEntity();
+    _body = _dataGame.engine.createEntity();
     _body->addComponent(new Haze::Position(WINDOW_WIDTH + SIZE_TILE + _data.x, _data.y));
     _body->addComponent(new Haze::Velocity(VELOCITY_WALL_X, VELOCITY_WALL_Y, 0.05));
     _body->addComponent(new Haze::Scale(UNIVERSAL_SCALE, UNIVERSAL_SCALE));
     //    _body->addComponent(new Haze::Hitbox({{_data.hitBoxData.x, _data.hitBoxData.y, _data.hitBoxData.width, _data.hitBoxData.height}}));
 
-    _tummy = _engine.createEntity();
+    _tummy = _dataGame.engine.createEntity();
     _tummy->addComponent(new Haze::Position(WINDOW_WIDTH + SIZE_TILE + _data.x + (71 * UNIVERSAL_SCALE), _data.y + (96 * UNIVERSAL_SCALE)));
     _tummy->addComponent(new Haze::Velocity(VELOCITY_WALL_X, VELOCITY_WALL_Y, 0.05));
     _tummy->addComponent(new Haze::Scale(UNIVERSAL_SCALE, UNIVERSAL_SCALE));
@@ -102,7 +103,7 @@ void Boss::build(std::string filePath)
                 //                if (!_body) {
                 //                    return;
                 //                }
-                auto damage = dynamic_cast<Haze::Damage *>(_engine.getEntity(b)->getComponent("Damage"));
+                auto damage = dynamic_cast<Haze::Damage *>(_dataGame.engine.getEntity(b)->getComponent("Damage"));
                 if (damage == nullptr) {
                     return;
                 }
@@ -116,11 +117,11 @@ void Boss::build(std::string filePath)
                     _data.y = position->y;
                     std::cout << "enemy die by missile player\n";
 
-                    _channel.sendGroup(RType::message::deleteEntity(_body->getId()));
+                    _dataGame.channel.sendGroup(RType::message::deleteEntity(_body->getId()));
                     _body->addComponent(new Haze::Destroy());
                     _body = nullptr;
 
-                    _channel.sendGroup(RType::message::deleteEntity(_tummy->getId()));
+                    _dataGame.channel.sendGroup(RType::message::deleteEntity(_tummy->getId()));
                     _tummy->addComponent(new Haze::Destroy());
                     _tummy = nullptr;
 
@@ -141,11 +142,11 @@ void Boss::build(std::string filePath)
                 if (_data.life == -1) {// immortal
                     return;
                 }
-                _channel.sendGroup(RType::message::deleteEntity(_body->getId()));
+                _dataGame.channel.sendGroup(RType::message::deleteEntity(_body->getId()));
                 _body->addComponent(new Haze::Destroy());
                 _body = nullptr;
 
-                _channel.sendGroup(RType::message::deleteEntity(_tummy->getId()));
+                _dataGame.channel.sendGroup(RType::message::deleteEntity(_tummy->getId()));
                 _tummy->addComponent(new Haze::Destroy());
                 _tummy = nullptr;
             }};
@@ -156,41 +157,41 @@ void Boss::build(std::string filePath)
 void Boss::send()
 {
     auto pos = dynamic_cast<Haze::Position *>(_body->getComponent("Position"));
-    _channel.sendGroup(RType::message::createEntity(_body->getId()));
-    _channel.sendGroup(RType::message::addComponent(_body->getId(), "Health", new Haze::HealthData{_data.life}, sizeof(Haze::HealthData)));
-    _channel.sendGroup(RType::message::addComponent(_body->getId(), "Position", new Haze::PositionData{pos->x, pos->y}, sizeof(Haze::PositionData)));
-    _channel.sendGroup(RType::message::addComponent(_body->getId(), "Velocity", new Haze::VelocityData{VELOCITY_WALL_X, VELOCITY_WALL_Y, 0.05}, sizeof(Haze::VelocityData)));
-    _channel.sendGroup(RType::message::addComponent(_body->getId(), "Scale", new Haze::ScaleData{UNIVERSAL_SCALE, UNIVERSAL_SCALE}, sizeof(Haze::ScaleData)));
-    _channel.sendGroup(RType::message::addComponent(_body->getId(), "Hitbox", new Haze::HitboxData{_data.hitBoxData.x, _data.hitBoxData.y, _data.hitBoxData.width, _data.hitBoxData.height}, sizeof(Haze::HitboxData)));
-    // _channel.sendGroup(RType::message::addComponent(_body->getId(), "HitboxDisplay", nullptr, 0));
+    _dataGame.channel.sendGroup(RType::message::createEntity(_body->getId()));
+    _dataGame.channel.sendGroup(RType::message::addComponent(_body->getId(), "Health", new Haze::HealthData{_data.life}, sizeof(Haze::HealthData)));
+    _dataGame.channel.sendGroup(RType::message::addComponent(_body->getId(), "Position", new Haze::PositionData{pos->x, pos->y}, sizeof(Haze::PositionData)));
+    _dataGame.channel.sendGroup(RType::message::addComponent(_body->getId(), "Velocity", new Haze::VelocityData{VELOCITY_WALL_X, VELOCITY_WALL_Y, 0.05}, sizeof(Haze::VelocityData)));
+    _dataGame.channel.sendGroup(RType::message::addComponent(_body->getId(), "Scale", new Haze::ScaleData{UNIVERSAL_SCALE, UNIVERSAL_SCALE}, sizeof(Haze::ScaleData)));
+    _dataGame.channel.sendGroup(RType::message::addComponent(_body->getId(), "Hitbox", new Haze::HitboxData{_data.hitBoxData.x, _data.hitBoxData.y, _data.hitBoxData.width, _data.hitBoxData.height}, sizeof(Haze::HitboxData)));
+    // _dataGame.channel.sendGroup(RType::message::addComponent(_body->getId(), "HitboxDisplay", nullptr, 0));
     auto elem_sprite = new Haze::SpriteData();
     strncpy(elem_sprite->path, _data.path_sprite.c_str(), sizeof(elem_sprite->path));
     elem_sprite->path[sizeof(elem_sprite->path) - 1] = '\0';
-    _channel.sendGroup(RType::message::addComponent(_body->getId(), "Sprite", elem_sprite, sizeof(Haze::SpriteData)));
+    _dataGame.channel.sendGroup(RType::message::addComponent(_body->getId(), "Sprite", elem_sprite, sizeof(Haze::SpriteData)));
 
     auto elem_animation = new Haze::AnimationData();
     strncpy(elem_animation->path, _data.path_json.c_str(), sizeof(elem_animation->path));
     elem_animation->path[sizeof(elem_animation->path) - 1] = '\0';
-    _channel.sendGroup(RType::message::addComponent(_body->getId(), "Animation", elem_animation, sizeof(Haze::AnimationData)));
+    _dataGame.channel.sendGroup(RType::message::addComponent(_body->getId(), "Animation", elem_animation, sizeof(Haze::AnimationData)));
 
 
     auto tummy_pos = dynamic_cast<Haze::Position *>(_tummy->getComponent("Position"));
-    _channel.sendGroup(RType::message::createEntity(_tummy->getId()));
-    _channel.sendGroup(RType::message::addComponent(_tummy->getId(), "Health", new Haze::HealthData{_data.life}, sizeof(Haze::HealthData)));
-    _channel.sendGroup(RType::message::addComponent(_tummy->getId(), "Position", new Haze::PositionData{tummy_pos->x, tummy_pos->y}, sizeof(Haze::PositionData)));
-    _channel.sendGroup(RType::message::addComponent(_tummy->getId(), "Velocity", new Haze::VelocityData{VELOCITY_WALL_X, VELOCITY_WALL_Y, 0.05}, sizeof(Haze::VelocityData)));
-    _channel.sendGroup(RType::message::addComponent(_tummy->getId(), "Scale", new Haze::ScaleData{UNIVERSAL_SCALE, UNIVERSAL_SCALE}, sizeof(Haze::ScaleData)));
-    _channel.sendGroup(RType::message::addComponent(_tummy->getId(), "Hitbox", new Haze::HitboxData{_data.hitBoxData.x, _data.hitBoxData.y, _data.hitBoxData.width, _data.hitBoxData.height}, sizeof(Haze::HitboxData)));
-    // _channel.sendGroup(RType::message::addComponent(_tummy->getId(), "HitboxDisplay", nullptr, 0));
+    _dataGame.channel.sendGroup(RType::message::createEntity(_tummy->getId()));
+    _dataGame.channel.sendGroup(RType::message::addComponent(_tummy->getId(), "Health", new Haze::HealthData{_data.life}, sizeof(Haze::HealthData)));
+    _dataGame.channel.sendGroup(RType::message::addComponent(_tummy->getId(), "Position", new Haze::PositionData{tummy_pos->x, tummy_pos->y}, sizeof(Haze::PositionData)));
+    _dataGame.channel.sendGroup(RType::message::addComponent(_tummy->getId(), "Velocity", new Haze::VelocityData{VELOCITY_WALL_X, VELOCITY_WALL_Y, 0.05}, sizeof(Haze::VelocityData)));
+    _dataGame.channel.sendGroup(RType::message::addComponent(_tummy->getId(), "Scale", new Haze::ScaleData{UNIVERSAL_SCALE, UNIVERSAL_SCALE}, sizeof(Haze::ScaleData)));
+    _dataGame.channel.sendGroup(RType::message::addComponent(_tummy->getId(), "Hitbox", new Haze::HitboxData{_data.hitBoxData.x, _data.hitBoxData.y, _data.hitBoxData.width, _data.hitBoxData.height}, sizeof(Haze::HitboxData)));
+    // _dataGame.channel.sendGroup(RType::message::addComponent(_tummy->getId(), "HitboxDisplay", nullptr, 0));
     auto tummy_sprite = new Haze::SpriteData();
     strncpy(tummy_sprite->path, _data.tools_path_sprite.c_str(), sizeof(tummy_sprite->path));
     tummy_sprite->path[sizeof(tummy_sprite->path) - 1] = '\0';
-    _channel.sendGroup(RType::message::addComponent(_tummy->getId(), "Sprite", tummy_sprite, sizeof(Haze::SpriteData)));
+    _dataGame.channel.sendGroup(RType::message::addComponent(_tummy->getId(), "Sprite", tummy_sprite, sizeof(Haze::SpriteData)));
 
     auto tummy_animation = new Haze::AnimationData();
     strncpy(tummy_animation->path, _data.tools_path_json.c_str(), sizeof(tummy_animation->path));
     tummy_animation->path[sizeof(tummy_animation->path) - 1] = '\0';
-    _channel.sendGroup(RType::message::addComponent(_tummy->getId(), "Animation", tummy_animation, sizeof(Haze::AnimationData)));
+    _dataGame.channel.sendGroup(RType::message::addComponent(_tummy->getId(), "Animation", tummy_animation, sizeof(Haze::AnimationData)));
 }
 
 void Boss::shot()
@@ -206,15 +207,15 @@ void Boss::stopVelocity()
     _body->addComponent(new Haze::Velocity(0, 0, 0.5));// ? should delete this ?
 
     auto pos = dynamic_cast<Haze::Position *>(_body->getComponent("Position"));
-    _channel.sendGroup(RType::message::addComponent(_body->getId(), "Velocity", new Haze::VelocityData{0, 0, 0.5}, sizeof(Haze::VelocityData)));
-    _channel.sendGroup(RType::message::addComponent(_body->getId(), "Position", new Haze::PositionData{pos->x, pos->y}, sizeof(Haze::PositionData)));
+    _dataGame.channel.sendGroup(RType::message::addComponent(_body->getId(), "Velocity", new Haze::VelocityData{0, 0, 0.5}, sizeof(Haze::VelocityData)));
+    _dataGame.channel.sendGroup(RType::message::addComponent(_body->getId(), "Position", new Haze::PositionData{pos->x, pos->y}, sizeof(Haze::PositionData)));
 
 
     _tummy->addComponent(new Haze::Velocity(0, 0, 0.5));// ? should delete this ?
 
     auto pos_tummy = dynamic_cast<Haze::Position *>(_tummy->getComponent("Position"));
-    _channel.sendGroup(RType::message::addComponent(_tummy->getId(), "Velocity", new Haze::VelocityData{0, 0, 0.5}, sizeof(Haze::VelocityData)));
-    _channel.sendGroup(RType::message::addComponent(_tummy->getId(), "Position", new Haze::PositionData{pos_tummy->x, pos_tummy->y}, sizeof(Haze::PositionData)));
+    _dataGame.channel.sendGroup(RType::message::addComponent(_tummy->getId(), "Velocity", new Haze::VelocityData{0, 0, 0.5}, sizeof(Haze::VelocityData)));
+    _dataGame.channel.sendGroup(RType::message::addComponent(_tummy->getId(), "Position", new Haze::PositionData{pos_tummy->x, pos_tummy->y}, sizeof(Haze::PositionData)));
 }
 
 //      "boss": {

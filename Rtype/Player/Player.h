@@ -52,7 +52,7 @@ public:
      * @param channel The data channel for network communication.
      * @param id The unique identifier for the player.
      */
-    Player(Haze::Engine &engine, network::data_channel<protocol::data> &channel, uint32_t id, TypeEntities typeEntities);
+    Player(DataGame _dataGame, TypeEntities _typeEntities, uint32_t id);
 
     /**
      * @brief Builds the player object.
@@ -95,8 +95,6 @@ public:
     Cooldown _missileCd{300ms};                ///< Cooldown for missile firing.
 
 private:
-    Haze::Engine &_engine;
-    network::data_channel<protocol::data> &_channel;
-
+    DataGame _dataGame;
     TypeEntities _typeEntities;
 };

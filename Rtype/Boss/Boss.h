@@ -21,7 +21,7 @@ using namespace std::chrono_literals;
 
 class Boss {
 public:
-    Boss(Haze::Engine &engine, network::data_channel<protocol::data> &channel);
+    Boss(DataGame dataGame, TypeEntities typeEntities);
 
     void build(std::string path);
 
@@ -44,7 +44,8 @@ public:
     std::list<std::unique_ptr<Shot>> _missiles;///< List of missiles fired by the enemy.
 
 private:
-    Haze::Engine &_engine;                          ///< The game engine.
-    network::data_channel<protocol::data> &_channel;///< The network data channel.
-    Cooldown _missileCd{5000ms};                    ///< Cooldown timer for missile firing.
+    DataGame _dataGame;
+    TypeEntities _typeEntities;
+
+    Cooldown _missileCd{5000ms};///< Cooldown timer for missile firing.
 };

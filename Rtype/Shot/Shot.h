@@ -30,7 +30,7 @@ public:
      * @param channel The data channel for network communication.
      * @param fromPlayer Indicates whether the missile was fired by a player.
      */
-    Shot(Haze::Engine &engine, network::data_channel<protocol::data> &channel, bool fromPlayer, uint16_t type, TypeEntities typeEntities);
+    Shot(DataGame _dataGame, TypeEntities _typeEntities, bool fromPlayer, uint16_t type);
 
     /**
      * @brief Builds the missile at a specified position.
@@ -52,10 +52,9 @@ public:
     float _y;                       ///< The Y-coordinate of the missile's position.
 
 private:
-    uint16_t _type;
+    DataGame _dataGame;
     TypeEntities _typeEntities;
 
+    uint16_t _type;
     bool _fromPlayer;///< Indicates whether the missile was fired by a player.
-    Haze::Engine &_engine;
-    network::data_channel<protocol::data> &_channel;
 };

@@ -6,6 +6,7 @@
 
 #include "../protocol.h"
 #include "Cooldown/Cooldown.h"
+#include "GameStructures.h"
 #include "Shot/Shot.h"
 #include <componentData.hpp>
 #include <data.h>
@@ -29,7 +30,7 @@ public:
      * @param engine The game engine.
      * @param channel The data channel for network communication.
      */
-    Parallax(Haze::Engine &engine, network::data_channel<protocol::data> &channel);
+    Parallax(DataGame dataGame);
 
     /**
      * @brief Builds the parallax background.
@@ -62,8 +63,8 @@ public:
     void sendUpdate();
 
 private:
-    Haze::Engine &_engine;
+    DataGame _dataGame;
+
     Haze::Entity *_bg1;///< The first layer of the parallax background.
     Haze::Entity *_bg2;///< The second layer of the parallax background.
-    network::data_channel<protocol::data> &_channel;
 };

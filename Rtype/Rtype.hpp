@@ -121,11 +121,17 @@ public:
     void jsonHandler();
 
 private:
+    // * data of the game
+    DataGame _dataGame;
     Haze::Engine _engine;
     network::data_channel<protocol::data> _channel;
-
-    std::unique_ptr<Map> _mapHandler;
-    std::vector<Haze::Entity *> _entities;
+    std::unique_ptr<Parallax> _background;
+    std::unique_ptr<Boss> _boss;
+    std::vector<std::unique_ptr<Shot>> _shots;
+    std::vector<std::unique_ptr<Wall>> _walls;
+    std::vector<std::unique_ptr<Player>> _players;
+    std::vector<std::unique_ptr<Explosion>> _explosions;
+    std::vector<std::unique_ptr<Enemy>> _enemies;
 
     // * types of the game
     TypeEntities _typeEntities;
@@ -134,15 +140,8 @@ private:
     std::map<uint16_t, ShotData> _shots_type;
     std::map<uint16_t, BossData> _bosses_type;
 
-    // * data of the game
-    DataGame _dataGame;
-    std::unique_ptr<Parallax> _background;
-    std::unique_ptr<Boss> _boss;
-    std::vector<std::unique_ptr<Shot>> _shots;
-    std::vector<std::unique_ptr<Wall>> _walls;
-    std::vector<std::unique_ptr<Player>> _players;
-    std::vector<std::unique_ptr<Explosion>> _explosions;
-    std::vector<std::unique_ptr<Enemy>> _enemies;
+    std::unique_ptr<Map> _mapHandler;
+    std::vector<Haze::Entity *> _entities;
 
     bool _running = false;
 };
