@@ -1,6 +1,6 @@
 {
-  "type": 1,
-  "path_sprite": "assets/sprites/shot.png",
+  "type": 2,
+  "path_sprite": "assets/sprites/shot-enemy.png",
   "hitbox": {
     "x": 0,
     "y": 6,

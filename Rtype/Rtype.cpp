@@ -159,7 +159,7 @@ void Rtype::onReceive(udp::endpoint from, network::datagram<protocol::data> cont
             if (_players.size() < 4) {
                 _channel.getGroup().insert(from);
                 sendEverything(from);
-                _players.emplace_back(std::make_unique<Player>(_engine, _channel, _players.size() + 1));
+                _players.emplace_back(std::make_unique<Player>(_engine, _channel, _players.size() + 1, _typeEntities));
                 _players.back()->_remote = std::make_unique<Player::Remote>(from);
                 _players.back()->build();
             }

@@ -143,7 +143,7 @@ void Map::update()
             for (auto &enemy_tile: enemies_tile) {
                 // * create enemy
                 try {
-                    _dataGame.enemies.emplace_back(std::make_unique<Enemy>(_engine, _channel));
+                    _dataGame.enemies.emplace_back(std::make_unique<Enemy>(_engine, _channel, _dataGame, _typeEntities));
                     _dataGame.enemies.back()->build(_typeEntities.enemies[enemy_tile["type"]], enemy_tile);
                 } catch (nlohmann::json::parse_error &e) {
                     std::cerr << "Error parsing JSON file: " << _maps_paths[_id_map] << std::endl;

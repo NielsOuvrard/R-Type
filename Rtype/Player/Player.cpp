@@ -6,8 +6,8 @@
 
 #define IS_KEY_PRESSED(key) (std::find(components.begin(), components.end(), Haze::InputType::key) != components.end())
 
-Player::Player(Haze::Engine &engine, network::data_channel<protocol::data> &channel, uint32_t id)
-    : _engine(engine), _channel(channel), _id(id)
+Player::Player(Haze::Engine &engine, network::data_channel<protocol::data> &channel, uint32_t id, TypeEntities typeEntities)
+    : _engine(engine), _channel(channel), _id(id), _typeEntities(typeEntities)
 {
 }
 
@@ -27,7 +27,7 @@ void Player::build()
                 if (IS_KEY_PRESSED(KEY_F) && _missileCd.IsReady()) {
                     _missileCd.Activate();
                     auto position = dynamic_cast<Haze::Position *>(this->_entity->getComponent("Position"));
-                    _missiles.emplace_back(std::make_unique<Shot>(_engine, _channel, true));
+                    _missiles.emplace_back(std::make_unique<Shot>(_engine, _channel, true, 1, _typeEntities));
                     _missiles.back()->build(position->x, position->y);
                 }
                 auto position = dynamic_cast<Haze::Position *>(_entity->getComponent("Position"));

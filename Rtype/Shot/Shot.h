@@ -4,7 +4,9 @@
 
 #pragma once
 
+#include "../config.h"
 #include "../protocol.h"
+#include "GameStructures.h"
 #include "ShotData.h"
 #include <componentData.hpp>
 #include <data.h>
@@ -28,7 +30,7 @@ public:
      * @param channel The data channel for network communication.
      * @param fromPlayer Indicates whether the missile was fired by a player.
      */
-    Shot(Haze::Engine &engine, network::data_channel<protocol::data> &channel, bool fromPlayer);
+    Shot(Haze::Engine &engine, network::data_channel<protocol::data> &channel, bool fromPlayer, uint16_t type, TypeEntities typeEntities);
 
     /**
      * @brief Builds the missile at a specified position.
@@ -50,6 +52,9 @@ public:
     float _y;                       ///< The Y-coordinate of the missile's position.
 
 private:
+    uint16_t _type;
+    TypeEntities _typeEntities;
+
     bool _fromPlayer;///< Indicates whether the missile was fired by a player.
     Haze::Engine &_engine;
     network::data_channel<protocol::data> &_channel;

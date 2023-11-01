@@ -2,7 +2,7 @@
   "type": 3,
   "damage": 20,
   "life": 50,
-  "shot_type": 1,
+  "shot_type": 2,
   "explosion_type": 2,
   "path_sprite": "assets/sprites/r-typesheet12.gif",
   "hitbox": {

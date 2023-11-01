@@ -8,12 +8,15 @@
 #include "../protocol.h"
 #include "Cooldown/Cooldown.h"
 #include "EnemyData.h"
+#include "GameStructures.h"
 #include "Map/Map.h"
 #include "Shot/Shot.h"
 #include <componentData.hpp>
 #include <data.h>
 #include <haze-core.hpp>
 #include <net_data_channel.h>
+#include <utility>
+
 
 using namespace asio::ip;
 using namespace std::chrono_literals;
@@ -29,7 +32,9 @@ public:
      * @param engine The game engine.
      * @param channel The network data channel.
      */
-    Enemy(Haze::Engine &engine, network::data_channel<protocol::data> &channel);
+    Enemy(Haze::Engine &engine, network::data_channel<protocol::data> &channel,
+          DataGame dataGame,
+          TypeEntities typeEntities);
 
     /**
      * @brief Build the enemy entity with initial properties.
@@ -65,4 +70,7 @@ private:
     Haze::Engine &_engine;                          ///< The game engine.
     network::data_channel<protocol::data> &_channel;///< The network data channel.
     Cooldown _missileCd{5000ms};                    ///< Cooldown timer for missile firing.
+
+    DataGame _dataGame;
+    TypeEntities _typeEntities;
 };

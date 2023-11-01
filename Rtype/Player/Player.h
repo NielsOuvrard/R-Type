@@ -7,6 +7,7 @@
 #include "../config.h"
 #include "../protocol.h"
 #include "Cooldown/Cooldown.h"
+#include "GameStructures.h"
 #include "Shot/Shot.h"
 #include <componentData.hpp>
 #include <data.h>
@@ -51,7 +52,7 @@ public:
      * @param channel The data channel for network communication.
      * @param id The unique identifier for the player.
      */
-    Player(Haze::Engine &engine, network::data_channel<protocol::data> &channel, uint32_t id);
+    Player(Haze::Engine &engine, network::data_channel<protocol::data> &channel, uint32_t id, TypeEntities typeEntities);
 
     /**
      * @brief Builds the player object.
@@ -91,9 +92,11 @@ public:
     int32_t _hp = 50;   ///< The player's health points.
 
     std::list<std::unique_ptr<Shot>> _missiles;///< The list of missiles fired by the player.
-    Cooldown _missileCd{300ms};                   ///< Cooldown for missile firing.
+    Cooldown _missileCd{300ms};                ///< Cooldown for missile firing.
 
 private:
     Haze::Engine &_engine;
     network::data_channel<protocol::data> &_channel;
+
+    TypeEntities _typeEntities;
 };

@@ -3,12 +3,13 @@
 //
 
 #include "Enemy.h"
-#include <utility>
 
 #define IS_KEY_PRESSED(key) (std::find(components.begin(), components.end(), Haze::InputType::key) != components.end())
 
-Enemy::Enemy(Haze::Engine &engine, network::data_channel<protocol::data> &channel)
-    : _engine(engine), _channel(channel)
+Enemy::Enemy(Haze::Engine &engine, network::data_channel<protocol::data> &channel,
+             DataGame dataGame,
+             TypeEntities typeEntities)
+    : _engine(engine), _channel(channel), _typeEntities(typeEntities), _dataGame(dataGame)
 {
 }
 
@@ -17,7 +18,7 @@ void Enemy::shot()
     if (_missileCd.IsReady() && _data.shot_type != -1) {
         _missileCd.Activate();
         auto position = dynamic_cast<Haze::Position *>(_entity->getComponent("Position"));
-        _missiles.emplace_back(std::make_unique<Shot>(_engine, _channel, false));
+        _missiles.emplace_back(std::make_unique<Shot>(_engine, _channel, false, _data.shot_type, _typeEntities));
         _missiles.back()->build(position->x, position->y);
     }
 }
