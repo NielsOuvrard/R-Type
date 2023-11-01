@@ -17,10 +17,11 @@ void Shot::build(float x, float y)
     _y = y;
     _entity->addComponent(new Haze::Position(x, y));
     _entity->addComponent(new Haze::Position(x, y));
-    _entity->addComponent(new Haze::Velocity(
-            (_vector_x * _typeEntities.shots[_type].velocity) + VELOCITY_WALL_X,
-            (_vector_y * _typeEntities.shots[_type].velocity),
-            0.05));
+    _entity->addComponent(new Haze::BulletDrop((_vector_x * _typeEntities.shots[_type].velocity), 45, 0.1));
+    // _entity->addComponent(new Haze::Velocity(
+    //         (_vector_x * _typeEntities.shots[_type].velocity) + VELOCITY_WALL_X,
+    //         (_vector_y * _typeEntities.shots[_type].velocity),
+    //         0.05));
     _entity->addComponent(new Haze::Scale(UNIVERSAL_SCALE * (_vector_x >= 0 ? 1 : -1), UNIVERSAL_SCALE));
     _entity->addComponent(new Haze::Hitbox({{_typeEntities.shots[_type].hitBoxData.x,
                                              _typeEntities.shots[_type].hitBoxData.y,
@@ -69,7 +70,8 @@ void Shot::send()
 {
     _dataGame.channel.sendGroup(RType::message::createEntity(_entity->getId()));
     _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Position", new Haze::PositionData{_x, _y}, sizeof(Haze::PositionData)));
-    _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Velocity", new Haze::VelocityData{(_vector_x * _typeEntities.shots[_type].velocity) + VELOCITY_WALL_X, (_vector_y * _typeEntities.shots[_type].velocity), 0.05}, sizeof(Haze::VelocityData)));
+    // _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Velocity", new Haze::VelocityData{(_vector_x * _typeEntities.shots[_type].velocity) + VELOCITY_WALL_X, (_vector_y * _typeEntities.shots[_type].velocity), 0.05}, sizeof(Haze::VelocityData)));
+    _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "BulletDrop", new Haze::BulletDropData{(_vector_x * _typeEntities.shots[_type].velocity), 45, 0.1}, sizeof(Haze::BulletDropData)));
     _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Hitbox", new Haze::HitboxData({_typeEntities.shots[_type].hitBoxData.x, _typeEntities.shots[_type].hitBoxData.y, _typeEntities.shots[_type].hitBoxData.width, _typeEntities.shots[_type].hitBoxData.height}), sizeof(Haze::HitboxData)));
     _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "HitboxDisplay", nullptr, 0));
     _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "SpriteCropped", new Haze::SpriteCroppedData{2}, sizeof(Haze::SpriteCroppedData)));
