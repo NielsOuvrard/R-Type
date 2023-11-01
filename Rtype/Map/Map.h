@@ -8,6 +8,8 @@
 #include "../config.h"
 #include "Boss/Boss.h"
 #include "Enemy/Enemy.h"
+#include "GameStructures.h"
+#include "MapData.h"
 #include "Wall/Wall.h"
 #include <Factory.hpp>
 #include <haze-core.hpp>
@@ -37,10 +39,9 @@ public:
      * @param enemies A vector of unique pointers to enemy objects.
      */
     Map(Haze::Engine &engine,
-                network::data_channel<protocol::data> &channel,
-                std::vector<std::unique_ptr<Wall>> &walls,
-                std::vector<std::unique_ptr<Enemy>> &enemies,
-                std::unique_ptr<Boss> &bosses);
+        network::data_channel<protocol::data> &channel,
+        DataGame dataGame,
+        TypeEntities typeEntities);
 
     /**
      * @brief Updates the game's map state.
@@ -84,16 +85,12 @@ private:
 private:
     Haze::Engine &_engine;
     network::data_channel<protocol::data> &_channel;
-    std::vector<std::unique_ptr<Enemy>> &_enemies;
-    std::unique_ptr<Boss> &_boss;
 
-    Haze::Entity *_entity = nullptr;
-    nlohmann::json _dataJSON;
-    std::vector<std::unique_ptr<Wall>> &_walls;
+    DataGame _dataGame;
+    TypeEntities _typeEntities;
+
     std::vector<std::string> _maps_paths;
-
-    std::map<uint16_t, EnemyData> _enemies_type;
-
+    nlohmann::json _dataJSON;
     nlohmann::json _mapTiles;   ///< JSON data for map tiles.
     nlohmann::json _hitboxWalls;///< JSON data for hitbox walls.
     uint16_t _index_map;        ///< Index of the map layout.

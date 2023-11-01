@@ -5,6 +5,7 @@
 #pragma once
 
 #include "../protocol.h"
+#include "ShotData.h"
 #include <componentData.hpp>
 #include <data.h>
 #include <haze-core.hpp>

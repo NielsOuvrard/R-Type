@@ -22,9 +22,10 @@ Wall::Wall(Haze::Engine &engine, network::data_channel<protocol::data> &channel,
     for (const auto &frame: animation) {
         _frames.emplace_back(Haze::Animation::intRect{frame["x"], frame["y"], frame["width"], frame["height"]});
     }
+    std::cout << "frame size = " << _frames.size() << "\n";
 }
 
-void Wall::build(uint8_t frameIndex)
+void Wall::build(uint16_t frameIndex)
 {
     _frameIndex = frameIndex;
     _entity = _engine.createEntity();
@@ -45,11 +46,13 @@ void Wall::build(uint8_t frameIndex)
             [this](int a, int b) {
             }};
     _entity->addComponent(new Haze::Collision("wall", mapCollision));
+    std::cout << "Collision OK\n";
 
     auto frame = _frames[_frameIndex];
     // _entity->addComponent(new Haze::Collision("wall", infos));
     _entity->addComponent(new Haze::Hitbox({{0, 0, frame.width, frame.height}}));
     send();
+    std::cout << "Wall created end\n";
 }
 
 void Wall::send()

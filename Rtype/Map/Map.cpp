@@ -4,90 +4,23 @@
 
 #include "Map.h"
 
-void fill_EnemyData(EnemyData &data, nlohmann::json jsonData)
-{
-    data.damage = 0;
-    data.type = 0;
-    data.life = 1;
-    data.path_sprite = "";
-    data.hitBoxData = {};
-    data.shot_type = -1;
-    data.fly = true;
-
-    if (jsonData.contains("type")) {
-        data.type = jsonData["type"];
-    }
-    if (jsonData.contains("damage")) {
-        data.damage = jsonData["damage"];
-    }
-    if (jsonData.contains("life")) {
-        data.life = jsonData["life"];
-    }
-    if (jsonData.contains("path_sprite")) {
-        data.path_sprite = jsonData["path_sprite"];
-    }
-    if (jsonData.contains("hitbox")) {
-        if (jsonData["hitbox"].contains("x"))
-            data.hitBoxData.x = jsonData["hitbox"]["x"];
-        if (jsonData["hitbox"].contains("y"))
-            data.hitBoxData.y = jsonData["hitbox"]["y"];
-        if (jsonData["hitbox"].contains("width"))
-            data.hitBoxData.width = jsonData["hitbox"]["width"];
-        if (jsonData["hitbox"].contains("height"))
-            data.hitBoxData.height = jsonData["hitbox"]["height"];
-    }
-    if (jsonData.contains("shot_type")) {
-        data.shot_type = jsonData["shot_type"];
-    }
-    if (jsonData.contains("fly")) {
-        data.fly = jsonData["fly"];
-    }
-}
-
 Map::Map(Haze::Engine &engine,
-                         network::data_channel<protocol::data> &channel,
-                         std::vector<std::unique_ptr<Wall>> &walls,
-                         std::vector<std::unique_ptr<Enemy>> &enemies,
-                         std::unique_ptr<Boss> &boss)
-    : _engine(engine), _channel(channel), _walls(walls), _enemies(enemies), _index_map(0), _id_map(0), _boss(boss)
+         network::data_channel<protocol::data> &channel,
+         DataGame dataGame,
+         TypeEntities typeEntities)
+    : _engine(engine), _channel(channel), _typeEntities(typeEntities), _index_map(0), _id_map(0), _dataGame(dataGame)
 {
 }
 
 void Map::build()
 {
-    // create enemies
-    processJsonFilesInDirectory("assets/json_files/enemies", [this](std::ifstream &fileStream, const std::string &filePath) {
-        this->createEnemy(fileStream, filePath);
-    });
     loadMaps();
     createMap();
-}
-
-void Map::createEnemy(std::ifstream &fileStream, const std::string &filePath)
-{
-    nlohmann::json jsonData;
-    fileStream >> jsonData;
-
-    EnemyData new_enemy_type;
-    fill_EnemyData(new_enemy_type, jsonData);
-    uint16_t type = jsonData["type"];
-
-    new_enemy_type.path_json = filePath;
-    _enemies_type[type] = (new_enemy_type);
 }
 
 void Map::loadMaps()
 {
     // ? add a type of mapTiles, so we can have infinity of sprites and hitbox
-    // Load sprite data for the walls from "ground.json"
-    std::ifstream groundFile("assets/json_files/walls/ground.json");
-
-    if (!groundFile.is_open()) {
-        std::cerr << "Error: Could not open 'ground.json' for reading" << std::endl;
-        return;
-    }
-    groundFile >> _hitboxWalls;
-    groundFile.close();
 
     const std::string directoryPath = "assets/json_files/maps";
 
@@ -102,6 +35,9 @@ void Map::loadMaps()
 void Map::createMap()
 {
     _id_map = _maps_paths.size() - 1;
+
+    std::string walls_file_path = "";
+
     bool map_filled = false;
     while (!map_filled) {
         if (_id_map >= _maps_paths.size())
@@ -113,6 +49,8 @@ void Map::createMap()
                 nlohmann::json jsonData;
                 fileStream >> jsonData;
                 _mapTiles = jsonData["map"];
+                walls_file_path = jsonData["walls"];
+                //                "walls": "assets/json_files/walls/officials.json",
                 map_filled = true;
             } catch (nlohmann::json::parse_error &e) {
                 std::cerr << "Error parsing JSON file: " << _maps_paths[_id_map] << std::endl;
@@ -125,6 +63,26 @@ void Map::createMap()
             _id_map++;
         }
     }
+
+    std::ifstream wallsFileStream(walls_file_path);
+    if (wallsFileStream.is_open()) {
+        try {
+            std::cout << "begin parsing file: " << _maps_paths[_id_map] << std::endl;
+            nlohmann::json jsonData;
+            wallsFileStream >> _hitboxWalls;
+
+        } catch (nlohmann::json::parse_error &e) {
+            std::cerr << "Error parsing JSON file: " << _maps_paths[_id_map] << std::endl;
+            std::cerr << e.what() << std::endl;
+            _id_map++;
+        }
+        wallsFileStream.close();
+    } else {
+        std::cerr << "Failed to open file: " << _maps_paths[_id_map] << std::endl;
+        _id_map++;
+    }
+
+
     // Iterate through each tile in the map
     for (const auto &tile: _mapTiles) {
         if (_index_map - 1 > WINDOW_WIDTH / (UNIVERSAL_SCALE * SIZE_TILE)) {
@@ -133,8 +91,9 @@ void Map::createMap()
 
         // Create and position the top wall
         try {
-            _walls.emplace_back(std::make_unique<Wall>(_engine, _channel, _hitboxWalls, (SIZE_TILE * UNIVERSAL_SCALE) * _index_map, 0, false));
-            _walls.back()->build(tile["tile_top"]);
+            // here
+            _dataGame.walls.emplace_back(std::make_unique<Wall>(_engine, _channel, _hitboxWalls, (SIZE_TILE * UNIVERSAL_SCALE) * _index_map, 0, false));
+            _dataGame.walls.back()->build(tile["tile_top"]);
         } catch (nlohmann::json::parse_error &e) {
             std::cerr << "Error parsing JSON file: " << _maps_paths[_id_map] << std::endl;
             std::cerr << e.what() << std::endl;
@@ -142,8 +101,8 @@ void Map::createMap()
 
         // Create and position the bottom wall
         try {
-            _walls.emplace_back(std::make_unique<Wall>(_engine, _channel, _hitboxWalls, (SIZE_TILE * UNIVERSAL_SCALE) * _index_map, WINDOW_HEIGHT, true));
-            _walls.back()->build(tile["tile_bottom"]);
+            _dataGame.walls.emplace_back(std::make_unique<Wall>(_engine, _channel, _hitboxWalls, (SIZE_TILE * UNIVERSAL_SCALE) * _index_map, WINDOW_HEIGHT, true));
+            _dataGame.walls.back()->build(tile["tile_bottom"]);
         } catch (nlohmann::json::parse_error &e) {
             std::cerr << "Error parsing JSON file: " << _maps_paths[_id_map] << std::endl;
             std::cerr << e.what() << std::endl;
@@ -154,25 +113,25 @@ void Map::createMap()
 
 void Map::update()
 {
-    if (_walls.front()->get_x_position() < -(SIZE_TILE * UNIVERSAL_SCALE)) {// * tile = 3 * SIZE_TILE
+    if (_dataGame.walls.front()->get_x_position() < -(SIZE_TILE * UNIVERSAL_SCALE)) {// * tile = 3 * SIZE_TILE
         // destroy
-        _walls.front()->destroy();
-        _walls.erase(_walls.begin());
-        _walls.front()->destroy();
-        _walls.erase(_walls.begin());
+        _dataGame.walls.front()->destroy();
+        _dataGame.walls.erase(_dataGame.walls.begin());
+        _dataGame.walls.front()->destroy();
+        _dataGame.walls.erase(_dataGame.walls.begin());
 
-        float pos_wall_back = _walls.back()->get_x_position();
+        float pos_wall_back = _dataGame.walls.back()->get_x_position();
 
         if (_index_map >= _mapTiles.size()) {
             // * stop scrolling the map
-            for (auto &wall: _walls) {
+            for (auto &wall: _dataGame.walls) {
                 wall->stopVelocity();
             }
-            for (auto &enemy: _enemies) {
+            for (auto &enemy: _dataGame.enemies) {
                 enemy->stopVelocity();
             }
-            if (_boss) {
-                _boss->stopVelocity();
+            if (_dataGame.boss) {
+                _dataGame.boss->stopVelocity();
             }
             return;
         }
@@ -184,8 +143,8 @@ void Map::update()
             for (auto &enemy_tile: enemies_tile) {
                 // * create enemy
                 try {
-                    _enemies.emplace_back(std::make_unique<Enemy>(_engine, _channel));
-                    _enemies.back()->build(_enemies_type[enemy_tile["type"]], enemy_tile);
+                    _dataGame.enemies.emplace_back(std::make_unique<Enemy>(_engine, _channel));
+                    _dataGame.enemies.back()->build(_typeEntities.enemies[enemy_tile["type"]], enemy_tile);
                 } catch (nlohmann::json::parse_error &e) {
                     std::cerr << "Error parsing JSON file: " << _maps_paths[_id_map] << std::endl;
                     std::cerr << e.what() << std::endl;
@@ -196,8 +155,8 @@ void Map::update()
         if (_mapTiles[_index_map].contains("boss")) {
             int16_t type_boss = _mapTiles[_index_map]["boss"];
             try {
-                _boss = std::make_unique<Boss>(_engine, _channel);
-                _boss->build("assets/json_files/bosses/dobkeratops.json");
+                _dataGame.boss = std::make_unique<Boss>(_engine, _channel);
+                _dataGame.boss->build("assets/json_files/bosses/dobkeratops.json");// TODO boss ID
             } catch (nlohmann::json::parse_error &e) {
                 std::cerr << "Error parsing JSON file: " << _maps_paths[_id_map] << std::endl;
                 std::cerr << e.what() << std::endl;
@@ -207,8 +166,8 @@ void Map::update()
 
         // Create and position the top wall
         try {
-            _walls.emplace_back(std::make_unique<Wall>(_engine, _channel, _hitboxWalls, pos_wall_back + (SIZE_TILE * UNIVERSAL_SCALE), 0, false));
-            _walls.back()->build(_mapTiles[_index_map]["tile_top"]);
+            _dataGame.walls.emplace_back(std::make_unique<Wall>(_engine, _channel, _hitboxWalls, pos_wall_back + (SIZE_TILE * UNIVERSAL_SCALE), 0, false));
+            _dataGame.walls.back()->build(_mapTiles[_index_map]["tile_top"]);
         } catch (nlohmann::json::parse_error &e) {
             std::cerr << "Error parsing JSON file: " << _maps_paths[_id_map] << std::endl;
             std::cerr << e.what() << std::endl;
@@ -216,8 +175,8 @@ void Map::update()
 
         // Create and position the bottom wall
         try {
-            _walls.emplace_back(std::make_unique<Wall>(_engine, _channel, _hitboxWalls, pos_wall_back + (SIZE_TILE * UNIVERSAL_SCALE), WINDOW_HEIGHT, true));
-            _walls.back()->build(_mapTiles[_index_map]["tile_bottom"]);
+            _dataGame.walls.emplace_back(std::make_unique<Wall>(_engine, _channel, _hitboxWalls, pos_wall_back + (SIZE_TILE * UNIVERSAL_SCALE), WINDOW_HEIGHT, true));
+            _dataGame.walls.back()->build(_mapTiles[_index_map]["tile_bottom"]);
         } catch (nlohmann::json::parse_error &e) {
             std::cerr << "Error parsing JSON file: " << _maps_paths[_id_map] << std::endl;
             std::cerr << e.what() << std::endl;

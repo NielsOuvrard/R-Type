@@ -14,10 +14,10 @@
 
 #include "Rtype.hpp"
 
-#define NBR_TILES_ON_SCREEN 6
-
 Rtype::Rtype(asio::io_context &context)
-    : _channel(context), _engine(60)
+    : _channel(context), _engine(60),
+      _typeEntities{_enemies_type, _explosions_type, _shots_type, _bosses_type},
+      _dataGame{_background, _boss, _shots, _walls, _players, _explosions, _enemies}
 {
     std::srand(std::time(0));
     _engine.init();
@@ -29,7 +29,7 @@ Rtype::Rtype(asio::io_context &context)
 
     _background = std::make_unique<Parallax>(_engine, _channel);
 
-    _mapHandler = std::make_unique<Map>(_engine, _channel, _walls, _enemies, _boss);
+    _mapHandler = std::make_unique<Map>(_engine, _channel, _dataGame, _typeEntities);
 }
 
 Rtype::~Rtype() = default;
@@ -113,6 +113,7 @@ void Rtype::sendEverything(udp::endpoint &to)
 void Rtype::start()
 {
     _running = true;
+    jsonHandler();
     _background->build();
     _mapHandler->build();
 
@@ -134,9 +135,6 @@ void Rtype::start()
 
         // Update the state of the non player entity
         update();
-
-        // Send all entities update to clients
-        sendUpdate();
     }
 }
 
@@ -206,20 +204,6 @@ void Rtype::onReceive(udp::endpoint from, network::datagram<protocol::data> cont
 asio::ip::udp::endpoint Rtype::getEndpoint() const
 {
     return _channel.getEndpoint();
-}
-
-void Rtype::sendUpdate()
-{
-    // _background->sendUpdate();
-    // for (auto &player: _players) {
-    //     if (player->_entity) {
-    //         player->sendUpdate();
-    //     }
-    // }
-    // _background->sendUpdate();
-    // for (auto &wall: _walls) {
-    //     wall->sendUpdate();
-    // }
 }
 
 void Rtype::update()

@@ -30,6 +30,8 @@ set(
         Boss/Boss.h
         Boss/BossData.h
         processJsonFilesInDirectory.cpp
+        RtypeJsonHandler.cpp
+        GameStructures.h
 )
 
 add_library(${PROJECT_NAME} STATIC ${SOURCES})

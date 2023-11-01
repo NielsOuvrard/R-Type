@@ -16,6 +16,7 @@
 
 #include "../../Haze/inc/json.hpp"
 #include "../config.h"
+#include "WallData.h"
 #include <Factory.hpp>
 #include <haze-core.hpp>
 #include <haze-graphics.hpp>
@@ -52,7 +53,7 @@ public:
      *
      * @param frameIndex The index of the frame to use for the wall (optional).
      */
-    void build(uint8_t frameIndex = 0);
+    void build(uint16_t frameIndex = 0);
 
     /**
      * @brief Sends the wall data to clients.
@@ -67,7 +68,7 @@ public:
      * This function sends an update for the wall object to clients.
      */
     void sendUpdate();
-    
+
     /**
      * @brief Stop the movement of walls, and send it to client.
      *

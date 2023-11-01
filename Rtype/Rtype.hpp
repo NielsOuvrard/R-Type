@@ -17,9 +17,12 @@
 #include "Boss/Boss.h"
 #include "Enemy/Enemy.h"
 #include "Explosion/Explosion.h"
+#include "GameStructures.h"
 #include "Map/Map.h"
 #include "Parallax/Parallax.h"
 #include "Player/Player.h"
+#include "Shot/Shot.h"
+#include "Wall/WallData.h"
 #include "data.h"
 #include "net_data_channel.h"
 #include "net_server.h"
@@ -48,7 +51,7 @@ public:
      *
      * @param context The Asio io_context used for network communication.
      */
-    Rtype(asio::io_context &context);
+    explicit Rtype(asio::io_context &context);
 
     /**
      * @brief Destroys an instance of the Rtype class.
@@ -76,13 +79,6 @@ public:
      * This function is responsible for updating the game's state, including entities, collisions, and more.
      */
     void update();
-
-    /**
-     * @brief Sends updates to connected clients.
-     *
-     * This function sends game updates to all connected clients.
-     */
-    void sendUpdate();
 
     /**
      * @brief Callback function for handling received datagrams.
@@ -119,27 +115,34 @@ public:
      */
     uint32_t getPlayerID(const asio::ip::udp::endpoint &endpoint);
 
+    template<typename T>
+    void createObject(std::ifstream &fileStream, const std::string &filePath, std::map<uint16_t, T> &objectMap, std::function<void(T &, const nlohmann::json &)> fillDataFunc);
+
+    void jsonHandler();
+
 private:
     Haze::Engine _engine;
     network::data_channel<protocol::data> _channel;
 
-    Cooldown _enemySpawnCD{5s};
-
     std::unique_ptr<Map> _mapHandler;
-    std::unique_ptr<Parallax> _background;
-    std::unique_ptr<Boss> _boss;
+    std::vector<Haze::Entity *> _entities;
 
+    // * types of the game
+    TypeEntities _typeEntities;
     std::map<uint16_t, EnemyData> _enemies_type;
-    //    std::map<uint16_t, ExplosionData> _explosions_type;
-    //    std::map<uint16_t, ShotData> _shots_type;
-    //    std::map<uint16_t, WallData> _walls_type;
-    //    std::map<uint16_t, MapData> _maps_type;
+    std::map<uint16_t, ExplosionData> _explosions_type;
+    std::map<uint16_t, ShotData> _shots_type;
     std::map<uint16_t, BossData> _bosses_type;
 
-    std::vector<Haze::Entity *> _entities;
+    // * data of the game
+    DataGame _dataGame;
+    std::unique_ptr<Parallax> _background;
+    std::unique_ptr<Boss> _boss;
+    std::vector<std::unique_ptr<Shot>> _shots;
     std::vector<std::unique_ptr<Wall>> _walls;
     std::vector<std::unique_ptr<Player>> _players;
     std::vector<std::unique_ptr<Explosion>> _explosions;
     std::vector<std::unique_ptr<Enemy>> _enemies;
+
     bool _running = false;
 };

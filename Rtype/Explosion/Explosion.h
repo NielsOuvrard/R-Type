@@ -7,6 +7,7 @@
 #include "../config.h"
 #include "../protocol.h"
 #include "Cooldown/Cooldown.h"
+#include "ExplosionData.h"
 #include <componentData.hpp>
 #include <data.h>
 #include <haze-core.hpp>
