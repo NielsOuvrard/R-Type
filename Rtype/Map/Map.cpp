@@ -8,7 +8,7 @@ Map::Map(Haze::Engine &engine,
          network::data_channel<protocol::data> &channel,
          DataGame dataGame,
          TypeEntities typeEntities)
-    : _engine(engine), _channel(channel), _typeEntities(typeEntities), _index_map(0), _id_map(0), _dataGame(dataGame)
+    : _engine(engine), _channel(channel), _typeEntities(typeEntities), _dataGame(dataGame), _index_map(0), _id_map(0)
 {
 }
 

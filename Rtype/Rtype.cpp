@@ -222,7 +222,7 @@ void Rtype::update()
         if (enemy->_isDead) {
             // * create explosion
 
-            _explosions.emplace_back(std::make_unique<Explosion>(_engine, _channel, enemy->_data.x, enemy->_data.y, enemy->_data.explosion_type));
+            _explosions.emplace_back(std::make_unique<Explosion>(_engine, _channel, enemy->_data.x, enemy->_data.y, enemy->_data.explosion_type, _dataGame, _typeEntities));
             _explosions.back()->build();
             _explosions.back()->send();
             std::cout << "Explosion created" << std::endl;

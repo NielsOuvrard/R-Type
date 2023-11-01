@@ -1,6 +1,6 @@
 {
   "type": 2,
-  "path": "assets/sprites/r-typesheet16.gif",
+  "path_sprite": "assets/sprites/r-typesheet16.gif",
   "animation_tics": 0.2,
   "animation_type": "loop_once",
   "animation": [

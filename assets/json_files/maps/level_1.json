@@ -43,8 +43,56 @@
         },
         {
           "type": 3,
+          "x": 50,
+          "y": 500,
+          "velocity_x": 0,
+          "move": "linear",
+          "move_time": 0.05
+        },
+        {
+          "type": 3,
+          "x": 100,
+          "y": 500,
+          "velocity_x": 0,
+          "move": "linear",
+          "move_time": 0.05
+        },
+        {
+          "type": 3,
+          "x": 0,
+          "y": 500,
+          "velocity_x": 0,
+          "move": "linear",
+          "move_time": 0.05
+        },
+        {
+          "type": 3,
           "x": 30,
           "y": 0,
+          "velocity_x": 0,
+          "move": "linear",
+          "move_time": 0.05
+        },
+        {
+          "type": 1,
+          "x": 30,
+          "y": 250,
+          "velocity_x": 0,
+          "move": "linear",
+          "move_time": 0.05
+        },
+        {
+          "type": 1,
+          "x": 80,
+          "y": 250,
+          "velocity_x": 0,
+          "move": "linear",
+          "move_time": 0.05
+        },
+        {
+          "type": 1,
+          "x": 130,
+          "y": 250,
           "velocity_x": 0,
           "move": "linear",
           "move_time": 0.05

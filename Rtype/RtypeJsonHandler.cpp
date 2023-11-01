@@ -21,6 +21,7 @@ void json_fill_EnemyData(EnemyData &data, nlohmann::json jsonData)
     data.hitBoxData = {};
     data.shot_type = -1;
     data.fly = true;
+    data.explosion_type = 0;
     data.type = jsonData["type"];
 
     if (jsonData.contains("damage")) {
@@ -47,6 +48,9 @@ void json_fill_EnemyData(EnemyData &data, nlohmann::json jsonData)
     }
     if (jsonData.contains("fly")) {
         data.fly = jsonData["fly"];
+    }
+    if (jsonData.contains("explosion_type")) {
+        data.explosion_type = jsonData["explosion_type"];
     }
 }
 

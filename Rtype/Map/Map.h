@@ -60,13 +60,6 @@ public:
 
 private:
     /**
-     * @brief Creates enemy entity from a path.
-     *
-     * This function creates enemy entity according to their types.
-     */
-    void createEnemy(std::ifstream &fileStream, const std::string &filePath);
-
-    /**
      * @brief Loads all maps paths in vector.
      *
      * Loading all maps paths inside a vector<string>.

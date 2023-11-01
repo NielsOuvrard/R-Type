@@ -12,8 +12,15 @@
  * @param x The x-coordinate of the explosion.
  * @param y The y-coordinate of the explosion.
  */
-Explosion::Explosion(Haze::Engine &engine, network::data_channel<protocol::data> &channel, float x, float y, uint16_t type)
-    : _engine(engine), _channel(channel), _x(x), _y(y), _type(type)
+//Explosion::Explosion(Haze::Engine &engine, network::data_channel<protocol::data> &channel, float x, float y, uint16_t type)
+Explosion::Explosion(Haze::Engine &engine,
+                     network::data_channel<protocol::data> &channel,
+                     float x,
+                     float y,
+                     uint16_t type,
+                     DataGame dataGame,
+                     TypeEntities typeEntities)
+    : _engine(engine), _channel(channel), _x(x), _y(y), _type(type), _typeEntities(typeEntities), _dataGame(dataGame)
 {
 }
 
@@ -46,8 +53,16 @@ void Explosion::send()
     // Send messages to add Position, Scale, Sprite, and Animation components
     _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Position", new Haze::PositionData{_x, _y}, sizeof(Haze::PositionData)));
     _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Scale", new Haze::ScaleData{UNIVERSAL_SCALE, UNIVERSAL_SCALE}, sizeof(Haze::ScaleData)));
-    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Sprite", new Haze::SpriteData{"assets/sprites/r-typesheet16.gif"}, sizeof(Haze::SpriteData)));
-    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Animation", new Haze::AnimationData{"assets/json_files/explosions/explosion.json"}, sizeof(Haze::AnimationData)));
+
+    auto elem_sprite = new Haze::SpriteData();
+    strncpy(elem_sprite->path, _typeEntities.explosions[_type].path_sprite.c_str(), sizeof(elem_sprite->path));
+    elem_sprite->path[sizeof(elem_sprite->path) - 1] = '\0';
+    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Sprite", elem_sprite, sizeof(Haze::SpriteData)));
+
+    auto elem_animation = new Haze::AnimationData();
+    strncpy(elem_animation->path, _typeEntities.explosions[_type].path_json.c_str(), sizeof(elem_animation->path));
+    elem_animation->path[sizeof(elem_animation->path) - 1] = '\0';
+    _channel.sendGroup(RType::message::addComponent(_entity->getId(), "Animation", elem_animation, sizeof(Haze::AnimationData)));
 }
 
 /**

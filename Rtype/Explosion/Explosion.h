@@ -8,6 +8,7 @@
 #include "../protocol.h"
 #include "Cooldown/Cooldown.h"
 #include "ExplosionData.h"
+#include "GameStructures.h"
 #include <componentData.hpp>
 #include <data.h>
 #include <haze-core.hpp>
@@ -28,7 +29,13 @@ public:
      * @param x The x-coordinate of the explosion.
      * @param y The y-coordinate of the explosion.
      */
-    Explosion(Haze::Engine &engine, network::data_channel<protocol::data> &channel, float x, float y, uint16_t type);
+    Explosion(Haze::Engine &engine,
+              network::data_channel<protocol::data> &channel,
+              float x,
+              float y,
+              uint16_t type,
+              DataGame dataGame,
+              TypeEntities typeEntities);
 
     /**
      * @brief Build the explosion entity with initial properties.
@@ -55,4 +62,7 @@ private:
     float _x;                                       ///< The x-coordinate of the explosion.
     float _y;                                       ///< The y-coordinate of the explosion.
     uint16_t _type;
+
+    DataGame _dataGame;
+    TypeEntities _typeEntities;
 };

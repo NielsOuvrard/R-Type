@@ -71,11 +71,6 @@ void Wall::send()
     //    _channel.sendGroup(RType::message::addComponent(_id, "HitboxDisplay", nullptr, 0));
 }
 
-void Wall::sendUpdate()
-{
-    //    _channel.sendGroup(RType::message::addComponent(_id, "Position", new Haze::PositionData{_x, _y}, sizeof(Haze::PositionData)));
-}
-
 void Wall::stopVelocity()
 {
     // TODO : made the same for enemies

@@ -63,13 +63,6 @@ public:
     void send();
 
     /**
-     * @brief Sends an update for the wall.
-     *
-     * This function sends an update for the wall object to clients.
-     */
-    void sendUpdate();
-
-    /**
      * @brief Stop the movement of walls, and send it to client.
      *
      * Useful for the end of the map
