@@ -108,6 +108,10 @@ void game::addComponent(Haze::component_info info)
         });
     }
     Haze::Component *comp = Haze::Factory::createComponent(std::string(info.name), info.data);
+    if (!comp) {
+        std::cout << "\033[31m[GAME] Error: couldn't create component " << info.name << "\033[0m\n";
+        return;
+    }
     if (comp->getType() == "Position") {
         Haze::Interpolation *interpolation = dynamic_cast<Haze::Interpolation *>(_entities[info.id]->getComponent("Interpolation"));
         if (interpolation == nullptr) {
