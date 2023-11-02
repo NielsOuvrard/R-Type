@@ -114,7 +114,7 @@ Client:
 
 ## test
 
-<div style="display; justify-content: space-between: center;">
+<div style="display: center; justify-content: space-between;">
     <img src="https://media.licdn.com/dms/image/C4E03AQF6AIitN8q7cg/profile-displayphoto-shrink_400_400/0/1651531289334?e=1703721600&v=beta&t=nCsDz0wBgls-nLvLAzpAZqELOfTItPVJtoWJwRtmSGk" width="150" height="150">
     <img src="https://avatars.githubusercontent.com/u/91875893?v=4" width="150" height="150">
     <img src="https://avatars.githubusercontent.com/u/91876336?v=4" width="150" height="150">
