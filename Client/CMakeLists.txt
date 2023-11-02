@@ -31,6 +31,12 @@ set(SOURCES
         Scenes/LobbyList.cpp
         Scenes/LobbyItem.cpp
         Scenes/LobbyItem.h
+        Scenes/Lobby.cpp
+        Scenes/Lobby.h
+        Elements/Chat.cpp
+        Elements/Chat.h
+        Elements/UserCard.cpp
+        Elements/UserCard.h
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})

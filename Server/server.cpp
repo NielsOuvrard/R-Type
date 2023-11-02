@@ -31,11 +31,14 @@ void server::onMessage(std::shared_ptr<network::connection<lobby>> from, network
             msg >> room_id;
             if (_rooms.find(room_id) != _rooms.end() && _rooms[room_id]->isMember(from)) {
                 const auto &members = _rooms[room_id]->getMembers();
-                res << members.size();
                 for (auto &member: members) {
-                    res << std::get<0>(member.second)
-                        << std::get<1>(member.second);
+                    char name[32] = {0};
+                    bool owner = std::get<1>(member.second) == Room::privileges::owner;
+                    std::strcat(name, std::get<0>(member.second).data());
+                    res << owner
+                        << name;
                 }
+                res << static_cast<uint32_t>(members.size());
             } else {
                 res.header.id = lobby::ko;
             }
@@ -46,10 +49,10 @@ void server::onMessage(std::shared_ptr<network::connection<lobby>> from, network
             msg >> room_id;
             if (_rooms[room_id]->isMember(from)) {
                 auto chats = _rooms[room_id]->getChats();
-                msg << chats.size();
                 for (auto &chat: chats) {
                     msg << chat.sender.data() << chat.content.data();
                 }
+                msg << static_cast<uint32_t>(chats.size());
             } else {
                 res.header.id = lobby::ko;
             }

@@ -13,7 +13,7 @@ Image::Image(Haze::Engine &engine, const std::string &filepath, Element::AxisPai
 
 void Image::build()
 {
-    buildEntity();
+    Element::buildEntity();
     _entity->addComponent(new Haze::Sprite(_filepath));
 }
 
