@@ -12,6 +12,7 @@ namespace Haze
     class IWindow;
     class IRect;
     class IColor;
+    class IDisplay;
 }
 
 namespace Haze
@@ -110,5 +111,18 @@ namespace Haze
         virtual void setFillColor(IColor::colorEnum color) = 0;
         virtual void setOutlineColor(IColor::colorEnum color) = 0;
         virtual void setOutlineThickness(float thickness) = 0;
+    };
+
+    class IDisplay
+    {
+    private:
+    public:
+        virtual ~IDisplay() = default;
+        virtual ITexture *createTexture(std::string path) = 0;
+        virtual ISprite *createSprite(std::string path) = 0;
+        virtual IWindow *createWindow(int width, int height, std::string title) = 0;
+        virtual IText *createText(const std::string &text, IColor::colorEnum color, const std::string &fontname = "arial.ttf") = 0;
+        virtual IAudio *createAudio(std::string path) = 0;
+        virtual IRect *createRect(int x, int y, int width, int height, IColor::colorEnum color) = 0;
     };
 }

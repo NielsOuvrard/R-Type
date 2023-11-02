@@ -5,11 +5,14 @@
 ** hazeGfx
 */
 
-
 #pragma once
+#include <iostream>
+#include <vector>
 #include "IPipeline.hpp"
+#include "IDisplay.hpp"
 #include "SystemGfx.hpp"
 #include "Engine.hpp"
+#include <filesystem>
 
 namespace Haze
 {
