@@ -126,3 +126,17 @@ Client:
         <p>Erwan Gonzales Clovis Rabot Niels Ouvrard Corentin Fortes Angelo ZHOU</p>
     </div>
 </div>
+
+<div align="center">
+  <div style="margin: 10px;">
+    <img src="https://avatars.githubusercontent.com/u/91875893?v=4" width="150" height="150">
+    <p>Clovis Rabot</p>
+    <p><a href="mailto:clovis.rabot@epitech.eu">clovis.rabot@epitech.eu</a></p>
+  </div>
+  <div style="margin: 10px;">
+    <img src="https://media.licdn.com/dms/image/C4E03AQF6AIitN8q7cg/profile-displayphoto-shrink_400_400/0/1651531289334?e=1703721600&v=beta&t=nCsDz0wBgls-nLvLAzpAZqELOfTItPVJtoWJwRtmSGk" width="150" height="150">
+    <p>Erwan Gonzales</p>
+    <p><a href="mailto:erwan.gonzales@epitech.eu">erwan.gonzales@epitech.eu</a></p>
+  </div>
+  <!-- Add the other sections similarly -->
+</div>
