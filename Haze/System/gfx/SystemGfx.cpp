@@ -16,7 +16,7 @@ namespace Haze {
             if (componentList->getComponent("Scale", i) != nullptr && componentList->getComponent("Sprite", i) != nullptr) {
                 auto scale = static_cast<Scale *>(componentList->getComponent("Scale", i));
                 auto sprite = static_cast<Sprite *>(componentList->getComponent("Sprite", i));
-                sprite->sprite.setScale(scale->x, scale->y);
+                sprite->sprite->setScale(scale->x, scale->y);
             }
         }
     }
@@ -35,9 +35,9 @@ namespace Haze {
                         auto sprite = static_cast<Sprite *>(componentList->getComponent("Sprite", j));
                         auto position = static_cast<Position *>(componentList->getComponent("Position", j));
                         auto scale = static_cast<Scale *>(componentList->getComponent("Scale", j));
-                        sprite->sprite.setScale(scale->x, scale->y);
-                        sprite->sprite.setPosition(position->x, position->y);
-                        window->window.draw(&sprite->sprite);
+                        sprite->sprite->setScale(scale->x, scale->y);
+                        sprite->sprite->setPosition(position->x, position->y);
+                        window->window->draw(sprite->sprite);
                     }
 
                     if (componentList->getComponent("Hitbox", j) != nullptr &&
@@ -49,9 +49,9 @@ namespace Haze {
                         auto position = static_cast<Position *>(componentList->getComponent("Position", j));
                         auto scale = static_cast<Scale *>(componentList->getComponent("Scale", j));
                         for (int k = 0; k < hitbox->hitbox.size(); k++) {
-                            hitboxDisplay->rect.setPosition(hitbox->hitbox[k].x * scale->x + position->x, hitbox->hitbox[k].y * scale->y + position->y);
-                            hitboxDisplay->rect.setSize(hitbox->hitbox[k].width * scale->x, hitbox->hitbox[k].height * scale->y);
-                            window->window.draw(&hitboxDisplay->rect);
+                            hitboxDisplay->rect->setPosition(hitbox->hitbox[k].x * scale->x + position->x, hitbox->hitbox[k].y * scale->y + position->y);
+                            hitboxDisplay->rect->setSize(hitbox->hitbox[k].width * scale->x, hitbox->hitbox[k].height * scale->y);
+                            window->window->draw(hitboxDisplay->rect);
                         }
                     }
 
@@ -61,10 +61,10 @@ namespace Haze {
                         auto text = static_cast<Text *>(componentList->getComponent("Text", j));
                         auto position = static_cast<Position *>(componentList->getComponent("Position", j));
                         auto scale = static_cast<Scale *>(componentList->getComponent("Scale", j));
-                        text->textObj.setPosition(position->x, position->y);
-                        text->textObj.setScale(scale->x, scale->y);
-                        text->textObj.setString(text->text);
-                        window->window.draw(&text->textObj);
+                        text->textObj->setPosition(position->x, position->y);
+                        text->textObj->setScale(scale->x, scale->y);
+                        text->textObj->setString(text->text);
+                        window->window->draw(text->textObj);
                     }
                 }
             }
@@ -76,7 +76,7 @@ namespace Haze {
         for (int i = 0; i < componentList->getSize(); i++) {
             if (componentList->getComponent("Window", i) != nullptr) {
                 auto window = static_cast<Window *>(componentList->getComponent("Window", i));
-                window->window.display();
+                window->window->display();
             }
         }
     }
@@ -86,7 +86,7 @@ namespace Haze {
         for (int i = 0; i < componentList->getSize(); i++) {
             if (componentList->getComponent("Window", i) != nullptr) {
                 auto window = static_cast<Window *>(componentList->getComponent("Window", i));
-                window->window.clear();
+                window->window->clear();
             }
         }
     }
@@ -102,7 +102,7 @@ namespace Haze {
                 auto animation = static_cast<Animation *>(componentList->getComponent("Animation", i));
                 auto sprite_id = static_cast<SpriteCropped *>(componentList->getComponent("SpriteCropped", i));
                 auto sprite = static_cast<Sprite *>(componentList->getComponent("Sprite", i));
-                sprite->sprite.setTextureRect(animation->frames[sprite_id->frameId].x,
+                sprite->sprite->setTextureRect(animation->frames[sprite_id->frameId].x,
                                                 animation->frames[sprite_id->frameId].y,
                                                 animation->frames[sprite_id->frameId].width,
                                                 animation->frames[sprite_id->frameId].height);
@@ -144,7 +144,7 @@ namespace Haze {
                         }
                     }
                 }
-                sprite->sprite.setTextureRect(animation->frames[animation->currentFrame].x,
+                sprite->sprite->setTextureRect(animation->frames[animation->currentFrame].x,
                                                 animation->frames[animation->currentFrame].y,
                                                 animation->frames[animation->currentFrame].width,
                                                 animation->frames[animation->currentFrame].height);
@@ -170,23 +170,23 @@ namespace Haze {
             if (componentList->getComponent("Window", i) != nullptr) {
                 auto window = static_cast<Window *>(componentList->getComponent("Window", i));
 
-                window->window.fillKeyPressed(inputsPressed);
-                window->window.fillMousePosition(x, y);
-                window->window.fillMousePressed(mouseType);
+                window->window->fillKeyPressed(inputsPressed);
+                window->window->fillMousePosition(x, y);
+                window->window->fillMousePressed(mouseType);
 
 
 
 
-                // *x = (int) window->window.mapPixelToCoords(sf::Mouse::getPosition(window->window)).x;
-                // *y = (int) window->window.mapPixelToCoords(sf::Mouse::getPosition(window->window)).y;
+                // *x = (int) window->window->mapPixelToCoords(sf::Mouse::getPosition(window->window)).x;
+                // *y = (int) window->window->mapPixelToCoords(sf::Mouse::getPosition(window->window)).y;
                 // if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
                 //     *mouseType = PRESSED;
                 // }
-                while (window->window.pollEvent()) {
-                    window->window.close();
-                    window->window.fillKeyReleased(inputsReleased);
-                    window->window.fillFocus(&window->active);
-                    window->window.fillMouseReleased(mouseType);
+                while (window->window->pollEvent()) {
+                    window->window->close();
+                    window->window->fillKeyReleased(inputsReleased);
+                    window->window->fillFocus(&window->active);
+                    window->window->fillMouseReleased(mouseType);
 
                     // if (window->event.type == sf::Event::KeyReleased) {
                     //     switch (window->event.key.code) {

@@ -37,6 +37,40 @@ namespace Haze
 
 namespace Haze
 {
+
+    ITexture *SfDisplay::createTexture(std::string path)
+    {
+        return new SfTexture(path);
+    }
+
+    ISprite *SfDisplay::createSprite(std::string path)
+    {
+        return new SfSprite(path);
+    }
+
+    IWindow *SfDisplay::createWindow(int width, int height, std::string title)
+    {
+        return new SfWindow(width, height, title);
+    }
+
+    IText *SfDisplay::createText(const std::string &text, IColor::colorEnum color, const std::string &fontname)
+    {
+        return new SfText(text, color, fontname);
+    }
+
+    IAudio *SfDisplay::createAudio(std::string path)
+    {
+        return new SfAudio(path);
+    }
+
+    IRect *SfDisplay::createRect(int x, int y, int width, int height, IColor::colorEnum color)
+    {
+        return new SfRect(x, y, width, height, color);
+    }
+}
+
+namespace Haze
+{
     SfAudio::SfAudio(std::string path)
     {
         if (!_buffer.loadFromFile(path))
@@ -509,4 +543,9 @@ namespace Haze
     {
         _rect.setOutlineThickness(thickness);
     }
+}
+
+Haze::IDisplay *createDisplay()
+{
+    return new Haze::SfDisplay();
 }

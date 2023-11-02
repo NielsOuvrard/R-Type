@@ -56,7 +56,7 @@ namespace Haze
                 auto window = static_cast<Window *>(_componentList->getComponent("Window", i));
                 if (window == nullptr)
                     return true;
-                return window->window.isOpen();
+                return window->window->isOpen();
                 #endif
                 return true;
             }

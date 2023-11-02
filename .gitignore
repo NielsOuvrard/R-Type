@@ -1,6 +1,7 @@
 .idea
 .vscode/
 build/
+Haze/lib
 cmake-build-debug
 *.out
 *.o

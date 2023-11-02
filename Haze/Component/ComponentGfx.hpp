@@ -1,18 +1,26 @@
 #pragma once
 #include "Component.hpp"
-#include "SfDisplay.hpp"
+#include "IDisplay.hpp"
 #include "inputs.hpp"
 #include "json.hpp"
 #include <fstream>
 #include <iostream>
 #include <thread>
+#include <functional>
+#include <filesystem>
+#include "DynLib.hpp"
 
 namespace Haze {
+    static int i = 0;
+
     struct Sprite : public Component {
-        Sprite(std::string path) : path(path), sprite(path) {}
+        Sprite(std::string path);
+        ~Sprite() {
+            delete sprite;
+        }
 
         std::string path;
-        SfSprite sprite;
+        ISprite *sprite;
 
         std::string getType() const override { return "Sprite"; }
 
@@ -91,12 +99,15 @@ namespace Haze {
     };
 
     struct Window : public Component {
-        Window(int width, int height) : width(width), height(height), active(false), window(width, height, "R-Type") {}
+        Window(int width, int height);
+        ~Window() {
+            delete window;
+        }
 
         int width;
         int height;
         bool active;
-        SfWindow window;
+        IWindow *window;
 
         std::string getType() const override { return "Window"; }
 
@@ -104,14 +115,12 @@ namespace Haze {
     };
 
     struct HitboxDisplay : public Component {
-        HitboxDisplay() : rect(0, 0, 0, 0, SfColor::RED)
-        {
-            rect.setFillColor(SfColor::TRANSPARENT);
-            rect.setOutlineColor(SfColor::RED);
-            rect.setOutlineThickness(5);
+        HitboxDisplay();
+        ~HitboxDisplay() {
+            delete rect;
         }
 
-        SfRect rect;
+        IRect *rect;
 
         std::string getType() const override { return "HitboxDisplay"; }
 
@@ -119,21 +128,21 @@ namespace Haze {
     };
 
     struct Sound : public Component {
-        Sound(std::string path, bool loop = false) : path(path), sound(path)
-        {
-            sound.setLoop(loop);
+        Sound(std::string path, bool loop = false);
+        ~Sound() {
+            delete sound;
         }
 
         std::string path;
-        SfAudio sound;
+        IAudio *sound;
 
-        void play() { sound.play(); }
+        void play() { sound->play(); }
 
-        void stop() { sound.stop(); }
+        void stop() { sound->stop(); }
 
-        bool isPlaying() const { return sound.isPlaying(); }
+        bool isPlaying() const { return sound->isPlaying(); }
 
-        bool isStopped() const { return sound.isStopped(); }
+        bool isStopped() const { return sound->isStopped(); }
 
         std::string getType() const override { return "Sound"; }
 
@@ -152,45 +161,12 @@ namespace Haze {
             CYAN,
         };
 
-        Text(const std::string &text, colorHaze color, const std::string &fontname = "arial.ttf") : text(text),
-                                                                                                    textObj(text, IColor::RED, fontname)
-        {
-            switch (color) {
-                case RED:
-                    textObj.setColor(IColor::RED);
-                    break;
-                case GREEN:
-                    textObj.setColor(IColor::GREEN);
-                    break;
-                case BLUE:
-                    textObj.setColor(IColor::BLUE);
-                    break;
-                case YELLOW:
-                    textObj.setColor(IColor::YELLOW);
-                    break;
-                case BLACK:
-                    textObj.setColor(IColor::BLACK);
-                    break;
-                case WHITE:
-                    textObj.setColor(IColor::WHITE);
-                    break;
-                case MAGENTA:
-                    textObj.setColor(IColor::MAGENTA);
-                    break;
-                case CYAN:
-                    textObj.setColor(IColor::CYAN);
-                    break;
-            }
-        }
+        Text(const std::string &text, colorHaze color, const std::string &fontname = "arial.ttf");
 
-        Text(const std::string &text, int r, int g, int b, int a, const std::string &fontname = "arial.ttf") : text(text),
-                                                                                                               textObj(text, IColor::RED, fontname)
-        {
-            textObj.setColor(r, g, b, a);
-        }
+        Text(const std::string &text, int r, int g, int b, int a, const std::string &fontname = "arial.ttf");
 
         std::string text;
-        SfText textObj;
+        IText *textObj;
 
         std::string getType() const override { return "Text"; }
 
