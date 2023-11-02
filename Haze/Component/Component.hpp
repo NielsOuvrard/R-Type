@@ -104,6 +104,17 @@ namespace Haze {
         void show() const override { std::cout << "CircleVelocity: " << std::endl; }
     };
 
+    struct BulletDrop : public Component {
+        BulletDrop(float strength, float angle, float time) : strength(strength), angle(angle), tick(time) {}
+        float strength;
+        float angle;
+        float t = 0;
+        float tick;
+        std::chrono::time_point<std::chrono::high_resolution_clock> lastUpdate = std::chrono::high_resolution_clock::now();
+        std::string getType() const override { return "BulletDrop"; }
+        void show() const override { std::cout << "BulletDrop: " << std::endl; }
+    };
+
     struct Move : public Component {
         Move(float x, float y) : x(x), y(y) {}
         float x;

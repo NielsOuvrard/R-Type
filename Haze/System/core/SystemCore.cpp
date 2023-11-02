@@ -141,6 +141,22 @@ namespace Haze
                 position->y += sin(circleVelocity->t) * circleVelocity->radius;
                 circleVelocity->lastUpdate = std::chrono::high_resolution_clock::now();
             }
+            if (componentList->getComponent("Position", i) != nullptr && componentList->getComponent("BulletDrop", i) != nullptr)
+            {
+                auto position = static_cast<Position *>(componentList->getComponent("Position", i));
+                auto bulletDrop = static_cast<BulletDrop *>(componentList->getComponent("BulletDrop", i));
+                float gap = std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - bulletDrop->lastUpdate).count();
+                bulletDrop->t += (0.1 * gap) / 0.1;
+                float X = cos(bulletDrop->angle * M_PI / 180);
+                float Y = sin(bulletDrop->angle * M_PI / 180);
+
+                float accelerationX = (cos(bulletDrop->angle * M_PI / 180) * bulletDrop->strength);
+                float accelerationY = 9.81 + (sin(bulletDrop->angle * M_PI / 180) * bulletDrop->strength);
+
+                position->x += (-((X * bulletDrop->strength) * -bulletDrop->t + 0.5 * accelerationX * bulletDrop->t * bulletDrop->t) * gap) / 0.01;
+                position->y += ( ((Y * bulletDrop->strength) * -bulletDrop->t + 0.5 * accelerationY * bulletDrop->t * bulletDrop->t) * gap) / 0.01;
+                bulletDrop->lastUpdate = std::chrono::high_resolution_clock::now();
+            }
         }
     }
 

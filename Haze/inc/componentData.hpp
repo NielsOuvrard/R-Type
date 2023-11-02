@@ -68,6 +68,12 @@ namespace Haze {
         std::map<std::string, Collision::CollisionInfo> behavior;
     };
 
+    struct BulletDropData {
+        float strength;
+        float angle;
+        float time;
+    };
+
     struct HitboxData {
         Hitbox::intRect hitbox;
     };

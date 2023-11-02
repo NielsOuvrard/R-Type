@@ -66,6 +66,10 @@ namespace Haze {
             LifeTimeData *lifeTime = reinterpret_cast<LifeTimeData *>(data.data());
             return new LifeTime(lifeTime->lifeTime, [](int id) {});
         }
+        if (type == "BulletDrop") {
+            BulletDropData *bulletDrop = reinterpret_cast<BulletDropData *>(data.data());
+            return new BulletDrop(bulletDrop->strength, bulletDrop->angle, bulletDrop->time);
+        }
 #ifdef USE_SFML
         if (type == "Sprite") {
             SpriteData *sprite = reinterpret_cast<SpriteData *>(data.data());
