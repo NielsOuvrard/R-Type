@@ -121,3 +121,7 @@ Client:
     <img src="https://avatars.githubusercontent.com/u/91876233?v=4" width="150" height="150">
     <img src="https://avatars.githubusercontent.com/u/91876442?s=400&u=e17541db376ba488505351104ee598772dbe67a2&v=4" width="150" height="150">
 </div>
+
+<div style="text-align: center; margin-top: 20px;">
+    <p>Erwan Gonzales&nbsp;&nbsp;Clovis Rabot&nbsp;&nbsp;Niels Ouvrard&nbsp;&nbsp;Corentin Fortes&nbsp;&nbsp;Angelo ZHOU</p>
+</div>
