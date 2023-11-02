@@ -132,6 +132,7 @@ void Map::update()
             for (auto &shot: _dataGame.shots) {
                 shot->stopVelocity();
             }
+            _dataGame.map_moving = false;
             return;
         }
 

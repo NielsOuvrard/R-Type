@@ -77,7 +77,9 @@ void Enemy::build(EnemyData data_enemy, nlohmann::json mapData)
     // * copy all data from map
     fill_data_from_map(_data, mapData);
 
-    _data.velocity_x += VELOCITY_WALL_X;
+    if (_dataGame.map_moving) {
+        _data.velocity_x += VELOCITY_WALL_X;
+    }
 
     std::chrono::milliseconds d((std::rand() % 10 + 5) * 1000);
     _missileCd.setDuration(d);

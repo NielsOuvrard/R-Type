@@ -131,6 +131,7 @@ private:
     std::vector<std::unique_ptr<Player>> _players;
     std::vector<std::unique_ptr<Explosion>> _explosions;
     std::vector<std::unique_ptr<Enemy>> _enemies;
+    bool _map_moving;
 
     // * types of the game
     TypeEntities _typeEntities;

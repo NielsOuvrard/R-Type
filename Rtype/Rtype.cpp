@@ -17,7 +17,7 @@
 Rtype::Rtype(asio::io_context &context)
     : _channel(context), _engine(10),
       _typeEntities{_enemies_type, _explosions_type, _shots_type, _bosses_type},
-      _dataGame{_engine, _channel, _background, _boss, _shots, _walls, _players, _explosions, _enemies}
+      _dataGame{_engine, _channel, _background, _boss, _shots, _walls, _players, _explosions, _enemies, _map_moving}
 {
     std::srand(std::time(0));
     _engine.init();
@@ -30,6 +30,7 @@ Rtype::Rtype(asio::io_context &context)
     _background = std::make_unique<Parallax>(_dataGame);
 
     _mapHandler = std::make_unique<Map>(_dataGame, _typeEntities);
+    _map_moving = true;
 }
 
 Rtype::~Rtype() = default;
