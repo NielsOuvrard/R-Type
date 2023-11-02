@@ -1,40 +1,44 @@
 #include "ComponentGfx.hpp"
 
-namespace Haze
-{
-    static std::vector<IDisplay*> loadDisplay()
+namespace Haze {
+    static std::vector<IDisplay *> loadDisplay()
     {
         typedef IDisplay *(*createDisplay_t)();
-        std::vector<DynLib*> displayLib;
-        std::vector<IDisplay*> displayss;
+        std::vector<DynLib *> displayLib;
+        std::vector<IDisplay *> displayss;
         fs::path libpath = "Haze/lib/";
-        for (const auto &entry : fs::directory_iterator(libpath)) {
-            if (entry.path().extension() == ".so") {
+        for (const auto &entry: fs::directory_iterator(libpath)) {
+            //            if (entry.path().extension() == ".so") {
+            if (entry.path().extension() == ".so" || entry.path().extension().string() == ".dylib") {
+
                 displayLib.push_back(new DynLib(entry.path()));
             }
         }
 
         createDisplay_t createDisplay;
         for (int i = 0; i < displayLib.size(); i++) {
-            createDisplay = (createDisplay_t)displayLib[i]->sym("createDisplay");
+            createDisplay = (createDisplay_t) displayLib[i]->sym("createDisplay");
             if (createDisplay != nullptr) {
-                displayss.push_back((IDisplay*)createDisplay());
+                displayss.push_back((IDisplay *) createDisplay());
             }
         }
         return displayss;
     }
 
-    static std::vector<IDisplay*> displays = loadDisplay();
+    static std::vector<IDisplay *> displays = loadDisplay();
 
-    Sprite::Sprite(std::string path) : path(path) {
+    Sprite::Sprite(std::string path) : path(path)
+    {
         sprite = displays[i]->createSprite(path);
     }
 
-    Window::Window(int width, int height) : width(width), height(height), active(false) {
+    Window::Window(int width, int height) : width(width), height(height), active(false)
+    {
         window = displays[i]->createWindow(width, height, "R-Type");
     }
 
-    HitboxDisplay::HitboxDisplay() {
+    HitboxDisplay::HitboxDisplay()
+    {
         rect = displays[i]->createRect(0, 0, 0, 0, IColor::RED);
         rect->setFillColor(IColor::TRANSPARENT);
         rect->setOutlineColor(IColor::RED);
@@ -84,4 +88,4 @@ namespace Haze
         textObj->setColor(r, g, b, a);
     }
 
-}
+}// namespace Haze

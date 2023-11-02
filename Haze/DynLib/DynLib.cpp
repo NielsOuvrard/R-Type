@@ -1,14 +1,13 @@
 #include "DynLib.hpp"
 #include "logger.hpp"
 
-namespace Haze
-{
+namespace Haze {
     DynLib::DynLib(const fs::path &libpath, int mode)
     {
         dlerror();
         _handle = {
-            .ptr = dlopen(libpath.string().c_str(), mode),
-            .libname = libpath.filename(),
+                .ptr = dlopen(libpath.string().c_str(), mode),
+                .libname = libpath.filename(),
         };
         char *dlerr = dlerror();
         if (dlerr != NULL)
@@ -36,4 +35,4 @@ namespace Haze
     {
         return _handle.libname;
     }
-}
+}// namespace Haze
