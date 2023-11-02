@@ -24,6 +24,14 @@ void client::start()
         emit();
         receive();
 
+        if (_spectator) {
+            _spectator->update(50, false);
+            if (_spectator->aliveCD.IsReady()) {
+                _spectator->aliveCD.Activate();
+                _spectator->sendAll(network::datagram<protocol::data>(protocol::data::alive));
+            }
+        }
+
         for (auto &[name, element]: _elements) {
             if (!element->getHide()) {
                 element->update();
@@ -111,6 +119,24 @@ void client::receive()
         switch (msg.header.id) {
             case lobby::ok: {
                 handleOk(msg);
+                break;
+            }
+            case lobby::data_channel: {
+                if (_selected != "lobby") return;
+                _elements["lobby"]->setHide(true);
+                _elements["bg"]->setHide(true);
+
+                auto ip = _elements["login"]->get<TextInput>("ip")->getValue();
+                udp::endpoint remote_game;
+                msg >> remote_game;
+                remote_game = udp::endpoint(asio::ip::make_address(ip), remote_game.port());
+
+                _spectator = std::make_unique<spectator>(_context, _engine);
+                _spectator->addPeer(remote_game);
+
+                network::datagram<data> data(data::join);
+                _spectator->sendTo(data, remote_game);
+                _state = state::in_game;
                 break;
             }
         }

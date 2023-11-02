@@ -40,6 +40,8 @@ public:
         _members[target] = std::tuple(std::get<0>(_members[target]), std::get<1>(_members[target]), !std::get<2>(_members[target]));
     }
 
+    void close() { _open = false; };
+
 private:
     uint32_t maxSize;
     bool _open = true;

@@ -19,6 +19,14 @@ void Lobby::update()
     }
 }
 
+void Lobby::setHide(bool state)
+{
+    Element::setHide(state);
+    for (auto &player: players) {
+        player.setHide(true);
+    }
+}
+
 void Lobby::build()
 {
     _children["chat"] = std::make_shared<Chat>(_engine);

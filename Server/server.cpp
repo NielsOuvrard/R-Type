@@ -73,10 +73,10 @@ void server::onMessage(std::shared_ptr<network::connection<lobby>> from, network
         case lobby::create_room: {
             char nickname[32] = {0};
             msg >> nickname;
-            _rooms[_idCounter] = std::make_unique<Room>();
-            _rooms[_idCounter]->addConnection(from, nickname, Room::privileges::owner);
-            res << _idCounter;
-            _idCounter++;
+            _rooms[_roomCounter] = std::make_unique<Room>();
+            _rooms[_roomCounter]->addConnection(from, nickname, Room::privileges::owner);
+            res << _roomCounter;
+            _roomCounter++;
             break;
         }
         case lobby::start_room: {
@@ -86,10 +86,18 @@ void server::onMessage(std::shared_ptr<network::connection<lobby>> from, network
                 _rooms[room_id]->toggleReady(from);
             }
             if (_rooms[room_id]->isOpen() && _rooms[room_id]->canStart(from)) {
-                // TODO: Start thread and send datachannel
+                _threads[_threadCounter++] = std::thread([this, room_id]() {
+                    Rtype rtype = Rtype(_context);
+                    network::message<lobby> msg(lobby::data_channel);
+                    msg << rtype.getEndpoint();
+                    for (auto &[con, info]: _rooms[room_id]->getMembers()) {
+                        messageClient(con, msg);
+                    }
+                    _rooms[room_id]->close();
+                    rtype.start();
+                });
             }
-            messageAllClient(res);
-            return;
+            break;
         }
         case lobby::leave_room: {
             uint32_t room_id = 0;

@@ -19,6 +19,8 @@ protected:
     void onClientDisconnect(std::shared_ptr<network::connection<protocol::lobby>> client) override;
 
 private:
-    uint32_t _idCounter = 1;
+    uint32_t _roomCounter = 1;
+    uint32_t _threadCounter = 1;
     std::map<uint32_t, std::unique_ptr<Room>> _rooms;
+    std::map<uint32_t, std::thread> _threads;
 };

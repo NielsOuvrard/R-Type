@@ -13,6 +13,7 @@ public:
     explicit Lobby(Haze::Engine &engine, std::function<void()> onReady);
     void update() override;
     void build() override;
+    void setHide(bool state) override;
     std::function<void()> onReady;
     std::array<UserCard, 4> players;
 };

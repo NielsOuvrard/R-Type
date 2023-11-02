@@ -33,6 +33,7 @@ private:
         w_room,
         w_join,
         w_start,
+        in_game,
     };
 
     void handleOk(network::message<lobby> &msg);
