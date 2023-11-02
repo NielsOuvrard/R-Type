@@ -57,27 +57,27 @@ Client:
 <div align="center">
   <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center;">
     <div style="text-align: center; margin: 10px;">
-      <img src="https://avatars.githubusercontent.com/u/91875893?v=4" width="200" height="200">
+      <img src="https://avatars.githubusercontent.com/u/91875893?v=4" width="150" height="150">
       <p>Clovis Rabot</p>
       <p><a href="mailto:clovis.rabot@epitech.eu">clovis.rabot@epitech.eu</a></p>
     </div>
     <div style="text-align: cecenternter; margin: 10px;">
-      <img src="https://media.licdn.com/dms/image/C4E03AQF6AIitN8q7cg/profile-displayphoto-shrink_400_400/0/1651531289334?e=1703721600&v=beta&t=nCsDz0wBgls-nLvLAzpAZqELOfTItPVJtoWJwRtmSGk" width="200" height="200">
+      <img src="https://media.licdn.com/dms/image/C4E03AQF6AIitN8q7cg/profile-displayphoto-shrink_400_400/0/1651531289334?e=1703721600&v=beta&t=nCsDz0wBgls-nLvLAzpAZqELOfTItPVJtoWJwRtmSGk" width="150" height="150">
       <p>Erwan Gonzales</p>
       <p><a href="mailto:erwan.gonzales@epitech.eu">erwan.gonzales@epitech.eu</a></p>
     </div>
     <div style="text-align: center; margin: 10px;">
-      <img src="https://avatars.githubusercontent.com/u/91876233?v=4" width="200" height="200">
+      <img src="https://avatars.githubusercontent.com/u/91876233?v=4" width="150" height="150">
       <p>Corentin Fortesn</p>
       <p><a href="mailto:corentin.@epitech.eu">corentin.fortes@epitech.eu</a></p>
     </div>
     <div style="text-align: center; margin: 10px;">
-      <img src="https://avatars.githubusercontent.com/u/91876336?v=4" width="200" height="200">
+      <img src="https://avatars.githubusercontent.com/u/91876336?v=4" width="150" height="150">
       <p>Niels Ouvrard </p>
       <p><a href="mailto:niels.ouvrard@epitech.eu">niels.ouvrard@epitech.eu</a></p>
     </div>
     <div style="text-align: center; margin: 10px;">
-      <img src="https://avatars.githubusercontent.com/u/91876442?s=400&u=e17541db376ba488505351104ee598772dbe67a2&v=4" width="200" height="200">
+      <img src="https://avatars.githubusercontent.com/u/91876442?s=400&u=e17541db376ba488505351104ee598772dbe67a2&v=4" width="150" height="150">
       <p>Angelo Zhou</p>
       <p><a href="mailto:angelo.zhou@epitech.eu">angelo.zhou@epitech.eu</a></p>
     </div>
@@ -86,27 +86,27 @@ Client:
 
 <!-- <div style="display: flex; justify-content: center; align-items: center;">
   <div style="text-align: center; margin: 10px;">
-    <img src="https://avatars.githubusercontent.com/u/91875893?v=4" width="200" height="200">
+    <img src="https://avatars.githubusercontent.com/u/91875893?v=4" width="150" height="150">
     <p>Clovis Rabot</p>
     <p><a href="mailto:clovis.rabot@epitech.eu">clovis.rabot@epitech.eu</a></p>
   </div>
   <div style="text-align: center; margin: 10px;">
-    <img src="https://media.licdn.com/dms/image/C4E03AQF6AIitN8q7cg/profile-displayphoto-shrink_400_400/0/1651531289334?e=1703721600&v=beta&t=nCsDz0wBgls-nLvLAzpAZqELOfTItPVJtoWJwRtmSGk" width="200" height="200">
+    <img src="https://media.licdn.com/dms/image/C4E03AQF6AIitN8q7cg/profile-displayphoto-shrink_400_400/0/1651531289334?e=1703721600&v=beta&t=nCsDz0wBgls-nLvLAzpAZqELOfTItPVJtoWJwRtmSGk" width="150" height="150">
     <p>Erwan Gonzales</p>
     <p><a href="mailto:erwan.gonzales@epitech.eu">erwan.gonzales@epitech.eu</a></p>
   </div>
   <div style="text-align: center; margin: 10px;">
-    <img src="https://avatars.githubusercontent.com/u/91876233?v=4" width="200" height="200">
+    <img src="https://avatars.githubusercontent.com/u/91876233?v=4" width="150" height="150">
     <p>Corentin Fortesn</p>
     <p><a href="mailto:corentin.@epitech.eu">corentin.fortes@epitech.eu</a></p>
   </div>
   <div style="text-align: center; margin: 10px;">
-    <img src="https://avatars.githubusercontent.com/u/91876336?v=4" width="200" height="200">
+    <img src="https://avatars.githubusercontent.com/u/91876336?v=4" width="150" height="150">
     <p>Niels Ouvrard </p>
     <p><a href="mailto:niels.ouvrard@epitech.eu">niels.ouvrard@epitech.eu</a></p>
   </div>
   <div style="text-align: center; margin: 10px;">
-    <img src="https://avatars.githubusercontent.com/u/91876442?s=400&u=e17541db376ba488505351104ee598772dbe67a2&v=4" width="200" height="200">
+    <img src="https://avatars.githubusercontent.com/u/91876442?s=400&u=e17541db376ba488505351104ee598772dbe67a2&v=4" width="150" height="150">
     <p>Angelo Zhou</p>
     <p><a href="mailto:angelo.zhou@epitech.eu">angelo.zhou@epitech.eu</a></p>
   </div>
@@ -123,5 +123,6 @@ Client:
 </div>
 
 <div style="text-align: center; margin-top: 20px;">
-    <p>Erwan Gonzales&nbsp;&nbsp;Clovis Rabot&nbsp;&nbsp;Niels Ouvrard&nbsp;&nbsp;Corentin Fortes&nbsp;&nbsp;Angelo ZHOU</p>
+        <p>Erwan Gonzales Clovis Rabot Niels Ouvrard Corentin Fortes Angelo ZHOU</p>
+    </div>
 </div>
