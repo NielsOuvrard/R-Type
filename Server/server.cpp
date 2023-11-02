@@ -34,8 +34,10 @@ void server::onMessage(std::shared_ptr<network::connection<lobby>> from, network
                 for (auto &member: members) {
                     char name[32] = {0};
                     bool owner = std::get<1>(member.second) == Room::privileges::owner;
+                    bool ready = std::get<2>(member.second);
                     std::strcat(name, std::get<0>(member.second).data());
-                    res << owner
+                    res << ready
+                        << owner
                         << name;
                 }
                 res << static_cast<uint32_t>(members.size());
@@ -80,6 +82,9 @@ void server::onMessage(std::shared_ptr<network::connection<lobby>> from, network
         case lobby::start_room: {
             uint32_t room_id = 0;
             msg >> room_id;
+            if (_rooms[room_id]->isMember(from)) {
+                _rooms[room_id]->toggleReady(from);
+            }
             if (_rooms[room_id]->isOpen() && _rooms[room_id]->canStart(from)) {
                 // TODO: Start thread and send datachannel
             }

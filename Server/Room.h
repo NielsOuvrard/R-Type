@@ -30,14 +30,19 @@ public:
     [[nodiscard]] std::size_t size();
     [[nodiscard]] bool canStart(const std::shared_ptr<network::connection<protocol::lobby>> &);
     [[nodiscard]] bool isMember(const std::shared_ptr<network::connection<protocol::lobby>> &);
-    [[nodiscard]] const std::map<std::shared_ptr<network::connection<protocol::lobby>>, std::tuple<std::string, privileges>> &getMembers() const;
+    [[nodiscard]] const std::map<std::shared_ptr<network::connection<protocol::lobby>>, std::tuple<std::string, Room::privileges, bool>> &getMembers() const;
     bool disconnect(const std::shared_ptr<network::connection<protocol::lobby>> &);
     void addConnection(std::shared_ptr<network::connection<protocol::lobby>> &, char[32], privileges = privileges::member);
     const std::list<Room::chat_message> &getChats();
+
+    void toggleReady(std::shared_ptr<network::connection<protocol::lobby>> &target)
+    {
+        _members[target] = std::tuple(std::get<0>(_members[target]), std::get<1>(_members[target]), !std::get<2>(_members[target]));
+    }
 
 private:
     uint32_t maxSize;
     bool _open = true;
     std::list<chat_message> _chats;
-    std::map<std::shared_ptr<network::connection<protocol::lobby>>, std::tuple<std::string, privileges>> _members;
+    std::map<std::shared_ptr<network::connection<protocol::lobby>>, std::tuple<std::string, Room::privileges, bool>> _members;
 };

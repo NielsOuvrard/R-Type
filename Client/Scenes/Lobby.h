@@ -10,9 +10,9 @@
 
 class Lobby : public Element {
 public:
-    explicit Lobby(Haze::Engine &engine);
+    explicit Lobby(Haze::Engine &engine, std::function<void()> onReady);
     void update() override;
     void build() override;
-
+    std::function<void()> onReady;
     std::array<UserCard, 4> players;
 };

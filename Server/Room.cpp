@@ -8,7 +8,7 @@ Room::Room(uint32_t maxSize) : maxSize(maxSize) {}
 
 void Room::addConnection(std::shared_ptr<network::connection<protocol::lobby>> &con, char *name, Room::privileges permissions)
 {
-    _members[con] = std::make_tuple(name, permissions);
+    _members[con] = std::make_tuple(name, permissions, false);
 }
 
 std::size_t Room::size()
@@ -33,7 +33,13 @@ bool Room::disconnect(const std::shared_ptr<network::connection<protocol::lobby>
 
 bool Room::canStart(const std::shared_ptr<network::connection<protocol::lobby>> &target)
 {
-    return std::get<1>(_members[target]) == privileges::owner;
+    bool ready = true;
+    for (auto &[con, infos]: _members) {
+        ready &= std::get<2>(infos);
+        if (!ready)
+            return false;
+    }
+    return true;
 }
 
 bool Room::isMember(const std::shared_ptr<network::connection<protocol::lobby>> &target)
@@ -41,7 +47,7 @@ bool Room::isMember(const std::shared_ptr<network::connection<protocol::lobby>> 
     return _members.find(target) != _members.end();
 }
 
-const std::map<std::shared_ptr<network::connection<protocol::lobby>>, std::tuple<std::string, Room::privileges>> &Room::getMembers() const
+const std::map<std::shared_ptr<network::connection<protocol::lobby>>, std::tuple<std::string, Room::privileges, bool>> &Room::getMembers() const
 {
     return _members;
 }

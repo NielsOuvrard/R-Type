@@ -88,7 +88,14 @@ void client::build()
     _elements["lobbyList"]->build();
     _elements["lobbyList"]->setHide(true);
 
-    _elements["lobby"] = std::make_shared<Lobby>(_engine);
+    _elements["lobby"] = std::make_shared<Lobby>(_engine, [this]() {
+        if (_state != state::ok) return;
+        std::cout << "Ready" << std::endl;
+        net::message<lobby> msg(lobby::start_room);
+        msg << _currentLobby;
+        send(msg);
+        _state = state::w_start;
+    });
     _elements["lobby"]->build();
     _elements["lobby"]->setHide(true);
 
@@ -134,6 +141,10 @@ void client::emit()
 void client::handleOk(network::message<lobby> &msg)
 {
     switch (_state) {
+        case state::w_start: {
+            _state = state::ok;
+            break;
+        }
         case state::w_room: {
             uint32_t nb = 0;
             msg >> nb;
@@ -142,10 +153,11 @@ void client::handleOk(network::message<lobby> &msg)
             for (uint32_t i = 0; i < 4; i++) {
                 if (i < nb) {
                     char name[32] = {0};
-                    bool owner = false;
-                    msg >> name >> owner;
+                    bool owner = false, ready = false;
+                    msg >> name >> owner >> ready;
                     players[i].name = name;
                     players[i].owner = owner;
+                    players[i].ready = ready;
                     players[i].setHide(false);
                 } else {
                     players[i].setHide(true);

@@ -42,6 +42,11 @@ void UserCard::update()
     _children["kick_btn"]->add(new Haze::Position(kick_btn.x + x, kick_btn.y + y));
     _children["name"]->add(new Haze::Position(txt.x + x, txt.y + y));
     get<Text>("name")->setValue(name);
+    if (ready) {
+        get<Image>("img")->add(new Haze::Sprite("assets/sprites/table2_gold.png"));
+    } else {
+        get<Image>("img")->add(new Haze::Sprite("assets/sprites/table2.png"));
+    }
 }
 
 void UserCard::setHide(bool state)

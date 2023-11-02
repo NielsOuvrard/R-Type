@@ -17,6 +17,7 @@ public:
     int y = 0;
     std::string name = "dummy";
     bool owner = false;
+    bool ready = false;
     std::function<void(const std::string &)> onKick = [](const std::string &) { std::cout << "Kick" << std::endl; };
 
 private:
