@@ -1,4 +1,5 @@
 {
+  "walls": "assets/json_files/walls/ground.json",
   "map": [
     {
       "tile_top": 3,

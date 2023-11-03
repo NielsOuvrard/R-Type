@@ -7,6 +7,7 @@
 Map::Map(DataGame dataGame, TypeEntities typeEntities)
     : _dataGame(dataGame), _typeEntities(typeEntities), _index_map(0), _id_map(0)
 {
+    _walls_file_path = "";
 }
 
 void Map::build()
@@ -17,8 +18,6 @@ void Map::build()
 
 void Map::loadMaps()
 {
-    // ? add a type of mapTiles, so we can have infinity of sprites and hitbox
-
     const std::string directoryPath = "assets/json_files/maps";
 
     for (const auto &entry: std::filesystem::directory_iterator(directoryPath)) {
@@ -33,8 +32,6 @@ void Map::createMap()
 {
     _id_map = _maps_paths.size() - 1;
 
-    std::string walls_file_path = "";
-
     bool map_filled = false;
     while (!map_filled) {
         if (_id_map >= _maps_paths.size())
@@ -46,7 +43,7 @@ void Map::createMap()
                 nlohmann::json jsonData;
                 fileStream >> jsonData;
                 _mapTiles = jsonData["map"];
-                walls_file_path = jsonData["walls"];
+                _walls_file_path = jsonData["walls"];
                 map_filled = true;
             } catch (nlohmann::json::parse_error &e) {
                 std::cerr << "Error parsing JSON file: " << _maps_paths[_id_map] << std::endl;
@@ -60,7 +57,7 @@ void Map::createMap()
         }
     }
 
-    std::ifstream wallsFileStream(walls_file_path);
+    std::ifstream wallsFileStream(_walls_file_path);
     if (wallsFileStream.is_open()) {
         try {
             std::cout << "begin parsing file: " << _maps_paths[_id_map] << std::endl;
@@ -88,7 +85,7 @@ void Map::createMap()
         // Create and position the top wall
         try {
             // here
-            _dataGame.walls.emplace_back(std::make_unique<Wall>(_dataGame, _hitboxWalls, (SIZE_TILE * UNIVERSAL_SCALE) * _index_map, 0, false));
+            _dataGame.walls.emplace_back(std::make_unique<Wall>(_dataGame, _hitboxWalls, (SIZE_TILE * UNIVERSAL_SCALE) * _index_map, 0, false, _walls_file_path));
             _dataGame.walls.back()->build(tile["tile_top"]);
         } catch (nlohmann::json::parse_error &e) {
             std::cerr << "Error parsing JSON file: " << _maps_paths[_id_map] << std::endl;
@@ -97,7 +94,7 @@ void Map::createMap()
 
         // Create and position the bottom wall
         try {
-            _dataGame.walls.emplace_back(std::make_unique<Wall>(_dataGame, _hitboxWalls, (SIZE_TILE * UNIVERSAL_SCALE) * _index_map, WINDOW_HEIGHT, true));
+            _dataGame.walls.emplace_back(std::make_unique<Wall>(_dataGame, _hitboxWalls, (SIZE_TILE * UNIVERSAL_SCALE) * _index_map, WINDOW_HEIGHT, true, _walls_file_path));
             _dataGame.walls.back()->build(tile["tile_bottom"]);
         } catch (nlohmann::json::parse_error &e) {
             std::cerr << "Error parsing JSON file: " << _maps_paths[_id_map] << std::endl;
@@ -166,7 +163,7 @@ void Map::update()
 
         // Create and position the top wall
         try {
-            _dataGame.walls.emplace_back(std::make_unique<Wall>(_dataGame, _hitboxWalls, pos_wall_back + (SIZE_TILE * UNIVERSAL_SCALE), 0, false));
+            _dataGame.walls.emplace_back(std::make_unique<Wall>(_dataGame, _hitboxWalls, pos_wall_back + (SIZE_TILE * UNIVERSAL_SCALE), 0, false, _walls_file_path));
             _dataGame.walls.back()->build(_mapTiles[_index_map]["tile_top"]);
         } catch (nlohmann::json::parse_error &e) {
             std::cerr << "Error parsing JSON file: " << _maps_paths[_id_map] << std::endl;
@@ -175,7 +172,7 @@ void Map::update()
 
         // Create and position the bottom wall
         try {
-            _dataGame.walls.emplace_back(std::make_unique<Wall>(_dataGame, _hitboxWalls, pos_wall_back + (SIZE_TILE * UNIVERSAL_SCALE), WINDOW_HEIGHT, true));
+            _dataGame.walls.emplace_back(std::make_unique<Wall>(_dataGame, _hitboxWalls, pos_wall_back + (SIZE_TILE * UNIVERSAL_SCALE), WINDOW_HEIGHT, true, _walls_file_path));
             _dataGame.walls.back()->build(_mapTiles[_index_map]["tile_bottom"]);
         } catch (nlohmann::json::parse_error &e) {
             std::cerr << "Error parsing JSON file: " << _maps_paths[_id_map] << std::endl;
