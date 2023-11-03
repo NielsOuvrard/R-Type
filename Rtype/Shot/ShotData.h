@@ -15,6 +15,8 @@ struct ShotData {
     std::string path_json;  ///< The path of the animation of the sprite.
     float velocity;
     uint16_t damage;
+    bool bullet_drop;
+    uint16_t bullet_drop_degree;
 
 
     // Todo: bool bonce;

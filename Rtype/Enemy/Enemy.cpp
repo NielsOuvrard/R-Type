@@ -220,6 +220,9 @@ void Enemy::update()
 
 void Enemy::stopVelocity()
 {
+    if (_entity == nullptr) {
+        return;
+    }
     _data.velocity_x -= VELOCITY_WALL_X;
     _entity->addComponent(new Haze::Velocity(_data.velocity_x, _data.velocity_y, _data.move_time));
     auto pos = dynamic_cast<Haze::Position *>(_entity->getComponent("Position"));
