@@ -10,6 +10,7 @@
 #include "Enemy/Enemy.h"
 #include "GameStructures.h"
 #include "MapData.h"
+#include "Parallax/Parallax.h"
 #include "Wall/Wall.h"
 #include <Factory.hpp>
 #include <haze-core.hpp>
@@ -76,6 +77,7 @@ private:
     DataGame _dataGame;
     TypeEntities _typeEntities;
 
+    std::string _parallax_path;
     std::string _walls_file_path;
     std::vector<std::string> _maps_paths;
     nlohmann::json _dataJSON;

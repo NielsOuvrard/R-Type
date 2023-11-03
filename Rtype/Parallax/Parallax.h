@@ -38,7 +38,7 @@ public:
      * This function constructs the parallax background, including the layers or entities that make up
      * the parallax effect.
      */
-    void build();
+    void build(std::string parallax_path);
 
     /**
      * @brief Updates the state of the parallax background.
@@ -64,6 +64,8 @@ public:
 
 private:
     DataGame _dataGame;
+
+    std::string _parallax_path;
 
     Haze::Entity *_bg1;///< The first layer of the parallax background.
     Haze::Entity *_bg2;///< The second layer of the parallax background.

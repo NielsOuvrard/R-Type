@@ -1,5 +1,6 @@
 {
   "walls": "assets/json_files/walls/ground.json",
+  "parallax": "assets/sprites/space.jpg",
   "map": [
     {
       "tile_top": 3,
