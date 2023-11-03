@@ -62,6 +62,7 @@ Component of the **haze-graphics** lib are at:
 [[ComponentGfx Technical]]
 
 ## Entity
+
 Entity are defined at
 [[Entity Technical]]
 

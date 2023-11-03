@@ -1,35 +1,30 @@
 #pragma once
 
-#include <iostream>
 #include <dlfcn.h>
+#include <iostream>
 
 #include <filesystem>
 
 namespace fs = std::filesystem;
 
-namespace Haze
-{
+namespace Haze {
 
-    class DynLib
-    {
+    class DynLib {
     public:
-        class DynLibException : public std::runtime_error
-        {
+        class DynLibException : public std::runtime_error {
             using std::runtime_error::runtime_error;
         };
 
     private:
-        class DLOpenException : public DynLibException
-        {
-            using DynLibException::DynLibException;
-        };
-        class DLSymException : public DynLibException
-        {
+        class DLOpenException : public DynLibException {
             using DynLibException::DynLibException;
         };
 
-        typedef struct handle
-        {
+        class DLSymException : public DynLibException {
+            using DynLibException::DynLibException;
+        };
+
+        typedef struct handle {
             void *ptr;
             std::string libname;
         } handle_t;
@@ -44,4 +39,4 @@ namespace Haze
         std::string getLibName() const;
     };
 
-};
+};// namespace Haze

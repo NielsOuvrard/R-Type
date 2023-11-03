@@ -103,9 +103,9 @@ namespace Haze {
                 auto sprite_id = static_cast<SpriteCropped *>(componentList->getComponent("SpriteCropped", i));
                 auto sprite = static_cast<Sprite *>(componentList->getComponent("Sprite", i));
                 sprite->sprite->setTextureRect(animation->frames[sprite_id->frameId].x,
-                                                animation->frames[sprite_id->frameId].y,
-                                                animation->frames[sprite_id->frameId].width,
-                                                animation->frames[sprite_id->frameId].height);
+                                               animation->frames[sprite_id->frameId].y,
+                                               animation->frames[sprite_id->frameId].width,
+                                               animation->frames[sprite_id->frameId].height);
             } else if (componentList->getComponent("Animation", i) != nullptr &&
                        componentList->getComponent("Sprite", i) != nullptr) {
                 auto animation = static_cast<Animation *>(componentList->getComponent("Animation", i));
@@ -145,9 +145,9 @@ namespace Haze {
                     }
                 }
                 sprite->sprite->setTextureRect(animation->frames[animation->currentFrame].x,
-                                                animation->frames[animation->currentFrame].y,
-                                                animation->frames[animation->currentFrame].width,
-                                                animation->frames[animation->currentFrame].height);
+                                               animation->frames[animation->currentFrame].y,
+                                               animation->frames[animation->currentFrame].width,
+                                               animation->frames[animation->currentFrame].height);
             }
         }
     }
@@ -173,8 +173,6 @@ namespace Haze {
                 window->window->fillKeyPressed(inputsPressed);
                 window->window->fillMousePosition(x, y);
                 window->window->fillMousePressed(mouseType);
-
-
 
 
                 // *x = (int) window->window->mapPixelToCoords(sf::Mouse::getPosition(window->window)).x;
