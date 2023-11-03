@@ -17,14 +17,16 @@ namespace network {
         connection(owner parent, asio::io_context &context,
                    asio::ip::tcp::socket socket,
                    ThreadSafeQueue<owned_message<T>> &inbox)
-            : _context(context), _socket(std::move(socket)), _inbox(inbox) {
+            : _context(context), _socket(std::move(socket)), _inbox(inbox)
+        {
             _owner = parent;
         }
 
         virtual ~connection() = default;
 
     public:
-        void connectToServer(const asio::ip::tcp::endpoint endpoint) {
+        void connectToServer(const asio::ip::tcp::endpoint endpoint)
+        {
             if (_owner != owner::client)
                 return;
             _socket.async_connect(endpoint, [this](std::error_code ec) {
@@ -37,7 +39,8 @@ namespace network {
             });
         }
 
-        void startListening(uint32_t id) {
+        void startListening(uint32_t id)
+        {
             if (_owner == owner::server && _socket.is_open()) {
                 _id = id;
                 asyncReadHeader();
@@ -50,21 +53,34 @@ namespace network {
 
         bool isConnected() { return _socket.is_open(); }
 
-        void disconnect() {
+        void disconnect()
+        {
             if (isConnected()) {
                 asio::post(_context, [this]() { _socket.close(); });
             }
         }
 
+        bool operator==(const connection &rhs) const
+        {
+            return static_cast<const std::enable_shared_from_this<network::connection<T>> &>(*this) == static_cast<const std::enable_shared_from_this<network::connection<T>> &>(rhs) &&
+                   _id == rhs._id;
+        }
+
+        bool operator!=(const connection &rhs) const
+        {
+            return !(rhs == *this);
+        }
+
     public:
-        void asyncReadHeader() {
+        void asyncReadHeader()
+        {
             asio::async_read(
                     _socket,
                     asio::buffer(
                             &_messageBuffer.header, sizeof(message_header<T>)),
                     [this](std::error_code ec, std::size_t length) {
                         if (!ec) {
-                            std::cout << "[" << _id << "] Read " << length << "bytes" << std::endl;
+                            //                            std::cout << "[" << _id << "] Read " << length << "bytes" << std::endl;
                             if (_messageBuffer.header.size > 0) {
                                 _messageBuffer.body.resize(_messageBuffer.header.size);
                                 asyncReadBody();
@@ -85,7 +101,8 @@ namespace network {
                     });
         }
 
-        void asyncReadBody() {
+        void asyncReadBody()
+        {
             asio::async_read(
                     _socket,
                     asio::buffer(_messageBuffer.body.data(), _messageBuffer.body.size()),
@@ -102,13 +119,14 @@ namespace network {
                     });
         }
 
-        void asyncWriteHeader() {
-            std::cout << "writing\n";
+        void asyncWriteHeader()
+        {
+            //            std::cout << "writing\n";
             asio::async_write(
                     _socket, asio::buffer(&_outbox.front().header, sizeof(message_header<T>)),
                     [this](std::error_code ec, std::size_t length) {
                         if (!ec) {
-                            std::cout << length << "bytes were written successfully" << std::endl;
+                            //                            std::cout << length << "bytes were written successfully" << std::endl;
                             if (_outbox.front().body.size() > 0) {
                                 asyncWriteBody();
                             } else {
@@ -124,7 +142,8 @@ namespace network {
                     });
         }
 
-        void asyncWriteBody() {
+        void asyncWriteBody()
+        {
             asio::async_write(_socket, asio::buffer(_outbox.front().body.data(), _outbox.front().body.size()),
                               [this](std::error_code ec, std::size_t length) {
                                   if (!ec) {
@@ -139,7 +158,8 @@ namespace network {
                               });
         }
 
-        void asyncSend(const message<T> &msg) {
+        void asyncSend(const message<T> &msg)
+        {
             asio::post(_context, [this, msg]() {
                 bool writing = !_outbox.empty();
                 _outbox.push_back(msg);
@@ -150,7 +170,8 @@ namespace network {
         }
 
     public:
-        void addMessageToInbox() {
+        void addMessageToInbox()
+        {
             // Called when a message has been validated,
             // create a new owned message and add it to the inbox reference
 

@@ -1,8 +1,8 @@
 #include "SfDisplay.hpp"
 
-namespace Haze
-{
+namespace Haze {
     static AssetManager<SfTexture> assetManager;
+
     SfSprite::SfSprite(std::string path)
     {
         _texture = assetManager.loadTexture(path);
@@ -33,10 +33,9 @@ namespace Haze
     {
         _sprite.setTextureRect(sf::IntRect(x, y, width, height));
     }
-}
+}// namespace Haze
 
-namespace Haze
-{
+namespace Haze {
 
     ITexture *SfDisplay::createTexture(std::string path)
     {
@@ -67,10 +66,9 @@ namespace Haze
     {
         return new SfRect(x, y, width, height, color);
     }
-}
+}// namespace Haze
 
-namespace Haze
-{
+namespace Haze {
     SfAudio::SfAudio(std::string path)
     {
         if (!_buffer.loadFromFile(path))
@@ -102,19 +100,17 @@ namespace Haze
     {
         return _sound.getStatus() == sf::Sound::Stopped;
     }
-}
+}// namespace Haze
 
-namespace Haze
-{
+namespace Haze {
     SfTexture::SfTexture(std::string path)
     {
         if (!_texture.loadFromFile(path))
             std::cerr << "Error: could not load texture" << std::endl;
     }
-}
+}// namespace Haze
 
-namespace Haze
-{
+namespace Haze {
     SfWindow::SfWindow(int width, int height, std::string title)
     {
         _window.create(sf::VideoMode(width, height), title);
@@ -160,7 +156,7 @@ namespace Haze
             _window.close();
     }
 
-    void SfWindow::fillKeyPressed (std::vector<Haze::InputType> *inputsPressed)
+    void SfWindow::fillKeyPressed(std::vector<Haze::InputType> *inputsPressed)
     {
         (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) ? (inputsPressed->push_back(InputType::KEY_A)) : void();
         (sf::Keyboard::isKeyPressed(sf::Keyboard::B)) ? (inputsPressed->push_back(InputType::KEY_B)) : void();
@@ -222,7 +218,7 @@ namespace Haze
         (sf::Keyboard::isKeyPressed(sf::Keyboard::Period)) ? (inputsPressed->push_back(InputType::KEY_DOT)) : void();
     }
 
-    void SfWindow::fillKeyReleased (std::vector<Haze::InputType> *inputsReleased)
+    void SfWindow::fillKeyReleased(std::vector<Haze::InputType> *inputsReleased)
     {
         if (_event.type == sf::Event::KeyReleased) {
             switch (_event.key.code) {
@@ -438,10 +434,9 @@ namespace Haze
     {
         return _window.pollEvent(_event);
     }
-}
+}// namespace Haze
 
-namespace Haze
-{
+namespace Haze {
     sf::Color SfColor::getColor(colorEnum color)
     {
         switch (color) {
@@ -472,10 +467,9 @@ namespace Haze
     {
         return sf::Color(r, g, b, a);
     }
-}
+}// namespace Haze
 
-namespace Haze
-{
+namespace Haze {
     SfText::SfText(const std::string &text, IColor::colorEnum color, const std::string &fontname)
     {
         _font.loadFromFile("assets/fonts/" + fontname);
@@ -508,10 +502,9 @@ namespace Haze
     {
         _text.setFillColor(SfColor::getColor(r, g, b, a));
     }
-}
+}// namespace Haze
 
-namespace Haze
-{
+namespace Haze {
     SfRect::SfRect(int x, int y, int width, int height, IColor::colorEnum color)
     {
         _rect.setPosition(x, y);
@@ -543,7 +536,7 @@ namespace Haze
     {
         _rect.setOutlineThickness(thickness);
     }
-}
+}// namespace Haze
 
 Haze::IDisplay *createDisplay()
 {
