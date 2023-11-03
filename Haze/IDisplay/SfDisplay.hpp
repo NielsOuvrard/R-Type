@@ -5,13 +5,6 @@
 #include <memory>
 #include "AssetManager.hpp"
 
-// Haze::ITexture *createTexture(std::string path);
-// Haze::ISprite *createSprite(std::string path);
-// Haze::IWindow *createWindow(int width, int height, std::string title);
-// Haze::IText *createText(const std::string &text, Haze::IColor::colorEnum color, const std::string &fontname = "arial.ttf");
-// Haze::IAudio *createAudio(std::string path);
-// Haze::IRect *createRect(int x, int y, int width, int height, Haze::IColor::colorEnum color);
-
 extern "C" {
     Haze::IDisplay *createDisplay();
 }

@@ -45,7 +45,7 @@ set(
 
 set(
         SFML_SOURCES
-        IDisplay/sfDisplay.cpp
+        IDisplay/SfDisplay.cpp
 )
 
 add_library(rtype_sfml SHARED ${SFML_SOURCES})
