@@ -37,6 +37,75 @@ namespace Haze
 
 namespace Haze
 {
+
+    ITexture *SfDisplay::createTexture(std::string path)
+    {
+        return new SfTexture(path);
+    }
+
+    ISprite *SfDisplay::createSprite(std::string path)
+    {
+        return new SfSprite(path);
+    }
+
+    IWindow *SfDisplay::createWindow(int width, int height, std::string title)
+    {
+        return new SfWindow(width, height, title);
+    }
+
+    IText *SfDisplay::createText(const std::string &text, IColor::colorEnum color, const std::string &fontname)
+    {
+        return new SfText(text, color, fontname);
+    }
+
+    IAudio *SfDisplay::createAudio(std::string path)
+    {
+        return new SfAudio(path);
+    }
+
+    IRect *SfDisplay::createRect(int x, int y, int width, int height, IColor::colorEnum color)
+    {
+        return new SfRect(x, y, width, height, color);
+    }
+}
+
+namespace Haze
+{
+    SfAudio::SfAudio(std::string path)
+    {
+        if (!_buffer.loadFromFile(path))
+            std::cerr << "Error: could not load audio" << std::endl;
+        _sound.setBuffer(_buffer);
+    }
+
+    void SfAudio::play()
+    {
+        _sound.play();
+    }
+
+    void SfAudio::stop()
+    {
+        _sound.stop();
+    }
+
+    void SfAudio::setLoop(bool loop)
+    {
+        _sound.setLoop(loop);
+    }
+
+    bool SfAudio::isPlaying() const
+    {
+        return _sound.getStatus() == sf::Sound::Playing;
+    }
+
+    bool SfAudio::isStopped() const
+    {
+        return _sound.getStatus() == sf::Sound::Stopped;
+    }
+}
+
+namespace Haze
+{
     SfTexture::SfTexture(std::string path)
     {
         if (!_texture.loadFromFile(path))
@@ -373,9 +442,9 @@ namespace Haze
 
 namespace Haze
 {
-    sf::Color SfColor::getColor(colorEnum ccolor)
+    sf::Color SfColor::getColor(colorEnum color)
     {
-        switch (ccolor) {
+        switch (color) {
             case RED:
                 return sf::Color::Red;
             case GREEN:
@@ -407,7 +476,7 @@ namespace Haze
 
 namespace Haze
 {
-    SfText::SfText(const std::string &text, SfColor::colorEnum color, const std::string &fontname)
+    SfText::SfText(const std::string &text, IColor::colorEnum color, const std::string &fontname)
     {
         _font.loadFromFile("assets/fonts/" + fontname);
         _text.setFont(_font);
@@ -430,20 +499,20 @@ namespace Haze
         _text.setString(string);
     }
 
-    void SfText::setColor(SfColor::colorEnum color)
+    void SfText::setColor(IColor::colorEnum color)
     {
         _text.setFillColor(SfColor::getColor(color));
     }
 
-    void SfText::setColor(sf::Color color)
+    void SfText::setColor(int r, int g, int b, int a)
     {
-        _text.setFillColor(color);
+        _text.setFillColor(SfColor::getColor(r, g, b, a));
     }
 }
 
 namespace Haze
 {
-    SfRect::SfRect(int x, int y, int width, int height, SfColor::colorEnum color)
+    SfRect::SfRect(int x, int y, int width, int height, IColor::colorEnum color)
     {
         _rect.setPosition(x, y);
         _rect.setSize(sf::Vector2f(width, height));
@@ -460,12 +529,12 @@ namespace Haze
         _rect.setSize(sf::Vector2f(width, height));
     }
 
-    void SfRect::setFillColor(SfColor::colorEnum color)
+    void SfRect::setFillColor(IColor::colorEnum color)
     {
         _rect.setFillColor(SfColor::getColor(color));
     }
 
-    void SfRect::setOutlineColor(SfColor::colorEnum color)
+    void SfRect::setOutlineColor(IColor::colorEnum color)
     {
         _rect.setOutlineColor(SfColor::getColor(color));
     }
@@ -474,4 +543,9 @@ namespace Haze
     {
         _rect.setOutlineThickness(thickness);
     }
+}
+
+Haze::IDisplay *createDisplay()
+{
+    return new Haze::SfDisplay();
 }

@@ -10,6 +10,7 @@
 #include "haze-core.hpp"
 #include "haze-graphics.hpp"
 #include "net_data_channel.h"
+#include <chrono>
 
 using namespace protocol;
 using namespace std::chrono_literals;

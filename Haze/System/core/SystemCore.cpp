@@ -90,6 +90,17 @@ namespace Haze
                 position->y += (velocity->y * gap) / velocity->tick;
                 velocity->lastUpdate = std::chrono::high_resolution_clock::now();
             }
+            if (componentList->getComponent("Position", i) != nullptr && componentList->getComponent("VelocityInterpolation", i) != nullptr)
+            {
+                auto position = static_cast<Position *>(componentList->getComponent("Position", i));
+                auto velocityInterpolation = static_cast<VelocityInterpolation *>(componentList->getComponent("VelocityInterpolation", i));
+                float gap = std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - velocityInterpolation->lastUpdate).count();
+                position->x += (velocityInterpolation->x * gap) / velocityInterpolation->tick;
+                position->y += (velocityInterpolation->y * gap) / velocityInterpolation->tick;
+                velocityInterpolation->lastUpdate = std::chrono::high_resolution_clock::now();
+                if (std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - velocityInterpolation->fullUpdate).count() > velocityInterpolation->tick)
+                    componentList->removeComponent("VelocityInterpolation", i);
+            }
             if (componentList->getComponent("Position", i) != nullptr && componentList->getComponent("Move", i) != nullptr)
             {
                 auto position = static_cast<Position *>(componentList->getComponent("Position", i));
@@ -103,9 +114,13 @@ namespace Haze
                 auto position = static_cast<Position *>(componentList->getComponent("Position", i));
                 auto sinVelocity = static_cast<SinVelocity *>(componentList->getComponent("SinVelocity", i));
                 float gap = std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - sinVelocity->lastUpdate).count();
-                float oldX = position->x;
+                float oldX = position->x + sinVelocity->offset;
                 position->x += (sinVelocity->x * gap) / sinVelocity->tick;
-                position->y -= sin(sinVelocity->frequency * oldX) * sinVelocity->amplitude;
+                if (sinVelocity->applied) {
+                    position->y -= sin(sinVelocity->frequency * oldX) * sinVelocity->amplitude;
+                } else {
+                    sinVelocity->applied = true;
+                }
                 position->y += sin(sinVelocity->frequency * position->x) * sinVelocity->amplitude;
                 sinVelocity->lastUpdate = std::chrono::high_resolution_clock::now();
             }
@@ -116,11 +131,31 @@ namespace Haze
                 float gap = std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - circleVelocity->lastUpdate).count();
                 float oldT = circleVelocity->t;
                 circleVelocity->t += (circleVelocity->x * gap) / circleVelocity->tick;
-                position->x -= cos(oldT) * circleVelocity->radius;
-                position->y -= sin(oldT) * circleVelocity->radius;
+                if (circleVelocity->applied) {
+                    position->x -= cos(oldT) * circleVelocity->radius;
+                    position->y -= sin(oldT) * circleVelocity->radius;
+                } else {
+                    circleVelocity->applied = true;
+                }
                 position->x += cos(circleVelocity->t) * circleVelocity->radius;
                 position->y += sin(circleVelocity->t) * circleVelocity->radius;
                 circleVelocity->lastUpdate = std::chrono::high_resolution_clock::now();
+            }
+            if (componentList->getComponent("Position", i) != nullptr && componentList->getComponent("BulletDrop", i) != nullptr)
+            {
+                auto position = static_cast<Position *>(componentList->getComponent("Position", i));
+                auto bulletDrop = static_cast<BulletDrop *>(componentList->getComponent("BulletDrop", i));
+                float gap = std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - bulletDrop->lastUpdate).count();
+                bulletDrop->t += (0.1 * gap) / 0.1;
+                float X = cos(bulletDrop->angle * M_PI / 180);
+                float Y = sin(bulletDrop->angle * M_PI / 180);
+
+                float accelerationX = (cos(bulletDrop->angle * M_PI / 180) * bulletDrop->strength);
+                float accelerationY = 9.81 + (sin(bulletDrop->angle * M_PI / 180) * bulletDrop->strength);
+
+                position->x += (-((X * bulletDrop->strength) * -bulletDrop->t + 0.5 * accelerationX * bulletDrop->t * bulletDrop->t) * gap) / 0.01;
+                position->y += ( ((Y * bulletDrop->strength) * -bulletDrop->t + 0.5 * accelerationY * bulletDrop->t * bulletDrop->t) * gap) / 0.01;
+                bulletDrop->lastUpdate = std::chrono::high_resolution_clock::now();
             }
         }
     }

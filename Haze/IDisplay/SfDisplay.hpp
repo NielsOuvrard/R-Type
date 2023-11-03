@@ -1,8 +1,20 @@
 #include "IDisplay.hpp"
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <iostream>
 #include <memory>
 #include "AssetManager.hpp"
+
+// Haze::ITexture *createTexture(std::string path);
+// Haze::ISprite *createSprite(std::string path);
+// Haze::IWindow *createWindow(int width, int height, std::string title);
+// Haze::IText *createText(const std::string &text, Haze::IColor::colorEnum color, const std::string &fontname = "arial.ttf");
+// Haze::IAudio *createAudio(std::string path);
+// Haze::IRect *createRect(int x, int y, int width, int height, Haze::IColor::colorEnum color);
+
+extern "C" {
+    Haze::IDisplay *createDisplay();
+}
 
 namespace Haze
 {
@@ -11,10 +23,45 @@ namespace Haze
     class SfWindow;
     class SfText;
     class SfColor;
+    class SfIAudio;
+    class SfRect;
+    class SfDisplay;
 }
 
 namespace Haze
 {
+    class SfDisplay : public IDisplay
+    {
+    private:
+    public:
+        SfDisplay() = default;
+        ~SfDisplay() = default;
+        ITexture *createTexture(std::string path) override;
+        ISprite *createSprite(std::string path) override;
+        IWindow *createWindow(int width, int height, std::string title) override;
+        IText *createText(const std::string &text, IColor::colorEnum color, const std::string &fontname = "arial.ttf") override;
+        IAudio *createAudio(std::string path) override;
+        IRect *createRect(int x, int y, int width, int height, IColor::colorEnum color) override;
+    };
+}
+
+namespace Haze
+{
+    class SfAudio : public IAudio
+    {
+    private:
+        sf::SoundBuffer _buffer;
+        sf::Sound _sound;
+    public:
+        SfAudio(std::string path);
+        ~SfAudio() = default;
+        void play() override;
+        void stop() override;
+        void setLoop(bool loop) override;
+        bool isPlaying() const override;
+        bool isStopped() const override;
+    };
+
     class SfTexture : public ITexture
     {
     private:
@@ -69,24 +116,11 @@ namespace Haze
 
     class SfColor : public IColor
     {
-    public:
-        enum colorEnum {
-            RED,
-            GREEN,
-            BLUE,
-            YELLOW,
-            BLACK,
-            WHITE,
-            MAGENTA,
-            CYAN,
-            TRANSPARENT,
-            COLOR_COUNT
-        };
     private:
         sf::Color _color;
     public:
         ~SfColor() = default;
-        static sf::Color getColor(colorEnum ccolor);
+        static sf::Color getColor(colorEnum color);
         static sf::Color getColor(int r, int g, int b, int a);
     };
 
@@ -96,14 +130,14 @@ namespace Haze
         sf::Text _text;
         sf::Font _font;
     public:
-        SfText(const std::string &text, SfColor::colorEnum color, const std::string &fontname = "arial.ttf");
+        SfText(const std::string &text, IColor::colorEnum color, const std::string &fontname = "arial.ttf");
         ~SfText() = default;
         void setPosition(int x, int y) override;
-        void setColor(SfColor::colorEnum color);
-        void setColor(sf::Color color);
-        sf::Text getText() const { return _text; }
+        void setColor(IColor::colorEnum color) override;
+        void setColor(int r, int g, int b, int a) override;
         void setString(std::string string) override;
         void setScale(float x, float y) override;
+        sf::Text getText() const { return _text; }
     };
 
     class SfRect : public IRect
@@ -111,13 +145,14 @@ namespace Haze
     private:
         sf::RectangleShape _rect;
     public:
-        SfRect(int x, int y, int width, int height, SfColor::colorEnum color);
+        SfRect(int x, int y, int width, int height, IColor::colorEnum color);
         ~SfRect() = default;
         sf::RectangleShape getRect() const { return _rect; }
         void setPosition(int x, int y) override;
         void setSize(int width, int height) override;
-        void setFillColor(SfColor::colorEnum color);
-        void setOutlineColor(SfColor::colorEnum color);
-        void setOutlineThickness(float thickness);
+        void setFillColor(IColor::colorEnum color) override;
+        void setOutlineColor(IColor::colorEnum color) override;
+        void setOutlineThickness(float thickness) override;
     };
 }
+

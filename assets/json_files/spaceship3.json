@@ -1,0 +1,36 @@
+{
+    "animation_tics": 0.5,
+    "animation_type": "boomerang",
+    "animation": [
+        {
+            "x": 0,
+            "y": 40,
+            "width": 33,
+            "height": 14
+        },
+        {
+            "x": 33,
+            "y": 40,
+            "width": 33,
+            "height": 14
+        },
+        {
+            "x": 66,
+            "y": 40,
+            "width": 33,
+            "height": 14
+        },
+        {
+            "x": 99,
+            "y": 40,
+            "width": 33,
+            "height": 14
+        },
+        {
+            "x": 132,
+            "y": 40,
+            "width": 33,
+            "height": 14
+        }
+    ]
+}

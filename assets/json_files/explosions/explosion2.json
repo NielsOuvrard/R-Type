@@ -1,0 +1,32 @@
+{
+  "type": 2,
+  "path_sprite": "assets/sprites/r-typesheet16.gif",
+  "animation_tics": 0.2,
+  "animation_type": "loop_once",
+  "animation": [
+    {
+      "x": 42,
+      "y": 37,
+      "height": 32,
+      "width": 31
+    },
+    {
+      "x": 80,
+      "y": 41,
+      "height": 28,
+      "width": 29
+    },
+    {
+      "x": 115,
+      "y": 43,
+      "height": 26,
+      "width": 25
+    },
+    {
+      "x": 146,
+      "y": 46,
+      "height": 23,
+      "width": 23
+    }
+  ]
+}

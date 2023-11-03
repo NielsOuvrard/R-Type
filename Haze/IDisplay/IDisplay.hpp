@@ -10,13 +10,33 @@ namespace Haze
     class IText;
     class IAudio;
     class IWindow;
-    class IInput;
     class IRect;
     class IColor;
+    class IDisplay;
 }
 
 namespace Haze
 {
+    class IColor
+    {
+    public:
+        enum colorEnum {
+            RED,
+            GREEN,
+            BLUE,
+            YELLOW,
+            BLACK,
+            WHITE,
+            MAGENTA,
+            CYAN,
+            TRANSPARENT,
+            COLOR_COUNT
+        };
+    private:
+    public:
+        virtual ~IColor() = default;
+    };
+
     class ISprite
     {
     private:
@@ -44,6 +64,8 @@ namespace Haze
         virtual void setPosition(int x, int y) = 0;
         virtual void setScale(float x, float y) = 0;
         virtual void setString(std::string string) = 0;
+        virtual void setColor(IColor::colorEnum color) = 0;
+        virtual void setColor(int r, int g, int b, int a) = 0;
     };
 
     class IAudio
@@ -51,6 +73,11 @@ namespace Haze
     private:
     public:
         virtual ~IAudio() = default;
+        virtual void play() = 0;
+        virtual void stop() = 0;
+        virtual void setLoop(bool loop) = 0;
+        virtual bool isPlaying() const = 0;
+        virtual bool isStopped() const = 0;
     };
 
     class IWindow
@@ -74,13 +101,6 @@ namespace Haze
         virtual bool pollEvent() = 0;
     };
 
-    class IInput
-    {
-    private:
-    public:
-        virtual ~IInput() = default;
-    };
-
     class IRect
     {
     private:
@@ -88,12 +108,21 @@ namespace Haze
         virtual ~IRect() = default;
         virtual void setPosition(int x, int y) = 0;
         virtual void setSize(int width, int height) = 0;
+        virtual void setFillColor(IColor::colorEnum color) = 0;
+        virtual void setOutlineColor(IColor::colorEnum color) = 0;
+        virtual void setOutlineThickness(float thickness) = 0;
     };
 
-    class IColor
+    class IDisplay
     {
     private:
     public:
-        virtual ~IColor() = default;
+        virtual ~IDisplay() = default;
+        virtual ITexture *createTexture(std::string path) = 0;
+        virtual ISprite *createSprite(std::string path) = 0;
+        virtual IWindow *createWindow(int width, int height, std::string title) = 0;
+        virtual IText *createText(const std::string &text, IColor::colorEnum color, const std::string &fontname = "arial.ttf") = 0;
+        virtual IAudio *createAudio(std::string path) = 0;
+        virtual IRect *createRect(int x, int y, int width, int height, IColor::colorEnum color) = 0;
     };
 }

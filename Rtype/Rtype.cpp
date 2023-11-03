@@ -15,7 +15,9 @@
 #include "Rtype.hpp"
 
 Rtype::Rtype(asio::io_context &context)
-    : _channel(context), _engine(60)
+    : _channel(context), _engine(10),
+      _typeEntities{_enemies_type, _explosions_type, _shots_type, _bosses_type},
+      _dataGame{_engine, _channel, _background, _boss, _shots, _walls, _players, _explosions, _enemies, _map_moving}
 {
     std::srand(std::time(0));
     _engine.init();
@@ -25,7 +27,10 @@ Rtype::Rtype(asio::io_context &context)
     _engine.setInfoInputs({std::vector<Haze::InputType>(), std::vector<Haze::InputType>(), Haze::MouseType::NOTHING, 0, 0}, 3);
     _engine.setInfoInputs({std::vector<Haze::InputType>(), std::vector<Haze::InputType>(), Haze::MouseType::NOTHING, 0, 0}, 4);
 
-    _background = std::make_unique<Paralax>(_engine, _channel);
+    _background = std::make_unique<Parallax>(_dataGame);
+
+    _mapHandler = std::make_unique<Map>(_dataGame, _typeEntities);
+    _map_moving = true;
 }
 
 Rtype::~Rtype() = default;
@@ -103,66 +108,15 @@ void Rtype::sendEverything(udp::endpoint &to)
             }
         }
     }
-}
-
-void Rtype::updateMap()
-{
-}
-
-void Rtype::createMap()
-{
-    // Load sprite data for the walls from "ground.json"
-    std::ifstream groundFile("assets/AnimationJSON/ground.json");
-    nlohmann::json groundData;
-
-    if (!groundFile.is_open()) {
-        std::cerr << "Error: Could not open 'ground.json' for reading" << std::endl;
-        return;
-    }
-    groundFile >> groundData;
-    groundFile.close();
-
-    // Load map data from "map.json"
-    std::ifstream mapFile("assets/AnimationJSON/map.json");
-    nlohmann::json mapData;
-    if (!mapFile.is_open()) {
-        std::cerr << "Error: Could not open 'map.json' for reading" << std::endl;
-        return;
-    }
-    mapFile >> mapData;
-    mapFile.close();
-
-    // Retrieve the array of tiles from the map data
-    nlohmann::json mapTiles = mapData["map"];
-    uint16_t tileIndex = 0;
-
-    // Iterate through each tile in the map
-    for (const auto &tile: mapTiles) {
-        // Create and position the top wall
-        _walls.emplace_back(std::make_unique<Wall>(_engine, _channel, groundData, (48 * 3) * tileIndex, 0, false));
-        _walls.back()->build(tile["tile_top"]);
-
-        // Create and position the bottom wall
-        _walls.emplace_back(std::make_unique<Wall>(_engine, _channel, groundData, (48 * 3) * tileIndex, 600, true));
-        _walls.back()->build(tile["tile_bottom"]);
-
-        // Print the tile index
-        std::cout << "Tile " << tileIndex << " created." << std::endl;
-        tileIndex++;
-    }
-
-    std::cout << "Map successfully created." << std::endl;
+    // TODO add boss
 }
 
 void Rtype::start()
 {
     _running = true;
+    jsonHandler();
     _background->build();
-
-    createMap();
-
-    _enemies.emplace_back(std::make_unique<Enemy>(_engine, _channel));
-    _enemies.back()->build();
+    _mapHandler->build();
 
     /**
       * Update Cycle
@@ -182,9 +136,6 @@ void Rtype::start()
 
         // Update the state of the non player entity
         update();
-
-        // Send all entities update to clients
-        sendUpdate();
     }
 }
 
@@ -209,7 +160,7 @@ void Rtype::onReceive(udp::endpoint from, network::datagram<protocol::data> cont
             if (_players.size() < 4) {
                 _channel.getGroup().insert(from);
                 sendEverything(from);
-                _players.emplace_back(std::make_unique<Player>(_engine, _channel, _players.size() + 1));
+                _players.emplace_back(std::make_unique<Player>(_dataGame, _typeEntities, _players.size() + 1));
                 _players.back()->_remote = std::make_unique<Player::Remote>(from);
                 _players.back()->build();
             }
@@ -256,24 +207,14 @@ asio::ip::udp::endpoint Rtype::getEndpoint() const
     return _channel.getEndpoint();
 }
 
-void Rtype::sendUpdate()
-{
-    // _background->sendUpdate();
-    // for (auto &player: _players) {
-    //     if (player->_entity) {
-    //         player->sendUpdate();
-    //     }
-    // }
-    // _background->sendUpdate();
-    // for (auto &wall: _walls) {
-    //     wall->sendUpdate();
-    // }
-}
-
 void Rtype::update()
 {
     /**
-     * Enemy & Missiles' cleanup cycle
+     * remove and add wall
+     */
+    _mapHandler->update();
+    /**
+     * Enemy & Shots' cleanup cycle
      */
     bool enemyToCleanup = false;
     for (auto &enemy: _enemies) {
@@ -282,7 +223,7 @@ void Rtype::update()
         if (enemy->_isDead) {
             // * create explosion
 
-            _explosions.emplace_back(std::make_unique<Explosion>(_engine, _channel, enemy->_pos_x, enemy->_pos_y));
+            _explosions.emplace_back(std::make_unique<Explosion>(_dataGame, _typeEntities, enemy->_data.x, enemy->_data.y, enemy->_data.explosion_type));
             _explosions.back()->build();
             _explosions.back()->send();
             std::cout << "Explosion created" << std::endl;
@@ -310,7 +251,7 @@ void Rtype::update()
     // Trigger enemy actions
     for (auto &enemy: _enemies) {
         if (enemy->_entity) {
-            enemy->shoot();
+            enemy->shot();
         }
     }
 
@@ -328,7 +269,7 @@ void Rtype::update()
                       _explosions.end());
 
     /**
-     * Enemy & Missiles' cleanup cycle
+     * Enemy & Shots' cleanup cycle
      */
     bool playerToCleanup = false;
     for (auto &player: _players) {
@@ -348,19 +289,4 @@ void Rtype::update()
      * Background's motion cycle
      */
     _background->update();
-
-    /**
-     * Spawn random enemies
-     */
-    if (_enemySpawnCD.IsReady()) {
-        std::chrono::milliseconds newDuration((std::rand() % 6 + 3) * 1000);
-        _enemySpawnCD.setDuration(newDuration);
-        _enemySpawnCD.Activate();
-
-        int32_t enemyNb = std::rand() % 3 + 1;
-        for (int32_t i = 0; i < enemyNb; i++) {
-            _enemies.emplace_back(std::make_unique<Enemy>(_engine, _channel));
-            _enemies.back()->build();
-        }
-    }
 }

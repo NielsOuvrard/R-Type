@@ -33,6 +33,7 @@ namespace Haze
         void removeEntity(Entity *entity);
         bool isOpen();
         void setInfoInputs(info_inputs info, size_t id);
+        int getFramerate() { return _framerate; }
         ComponentList *getComponentList() { return _componentList; }
         std::vector<info_inputs> *getInfoInputs() { return &_infoInputs; }
 

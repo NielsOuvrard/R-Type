@@ -1,19 +1,29 @@
 #pragma once
 #include "Component.hpp"
+#include "IDisplay.hpp"
 #include "inputs.hpp"
 #include "json.hpp"
-#include "SfDisplay.hpp"
-#include <SFML/Graphics.hpp>
 #include <fstream>
 #include <iostream>
 #include <thread>
+#include <functional>
+#include <filesystem>
+#include "DynLib.hpp"
 
 namespace Haze {
+    static int i = 0;
+
     struct Sprite : public Component {
-        Sprite(std::string path) : path(path), sprite(path) {}
+        Sprite(std::string path);
+        ~Sprite() {
+            delete sprite;
+        }
+
         std::string path;
-        SfSprite sprite;
+        ISprite *sprite;
+
         std::string getType() const override { return "Sprite"; }
+
         void show() const override { std::cout << "flm" << path << std::endl; }
     };
 
@@ -46,14 +56,14 @@ namespace Haze {
             inputFile.close();
 
             // * parse the json string into variables
-            tics = jsonData["tics"];
-            if (jsonData["type"] == "loop")
+            tics = jsonData["animation_tics"];
+            if (jsonData["animation_type"] == "loop")
                 type = AnimationType::LOOP;
-            else if (jsonData["type"] == "boomerang")
+            else if (jsonData["animation_type"] == "boomerang")
                 type = AnimationType::BOOMERANG;
-            else if (jsonData["type"] == "once")
+            else if (jsonData["animation_type"] == "once")
                 type = AnimationType::ONCE;
-            else if (jsonData["type"] == "loop_once")
+            else if (jsonData["animation_type"] == "loop_once")
                 type = AnimationType::LOOP_ONCE;
             else
                 type = AnimationType::LOOP;
@@ -89,12 +99,15 @@ namespace Haze {
     };
 
     struct Window : public Component {
-        Window(int width, int height) : width(width), height(height), active(false), window(width, height, "R-Type") {}
+        Window(int width, int height);
+        ~Window() {
+            delete window;
+        }
 
         int width;
         int height;
         bool active;
-        SfWindow window;
+        IWindow *window;
 
         std::string getType() const override { return "Window"; }
 
@@ -102,15 +115,38 @@ namespace Haze {
     };
 
     struct HitboxDisplay : public Component {
-        HitboxDisplay() : rect(0, 0, 0, 0, SfColor::RED)
-        {
-            rect.setFillColor(SfColor::TRANSPARENT);
-            rect.setOutlineColor(SfColor::RED);
-            rect.setOutlineThickness(5);
+        HitboxDisplay();
+        ~HitboxDisplay() {
+            delete rect;
         }
-        SfRect rect;
+
+        IRect *rect;
+
         std::string getType() const override { return "HitboxDisplay"; }
+
         void show() const override { std::cout << "HitboxDisplay: " << std::endl; }
+    };
+
+    struct Sound : public Component {
+        Sound(std::string path, bool loop = false);
+        ~Sound() {
+            delete sound;
+        }
+
+        std::string path;
+        IAudio *sound;
+
+        void play() { sound->play(); }
+
+        void stop() { sound->stop(); }
+
+        bool isPlaying() const { return sound->isPlaying(); }
+
+        bool isStopped() const { return sound->isStopped(); }
+
+        std::string getType() const override { return "Sound"; }
+
+        void show() const override { std::cout << "Sound: " << path << std::endl; }
     };
 
     struct Text : public Component {
@@ -125,45 +161,12 @@ namespace Haze {
             CYAN,
         };
 
-        Text(const std::string &text, colorHaze color, const std::string &fontname = "arial.ttf") : text(text),
-            textObj(text, SfColor::RED, fontname)
-        {
-            switch (color) {
-            case RED:
-                textObj.setColor(SfColor::RED);
-                break;
-            case GREEN:
-                textObj.setColor(SfColor::GREEN);
-                break;
-            case BLUE:
-                textObj.setColor(SfColor::BLUE);
-                break;
-            case YELLOW:
-                textObj.setColor(SfColor::YELLOW);
-                break;
-            case BLACK:
-                textObj.setColor(SfColor::BLACK);
-                break;
-            case WHITE:
-                textObj.setColor(SfColor::WHITE);
-                break;
-            case MAGENTA:
-                textObj.setColor(SfColor::MAGENTA);
-                break;
-            case CYAN:
-                textObj.setColor(SfColor::CYAN);
-                break;
-            }
-        }
+        Text(const std::string &text, colorHaze color, const std::string &fontname = "arial.ttf");
 
-        Text(const std::string &text, int r, int g, int b, int a, const std::string &fontname = "arial.ttf") : text(text),
-            textObj(text, SfColor::RED, fontname)
-        {
-            textObj.setColor(SfColor::getColor(r, g, b, a));
-        }
+        Text(const std::string &text, int r, int g, int b, int a, const std::string &fontname = "arial.ttf");
 
         std::string text;
-        SfText textObj;
+        IText *textObj;
 
         std::string getType() const override { return "Text"; }
 

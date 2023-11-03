@@ -1,0 +1,36 @@
+{
+  "animation_tics": 0.5,
+  "animation_type": "loop",
+  "animation": [
+    {
+      "x": 106,
+      "y": 3,
+      "width": 28,
+      "height": 14
+    },
+    {
+      "x": 139,
+      "y": 3,
+      "width": 28,
+      "height": 13
+    },
+    {
+      "x": 173,
+      "y": 3,
+      "width": 28,
+      "height": 13
+    },
+    {
+      "x": 205,
+      "y": 3,
+      "width": 28,
+      "height": 13
+    },
+    {
+      "x": 138,
+      "y": 2,
+      "width": 28,
+      "height": 14
+    }
+  ]
+}

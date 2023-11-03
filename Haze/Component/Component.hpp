@@ -24,6 +24,23 @@ namespace Haze {
         virtual void show() const = 0;
     };
 
+    struct PositionInterpolation : public Component {
+        PositionInterpolation(float prevX, float prevY, float nextX, float nextY) : prevX(prevX), prevY(prevY), nextX(nextX), nextY(nextY) {}
+        float prevX;
+        float prevY;
+        float nextX;
+        float nextY;
+        std::string getType() const override { return "PositionInterpolation"; }
+        void show() const override { std::cout << "PositionInterpolation: " << prevX << ", " << prevY << ", " << nextX << ", " << nextY << std::endl; }
+    };
+
+    struct Interpolation : public Component {
+        Interpolation(int framerate) : framerate(framerate) {}
+        int framerate;
+        std::string getType() const override { return "Interpolation"; }
+        void show() const override { std::cout << "Interpolation: " << framerate << std::endl; }
+    };
+
     struct Position : public Component {
         Position(float x, float y) : x(x), y(y) {}
         float x;
@@ -50,26 +67,52 @@ namespace Haze {
         void show() const override { std::cout << "Velocity: " << x << ", " << y << std::endl; }
     };
 
+    struct VelocityInterpolation : public Component {
+        VelocityInterpolation(float x, float y, float time) : x(x), y(y), tick(time) {}
+        float x;
+        float y;
+        float tick;
+
+        std::chrono::time_point<std::chrono::high_resolution_clock> lastUpdate = std::chrono::high_resolution_clock::now();
+        std::chrono::time_point<std::chrono::high_resolution_clock> fullUpdate = std::chrono::high_resolution_clock::now();
+        std::string getType() const override { return "VelocityInterpolation"; }
+        void show() const override { std::cout << "VelocityInterpolation: " << x << ", " << y << std::endl; }
+    };
+
     struct SinVelocity : public Component {
-        SinVelocity(float x, float time, float amplitude, float frequency) : x(x), tick(time), amplitude(amplitude), frequency(frequency) {}
+        SinVelocity(float x, float time, float amplitude, float frequency, float offset = 0) : x(x), tick(time), amplitude(amplitude), frequency(frequency), offset(offset) {}
         float x;
         float tick;
         float amplitude;
         float frequency;
+        float offset;
+        bool applied = false;
         std::chrono::time_point<std::chrono::high_resolution_clock> lastUpdate = std::chrono::high_resolution_clock::now();
         std::string getType() const override { return "SinVelocity"; }
         void show() const override { std::cout << "SinVelocity: " << x << ", " << tick << std::endl; }
     };
 
     struct CircleVelocity : public Component {
-        CircleVelocity(float x, float time, float radius) : x(x), tick(time), radius(radius) {}
+        CircleVelocity(float x, float time, float radius, float offset = 0) : x(x), tick(time), radius(radius), t(offset) {}
         float x;
         float tick;
         float radius;
         float t = 0;
+        bool applied = false;
         std::chrono::time_point<std::chrono::high_resolution_clock> lastUpdate = std::chrono::high_resolution_clock::now();
         std::string getType() const override { return "CircleVelocity"; }
         void show() const override { std::cout << "CircleVelocity: " << std::endl; }
+    };
+
+    struct BulletDrop : public Component {
+        BulletDrop(float strength, float angle, float time) : strength(strength), angle(angle), tick(time) {}
+        float strength;
+        float angle;
+        float t = 0;
+        float tick;
+        std::chrono::time_point<std::chrono::high_resolution_clock> lastUpdate = std::chrono::high_resolution_clock::now();
+        std::string getType() const override { return "BulletDrop"; }
+        void show() const override { std::cout << "BulletDrop: " << std::endl; }
     };
 
     struct Move : public Component {

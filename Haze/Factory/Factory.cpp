@@ -32,15 +32,19 @@ namespace Haze {
         }
         if (type == "SinVelocity") {
             SinVelocityData *sinVelocity = reinterpret_cast<SinVelocityData *>(data.data());
-            return new SinVelocity(sinVelocity->x, sinVelocity->time, sinVelocity->amplitude, sinVelocity->frequency);
+            return new SinVelocity(sinVelocity->x, sinVelocity->time, sinVelocity->amplitude, sinVelocity->frequency, sinVelocity->offset);
         }
         if (type == "CircleVelocity") {
             CircleVelocityData *circleVelocity = reinterpret_cast<CircleVelocityData *>(data.data());
-            return new CircleVelocity(circleVelocity->x, circleVelocity->time, circleVelocity->radius);
+            return new CircleVelocity(circleVelocity->x, circleVelocity->time, circleVelocity->radius, circleVelocity->offset);
         }
         if (type == "Move") {
             MoveData *move = reinterpret_cast<MoveData *>(data.data());
             return new Move(move->x, move->y);
+        }
+        if (type == "Interpolation") {
+            InterpolationData *interpolation = reinterpret_cast<InterpolationData *>(data.data());
+            return new Interpolation(interpolation->framerate);
         }
         if (type == "Health") {
             HealthData *health = reinterpret_cast<HealthData *>(data.data());
@@ -61,6 +65,10 @@ namespace Haze {
         if (type == "LifeTime") {
             LifeTimeData *lifeTime = reinterpret_cast<LifeTimeData *>(data.data());
             return new LifeTime(lifeTime->lifeTime, [](int id) {});
+        }
+        if (type == "BulletDrop") {
+            BulletDropData *bulletDrop = reinterpret_cast<BulletDropData *>(data.data());
+            return new BulletDrop(bulletDrop->strength, bulletDrop->angle, bulletDrop->time);
         }
 #ifdef USE_SFML
         if (type == "Sprite") {

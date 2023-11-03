@@ -1,4 +1,3 @@
-
 ## Data used to build a component
 ```cpp
 namespace Haze

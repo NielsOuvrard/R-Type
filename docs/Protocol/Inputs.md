@@ -1,5 +1,4 @@
 ## Enum of the inputs
-
 ```cpp
 enum InputType {
     KEY_A,
