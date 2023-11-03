@@ -111,6 +111,16 @@ namespace Haze {
 }// namespace Haze
 
 namespace Haze {
+    SfFont::SfFont(std::string path)
+    {
+        if (!_font.loadFromFile(path))
+            std::cerr << "Error: could not load font" << std::endl;
+        else
+            std::cout << "Font loaded" << std::endl;
+    }
+}// namespace Haze
+
+namespace Haze {
     SfWindow::SfWindow(int width, int height, std::string title)
     {
         _window.create(sf::VideoMode(width, height), title);
@@ -470,10 +480,12 @@ namespace Haze {
 }// namespace Haze
 
 namespace Haze {
-    SfText::SfText(const std::string &text, IColor::colorEnum color, const std::string &fontname)
+    static AssetManager<SfFont> assetManagerFont;
+
+    SfText::SfText(const std::string &text, IColor::colorEnum color, std::string path)
     {
-        _font.loadFromFile("assets/fonts/" + fontname);
-        _text.setFont(_font);
+        _font = assetManagerFont.loadTexture("assets/fonts/" + path);
+        _text.setFont(*_font->getFont());
         _text.setString(text);
         _text.setFillColor(SfColor::getColor(color));
     }
@@ -502,6 +514,11 @@ namespace Haze {
     {
         _text.setFillColor(SfColor::getColor(r, g, b, a));
     }
+
+    // void SfText::setFont(IFont *font)
+    // {
+    //     _text.setFont(*dynamic_cast<SfFont *>(font)->getFont());
+    // }
 }// namespace Haze
 
 namespace Haze {

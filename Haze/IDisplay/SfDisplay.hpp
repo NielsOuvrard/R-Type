@@ -5,13 +5,6 @@
 #include <iostream>
 #include <memory>
 
-// Haze::ITexture *createTexture(std::string path);
-// Haze::ISprite *createSprite(std::string path);
-// Haze::IWindow *createWindow(int width, int height, std::string title);
-// Haze::IText *createText(const std::string &text, Haze::IColor::colorEnum color, const std::string &fontname = "arial.ttf");
-// Haze::IAudio *createAudio(std::string path);
-// Haze::IRect *createRect(int x, int y, int width, int height, Haze::IColor::colorEnum color);
-
 extern "C" {
 Haze::IDisplay *createDisplay();
 }
@@ -24,6 +17,7 @@ namespace Haze {
     class SfColor;
     class SfIAudio;
     class SfRect;
+    class SfFont;
     class SfDisplay;
 }// namespace Haze
 
@@ -124,18 +118,28 @@ namespace Haze {
     class SfText : public IText {
     private:
         sf::Text _text;
-        sf::Font _font;
+        std::shared_ptr<SfFont> _font;
 
     public:
-        SfText(const std::string &text, IColor::colorEnum color, const std::string &fontname = "arial.ttf");
+        SfText(const std::string &text, IColor::colorEnum color, std::string path = "arial.ttf");
         ~SfText() = default;
         void setPosition(int x, int y) override;
         void setColor(IColor::colorEnum color) override;
         void setColor(int r, int g, int b, int a) override;
         void setString(std::string string) override;
         void setScale(float x, float y) override;
+        // void setFont(IFont *font) override;
 
         sf::Text getText() const { return _text; }
+    };
+
+    class SfFont : public IFont {
+    private:
+        sf::Font _font;
+    public:
+        SfFont(std::string path = "arial.ttf");
+        ~SfFont() = default;
+        sf::Font *getFont() { return &_font; }
     };
 
     class SfRect : public IRect {

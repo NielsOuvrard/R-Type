@@ -11,6 +11,7 @@ namespace Haze {
     class IWindow;
     class IRect;
     class IColor;
+    class IFont;
     class IDisplay;
 }// namespace Haze
 
@@ -103,6 +104,12 @@ namespace Haze {
         virtual void setFillColor(IColor::colorEnum color) = 0;
         virtual void setOutlineColor(IColor::colorEnum color) = 0;
         virtual void setOutlineThickness(float thickness) = 0;
+    };
+
+    class IFont {
+    private:
+    public:
+        virtual ~IFont() = default;
     };
 
     class IDisplay {
