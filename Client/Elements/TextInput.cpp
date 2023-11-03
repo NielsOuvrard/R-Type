@@ -57,10 +57,11 @@ void TextInput::setValue(const std::string &newValue)
 
 void TextInput::update()
 {
+    auto txt = dynamic_cast<Haze::Text *>(_entity->getComponent("Text"));
     if (_focus) {
-        _entity->addComponent(new Haze::Text(_value + "|", Haze::Text::colorHaze::WHITE, _fontFile));
+        txt->text = _value + "|";
     } else {
-        _entity->addComponent(new Haze::Text(_value, Haze::Text::colorHaze::WHITE, _fontFile));
+        txt->text = _value;
     }
 }
 
