@@ -1,6 +1,6 @@
 {
   "type": 1,
-  "path_sprite": "assets/sprites/spaceship.gif",
+  "path_sprite": "assets/sprites/r-typesheet1.gif",
   "animation_tics": 0.2,
   "animation_type": "loop_once",
   "animation": [

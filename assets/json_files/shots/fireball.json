@@ -1,0 +1,43 @@
+{
+  "type": 3,
+  "path_sprite": "assets/sprites/r-typesheet2.gif",
+  "damage": 20,
+  "velocity": 7,
+  "bullet_drop": true,
+  "bullet_drop_degree": 45,
+  "laser": false,
+  "hitbox": {
+    "x": 0,
+    "y": 0,
+    "width": 14,
+    "height": 14
+  },
+  "animation_tics": 0.2,
+  "animation_type": "loop",
+  "animation": [
+    {
+      "x": 99,
+      "y": 118,
+      "width": 16,
+      "height": 14
+    },
+    {
+      "x": 113,
+      "y": 118,
+      "width": 16,
+      "height": 14
+    },
+    {
+      "x": 130,
+      "y": 118,
+      "width": 16,
+      "height": 14
+    },
+    {
+      "x": 146,
+      "y": 118,
+      "width": 16,
+      "height": 14
+    }
+  ]
+}

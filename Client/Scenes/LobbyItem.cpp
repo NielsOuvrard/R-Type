@@ -4,6 +4,7 @@
 
 #include "LobbyItem.h"
 #include "../Elements/Image.h"
+#include <sstream>
 
 void LobbyItem::update()
 {

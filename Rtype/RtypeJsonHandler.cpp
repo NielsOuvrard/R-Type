@@ -76,6 +76,9 @@ void json_fill_ShotData(ShotData &data, nlohmann::json jsonData)
     data.type = jsonData["type"];
     data.velocity = 0;
     data.damage = 0;
+    data.bullet_drop = false;
+    data.bullet_drop_degree = 0;
+    data.no_animation = false;
 
     if (jsonData.contains("path_sprite")) {
         data.path_sprite = jsonData["path_sprite"];
@@ -95,6 +98,13 @@ void json_fill_ShotData(ShotData &data, nlohmann::json jsonData)
     }
     if (jsonData.contains("damage")) {
         data.damage = jsonData["damage"];
+    }
+    if (jsonData.contains("bullet_drop") && jsonData.contains("bullet_drop_degree")) {
+        data.bullet_drop = jsonData["bullet_drop"];
+        data.bullet_drop_degree = jsonData["bullet_drop_degree"];
+    }
+    if (jsonData.contains("no_animation")) {
+        data.no_animation = jsonData["no_animation"];
     }
 }
 

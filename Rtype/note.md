@@ -25,7 +25,9 @@ music
 - damage depend of shot, not player / enemy / boss
 - and his velocity
 - a great spritecropped thing
-- stop velocity
+
+// ground in maps
+stop velocity inside global structure
 
         //        _ip.setValue("88.120.142.2");
         //        _port.setValue("3001");
