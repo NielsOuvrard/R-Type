@@ -8,6 +8,7 @@ Map::Map(DataGame dataGame, TypeEntities typeEntities)
     : _dataGame(dataGame), _typeEntities(typeEntities), _index_map(0), _id_map(0)
 {
     _walls_file_path = "";
+    _parallax_path = "";
 }
 
 void Map::build()
@@ -44,6 +45,7 @@ void Map::createMap()
                 fileStream >> jsonData;
                 _mapTiles = jsonData["map"];
                 _walls_file_path = jsonData["walls"];
+                _parallax_path = jsonData["parallax"];
                 map_filled = true;
             } catch (nlohmann::json::parse_error &e) {
                 std::cerr << "Error parsing JSON file: " << _maps_paths[_id_map] << std::endl;
@@ -56,6 +58,7 @@ void Map::createMap()
             _id_map++;
         }
     }
+    _dataGame.parallax->build(_parallax_path);
 
     std::ifstream wallsFileStream(_walls_file_path);
     if (wallsFileStream.is_open()) {
@@ -106,6 +109,7 @@ void Map::createMap()
 
 void Map::update()
 {
+    _dataGame.parallax->update();
     if (_dataGame.walls.front()->get_x_position() < -(SIZE_TILE * UNIVERSAL_SCALE)) {// * tile = 3 * SIZE_TILE
         // destroy
         _dataGame.walls.front()->destroy();

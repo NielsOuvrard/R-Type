@@ -115,7 +115,6 @@ void Rtype::start()
 {
     _running = true;
     jsonHandler();
-    _background->build();
     _mapHandler->build();
 
     /**
@@ -284,9 +283,4 @@ void Rtype::update()
     }
     if (playerToCleanup)
         _players.erase(std::remove(_players.begin(), _players.end(), nullptr), _players.end());
-
-    /**
-     * Background's motion cycle
-     */
-    _background->update();
 }

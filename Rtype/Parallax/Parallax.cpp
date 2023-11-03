@@ -8,8 +8,9 @@ Parallax::Parallax(DataGame dataGame)
     : _dataGame(dataGame), _bg1(nullptr), _bg2(nullptr)
 {}
 
-void Parallax::build()
+void Parallax::build(std::string parallax_path)
 {
+    _parallax_path = parallax_path;
     _bg1 = _dataGame.engine.createEntity();
     std::cout << "["
               << _bg1->getId()
@@ -42,17 +43,28 @@ void Parallax::update()
 
 void Parallax::send()
 {
+    if (_parallax_path.empty()) {
+        return;
+    }
+
+    auto elem_sprite = new Haze::SpriteData();
+    strncpy(elem_sprite->path, _parallax_path.c_str(), sizeof(elem_sprite->path));
+    elem_sprite->path[sizeof(elem_sprite->path) - 1] = '\0';
+    auto elem_sprite_2 = new Haze::SpriteData();
+    strncpy(elem_sprite_2->path, _parallax_path.c_str(), sizeof(elem_sprite_2->path));
+    elem_sprite_2->path[sizeof(elem_sprite_2->path) - 1] = '\0';
+
     _dataGame.channel.sendGroup(RType::message::createEntity(_bg1->getId()));
     auto pos = dynamic_cast<Haze::Position *>(_bg1->getComponent("Position"));
     _dataGame.channel.sendGroup(RType::message::addComponent(_bg1->getId(), "Position", new Haze::PositionData{pos->x, pos->y}, sizeof(Haze::PositionData)));
     _dataGame.channel.sendGroup(RType::message::addComponent(_bg1->getId(), "Scale", new Haze::ScaleData{1.9, 1.9}, sizeof(Haze::ScaleData)));
-    _dataGame.channel.sendGroup(RType::message::addComponent(_bg1->getId(), "Sprite", new Haze::SpriteData{"assets/sprites/space.jpg"}, sizeof(Haze::SpriteData)));
+    _dataGame.channel.sendGroup(RType::message::addComponent(_bg1->getId(), "Sprite", elem_sprite_2, sizeof(Haze::SpriteData)));
 
     _dataGame.channel.sendGroup(RType::message::createEntity(_bg2->getId()));
     pos = dynamic_cast<Haze::Position *>(_bg2->getComponent("Position"));
     _dataGame.channel.sendGroup(RType::message::addComponent(_bg2->getId(), "Position", new Haze::PositionData{pos->x, pos->y}, sizeof(Haze::PositionData)));
     _dataGame.channel.sendGroup(RType::message::addComponent(_bg2->getId(), "Scale", new Haze::ScaleData{1.9, 1.9}, sizeof(Haze::ScaleData)));
-    _dataGame.channel.sendGroup(RType::message::addComponent(_bg2->getId(), "Sprite", new Haze::SpriteData{"assets/sprites/space.jpg"}, sizeof(Haze::SpriteData)));
+    _dataGame.channel.sendGroup(RType::message::addComponent(_bg2->getId(), "Sprite", elem_sprite, sizeof(Haze::SpriteData)));
 }
 
 void Parallax::sendUpdate()
