@@ -34,13 +34,14 @@ public:
     bool disconnect(const std::shared_ptr<network::connection<protocol::lobby>> &);
     void addConnection(std::shared_ptr<network::connection<protocol::lobby>> &, char[32], privileges = privileges::member);
     const std::list<Room::chat_message> &getChats();
+    void toggleReady(std::shared_ptr<network::connection<protocol::lobby>> &target);
+    void close();
 
-    void toggleReady(std::shared_ptr<network::connection<protocol::lobby>> &target)
+    void addChat(std::shared_ptr<network::connection<protocol::lobby>> &from, const std::string &content)
     {
-        _members[target] = std::tuple(std::get<0>(_members[target]), std::get<1>(_members[target]), !std::get<2>(_members[target]));
+        _chats.emplace_back(chat_message{std::get<0>(_members[from]), content});
     }
 
-    void close() { _open = false; };
 
 private:
     uint32_t maxSize;

@@ -38,6 +38,10 @@ void TextInput::build()
             } else if (key == Haze::KEY_ESC) {
                 _focus = false;
                 break;
+            } else if (key == Haze::KEY_ENTER_INPUT) {
+                onSubmit(_value);
+                _value.clear();
+                break;
             }
         }
 
@@ -51,7 +55,7 @@ void TextInput::setValue(const std::string &newValue)
     auto txt = comp<Haze::Text>("Text");
     if (_value.empty()) {
         txt->text = _placeholder;
-        txt->textObj->setColor(255, 255, 255, 100);
+        txt->textObj->setColor(255, 255, 255, 128);
     } else {
         txt->text = _value;
         txt->textObj->setColor(255, 255, 255, 255);

@@ -20,6 +20,9 @@ public:
     [[nodiscard]] const std::string &getValue() const;
 
     bool _focus = false;
+    std::function<void(const std::string &)> onSubmit = [this](const std::string &) {
+        std::cout << "SUBMIT: " << _value << std::endl;
+    };
 
 private:
     std::string _value;

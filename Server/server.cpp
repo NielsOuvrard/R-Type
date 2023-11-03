@@ -14,6 +14,25 @@ void server::onMessage(std::shared_ptr<network::connection<lobby>> from, network
 {
     network::message res{lobby::ok};
     switch (msg.header.id) {
+        case lobby::new_chat: {
+            uint32_t room_id = 0;
+            char content[128] = {0};
+            msg >> room_id >> content;
+            if (_rooms.find(room_id) != _rooms.end() && _rooms[room_id]->isMember(from)) {
+                _rooms[room_id]->addChat(from, content);
+                char sender[32] = {0};
+                std::strcat(sender, std::get<0>(_rooms[room_id]->getMembers().find(from)->second).data());
+                res << content << sender;
+                res.header.id = lobby::new_chat;
+                for (auto &[con, info]: _rooms[room_id]->getMembers()) {
+                    messageClient(con, res);
+                }
+                return;
+            } else {
+                res.header.id = lobby::ko;
+            }
+            break;
+        }
         case lobby::get_rooms: {
             std::list<std::tuple<uint32_t, uint8_t>> ids;
             for (auto &pair: _rooms) {
@@ -49,7 +68,7 @@ void server::onMessage(std::shared_ptr<network::connection<lobby>> from, network
         case lobby::get_chats: {
             uint32_t room_id = 0;
             msg >> room_id;
-            if (_rooms[room_id]->isMember(from)) {
+            if (_rooms.find(room_id) != _rooms.end() && _rooms[room_id]->isMember(from)) {
                 auto chats = _rooms[room_id]->getChats();
                 for (auto &chat: chats) {
                     msg << chat.sender.data() << chat.content.data();
