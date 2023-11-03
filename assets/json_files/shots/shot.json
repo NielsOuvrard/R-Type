@@ -11,21 +11,10 @@
     "width": 16,
     "height": 4
   },
+  "no_animation": true,
   "animation_tics": 0.2,
   "animation_type": "boomerang",
   "animation": [
-    {
-      "x": 0,
-      "y": 0,
-      "width": 16,
-      "height": 14
-    },
-    {
-      "x": 16,
-      "y": 0,
-      "width": 16,
-      "height": 14
-    },
     {
       "x": 32,
       "y": 0,

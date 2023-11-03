@@ -240,6 +240,9 @@ namespace Haze {
                         auto position2 = static_cast<Position *>(componentList->getComponent("Position", j));
                         auto size2 = static_cast<Hitbox *>(componentList->getComponent("Hitbox", j));
                         auto scale2 = static_cast<Scale *>(componentList->getComponent("Scale", j));
+                        if (position2 == nullptr || size2 == nullptr || scale2 == nullptr) {
+                            return;
+                        }
                         if (isColiding(size1->hitbox, size2->hitbox, scale1, scale2, position1, position2)) {
                             CollisionHandling(componentList, i, j);
                         }

@@ -28,13 +28,13 @@ void Player::build()
                     _missileCd.Activate();
                     auto position = dynamic_cast<Haze::Position *>(this->_entity->getComponent("Position"));
                     _missiles.emplace_back(std::make_unique<Shot>(_dataGame, _typeEntities, 1, 1, 0, "player"));
-                    _missiles.back()->build(position->x, position->y);
+                    _missiles.back()->build(position->x + (20 * UNIVERSAL_SCALE), position->y);
                 }
                 if (IS_KEY_PRESSED(KEY_E) && _missileCd.IsReady()) {
                     _missileCd.Activate();
                     auto position = dynamic_cast<Haze::Position *>(this->_entity->getComponent("Position"));
-                    _missiles.emplace_back(std::make_unique<Shot>(_dataGame, _typeEntities, 2, 1, 0, "player"));
-                    _missiles.back()->build(position->x, position->y);
+                    _missiles.emplace_back(std::make_unique<Shot>(_dataGame, _typeEntities, 3, 1, 0, "player"));
+                    _missiles.back()->build(position->x + (20 * UNIVERSAL_SCALE), position->y);
                 }
                 auto position = dynamic_cast<Haze::Position *>(_entity->getComponent("Position"));
 
