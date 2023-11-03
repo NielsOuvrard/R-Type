@@ -1,10 +1,9 @@
 #pragma once
 #include "inputs.hpp"
-#include <vector>
 #include <string>
+#include <vector>
 
-namespace Haze
-{
+namespace Haze {
     class ISprite;
     class ITexture;
     class IText;
@@ -12,13 +11,12 @@ namespace Haze
     class IWindow;
     class IRect;
     class IColor;
+    class IFont;
     class IDisplay;
-}
+}// namespace Haze
 
-namespace Haze
-{
-    class IColor
-    {
+namespace Haze {
+    class IColor {
     public:
         enum colorEnum {
             RED,
@@ -32,13 +30,13 @@ namespace Haze
             TRANSPARENT,
             COLOR_COUNT
         };
+
     private:
     public:
         virtual ~IColor() = default;
     };
 
-    class ISprite
-    {
+    class ISprite {
     private:
     public:
         virtual ~ISprite() = default;
@@ -49,15 +47,13 @@ namespace Haze
         virtual void setTextureRect(int x, int y, int width, int height) = 0;
     };
 
-    class ITexture
-    {
+    class ITexture {
     private:
     public:
         virtual ~ITexture() = default;
     };
 
-    class IText
-    {
+    class IText {
     private:
     public:
         virtual ~IText() = default;
@@ -68,8 +64,7 @@ namespace Haze
         virtual void setColor(int r, int g, int b, int a) = 0;
     };
 
-    class IAudio
-    {
+    class IAudio {
     private:
     public:
         virtual ~IAudio() = default;
@@ -80,8 +75,7 @@ namespace Haze
         virtual bool isStopped() const = 0;
     };
 
-    class IWindow
-    {
+    class IWindow {
     private:
     public:
         virtual ~IWindow() = default;
@@ -101,8 +95,7 @@ namespace Haze
         virtual bool pollEvent() = 0;
     };
 
-    class IRect
-    {
+    class IRect {
     private:
     public:
         virtual ~IRect() = default;
@@ -113,8 +106,13 @@ namespace Haze
         virtual void setOutlineThickness(float thickness) = 0;
     };
 
-    class IDisplay
-    {
+    class IFont {
+    private:
+    public:
+        virtual ~IFont() = default;
+    };
+
+    class IDisplay {
     private:
     public:
         virtual ~IDisplay() = default;
@@ -125,4 +123,4 @@ namespace Haze
         virtual IAudio *createAudio(std::string path) = 0;
         virtual IRect *createRect(int x, int y, int width, int height, IColor::colorEnum color) = 0;
     };
-}
+}// namespace Haze

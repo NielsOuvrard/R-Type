@@ -4,17 +4,19 @@
 
 namespace protocol {
     enum class lobby : std::uint32_t {
-        // Request
+        // Client
         create_room,
         get_rooms,
+        get_room,
+        get_chats,
         join_room,
         leave_room,
         start_room,
 
-        // Response
+        // Server
         ok,
         ko,
-        rooms,
+        new_chat,
         data_channel,
     };
 }// namespace protocol

@@ -1,21 +1,23 @@
 #pragma once
 #include "Component.hpp"
+#include "DynLib.hpp"
 #include "IDisplay.hpp"
 #include "inputs.hpp"
 #include "json.hpp"
+#include <filesystem>
 #include <fstream>
+#include <functional>
 #include <iostream>
 #include <thread>
-#include <functional>
-#include <filesystem>
-#include "DynLib.hpp"
 
 namespace Haze {
     static int i = 0;
 
     struct Sprite : public Component {
         Sprite(std::string path);
-        ~Sprite() {
+
+        ~Sprite()
+        {
             delete sprite;
         }
 
@@ -100,7 +102,9 @@ namespace Haze {
 
     struct Window : public Component {
         Window(int width, int height);
-        ~Window() {
+
+        ~Window()
+        {
             delete window;
         }
 
@@ -116,7 +120,9 @@ namespace Haze {
 
     struct HitboxDisplay : public Component {
         HitboxDisplay();
-        ~HitboxDisplay() {
+
+        ~HitboxDisplay()
+        {
             delete rect;
         }
 
@@ -129,7 +135,9 @@ namespace Haze {
 
     struct Sound : public Component {
         Sound(std::string path, bool loop = false);
-        ~Sound() {
+
+        ~Sound()
+        {
             delete sound;
         }
 

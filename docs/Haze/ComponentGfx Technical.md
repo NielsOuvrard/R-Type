@@ -1,4 +1,5 @@
 ## Component graphics:
+
 ```cpp
 #include "Component.hpp"
 #include "inputs.hpp"
@@ -28,6 +29,7 @@ struct Sprite : public Component
 	void show() const override { std::cout << "flm" << path << std::endl; }
 };
 ```
+
 `Sprite` is used to set a sprite with a texture to an entity.
 It just takes a **path** for the texture.
 
@@ -58,10 +60,13 @@ struct Animation : public Component
 	void show() const override { std::cout << "Animation: " << std::endl; }
 };
 ```
+
 `Animation` is the component that will define how a sprite is animated.
 It takes:
+
 - a **vector** of `IntRect` that will define the position and the size of every frame of the animation
-- an `AnimationType` that will define id the animation is a `LOOP`, a `BOOMERANG` or simply a static image (note that you can still have multiple frames and change by hand the `currentFrame`)
+- an `AnimationType` that will define id the animation is a `LOOP`, a `BOOMERANG` or simply a static image (note that
+  you can still have multiple frames and change by hand the `currentFrame`)
 - a **direction** that will define the direction of the animation (**1** for left to right and **2** for right to left).
 - and a **tics** that will set the time between the updates of the animation.
 
@@ -86,8 +91,9 @@ struct Window : public Component
 	void show() const override { std::cout << "Window: " << width << ", " << height << std::endl; }
 };
 ```
+
 `Window` is the component that can set the window for your game.
-A **strong advice** is that the entity who has the component window doesn't have any other component. 
+A **strong advice** is that the entity who has the component window doesn't have any other component.
 
 ```cpp
 struct HitboxDisplay : public Component
@@ -105,6 +111,7 @@ struct HitboxDisplay : public Component
 	void show() const override { std::cout << "HitboxDisplay: " << std::endl; }
 };
 ```
+
 `HitboxDisplay` is a debug tool to see the `Hitbox` of your entity
 
 ```cpp
@@ -123,8 +130,10 @@ struct Text : public Component {
 	void show() const override { std::cout << "Text: " << text << std::endl; }
 };
 ```
+
 `Text` is used to create a text component to your entity.
 It takes:
+
 - the **text** you want to display
 - a **color**
 - and a **font name**

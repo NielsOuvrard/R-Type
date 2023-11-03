@@ -6,25 +6,26 @@
 */
 
 #pragma once
+#include "Engine.hpp"
+#include "IDisplay.hpp"
+#include "IPipeline.hpp"
+#include "SystemGfx.hpp"
+#include <filesystem>
 #include <iostream>
 #include <vector>
-#include "IPipeline.hpp"
-#include "IDisplay.hpp"
-#include "SystemGfx.hpp"
-#include "Engine.hpp"
-#include <filesystem>
 
-namespace Haze
-{
+namespace Haze {
     class GfxPipeline : public APipeline {
-        public:
-            GfxPipeline(Engine *engine);
-            ~GfxPipeline();
-            ComponentList *getComponentList() { return _engine->getComponentList(); }
-            std::vector<info_inputs> *getInputs() { return _engine->getInfoInputs(); }
+    public:
+        GfxPipeline(Engine *engine);
+        ~GfxPipeline();
 
-        protected:
-        private:
-            Engine *_engine;
+        ComponentList *getComponentList() { return _engine->getComponentList(); }
+
+        std::vector<info_inputs> *getInputs() { return _engine->getInfoInputs(); }
+
+    protected:
+    private:
+        Engine *_engine;
     };
-}
+}// namespace Haze

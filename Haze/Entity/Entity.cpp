@@ -33,5 +33,4 @@ namespace Haze {
     {
         return _componentList->getComponent(type, _id);
     }
-
-}
+}// namespace Haze

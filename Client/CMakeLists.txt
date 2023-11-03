@@ -13,13 +13,30 @@ set(SOURCES
         Elements/TextInput.h
         Elements/Button.cpp
         Elements/Button.h
-        Elements/Login.cpp
-        Elements/Login.h
         Elements/Element.h
-        game.cpp
-        game.h
+        spectator.cpp
+        spectator.h
         Cooldown.h
         Cooldown.cpp
+        Scenes/Login.cpp
+        Scenes/Login.h
+        Elements/Image.cpp
+        Elements/Image.h
+        Scenes/Background.cpp
+        Scenes/Background.h
+        Scenes/LobbyList.cpp
+        Scenes/LobbyList.h
+        Elements/Text.cpp
+        Elements/Text.h
+        Scenes/LobbyList.cpp
+        Scenes/LobbyItem.cpp
+        Scenes/LobbyItem.h
+        Scenes/Lobby.cpp
+        Scenes/Lobby.h
+        Elements/Chat.cpp
+        Elements/Chat.h
+        Elements/UserCard.cpp
+        Elements/UserCard.h
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})
