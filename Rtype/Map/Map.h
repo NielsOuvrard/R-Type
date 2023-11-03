@@ -76,6 +76,7 @@ private:
     DataGame _dataGame;
     TypeEntities _typeEntities;
 
+    std::string _walls_file_path;
     std::vector<std::string> _maps_paths;
     nlohmann::json _dataJSON;
     nlohmann::json _mapTiles;   ///< JSON data for map tiles.

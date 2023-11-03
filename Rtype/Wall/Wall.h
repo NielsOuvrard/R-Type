@@ -44,7 +44,7 @@ public:
      * @param y The Y-coordinate of the wall's position.
      * @param isGround Specifies whether the wall is a ground object.
      */
-    Wall(DataGame _dataGame, nlohmann::json dataJSON, float x, float y, bool isGround);
+    Wall(DataGame _dataGame, nlohmann::json dataJSON, float x, float y, bool isGround, std::string wall_json_path);
 
     /**
      * @brief Builds the wall object.
@@ -92,6 +92,7 @@ private:
     float _y;
     uint32_t _id;
     bool _isGround;
+    std::string _wall_json_path;
 
     Haze::Entity *_entity = nullptr;
     nlohmann::json _dataJSON;

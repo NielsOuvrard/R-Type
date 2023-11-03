@@ -14,8 +14,8 @@
 
 #include "Wall.h"
 
-Wall::Wall(DataGame dataGame, nlohmann::json dataJSON, float x, float y, bool isGround)
-    : _dataGame(dataGame), _dataJSON(std::move(dataJSON)), _x(x), _y(y), _isGround(isGround)
+Wall::Wall(DataGame dataGame, nlohmann::json dataJSON, float x, float y, bool isGround, std::string wall_json_path)
+    : _dataGame(dataGame), _dataJSON(std::move(dataJSON)), _x(x), _y(y), _isGround(isGround), _wall_json_path(std::move(wall_json_path))
 {
     // Create the frames
     nlohmann::json animation = _dataJSON["animation"];
@@ -65,9 +65,24 @@ void Wall::send()
     auto scale_y = (float) ((_isGround ? -1.0 : 1.0) * UNIVERSAL_SCALE);
     _dataGame.channel.sendGroup(RType::message::addComponent(_id, "Scale", new Haze::ScaleData{UNIVERSAL_SCALE, scale_y}, sizeof(Haze::ScaleData)));
     _dataGame.channel.sendGroup(RType::message::addComponent(_id, "Hitbox", new Haze::HitboxData{{0, 0, frame.width, frame.height}}, sizeof(Haze::HitboxData)));
-    _dataGame.channel.sendGroup(RType::message::addComponent(_id, "Sprite", new Haze::SpriteData{"assets/sprites/wall.png"}, sizeof(Haze::SpriteData)));
-    _dataGame.channel.sendGroup(RType::message::addComponent(_id, "Animation", new Haze::AnimationData{"assets/json_files/walls/ground.json"}, sizeof(Haze::AnimationData)));
     _dataGame.channel.sendGroup(RType::message::addComponent(_id, "SpriteCropped", new Haze::SpriteCroppedData{_frameIndex}, sizeof(Haze::SpriteCroppedData)));
+
+    auto elem_sprite = new Haze::SpriteData();
+    std::string path_sprite = "";
+    try {
+        path_sprite = _dataJSON["path_sprite"];
+    } catch (std::exception &e) {
+        std::cerr << "Error parsing JSON file: " << _dataJSON << std::endl;
+        std::cerr << e.what() << std::endl;
+    }
+    strncpy(elem_sprite->path, path_sprite.c_str(), sizeof(elem_sprite->path));
+    elem_sprite->path[sizeof(elem_sprite->path) - 1] = '\0';
+    _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Sprite", elem_sprite, sizeof(Haze::SpriteData)));
+
+    auto elem_animation = new Haze::AnimationData();
+    strncpy(elem_animation->path, _wall_json_path.c_str(), sizeof(elem_animation->path));
+    elem_animation->path[sizeof(elem_animation->path) - 1] = '\0';
+    _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Animation", elem_animation, sizeof(Haze::AnimationData)));
     //    _dataGame.channel.sendGroup(RType::message::addComponent(_id, "HitboxDisplay", nullptr, 0));
 }
 
