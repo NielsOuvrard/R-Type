@@ -25,13 +25,17 @@ void TextInput::build()
         if (!_focus || stroke.empty()) return;
         for (auto key: stroke) {
             if (key <= Haze::KEY_Z) {
-                _value += static_cast<char>(key + 'a' - 1);
+                if (limit < 0 || _value.size() < limit)
+                    _value += static_cast<char>(key + 'a' - 1);
             } else if (key <= Haze::NUMKEY_9) {
-                _value += static_cast<char>(key - Haze::NUMKEY_0 + '0');
+                if (limit < 0 || _value.size() < limit)
+                    _value += static_cast<char>(key - Haze::NUMKEY_0 + '0');
             } else if (key == Haze::KEY_DOT) {
-                _value += '.';
+                if (limit < 0 || _value.size() < limit)
+                    _value += '.';
             } else if (key == Haze::KEY_SPACE) {
-                _value += ' ';
+                if (limit < 0 || _value.size() < limit)
+                    _value += ' ';
             } else if (key == Haze::KEY_BACK) {
                 if (!_value.empty())
                     _value.pop_back();

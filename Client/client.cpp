@@ -257,8 +257,9 @@ void client::handleNewChat(network::message<lobby> &msg)
     msg >> sender >> content;
     auto &history = _elements["lobby"]->get<Chat>("chat")->_history;
     history.emplace_back(Chat::Message{sender, content});
-    std::cout << "Coucou: " << history.size() << std::endl;
-    std::cout << "[" << sender << "]: " << content << std::endl;
+    while (history.size() > 10) {
+        history.pop_front();
+    }
 }
 
 void client::handleDataSocket(network::message<lobby> &msg)

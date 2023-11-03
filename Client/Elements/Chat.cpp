@@ -17,29 +17,30 @@ void Chat::build()
     _children["title"] = std::make_shared<Text>(_engine, "Chat", "NotoMono.ttf", Haze::Text::colorHaze::WHITE, AxisPair{150, 30});
     _children["title"]->build();
 
-    _children["input"] = std::make_shared<TextInput>(_engine, "enter your message", AxisPair{50, 500});
+    _children["input"] = std::make_shared<TextInput>(_engine, "enter your message", AxisPair{30, 500}, AxisPair{0.6, 0.6});
+    get<TextInput>("input")->limit = 40;
     _children["input"]->build();
 
-    _children["txt"] = std::make_shared<Text>(_engine, "JE SUIS UN GROS CACA", "NotoMono.ttf", Haze::Text::colorHaze::WHITE, AxisPair{50, 100});
+    _children["txt"] = std::make_shared<Text>(_engine, "", "NotoMono.ttf", Haze::Text::colorHaze::WHITE, AxisPair{50, 100}, AxisPair{0.6, 0.6});
     _children["txt"]->build();
 }
 
 void Chat::update()
 {
     static std::size_t diff = _history.size();
-    //    if (diff != _history.size()) {
-    auto txt = get<Text>("txt");
-    std::stringstream ss;
-    int i = 0;
-    for (auto &chat: _history) {
-        if (i++ == 10) {
-            break;
-        }
+    if (diff != _history.size()) {
+        auto txt = get<Text>("txt");
+        std::stringstream ss;
+        int i = 0;
+        for (auto &chat: _history) {
+            if (i++ == 10) {
+                break;
+            }
 
-        ss << "[" << chat.sender << "]: " << chat.content << std::endl;
+            ss << "[" << chat.sender << "]: " << chat.content << std::endl;
+        }
+        get<Text>("txt")->setValue(ss.str());
     }
-    get<Text>("txt")->setValue(ss.str());
-    //    }
     diff = _history.size();
     Element::update();
 }
