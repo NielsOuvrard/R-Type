@@ -15,7 +15,8 @@ namespace Haze {
     class SfWindow;
     class SfText;
     class SfColor;
-    class SfIAudio;
+    class SfAudioBuffer;
+    class SfAudio;
     class SfRect;
     class SfFont;
     class SfDisplay;
@@ -39,7 +40,7 @@ namespace Haze {
 namespace Haze {
     class SfAudio : public IAudio {
     private:
-        sf::SoundBuffer _buffer;
+        std::shared_ptr<SfAudioBuffer> _audioBuffer;
         sf::Sound _sound;
 
     public:
@@ -50,6 +51,16 @@ namespace Haze {
         void setLoop(bool loop) override;
         bool isPlaying() const override;
         bool isStopped() const override;
+    };
+
+    class SfAudioBuffer : public IAudioBuffer {
+    private:
+        sf::SoundBuffer _buffer;
+
+    public:
+        SfAudioBuffer(std::string path);
+        ~SfAudioBuffer() = default;
+        sf::SoundBuffer *getBuffer() { return &_buffer; }
     };
 
     class SfTexture : public ITexture {

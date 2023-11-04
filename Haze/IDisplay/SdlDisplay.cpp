@@ -74,15 +74,16 @@ namespace Haze
 
 namespace Haze
 {
+    AssetManager<SdlAudioBuffer> audioBufferManager;
     SdlAudio::SdlAudio(std::string path)
     {
-        _sound = Mix_LoadWAV(path.c_str());
+        _audioBuffer = audioBufferManager.loadTexture(path);
         _channel = -1;
     }
 
     void SdlAudio::play()
     {
-        _channel = Mix_PlayChannel(-1, _sound, 0);
+        _channel = Mix_PlayChannel(-1, _audioBuffer->getBuffer(), 0);
     }
 
     void SdlAudio::stop()
@@ -93,7 +94,7 @@ namespace Haze
     void SdlAudio::setLoop(bool loop)
     {
         if (loop)
-            Mix_PlayChannel(-1, _sound, -1);
+            Mix_PlayChannel(-1, _audioBuffer->getBuffer(), -1);
     }
 
     bool SdlAudio::isPlaying() const
@@ -104,6 +105,16 @@ namespace Haze
     bool SdlAudio::isStopped() const
     {
         return Mix_Paused(_channel);
+    }
+}
+
+namespace Haze
+{
+    SdlAudioBuffer::SdlAudioBuffer(std::string path)
+    {
+        _buffer = Mix_LoadWAV(path.c_str());
+        if (_buffer == nullptr)
+            std::cout << "Error: " << SDL_GetError() << std::endl;
     }
 }
 
@@ -667,6 +678,11 @@ namespace Haze
 
         if (IMG_Init(IMG_INIT_PNG) != IMG_INIT_PNG) {
             SDL_Log("Unable to initialize SDL_image: %s", IMG_GetError());
+            SDL_Quit();
+        }
+
+        if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
+            SDL_Log("Unable to initialize SDL_mixer: %s", Mix_GetError());
             SDL_Quit();
         }
     }

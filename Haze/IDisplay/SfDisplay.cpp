@@ -69,11 +69,19 @@ namespace Haze {
 }// namespace Haze
 
 namespace Haze {
-    SfAudio::SfAudio(std::string path)
+    SfAudioBuffer::SfAudioBuffer(std::string path)
     {
         if (!_buffer.loadFromFile(path))
             std::cerr << "Error: could not load audio" << std::endl;
-        _sound.setBuffer(_buffer);
+    }
+}// namespace Haze
+
+namespace Haze {
+    AssetManager<SfAudioBuffer> assetManagerAudioBuffer;
+    SfAudio::SfAudio(std::string path)
+    {
+        _audioBuffer = assetManagerAudioBuffer.loadTexture(path);
+        _sound.setBuffer(*_audioBuffer->getBuffer());
     }
 
     void SfAudio::play()

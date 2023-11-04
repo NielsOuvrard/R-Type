@@ -18,7 +18,8 @@ namespace Haze
     class SdlWindow;
     class SdlText;
     class SdlColor;
-    class SdlIAudio;
+    class SdlAudioBuffer;
+    class SdlAudio;
     class SdlRect;
     class SdlFont;
     class SdlDisplay;
@@ -46,7 +47,7 @@ namespace Haze
     class SdlAudio : public IAudio
     {
     private:
-        Mix_Chunk *_sound;
+        std::shared_ptr<SdlAudioBuffer> _audioBuffer;
         int _channel;
     public:
         SdlAudio(std::string path);
@@ -56,6 +57,16 @@ namespace Haze
         void setLoop(bool loop) override;
         bool isPlaying() const override;
         bool isStopped() const override;
+    };
+
+    class SdlAudioBuffer : public IAudioBuffer
+    {
+    private:
+        Mix_Chunk *_buffer;
+    public:
+        SdlAudioBuffer(std::string path);
+        ~SdlAudioBuffer() = default;
+        Mix_Chunk *getBuffer() { return _buffer; }
     };
 
     class SdlTexture : public ITexture
