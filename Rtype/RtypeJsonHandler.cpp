@@ -23,6 +23,7 @@ void json_fill_EnemyData(EnemyData &data, nlohmann::json jsonData)
     data.fly = true;
     data.explosion_type = 0;
     data.type = jsonData["type"];
+    data.height = 0;
 
     if (jsonData.contains("damage")) {
         data.damage = jsonData["damage"];
@@ -52,6 +53,9 @@ void json_fill_EnemyData(EnemyData &data, nlohmann::json jsonData)
     if (jsonData.contains("explosion_type")) {
         data.explosion_type = jsonData["explosion_type"];
     }
+    // if (jsonData.contains("animation") && jsonData["animation"].contains(0) && jsonData["animation"][0].contains("height")) {
+    data.height = jsonData["animation"][0]["height"];
+    // }
 }
 
 // type

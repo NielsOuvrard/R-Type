@@ -1,37 +1,37 @@
 {
-    "type": 5,
-    "damage": 20,
-    "life": 50,
-    "shot_type": 2,
-    "explosion_type": -1,
-    "path_sprite": "assets/sprites/rtypesheet11.gif",
-    "hitbox": {
-        "x": 0,
-        "y": 0,
-        "width": 32,
-        "height": 31
+  "type": 5,
+  "damage": 20,
+  "life": 50,
+  "shot_type": 3,
+  "explosion_type": 1,
+  "path_sprite": "assets/sprites/r-typesheet11.gif",
+  "hitbox": {
+    "x": 1,
+    "y": 1,
+    "width": 32,
+    "height": 31
+  },
+  "fly": false,
+  "animation_tics": 0.3,
+  "animation_type": "loop",
+  "animation": [
+    {
+      "x": 1,
+      "y": 1,
+      "width": 32,
+      "height": 31
     },
-    "fly": false,
-    "animation_tics": 0.3,
-    "animation_type": "loop",
-    "animation": [
-      {
-        "x": 1,
-        "y": 1,
-        "width": 32,
-        "height": 31
-      },
-      {
-        "x": 34,
-        "y": 1,
-        "width": 32,
-        "height": 31
-      },
-      {
-        "x": 67,
-        "y": 1,
-        "width": 32,
-        "height": 31
-      }
-    ]
-  }
+    {
+      "x": 34,
+      "y": 1,
+      "width": 32,
+      "height": 31
+    },
+    {
+      "x": 67,
+      "y": 1,
+      "width": 32,
+      "height": 31
+    }
+  ]
+}

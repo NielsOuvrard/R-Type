@@ -18,6 +18,7 @@ struct EnemyData {
     std::string path_json;  ///< The path of the animation of the sprite.
     HitBox hitBoxData;      ///< The hitbox of the enemy.
     bool fly;               ///< The enemy can fly or is on the ground. // ! default true
+    uint16_t height;
 
     // * // FROM MAP
     float x;         ///< The position X of the enemy, according to the tile where it is.

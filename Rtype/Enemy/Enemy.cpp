@@ -89,11 +89,12 @@ void Enemy::build(EnemyData data_enemy, nlohmann::json mapData)
     std::cout << "[" << _entity->getId() << "] Enemy Created" << std::endl;
 
 
-    if (!_data.fly) {                       // TODO : flip Y axe
+    if (!_data.fly) {// TODO : flip Y axe
+        // UNIVERSAL_SCALE * 7 because a tile is 7 height pixel
         if (_data.y > (WINDOW_HEIGHT / 2)) {// ? why +50 / -50
-            _data.y = WINDOW_HEIGHT - (UNIVERSAL_SCALE * 7) - (_data.hitBoxData.y * UNIVERSAL_SCALE) - 50;
+            _data.y = WINDOW_HEIGHT - (UNIVERSAL_SCALE * 7) - (_data.height * UNIVERSAL_SCALE);
         } else {
-            _data.y = (UNIVERSAL_SCALE * 7) + 50;
+            _data.y = (UNIVERSAL_SCALE * 7) + (_data.height * UNIVERSAL_SCALE);
         }
     }
 
@@ -201,8 +202,6 @@ void Enemy::update()
     for (auto &missile: _missiles) {
         if (missile->_entity) {
             auto pos = dynamic_cast<Haze::Position *>(missile->_entity->getComponent("Position"));
-            std::cout << "Shot position: " << pos->x << ", " << pos->y << std::endl;
-
             if ((pos->x > WINDOW_WIDTH + 100 || pos->x < -100) || pos->y > WINDOW_HEIGHT + 100) {
                 std::cout << "\033[1;31mShot deleted\033[0m" << std::endl;
                 _dataGame.channel.sendGroup(RType::message::deleteEntity(missile->_entity->getId()));
