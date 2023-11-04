@@ -50,19 +50,7 @@ void Shot::build(float x, float y)
                     _entity = nullptr;
                 }};
         _entity->addComponent(new Haze::Collision("missile", collision_enemy));
-        std::map<std::string, Haze::Collision::CollisionInfo> collision_boss;
-        collision_boss["boss"] = {
-                Haze::Collision::LAMBDA,
-                0.1,
-                [this](int a, int b) {
-                    if (!_entity) {
-                        return;
-                    }
-                    _dataGame.channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
-                    _entity->addComponent(new Haze::Destroy());
-                    _entity = nullptr;
-                }};
-        _entity->addComponent(new Haze::Collision("missile", collision_boss));
+
     } else if (_sender == "enemy") {
         std::map<std::string, Haze::Collision::CollisionInfo> collision_player;
 

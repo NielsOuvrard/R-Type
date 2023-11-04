@@ -81,7 +81,7 @@ void Map::createMap()
 
     // Iterate through each tile in the map
     for (const auto &tile: _mapTiles) {
-        if (_index_map - 1 > WINDOW_WIDTH / (UNIVERSAL_SCALE * SIZE_TILE)) {
+        if (_index_map - 2 > WINDOW_WIDTH / (UNIVERSAL_SCALE * SIZE_TILE)) {
             break;
         }
 
@@ -109,7 +109,7 @@ void Map::createMap()
 void Map::update()
 {
     _dataGame.parallax->update();
-    if (_dataGame.walls.front()->get_x_position() < -(SIZE_TILE * UNIVERSAL_SCALE)) {// * tile = 3 * SIZE_TILE
+    if (_dataGame.walls.front()->get_x_position() < -(SIZE_TILE * UNIVERSAL_SCALE * 2)) {// * tile = 3 * SIZE_TILE
         // destroy
         _dataGame.walls.front()->destroy();
         _dataGame.walls.erase(_dataGame.walls.begin());
