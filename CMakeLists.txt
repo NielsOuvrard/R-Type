@@ -45,13 +45,8 @@ FetchContent_Declare(
         GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
         GIT_TAG release-2.28.4
 )
-FetchContent_GetProperties(sdl2)
-if (NOT sdl2_POPULATED)
-    FetchContent_Populate(sdl2)
-endif ()
 
-# FetchContent_MakeAvailable(sdl2)
-
+FetchContent_MakeAvailable(sdl2)
 
 add_subdirectory(Protocols)
 add_subdirectory(Network)
