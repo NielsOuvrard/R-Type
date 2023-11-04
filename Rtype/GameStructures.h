@@ -36,7 +36,7 @@ typedef struct dataGame {
     std::unique_ptr<Parallax> &parallax;
     std::unique_ptr<Boss> &boss;
     // Several by game
-    std::vector<std::unique_ptr<Shot>> &shots;
+    std::vector<std::unique_ptr<Shot>> &shots;// never used
     std::vector<std::unique_ptr<Wall>> &walls;
     std::vector<std::unique_ptr<Player>> &players;
     std::vector<std::unique_ptr<Explosion>> &explosions;

@@ -35,7 +35,6 @@ void Shot::build(float x, float y)
     _entity->addComponent(new Haze::Damage(20));
 
 
-    // TODO: Add lifetime to missile
     if (_sender == "player") {
         std::map<std::string, Haze::Collision::CollisionInfo> collision_enemy;
 
@@ -51,6 +50,19 @@ void Shot::build(float x, float y)
                     _entity = nullptr;
                 }};
         _entity->addComponent(new Haze::Collision("missile", collision_enemy));
+        std::map<std::string, Haze::Collision::CollisionInfo> collision_boss;
+        collision_boss["boss"] = {
+                Haze::Collision::LAMBDA,
+                0.1,
+                [this](int a, int b) {
+                    if (!_entity) {
+                        return;
+                    }
+                    _dataGame.channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
+                    _entity->addComponent(new Haze::Destroy());
+                    _entity = nullptr;
+                }};
+        _entity->addComponent(new Haze::Collision("missile", collision_boss));
     } else if (_sender == "enemy") {
         std::map<std::string, Haze::Collision::CollisionInfo> collision_player;
 
@@ -84,7 +96,7 @@ void Shot::send()
     }
 
     _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Hitbox", new Haze::HitboxData({_typeEntities.shots[_type].hitBoxData.x, _typeEntities.shots[_type].hitBoxData.y, _typeEntities.shots[_type].hitBoxData.width, _typeEntities.shots[_type].hitBoxData.height}), sizeof(Haze::HitboxData)));
-    _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "HitboxDisplay", nullptr, 0));
+    //_dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "HitboxDisplay", nullptr, 0));
     if (_typeEntities.shots[_type].no_animation) {
         _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "SpriteCropped", new Haze::SpriteCroppedData{0}, sizeof(Haze::SpriteCroppedData)));
     }

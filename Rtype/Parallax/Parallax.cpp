@@ -35,9 +35,11 @@ void Parallax::update()
     auto pos2 = dynamic_cast<Haze::Position *>(_bg2->getComponent("Position"));
     if (pos1->x + 562 < 0) {
         pos1->x = 562;
+        sendUpdate();
     }
     if (pos2->x + 562 < 0) {
         pos2->x = 562;
+        sendUpdate();
     }
 }
 
@@ -59,9 +61,11 @@ void Parallax::send()
     _dataGame.channel.sendGroup(RType::message::addComponent(_bg1->getId(), "Position", new Haze::PositionData{pos->x, pos->y}, sizeof(Haze::PositionData)));
     _dataGame.channel.sendGroup(RType::message::addComponent(_bg1->getId(), "Scale", new Haze::ScaleData{1.9, 1.9}, sizeof(Haze::ScaleData)));
     _dataGame.channel.sendGroup(RType::message::addComponent(_bg1->getId(), "Sprite", elem_sprite_2, sizeof(Haze::SpriteData)));
+    _dataGame.channel.sendGroup(RType::message::addComponent(_bg1->getId(), "Velocity", new Haze::VelocityData{-0.8, 0, 0.1}, sizeof(Haze::VelocityData)));
 
     _dataGame.channel.sendGroup(RType::message::createEntity(_bg2->getId()));
     pos = dynamic_cast<Haze::Position *>(_bg2->getComponent("Position"));
+    _dataGame.channel.sendGroup(RType::message::addComponent(_bg2->getId(), "Velocity", new Haze::VelocityData{-0.8, 0, 0.1}, sizeof(Haze::VelocityData)));
     _dataGame.channel.sendGroup(RType::message::addComponent(_bg2->getId(), "Position", new Haze::PositionData{pos->x, pos->y}, sizeof(Haze::PositionData)));
     _dataGame.channel.sendGroup(RType::message::addComponent(_bg2->getId(), "Scale", new Haze::ScaleData{1.9, 1.9}, sizeof(Haze::ScaleData)));
     _dataGame.channel.sendGroup(RType::message::addComponent(_bg2->getId(), "Sprite", elem_sprite, sizeof(Haze::SpriteData)));
