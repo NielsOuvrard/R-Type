@@ -27,6 +27,7 @@ namespace Haze {
 
     static std::vector<IDisplay *> displays = loadDisplay();
     static int GFX_LIB = 0;
+    static int test = printf("test\n");
 
     void setGfxLib(int lib)
     {
