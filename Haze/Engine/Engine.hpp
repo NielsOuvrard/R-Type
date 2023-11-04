@@ -21,7 +21,7 @@
 namespace Haze {
     class Engine {
     public:
-        Engine(int framerate);
+        Engine(int framerate, int lib = 0);
         ~Engine();
         void init();
         void update();

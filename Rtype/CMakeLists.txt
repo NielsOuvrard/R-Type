@@ -39,7 +39,7 @@ target_compile_definitions(${PROJECT_NAME} PUBLIC USE_SFML=1)
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} inc)
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} class)
 target_link_libraries(${PROJECT_NAME} PUBLIC
-        haze-graphics
+        haze-core
         Network
         protocols
 )

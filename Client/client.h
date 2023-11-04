@@ -16,7 +16,10 @@
 
 class client : public network::client_interface<protocol::lobby> {
 public:
-    client() = default;
+    client(int framerate = 60, int lib = 0)
+        : _engine(framerate, lib)
+    {
+    }
     ~client() override = default;
 
 public:
@@ -42,7 +45,7 @@ private:
     void handleDataSocket(network::message<lobby> &msg);
 
 private:
-    Haze::Engine _engine{60};
+    Haze::Engine _engine;
     bool _build = false;
 
     Haze::Entity *_window = nullptr;

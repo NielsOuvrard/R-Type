@@ -12,7 +12,7 @@ namespace Haze
         public:
             AssetManager() = default;
             ~AssetManager() = default;
-            std::shared_ptr<T> loadTexture(std::string path)
+            std::shared_ptr<T> loadAsset(std::string path)
             {
                 if (_textures.find(path) == _textures.end()) {
                     _textures[path] = std::make_shared<T>(path);

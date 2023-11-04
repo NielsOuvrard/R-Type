@@ -11,8 +11,7 @@
 #include <thread>
 
 namespace Haze {
-    static int i = 0;
-
+    void setGfxLib(int lib);
     struct Sprite : public Component {
         Sprite(std::string path);
 

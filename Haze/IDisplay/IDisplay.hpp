@@ -7,6 +7,7 @@ namespace Haze {
     class ISprite;
     class ITexture;
     class IText;
+    class IAudioBuffer;
     class IAudio;
     class IWindow;
     class IRect;
@@ -62,6 +63,12 @@ namespace Haze {
         virtual void setString(std::string string) = 0;
         virtual void setColor(IColor::colorEnum color) = 0;
         virtual void setColor(int r, int g, int b, int a) = 0;
+    };
+
+    class IAudioBuffer {
+    private:
+    public:
+        virtual ~IAudioBuffer() = default;
     };
 
     class IAudio {
