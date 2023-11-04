@@ -89,15 +89,21 @@ void Enemy::build(EnemyData data_enemy, nlohmann::json mapData)
     std::cout << "[" << _entity->getId() << "] Enemy Created" << std::endl;
 
 
-    if (!_data.fly) {                       // TODO : flip Y axe
+    if (!_data.fly) {// TODO : flip Y axe
+        // UNIVERSAL_SCALE * 7 because a tile is 7 height pixel
         if (_data.y > (WINDOW_HEIGHT / 2)) {// ? why +50 / -50
-            _data.y = WINDOW_HEIGHT - (UNIVERSAL_SCALE * 7) - (_data.hitBoxData.y * UNIVERSAL_SCALE) - 50;
+            _data.y = WINDOW_HEIGHT - (UNIVERSAL_SCALE * 7) - (_data.height * UNIVERSAL_SCALE);
         } else {
-            _data.y = (UNIVERSAL_SCALE * 7) + 50;
+            _data.y = (UNIVERSAL_SCALE * 7) + (_data.height * UNIVERSAL_SCALE);
         }
+    }
+    bool reversed = false;
+    if (!_data.fly && _data.y < (WINDOW_HEIGHT / 2)) {
+        reversed = true;
     }
 
     _entity->addComponent(new Haze::Position(WINDOW_WIDTH + SIZE_TILE + _data.x, _data.y));
+    std::cout << "enemy x: " << WINDOW_WIDTH + SIZE_TILE + _data.x << " y: " << _data.y << "\n";
     _entity->addComponent(new Haze::Velocity(_data.velocity_x, _data.velocity_y, _data.move_time));
 
     if (_data.move == "sinusoidal" && _data.move_time != -1 && _data.move_amplitude != -1 && _data.move_frequency != -1) {
@@ -107,7 +113,7 @@ void Enemy::build(EnemyData data_enemy, nlohmann::json mapData)
         std::cout << "\033[0;31m [" << _entity->getId() << "] Enemy Created\033[0;0m" << std::endl;
     }
 
-    _entity->addComponent(new Haze::Scale(UNIVERSAL_SCALE, UNIVERSAL_SCALE));
+    _entity->addComponent(new Haze::Scale(UNIVERSAL_SCALE, UNIVERSAL_SCALE * (reversed ? -1 : 1)));
     _entity->addComponent(new Haze::Hitbox({{_data.hitBoxData.x, _data.hitBoxData.y, _data.hitBoxData.width, _data.hitBoxData.height}}));
 
     std::map<std::string, Haze::Collision::CollisionInfo> mapCollision;
@@ -167,7 +173,6 @@ void Enemy::send()
     }
     auto pos = dynamic_cast<Haze::Position *>(_entity->getComponent("Position"));
     _dataGame.channel.sendGroup(RType::message::createEntity(_entity->getId()));
-    _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Health", new Haze::HealthData{_data.life}, sizeof(Haze::HealthData)));
     _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Position", new Haze::PositionData{pos->x, pos->y}, sizeof(Haze::PositionData)));
     _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Velocity", new Haze::VelocityData{_data.velocity_x, _data.velocity_y, _data.move_time}, sizeof(Haze::VelocityData)));
 
@@ -181,7 +186,7 @@ void Enemy::send()
     scale->y = UNIVERSAL_SCALE * (reversed ? -1 : 1);
     _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Scale", scale, sizeof(Haze::ScaleData)));
     _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Hitbox", new Haze::HitboxData{_data.hitBoxData.x, _data.hitBoxData.y, _data.hitBoxData.width, _data.hitBoxData.height}, sizeof(Haze::HitboxData)));
-    //    _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "HitboxDisplay", nullptr, 0));
+    // _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "HitboxDisplay", nullptr, 0));
 
     auto elem_sprite = new Haze::SpriteData();
     strncpy(elem_sprite->path, _data.path_sprite.c_str(), sizeof(elem_sprite->path));
@@ -201,8 +206,6 @@ void Enemy::update()
     for (auto &missile: _missiles) {
         if (missile->_entity) {
             auto pos = dynamic_cast<Haze::Position *>(missile->_entity->getComponent("Position"));
-            std::cout << "Shot position: " << pos->x << ", " << pos->y << std::endl;
-
             if ((pos->x > WINDOW_WIDTH + 100 || pos->x < -100) || pos->y > WINDOW_HEIGHT + 100) {
                 std::cout << "\033[1;31mShot deleted\033[0m" << std::endl;
                 _dataGame.channel.sendGroup(RType::message::deleteEntity(missile->_entity->getId()));

@@ -27,8 +27,158 @@
       "tile_bottom": 3
     },
     {
-      "tile_top": 7,
-      "tile_bottom": 4
+      "tile_top": 8,
+      "tile_bottom": 5
+    },
+    {
+      "tile_top": 9,
+      "tile_bottom": 6
+    },
+    {
+      "tile_top": 8,
+      "tile_bottom": 5
+    },
+    {
+      "tile_top": 9,
+      "tile_bottom": 6
+    },
+    {
+      "tile_top": 8,
+      "tile_bottom": 5,
+      "enemies": [
+        {
+          "type": 4,
+          "x": 0,
+          "y": 100,
+          "velocity_x": 0,
+          "move": "linear",
+          "move_time": 0.05
+        },
+        {
+          "type": 4,
+          "x": 0,
+          "y": 500,
+          "velocity_x": 0,
+          "move": "linear",
+          "move_time": 0.05
+        }
+      ]
+    },
+    {
+      "tile_top": 8,
+      "tile_bottom": 5,
+      "enemies": [
+        {
+          "type": 5,
+          "x": 0,
+          "y": 200,
+          "velocity_x": 0,
+          "move": "linear",
+          "move_time": 0.05
+        },
+        {
+          "type": 3,
+          "x": 0,
+          "y": 500,
+          "velocity_x": 0,
+          "move": "linear",
+          "move_time": 0.05
+        },
+        {
+          "type": 3,
+          "x": 25,
+          "y": 500,
+          "velocity_x": 0,
+          "move": "linear",
+          "move_time": 0.05
+        }
+      ]
+    },
+    {
+      "tile_top": 9,
+      "tile_bottom": 6,
+      "enemies": [
+        {
+          "type": 5,
+          "x": 0,
+          "y": 500,
+          "velocity_x": 0,
+          "move": "linear",
+          "move_time": 0.05
+        }
+      ]
+    },
+    {
+      "tile_top": 8,
+      "tile_bottom": 5
+    },
+    {
+      "tile_top": 9,
+      "tile_bottom": 6
+    },
+    {
+      "tile_top": 8,
+      "tile_bottom": 5
+    },
+    {
+      "tile_top": 9,
+      "tile_bottom": 6
+    },
+    {
+      "tile_top": 8,
+      "tile_bottom": 5
+    },
+    {
+      "tile_top": 9,
+      "tile_bottom": 6
+    },
+    {
+      "tile_top": 8,
+      "tile_bottom": 5
+    },
+    {
+      "tile_top": 9,
+      "tile_bottom": 6
+    },
+    {
+      "tile_top": 8,
+      "tile_bottom": 5
+    },
+    {
+      "tile_top": 9,
+      "tile_bottom": 6
+    },
+    {
+      "tile_top": 8,
+      "tile_bottom": 5
+    },
+    {
+      "tile_top": 9,
+      "tile_bottom": 6
+    },
+    {
+      "tile_top": 8,
+      "tile_bottom": 5
+    },
+    {
+      "tile_top": 9,
+      "tile_bottom": 6
+    },
+    {
+      "tile_top": 8,
+      "tile_bottom": 5
+    },
+    {
+      "tile_top": 9,
+      "tile_bottom": 6
+    },
+    {
+      "tile_top": 8,
+      "tile_bottom": 5
+    },
+    {
+      "tile_top": 9,
+      "tile_bottom": 6
     },
     {
       "tile_top": 8,

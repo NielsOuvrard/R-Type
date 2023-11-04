@@ -1,22 +1,21 @@
 # Game
 
 - [ ] Asteroid
-
-
 - [ ] Level Editor
 - [ ] Doodle
 
 ```
 tir chargé
 enemies drop
-music
 ```
 
 - [ ] PvP Mode
-- [ ] Boss
+- [ ] Boss weak at tummy
 - [ ] Score
 
-// stop velocity of explosion too
+
+sound effect on all shots (load from file)
+
 
         //        _ip.setValue("88.120.142.2");
         //        _port.setValue("3001");
