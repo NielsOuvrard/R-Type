@@ -103,6 +103,18 @@ void Player::build()
                 _entity->addComponent(new Haze::Destroy());
                 _entity = nullptr;
             }};
+    mapCollision["boss"] = {
+            Haze::Collision::LAMBDA,
+            0.1,
+            [this](int a, int b) {
+                std::cout << "\033[1;34mplayer-boss\033[0m" << std::endl;
+                if (!_entity) {
+                    return;
+                }
+                _dataGame.channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
+                _entity->addComponent(new Haze::Destroy());
+                _entity = nullptr;
+            }};
     _entity->addComponent(new Haze::Collision("player", mapCollision));
     send();
 }
@@ -143,17 +155,22 @@ void Player::update()
 {
     bool invalidShotExists = false;
     for (auto &missile: _missiles) {
+        if (!missile) {
+            invalidShotExists = true;
+            return;
+        }
         if (missile->_entity) {
             auto pos = dynamic_cast<Haze::Position *>(missile->_entity->getComponent("Position"));
-            if (pos->x >= 800) {
+            if ((pos->x > WINDOW_WIDTH + 100 || pos->x < -100) || pos->y > WINDOW_HEIGHT + 100) {
+                std::cout << "\033[1;34mShot deleted\033[0m" << std::endl;
                 _dataGame.channel.sendGroup(RType::message::deleteEntity(missile->_entity->getId()));
                 missile->_entity->addComponent(new Haze::Destroy());
                 missile->_entity = nullptr;
+                invalidShotExists = true;
             }
         }
         if (!missile->_entity) {
             missile.reset();
-            invalidShotExists = true;
         }
     }
     if (invalidShotExists)

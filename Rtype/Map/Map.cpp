@@ -31,7 +31,7 @@ void Map::loadMaps()
 
 void Map::createMap()
 {
-    _id_map = _maps_paths.size() - 1;
+    _id_map = 1;
 
     bool map_filled = false;
     while (!map_filled) {
@@ -154,9 +154,9 @@ void Map::update()
         }
 
         if (_mapTiles[_index_map].contains("boss")) {
-            int16_t type_boss = _mapTiles[_index_map]["boss"];
+            nlohmann::json boss = _mapTiles[_index_map]["boss"];
             try {
-                _dataGame.boss = std::make_unique<Boss>(_dataGame, _typeEntities);
+                _dataGame.boss = std::make_unique<Boss>(_dataGame, _typeEntities, boss);
                 _dataGame.boss->build("assets/json_files/bosses/dobkeratops.json");// TODO boss ID
             } catch (nlohmann::json::parse_error &e) {
                 std::cerr << "Error parsing JSON file: " << _maps_paths[_id_map] << std::endl;

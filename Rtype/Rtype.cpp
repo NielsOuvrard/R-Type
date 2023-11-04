@@ -93,7 +93,7 @@ void Rtype::sendEverything(udp::endpoint &to)
             player->send();
         }
         for (auto &missile: player->_missiles) {
-            if (missile->_entity) {// <-- here
+            if (missile->_entity) {
                 missile->send();
             }
         }
@@ -103,7 +103,7 @@ void Rtype::sendEverything(udp::endpoint &to)
             enemy->send();
         }
         for (auto &missile: enemy->_missiles) {
-            if (missile->_entity) {// <-- here
+            if (missile->_entity) {
                 missile->send();
             }
         }
@@ -212,6 +212,10 @@ void Rtype::update()
      * remove and add wall
      */
     _mapHandler->update();
+
+    if (_boss) {
+        _boss->update();
+    }
     /**
      * Enemy & Shots' cleanup cycle
      */
@@ -252,6 +256,9 @@ void Rtype::update()
         if (enemy->_entity) {
             enemy->shot();
         }
+    }
+    if (_boss) {
+        _boss->shot();
     }
 
     for (auto &explosion: _explosions) {

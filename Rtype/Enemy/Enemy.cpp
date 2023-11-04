@@ -203,15 +203,19 @@ void Enemy::update()
     for (auto &missile: _missiles) {
         if (missile->_entity) {
             auto pos = dynamic_cast<Haze::Position *>(missile->_entity->getComponent("Position"));
-            if (pos->x <= -50) {
+            std::cout << "Shot position: " << pos->x << ", " << pos->y << std::endl;
+
+            if ((pos->x > WINDOW_WIDTH + 100 || pos->x < -100) || pos->y < WINDOW_HEIGHT + 100) {
+                std::cout << "\033[1;31mShot deleted\033[0m" << std::endl;
                 _dataGame.channel.sendGroup(RType::message::deleteEntity(missile->_entity->getId()));
                 missile->_entity->addComponent(new Haze::Destroy());
                 missile->_entity = nullptr;
+                invalidShotExists = true;
             }
         }
+
         if (!missile->_entity) {
             missile.reset();
-            invalidShotExists = true;
         }
     }
     if (invalidShotExists)

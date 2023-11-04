@@ -21,7 +21,7 @@ using namespace std::chrono_literals;
 
 class Boss {
 public:
-    Boss(DataGame dataGame, TypeEntities typeEntities);
+    Boss(DataGame dataGame, TypeEntities typeEntities, nlohmann::json boss);
 
     void build(std::string path);
 
@@ -47,5 +47,8 @@ private:
     DataGame _dataGame;
     TypeEntities _typeEntities;
 
-    Cooldown _missileCd{5000ms};///< Cooldown timer for missile firing.
+    uint16_t _y_next_shot;
+    bool _next_shot_upper;
+    uint16_t _type;
+    Cooldown _missileCd{5ms};///< Cooldown timer for missile firing.
 };
