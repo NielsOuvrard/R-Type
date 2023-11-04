@@ -48,14 +48,26 @@ set(
         IDisplay/SfDisplay.cpp
 )
 
+set(
+        SDL_SOURCES
+        IDisplay/SdlDisplay.cpp
+)
+
 add_library(rtype_sfml SHARED ${SFML_SOURCES})
 target_include_directories(rtype_sfml PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(rtype_sfml PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/IDisplay)
 target_include_directories(rtype_sfml PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/inc)
 target_include_directories(rtype_sfml PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/AssetManager)
 
+add_library(rtype_sdl SHARED ${SDL_SOURCES})
+target_include_directories(rtype_sdl PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(rtype_sdl PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/IDisplay)
+target_include_directories(rtype_sdl PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/inc)
+target_include_directories(rtype_sdl PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/AssetManager)
+
 add_library(haze-graphics STATIC ${SOURCES_GRAPHICS})
 target_link_libraries(rtype_sfml PUBLIC sfml-graphics sfml-window sfml-system sfml-audio)
+target_link_libraries(rtype_sdl PUBLIC SDL2 SDL2_image SDL2_ttf SDL2_mixer)
 target_compile_definitions(haze-graphics PUBLIC USE_SFML=1)
 target_include_directories(haze-graphics PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/inc)
 target_include_directories(haze-graphics PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/System/gfx)
@@ -72,3 +84,4 @@ target_include_directories(haze-graphics PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/IDis
 target_include_directories(haze-graphics PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/AssetManager)
 target_include_directories(haze-graphics PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/DynLib)
 target_link_libraries(haze-graphics PUBLIC sfml-graphics sfml-window sfml-system sfml-audio)
+target_link_libraries(haze-graphics PUBLIC SDL2 SDL2_image SDL2_ttf SDL2_mixer)

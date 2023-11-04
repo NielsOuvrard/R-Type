@@ -6,7 +6,7 @@
 #include <memory>
 
 extern "C" {
-Haze::IDisplay *createDisplay();
+    Haze::IDisplay *createDisplay();
 }
 
 namespace Haze {

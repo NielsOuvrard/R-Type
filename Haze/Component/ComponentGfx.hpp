@@ -11,7 +11,7 @@
 #include <thread>
 
 namespace Haze {
-    static int i = 0;
+    static int i = 1;
 
     struct Sprite : public Component {
         Sprite(std::string path);
