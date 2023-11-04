@@ -81,13 +81,12 @@ void Map::createMap()
 
     // Iterate through each tile in the map
     for (const auto &tile: _mapTiles) {
-        if (_index_map - 1 > WINDOW_WIDTH / (UNIVERSAL_SCALE * SIZE_TILE)) {
+        if (_index_map - 2 > WINDOW_WIDTH / (UNIVERSAL_SCALE * SIZE_TILE)) {
             break;
         }
 
         // Create and position the top wall
         try {
-            // here
             _dataGame.walls.emplace_back(std::make_unique<Wall>(_dataGame, _hitboxWalls, (SIZE_TILE * UNIVERSAL_SCALE) * _index_map, 0, false, _walls_file_path));
             _dataGame.walls.back()->build(tile["tile_top"]);
         } catch (nlohmann::json::parse_error &e) {
@@ -110,7 +109,7 @@ void Map::createMap()
 void Map::update()
 {
     _dataGame.parallax->update();
-    if (_dataGame.walls.front()->get_x_position() < -(SIZE_TILE * UNIVERSAL_SCALE)) {// * tile = 3 * SIZE_TILE
+    if (_dataGame.walls.front()->get_x_position() < -(SIZE_TILE * UNIVERSAL_SCALE * 2)) {// * tile = 3 * SIZE_TILE
         // destroy
         _dataGame.walls.front()->destroy();
         _dataGame.walls.erase(_dataGame.walls.begin());

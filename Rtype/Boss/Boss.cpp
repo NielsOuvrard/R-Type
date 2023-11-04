@@ -147,7 +147,7 @@ void Boss::build(std::string filePath)
                 _tummy->addComponent(new Haze::Destroy());
                 _tummy = nullptr;
             }};
-    _body->addComponent(new Haze::Collision("boss", boss_collisions));
+    _body->addComponent(new Haze::Collision("enemy", boss_collisions));
     send();
 }
 

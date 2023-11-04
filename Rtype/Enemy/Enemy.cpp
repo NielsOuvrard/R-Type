@@ -102,9 +102,7 @@ void Enemy::build(EnemyData data_enemy, nlohmann::json mapData)
 
     if (_data.move == "sinusoidal" && _data.move_time != -1 && _data.move_amplitude != -1 && _data.move_frequency != -1) {
         _entity->addComponent(new Haze::SinVelocity(_data.move_x, _data.move_time, _data.move_amplitude, _data.move_frequency));
-    }
-
-    else if (_data.move == "circular" && _data.move_radius != -1 && _data.move_time != -1) {
+    } else if (_data.move == "circular" && _data.move_radius != -1 && _data.move_time != -1) {
         _entity->addComponent(new Haze::CircleVelocity(_data.move_x, _data.move_time, _data.move_radius, _data.move_offset));
         std::cout << "\033[0;31m [" << _entity->getId() << "] Enemy Created\033[0;0m" << std::endl;
     }
@@ -205,7 +203,7 @@ void Enemy::update()
             auto pos = dynamic_cast<Haze::Position *>(missile->_entity->getComponent("Position"));
             std::cout << "Shot position: " << pos->x << ", " << pos->y << std::endl;
 
-            if ((pos->x > WINDOW_WIDTH + 100 || pos->x < -100) || pos->y < WINDOW_HEIGHT + 100) {
+            if ((pos->x > WINDOW_WIDTH + 100 || pos->x < -100) || pos->y > WINDOW_HEIGHT + 100) {
                 std::cout << "\033[1;31mShot deleted\033[0m" << std::endl;
                 _dataGame.channel.sendGroup(RType::message::deleteEntity(missile->_entity->getId()));
                 missile->_entity->addComponent(new Haze::Destroy());

@@ -29,6 +29,7 @@ void Player::build()
                     auto position = dynamic_cast<Haze::Position *>(this->_entity->getComponent("Position"));
                     _missiles.emplace_back(std::make_unique<Shot>(_dataGame, _typeEntities, 1, 1, 0, "player"));
                     _missiles.back()->build(position->x + (20 * UNIVERSAL_SCALE), position->y);
+                    _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Audio", new Haze::AudioData{"assets/sounds/shot.ogg"}, sizeof(Haze::AudioData)));
                 }
                 if (IS_KEY_PRESSED(KEY_E) && _missileCd.IsReady()) {
                     _missileCd.Activate();

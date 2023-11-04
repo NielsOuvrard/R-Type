@@ -32,6 +32,12 @@ namespace Haze {
         sprite = displays[i]->createSprite(path);
     }
 
+    Audio::Audio(std::string path) : path(path)
+    {
+        audio = displays[i]->createAudio(path);
+        audio->play();
+    }
+
     Window::Window(int width, int height) : width(width), height(height), active(false)
     {
         window = displays[i]->createWindow(width, height, "R-Type");

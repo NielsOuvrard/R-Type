@@ -27,7 +27,6 @@ void Explosion::build()
 
     // Create a new entity
     _entity = _dataGame.engine.createEntity();
-    //    _sound = Haze::SfAudio("assets/sounds/pluck_001.ogg");
 
     // Add Position, Velocity, and Scale components to the entity
     _entity->addComponent(new Haze::Position(_x, _y));
@@ -42,7 +41,7 @@ void Explosion::send()
 {
     // Send messages to create the explosion entity
     _dataGame.channel.sendGroup(RType::message::createEntity(_entity->getId()));
-    //    _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Audio", new Haze::SfAudio("assets/sounds/pluck_001.ogg"), sizeof(Haze::SfAudio)));
+    _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Audio", new Haze::AudioData{"assets/sounds/explosion.wav"}, sizeof(Haze::AudioData)));
     // Send messages to add Position, Scale, Sprite, and Animation components
     _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Position", new Haze::PositionData{_x, _y}, sizeof(Haze::PositionData)));
     _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Scale", new Haze::ScaleData{UNIVERSAL_SCALE, UNIVERSAL_SCALE}, sizeof(Haze::ScaleData)));
