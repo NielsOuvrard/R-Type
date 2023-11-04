@@ -79,6 +79,10 @@ namespace Haze {
             WindowData *window = reinterpret_cast<WindowData *>(data.data());
             return new Window(window->width, window->height);
         }
+        if (type == "Audio") {
+            AudioData *audio = reinterpret_cast<AudioData *>(data.data());
+            return new Audio(audio->path);
+        }
         if (type == "Animation") {
             AnimationData *animation = reinterpret_cast<AnimationData *>(data.data());
             return new Animation(animation->path);

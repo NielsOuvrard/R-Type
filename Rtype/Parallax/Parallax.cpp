@@ -63,6 +63,8 @@ void Parallax::send()
     _dataGame.channel.sendGroup(RType::message::addComponent(_bg1->getId(), "Sprite", elem_sprite_2, sizeof(Haze::SpriteData)));
     _dataGame.channel.sendGroup(RType::message::addComponent(_bg1->getId(), "Velocity", new Haze::VelocityData{-0.8, 0, 0.1}, sizeof(Haze::VelocityData)));
 
+    _dataGame.channel.sendGroup(RType::message::addComponent(_bg1->getId(), "Audio", new Haze::AudioData{"assets/sounds/ambiance.ogg"}, sizeof(Haze::AudioData)));
+
     _dataGame.channel.sendGroup(RType::message::createEntity(_bg2->getId()));
     pos = dynamic_cast<Haze::Position *>(_bg2->getComponent("Position"));
     _dataGame.channel.sendGroup(RType::message::addComponent(_bg2->getId(), "Velocity", new Haze::VelocityData{-0.8, 0, 0.1}, sizeof(Haze::VelocityData)));

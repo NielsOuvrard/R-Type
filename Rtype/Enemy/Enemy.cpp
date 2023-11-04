@@ -205,7 +205,7 @@ void Enemy::update()
             auto pos = dynamic_cast<Haze::Position *>(missile->_entity->getComponent("Position"));
             std::cout << "Shot position: " << pos->x << ", " << pos->y << std::endl;
 
-            if ((pos->x > WINDOW_WIDTH + 100 || pos->x < -100) || pos->y < WINDOW_HEIGHT + 100) {
+            if ((pos->x > WINDOW_WIDTH + 100 || pos->x < -100) || pos->y > WINDOW_HEIGHT + 100) {
                 std::cout << "\033[1;31mShot deleted\033[0m" << std::endl;
                 _dataGame.channel.sendGroup(RType::message::deleteEntity(missile->_entity->getId()));
                 missile->_entity->addComponent(new Haze::Destroy());

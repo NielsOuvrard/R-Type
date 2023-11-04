@@ -29,6 +29,22 @@ namespace Haze {
         void show() const override { std::cout << "flm" << path << std::endl; }
     };
 
+    struct Audio : public Component {
+        Audio(std::string path);
+
+        ~Audio()
+        {
+            delete audio;
+        }
+
+        std::string path;
+        IAudio *audio;
+
+        std::string getType() const override { return "Audio"; }
+
+        void show() const override { std::cout << "Audio: " << path << std::endl; }
+    };
+
     struct Animation : public Component {
         struct intRect {
             int x;

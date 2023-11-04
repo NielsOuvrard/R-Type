@@ -96,6 +96,10 @@ namespace Haze {
         char path[128];
     };
 
+    struct AudioData {
+        char path[128];
+    };
+
     struct SpriteCroppedData {
         uint8_t id;
     };

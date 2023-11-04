@@ -87,7 +87,6 @@ void Map::createMap()
 
         // Create and position the top wall
         try {
-            // here
             _dataGame.walls.emplace_back(std::make_unique<Wall>(_dataGame, _hitboxWalls, (SIZE_TILE * UNIVERSAL_SCALE) * _index_map, 0, false, _walls_file_path));
             _dataGame.walls.back()->build(tile["tile_top"]);
         } catch (nlohmann::json::parse_error &e) {

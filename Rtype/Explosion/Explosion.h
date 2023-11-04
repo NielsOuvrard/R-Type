@@ -53,7 +53,6 @@ private:
     DataGame _dataGame;
     TypeEntities _typeEntities;
 
-    //    Haze::SfAudio &_sound;
     float _x;///< The x-coordinate of the explosion.
     float _y;///< The y-coordinate of the explosion.
     uint16_t _type;
