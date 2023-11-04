@@ -5,7 +5,7 @@ namespace Haze {
 
     SfSprite::SfSprite(std::string path)
     {
-        _texture = assetManager.loadTexture(path);
+        _texture = assetManager.loadAsset(path);
         _sprite.setTexture(*_texture->getTexture());
     }
 
@@ -80,7 +80,7 @@ namespace Haze {
     AssetManager<SfAudioBuffer> assetManagerAudioBuffer;
     SfAudio::SfAudio(std::string path)
     {
-        _audioBuffer = assetManagerAudioBuffer.loadTexture(path);
+        _audioBuffer = assetManagerAudioBuffer.loadAsset(path);
         _sound.setBuffer(*_audioBuffer->getBuffer());
     }
 
@@ -492,7 +492,7 @@ namespace Haze {
 
     SfText::SfText(const std::string &text, IColor::colorEnum color, std::string path)
     {
-        _font = assetManagerFont.loadTexture("assets/fonts/" + path);
+        _font = assetManagerFont.loadAsset("assets/fonts/" + path);
         _text.setFont(*_font->getFont());
         _text.setString(text);
         _text.setFillColor(SfColor::getColor(color));

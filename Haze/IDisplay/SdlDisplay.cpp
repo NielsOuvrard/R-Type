@@ -28,7 +28,7 @@ namespace Haze
     static AssetManager<SdlTexture> assetManager;
     SdlSprite::SdlSprite(std::string path)
     {
-        _texture = assetManager.loadTexture(path);
+        _texture = assetManager.loadAsset(path);
         SDL_QueryTexture(_texture->getTexture(), NULL, NULL, &_srcRect.w, &_srcRect.h);
     }
 
@@ -77,7 +77,7 @@ namespace Haze
     AssetManager<SdlAudioBuffer> audioBufferManager;
     SdlAudio::SdlAudio(std::string path)
     {
-        _audioBuffer = audioBufferManager.loadTexture(path);
+        _audioBuffer = audioBufferManager.loadAsset(path);
         _channel = -1;
     }
 
@@ -210,7 +210,7 @@ namespace Haze
     void SdlWindow::fillKeyPressed(std::vector<InputType> *inputsPressed)
     {
         const Uint8 *keystate = SDL_GetKeyboardState(NULL);
-        (keystate[SDL_SCANCODE_A]) ? inputsPressed->push_back(InputType::KEY_A) : void();
+        (keystate[SDL_SCANCODE_A]) ? inputsPressed->push_back(InputType::KEY_Q) : void();
         (keystate[SDL_SCANCODE_B]) ? inputsPressed->push_back(InputType::KEY_B) : void();
         (keystate[SDL_SCANCODE_C]) ? inputsPressed->push_back(InputType::KEY_C) : void();
         (keystate[SDL_SCANCODE_D]) ? inputsPressed->push_back(InputType::KEY_D) : void();
@@ -222,20 +222,20 @@ namespace Haze
         (keystate[SDL_SCANCODE_J]) ? inputsPressed->push_back(InputType::KEY_J) : void();
         (keystate[SDL_SCANCODE_K]) ? inputsPressed->push_back(InputType::KEY_K) : void();
         (keystate[SDL_SCANCODE_L]) ? inputsPressed->push_back(InputType::KEY_L) : void();
-        (keystate[SDL_SCANCODE_M]) ? inputsPressed->push_back(InputType::KEY_M) : void();
+        (keystate[SDL_SCANCODE_SEMICOLON]) ? inputsPressed->push_back(InputType::KEY_M) : void();
         (keystate[SDL_SCANCODE_N]) ? inputsPressed->push_back(InputType::KEY_N) : void();
         (keystate[SDL_SCANCODE_O]) ? inputsPressed->push_back(InputType::KEY_O) : void();
         (keystate[SDL_SCANCODE_P]) ? inputsPressed->push_back(InputType::KEY_P) : void();
-        (keystate[SDL_SCANCODE_Q]) ? inputsPressed->push_back(InputType::KEY_Q) : void();
+        (keystate[SDL_SCANCODE_Q]) ? inputsPressed->push_back(InputType::KEY_A) : void();
         (keystate[SDL_SCANCODE_R]) ? inputsPressed->push_back(InputType::KEY_R) : void();
         (keystate[SDL_SCANCODE_S]) ? inputsPressed->push_back(InputType::KEY_S) : void();
         (keystate[SDL_SCANCODE_T]) ? inputsPressed->push_back(InputType::KEY_T) : void();
         (keystate[SDL_SCANCODE_U]) ? inputsPressed->push_back(InputType::KEY_U) : void();
         (keystate[SDL_SCANCODE_V]) ? inputsPressed->push_back(InputType::KEY_V) : void();
-        (keystate[SDL_SCANCODE_W]) ? inputsPressed->push_back(InputType::KEY_W) : void();
+        (keystate[SDL_SCANCODE_W]) ? inputsPressed->push_back(InputType::KEY_Z) : void();
         (keystate[SDL_SCANCODE_X]) ? inputsPressed->push_back(InputType::KEY_X) : void();
         (keystate[SDL_SCANCODE_Y]) ? inputsPressed->push_back(InputType::KEY_Y) : void();
-        (keystate[SDL_SCANCODE_Z]) ? inputsPressed->push_back(InputType::KEY_Z) : void();
+        (keystate[SDL_SCANCODE_Z]) ? inputsPressed->push_back(InputType::KEY_W) : void();
         (keystate[SDL_SCANCODE_0]) ? inputsPressed->push_back(InputType::NUMKEY_0) : void();
         (keystate[SDL_SCANCODE_1]) ? inputsPressed->push_back(InputType::NUMKEY_1) : void();
         (keystate[SDL_SCANCODE_2]) ? inputsPressed->push_back(InputType::NUMKEY_2) : void();
@@ -576,7 +576,7 @@ namespace Haze
     AssetManager<SdlFont> fontManager;
     SdlText::SdlText(const std::string &text, IColor::colorEnum color, std::string path)
     {
-        _font = fontManager.loadTexture("assets/fonts/" + path);
+        _font = fontManager.loadAsset("assets/fonts/" + path);
         _string = text;
         _color = SdlColor::getColor(color);
         if (_string == "")

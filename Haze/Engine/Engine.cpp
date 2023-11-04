@@ -15,9 +15,12 @@
 #include <unistd.h>
 
 namespace Haze {
-    Engine::Engine(int framerate)
+    Engine::Engine(int framerate, int lib)
     {
         _framerate = framerate;
+#ifdef USE_SFML
+        setGfxLib(lib);
+#endif
     }
 
     Engine::~Engine()

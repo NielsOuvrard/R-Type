@@ -26,26 +26,32 @@ namespace Haze {
     }
 
     static std::vector<IDisplay *> displays = loadDisplay();
+    static int GFX_LIB = 0;
+
+    void setGfxLib(int lib)
+    {
+        GFX_LIB = lib;
+    }
 
     Sprite::Sprite(std::string path) : path(path)
     {
-        sprite = displays[i]->createSprite(path);
+        sprite = displays[GFX_LIB]->createSprite(path);
     }
 
     Audio::Audio(std::string path) : path(path)
     {
-        audio = displays[i]->createAudio(path);
+        audio = displays[GFX_LIB]->createAudio(path);
         audio->play();
     }
 
     Window::Window(int width, int height) : width(width), height(height), active(false)
     {
-        window = displays[i]->createWindow(width, height, "R-Type");
+        window = displays[GFX_LIB]->createWindow(width, height, "R-Type");
     }
 
     HitboxDisplay::HitboxDisplay()
     {
-        rect = displays[i]->createRect(0, 0, 0, 0, IColor::RED);
+        rect = displays[GFX_LIB]->createRect(0, 0, 0, 0, IColor::RED);
         rect->setFillColor(IColor::TRANSPARENT);
         rect->setOutlineColor(IColor::RED);
         rect->setOutlineThickness(5);
@@ -53,13 +59,13 @@ namespace Haze {
 
     Sound::Sound(std::string path, bool loop) : path(path)
     {
-        sound = displays[i]->createAudio(path);
+        sound = displays[GFX_LIB]->createAudio(path);
         sound->setLoop(loop);
     }
 
     Text::Text(const std::string &text, colorHaze color, const std::string &fontname) : text(text)
     {
-        textObj = displays[i]->createText(text, IColor::RED, fontname);
+        textObj = displays[GFX_LIB]->createText(text, IColor::RED, fontname);
         switch (color) {
             case RED:
                 textObj->setColor(IColor::RED);
@@ -90,7 +96,7 @@ namespace Haze {
 
     Text::Text(const std::string &text, int r, int g, int b, int a, const std::string &fontname) : text(text)
     {
-        textObj = displays[i]->createText(text, IColor::RED, fontname);
+        textObj = displays[GFX_LIB]->createText(text, IColor::RED, fontname);
         textObj->setColor(r, g, b, a);
     }
 
