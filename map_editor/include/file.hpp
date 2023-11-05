@@ -62,7 +62,7 @@ typedef struct game_data {
     std::vector<std::string> walls_paths;
     int id_wall;
     int nmb_tiles;
-    int x_shift;
+    // int x_shift;
     int selected_tile;
     bool selected_tile_is_top;
     std::vector<EnemyData> enemies;

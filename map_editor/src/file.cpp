@@ -129,7 +129,7 @@ void write_into_the_file(game_data &data)
     }
 }
 
-void event_handling(sf::RenderWindow &window, game_data &data)
+void event_handling(sf::RenderWindow &window, game_data &data, sf::View &view)
 {
     sf::Event event;
     while (window.pollEvent(event)) {
@@ -159,17 +159,18 @@ void event_handling(sf::RenderWindow &window, game_data &data)
         if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Left) {
             data.selected_tile--;
             if (data.selected_tile < 0)
-                data.selected_tile = data.tiles.size() - 1;
-            // if ((data.selected_tile + (data.x_shift * 2)) * SIZE_TILE * UNIVERSAL_SCALE < -(SIZE_TILE * UNIVERSAL_SCALE))
-            //     data.x_shift = -((data.selected_tile - (WINDOW_WIDTH / (SIZE_TILE * UNIVERSAL_SCALE))) * 2);
+                data.selected_tile = 0;
+            // if view is not on the screen, move it
+            if (data.selected_tile * SIZE_TILE * UNIVERSAL_SCALE < view.getCenter().x - (WINDOW_WIDTH / 2))
+                view.move(-((SIZE_TILE / 2) * UNIVERSAL_SCALE), 0.0f);
         }
         if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Right) {
             data.selected_tile++;
             if (data.selected_tile >= data.tiles.size())
-                data.selected_tile = 0;
-            // TODO
-            // if (data.selected_tile * SIZE_TILE * UNIVERSAL_SCALE > WINDOW_WIDTH)
-            //     data.x_shift = -((data.selected_tile - (WINDOW_WIDTH / (SIZE_TILE * UNIVERSAL_SCALE))) * 2);
+                data.selected_tile = data.tiles.size() - 1;
+            // if view is not on the screen, move it
+            if (data.selected_tile * SIZE_TILE * UNIVERSAL_SCALE > view.getCenter().x + (WINDOW_WIDTH / 2))
+                view.move(((SIZE_TILE / 2) * UNIVERSAL_SCALE), 0.0f);
         }
         if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Up) {
             data.selected_tile_is_top = !data.selected_tile_is_top;
@@ -195,18 +196,18 @@ void event_handling(sf::RenderWindow &window, game_data &data)
                 data.id_enemy = 0;
             data.update_enemies = true;
         }
-        if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::O) {
-            data.x_shift -= 1;
-        }
-        if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::U) {
-            data.x_shift += 1;
-        }
+        // if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::O) {
+        //     view.move(-((SIZE_TILE / 2) * UNIVERSAL_SCALE), 0.0f);
+        // }
+        // if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::U) {
+        //     view.move(((SIZE_TILE / 2) * UNIVERSAL_SCALE), 0.0f);
+        // }
         // mouse
         if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
             sf::Vector2i mousePos = sf::Mouse::getPosition(window);
             // add enemy
             EnemyData new_enemy = data.enemies[data.id_enemy];
-            new_enemy.x = (mousePos.x / UNIVERSAL_SCALE) - (new_enemy.animation[0].width / 2) + (data.x_shift * (SIZE_TILE / 2));
+            new_enemy.x = (mousePos.x / UNIVERSAL_SCALE) - (new_enemy.animation[0].width / 2);
             new_enemy.y = (mousePos.y / UNIVERSAL_SCALE) - (new_enemy.animation[0].height / 2);
             std::cout << "x: " << new_enemy.x << " y: " << new_enemy.y << std::endl;
             new_enemy.type = data.id_enemy;
@@ -303,7 +304,6 @@ int main(int ac, char **av)
     game_data data;
     data.map_path = map_path;
     data.id_wall = 0;
-    data.x_shift = 0;
     data.selected_tile = 0;
     data.selected_tile_is_top = true;
     data.nmb_enemies = 0;
@@ -335,6 +335,15 @@ int main(int ac, char **av)
         }
         fileStream.close();
     }
+
+    // * create view_map
+    sf::View view_map(sf::FloatRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT));
+    view_map.setViewport(sf::FloatRect(0, 0, 1.0f, 1.0f));
+
+    // * create view_tool
+    sf::View view_tool(sf::FloatRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT));
+    view_tool.setViewport(sf::FloatRect(0, 0, 1.0f, 1.0f));
+
 
     // * create button
     ButtonElement button = ButtonElement(WINDOW_WIDTH - BUTTON_SIZE, 0, BUTTON_SIZE, BUTTON_SIZE, "Save");
@@ -370,20 +379,21 @@ int main(int ac, char **av)
         data.update_enemies = false;
         window.clear(sf::Color::White);
         button.handleEvent(sf::Event(), window);
-        event_handling(window, data);
+        event_handling(window, data, view_map);
         int i = 0;
+        window.setView(view_map);
         for (auto &tile: data.tiles) {
             // data.wall_hitbox[i]
             sf::IntRect rect = sf::IntRect(tile.tile_top * data.wall_hitbox[tile.tile_top].width, 0, data.wall_hitbox[tile.tile_top].width, data.wall_hitbox[tile.tile_top].height);
             wall.setTextureRect(rect);
             wall.setScale(UNIVERSAL_SCALE, UNIVERSAL_SCALE);
-            wall.setPosition((i * SIZE_TILE + (data.x_shift * (SIZE_TILE / 2))) * UNIVERSAL_SCALE, 0);
+            wall.setPosition((i * SIZE_TILE) * UNIVERSAL_SCALE, 0);
             window.draw(wall);
 
             rect = sf::IntRect(tile.tile_bottom * data.wall_hitbox[tile.tile_bottom].width, 0, data.wall_hitbox[tile.tile_bottom].width, data.wall_hitbox[tile.tile_bottom].height);
             wall.setTextureRect(rect);
             wall.setScale(UNIVERSAL_SCALE, -UNIVERSAL_SCALE);
-            wall.setPosition((i * SIZE_TILE + (data.x_shift * (SIZE_TILE / 2))) * UNIVERSAL_SCALE, WINDOW_HEIGHT);
+            wall.setPosition((i * SIZE_TILE) * UNIVERSAL_SCALE, WINDOW_HEIGHT);
             window.draw(wall);
 
             if (i == data.selected_tile) {
@@ -392,27 +402,25 @@ int main(int ac, char **av)
                 else
                     tile_selected_cursor = sf::RectangleShape(sf::Vector2f((data.wall_hitbox[tile.tile_bottom].width) * UNIVERSAL_SCALE, (data.wall_hitbox[tile.tile_bottom].height) * UNIVERSAL_SCALE));
                 if (data.selected_tile_is_top)
-                    tile_selected_cursor.setPosition((i * SIZE_TILE + (data.x_shift * (SIZE_TILE / 2))) * UNIVERSAL_SCALE, 0);
+                    tile_selected_cursor.setPosition((i * SIZE_TILE) * UNIVERSAL_SCALE, 0);
                 else
-                    tile_selected_cursor.setPosition((i * SIZE_TILE + (data.x_shift * (SIZE_TILE / 2))) * UNIVERSAL_SCALE, WINDOW_HEIGHT - (data.wall_hitbox[tile.tile_bottom].height) * UNIVERSAL_SCALE);
+                    tile_selected_cursor.setPosition((i * SIZE_TILE) * UNIVERSAL_SCALE, WINDOW_HEIGHT - (data.wall_hitbox[tile.tile_bottom].height) * UNIVERSAL_SCALE);
                 tile_selected_cursor.setFillColor(sf::Color(255, 0, 0, 60));
                 window.draw(tile_selected_cursor);
             }
-
             i++;
         }
         for (auto &enemy_on_map: data.enemies_on_map) {
             enemy.setTexture(data.textures[enemy_on_map.type]);
             sf::IntRect rect = sf::IntRect(data.enemies[enemy_on_map.type].animation[0].x, data.enemies[enemy_on_map.type].animation[0].y, data.enemies[enemy_on_map.type].animation[0].width, data.enemies[enemy_on_map.type].animation[0].height);
             enemy.setTextureRect(rect);
-            // new_enemy.x = (mousePos.x / UNIVERSAL_SCALE) - (new_enemy.animation[0].width / 2) + (data.x_shift * (SIZE_TILE / 2));
-            enemy.setPosition(((enemy_on_map.x + (data.x_shift * SIZE_TILE)) * UNIVERSAL_SCALE), enemy_on_map.y * UNIVERSAL_SCALE);
+            enemy.setPosition(enemy_on_map.x * UNIVERSAL_SCALE, enemy_on_map.y * UNIVERSAL_SCALE);
             window.draw(enemy);
         }
+
+        window.setView(view_tool);
         button.render(window);
-
         window.draw(tool_side);
-
         enemy.setTexture(data.textures[data.id_enemy]);
         sf::IntRect rect = sf::IntRect(data.enemies[data.id_enemy].animation[0].x, data.enemies[data.id_enemy].animation[0].y, data.enemies[data.id_enemy].animation[0].width, data.enemies[data.id_enemy].animation[0].height);
         enemy.setTextureRect(rect);
@@ -423,5 +431,3 @@ int main(int ac, char **av)
     }
     return 0;
 }
-
-// TODO cursor tile always on the screen, move shift if not
