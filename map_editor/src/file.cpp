@@ -2,6 +2,7 @@
 
 void json_fill_EnemyData(EnemyData &data, nlohmann::json jsonData)
 {
+    data.id = 0;
     data.damage = 0;
     data.life = 1;
     data.path_sprite = "";
@@ -104,12 +105,10 @@ void write_into_the_file(game_data &data)
                     }
                     fileStream << "        {" << std::endl;
                     fileStream << "          \"type\": " << enemy.type << "," << std::endl;
-                    fileStream << "          \"x\": " << enemy.x << "," << std::endl;
-                    fileStream << "          \"y\": " << enemy.y << "," << std::endl;
-                    fileStream << "          \"velocity_x\": " << 0 << "," << std::endl;// TODO true values
-                    fileStream << "          \"move\": \""
-                               << "linear"
-                               << "\"," << std::endl;
+                    fileStream << "          \"x\": " << std::round(enemy.x) << "," << std::endl;
+                    fileStream << "          \"y\": " << std::round(enemy.y) << "," << std::endl;
+                    fileStream << "          \"velocity_x\": " << data.types_velocity_enemy[data.id_type_velocity_enemy] << "," << std::endl;
+                    fileStream << "          \"move\": \"" << data.types_move_enemy[data.id_type_move_enemy] << "\"," << std::endl;
                     fileStream << "          \"move_time\": " << 0.05 << std::endl;
                     fileStream << "        }," << std::endl;
                 }
@@ -234,7 +233,7 @@ void event_handling(sf::RenderWindow &window, game_data &data, sf::View &view)
             EnemyData new_enemy = data.enemies[data.id_enemy];
             new_enemy.x = ((mousePos.x + view.getCenter().x - (WINDOW_WIDTH / 2)) / UNIVERSAL_SCALE) - (new_enemy.animation[0].width / 2);
             new_enemy.y = (mousePos.y / UNIVERSAL_SCALE) - (new_enemy.animation[0].height / 2);
-            new_enemy.type = data.id_enemy;
+            new_enemy.id = data.id_enemy;
             data.enemies_on_map.push_back(new_enemy);
         }
     }
@@ -483,8 +482,8 @@ int main(int argc, char **argv)
             i++;
         }
         for (auto &enemy_on_map: data.enemies_on_map) {
-            enemy.setTexture(data.textures_enemy[enemy_on_map.type]);
-            sf::IntRect rect = sf::IntRect(data.enemies[enemy_on_map.type].animation[0].x, data.enemies[enemy_on_map.type].animation[0].y, data.enemies[enemy_on_map.type].animation[0].width, data.enemies[enemy_on_map.type].animation[0].height);
+            enemy.setTexture(data.textures_enemy[enemy_on_map.id]);
+            sf::IntRect rect = sf::IntRect(data.enemies[enemy_on_map.id].animation[0].x, data.enemies[enemy_on_map.id].animation[0].y, data.enemies[enemy_on_map.id].animation[0].width, data.enemies[enemy_on_map.id].animation[0].height);
             enemy.setTextureRect(rect);
             enemy.setPosition(enemy_on_map.x * UNIVERSAL_SCALE, enemy_on_map.y * UNIVERSAL_SCALE);
             window.draw(enemy);

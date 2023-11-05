@@ -9,6 +9,7 @@
 #include <string>
 
 struct EnemyData {
+    int16_t id;
     // * // FROM TYPE
     int16_t type;
     int32_t damage;
