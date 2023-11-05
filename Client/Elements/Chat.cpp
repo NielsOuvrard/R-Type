@@ -36,20 +36,15 @@ void Chat::update()
     if (diff != _history.size()) {
         auto txt = get<Text>("txt");
         std::stringstream ss;
-        int i = 0;
         for (auto &chat: _history) {
-            if (i++ == 19) {
-                break;
-            }
-
             ss << chat.sender << ":";
             std::istringstream iss(chat.content);
             std::string word;
             std::size_t count = chat.sender.length() + 2;
             while (iss >> word) {
-                std::cout << "Count: " << count << "Word : " << word << std::endl;
+                std::cout << "Count: " << count << "Word : " << word << '\n';
                 if (count + word.length() > 43) {
-                    ss << std::endl;
+                    ss << '\n';
                     count = 0;
                 }
                 if (count > 0) {
@@ -59,9 +54,14 @@ void Chat::update()
                 ss << word;
                 count += word.length();
             }
-            ss << std::endl;
+            ss << '\n';
         }
         get<Text>("txt")->setValue(ss.str());
+        std::string out = ss.str();
+        size_t i = std::count(out.begin(), out.end(), '\n');
+        while (i-- > 18) {
+            _history.pop_front();
+        }
     }
     diff = _history.size();
     Element::update();
