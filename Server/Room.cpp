@@ -56,3 +56,10 @@ const std::list<Room::chat_message> &Room::getChats()
 {
     return _chats;
 }
+
+void Room::toggleReady(std::shared_ptr<network::connection<protocol::lobby>> &target)
+{
+    _members[target] = std::tuple(std::get<0>(_members[target]), std::get<1>(_members[target]), !std::get<2>(_members[target]));
+}
+
+void Room::close() { _open = false; }

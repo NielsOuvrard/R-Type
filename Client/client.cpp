@@ -3,6 +3,7 @@
 //
 
 #include "client.h"
+#include "Elements/Chat.h"
 #include "Elements/Image.h"
 #include "Elements/UserCard.h"
 #include "Scenes/Background.h"
@@ -61,7 +62,7 @@ void client::build()
         _selected = "lobbyList";
     });
     _elements["login"]->build();
-    _elements["login"]->get<TextInput>("name")->setValue("Toto");
+    _elements["login"]->get<TextInput>("name")->setValue("toto");
     _elements["login"]->get<TextInput>("ip")->setValue("127.0.0.1");
     _elements["login"]->get<TextInput>("port")->setValue("3030");
 
@@ -106,6 +107,13 @@ void client::build()
     });
     _elements["lobby"]->build();
     _elements["lobby"]->setHide(true);
+    _elements["lobby"]->get<Chat>("chat")->get<TextInput>("input")->onSubmit = [this](const std::string &value) {
+        network::message<lobby> msg(lobby::new_chat);
+        char content[128] = {0};
+        std::strcat(content, value.data());
+        msg << content << _currentLobby;
+        send(msg);
+    };
 
     _selected = "login";
     _build = true;
@@ -122,21 +130,11 @@ void client::receive()
                 break;
             }
             case lobby::data_channel: {
-                if (_selected != "lobby") return;
-                _elements["lobby"]->setHide(true);
-                _elements["bg"]->setHide(true);
-
-                auto ip = _elements["login"]->get<TextInput>("ip")->getValue();
-                udp::endpoint remote_game;
-                msg >> remote_game;
-                remote_game = udp::endpoint(asio::ip::make_address(ip), remote_game.port());
-
-                _spectator = std::make_unique<spectator>(_context, _engine);
-                _spectator->addPeer(remote_game);
-
-                network::datagram<data> data(data::join);
-                _spectator->sendTo(data, remote_game);
-                _state = state::in_game;
+                handleDataSocket(msg);
+                break;
+            }
+            case lobby::new_chat: {
+                handleNewChat(msg);
                 break;
             }
         }
@@ -155,7 +153,6 @@ void client::emit()
         getRoomsCD.Activate();
 
     } else if (_selected == "lobby" && _state == state::ok && getRoomCD.IsReady()) {
-        std::cout << "EMIT GET LOBBY" << std::endl;
         net::message<lobby> msg(lobby::get_room);
         msg << _currentLobby;
         send(msg);
@@ -175,7 +172,6 @@ void client::handleOk(network::message<lobby> &msg)
             uint32_t nb = 0;
             msg >> nb;
             auto &players = std::dynamic_pointer_cast<Lobby>(_elements["lobby"])->players;
-            std::cout << "NB: " << nb << std::endl;
             for (uint32_t i = 0; i < 4; i++) {
                 if (i < nb) {
                     char name[32] = {0};
@@ -242,9 +238,7 @@ void client::handleOk(network::message<lobby> &msg)
                     it++;
                 }
             }
-
             _state = state::ok;
-            //            std::cout << "Rooms received" << std::endl;
             break;
         }
         case state::w_join: {
@@ -255,4 +249,31 @@ void client::handleOk(network::message<lobby> &msg)
             break;
         }
     }
+}
+
+void client::handleNewChat(network::message<lobby> &msg)
+{
+    char content[128] = {0}, sender[32] = {0};
+    msg >> sender >> content;
+    auto &history = _elements["lobby"]->get<Chat>("chat")->_history;
+    history.emplace_back(Chat::Message{sender, content});
+}
+
+void client::handleDataSocket(network::message<lobby> &msg)
+{
+    if (_selected != "lobby") return;
+    _elements["lobby"]->setHide(true);
+    _elements["bg"]->setHide(true);
+
+    auto ip = _elements["login"]->get<TextInput>("ip")->getValue();
+    udp::endpoint remote_game;
+    msg >> remote_game;
+    remote_game = udp::endpoint(asio::ip::make_address(ip), remote_game.port());
+
+    _spectator = std::make_unique<spectator>(_context, _engine);
+    _spectator->addPeer(remote_game);
+
+    network::datagram<data> data(data::join);
+    _spectator->sendTo(data, remote_game);
+    _state = state::in_game;
 }

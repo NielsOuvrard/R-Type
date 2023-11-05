@@ -17,9 +17,15 @@ public:
     void setValue(const std::string &newValue);
     void setPlaceholder(const std::string &newPlaceholder);
     void setHitbox(int x, int y, int width, int height);
+
     [[nodiscard]] const std::string &getValue() const;
 
     bool _focus = false;
+    std::function<void(const std::string &)> onSubmit = [this](const std::string &) {
+        std::cout << "SUBMIT: " << _value << std::endl;
+    };
+
+    int limit = -1;
 
 private:
     std::string _value;

@@ -15,8 +15,8 @@ public:
     };
 
 public:
-    Chat(Haze::Engine &engine);
+    explicit Chat(Haze::Engine &engine);
     void build() override;
     void update() override;
-    //    std::list<Message> _history;
+    std::list<Message> _history;
 };
