@@ -14,7 +14,8 @@ enemies drop
 - [ ] Score
 
 
-sound effect on all shots (load from file)
+fix explosion position enemies up
+
 
 
         //        _ip.setValue("88.120.142.2");

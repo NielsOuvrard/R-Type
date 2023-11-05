@@ -17,7 +17,7 @@
 Rtype::Rtype(asio::io_context &context)
     : _channel(context), _engine(10),
       _typeEntities{_enemies_type, _explosions_type, _shots_type, _bosses_type},
-      _dataGame{_engine, _channel, _background, _boss, _shots, _walls, _players, _explosions, _enemies, _map_moving}
+      _dataGame{_engine, _channel, _background, _boss, _shots, _walls, _players, _explosions, _enemies, _map_moving, _score}
 {
     std::srand(std::time(0));
     _engine.init();
@@ -31,6 +31,18 @@ Rtype::Rtype(asio::io_context &context)
 
     _mapHandler = std::make_unique<Map>(_dataGame, _typeEntities);
     _map_moving = true;
+
+    _text_score = _dataGame.engine.createEntity();
+    _channel.sendGroup(RType::message::createEntity(_text_score->getId()));
+    _channel.sendGroup(RType::message::addComponent(_text_score->getId(), "Position", new Haze::Position(10, 10), sizeof(Haze::Position)));
+    //    _channel.sendGroup(RType::message::addComponent(_text_score->getId(), "Text", new Haze::Text("Score: 0", Haze::Text::CYAN, "assets/fonts/arial.ttf"), sizeof(Haze::Text)));
+
+
+    auto elem_txt = new Haze::TextData();
+    std::strncpy(elem_txt->text, std::to_string(_score).c_str(), sizeof(elem_txt->text));
+    elem_txt->text[sizeof(elem_txt->text) - 1] = '\0';
+    elem_txt->color = Haze::Text::MAGENTA;
+    _dataGame.channel.sendGroup(RType::message::addComponent(_text_score->getId(), "Text", elem_txt, sizeof(Haze::TextData)));
 }
 
 Rtype::~Rtype() = default;
@@ -108,7 +120,16 @@ void Rtype::sendEverything(udp::endpoint &to)
             }
         }
     }
-    // TODO add boss
+    //    // TODO add boss
+
+
+    _channel.sendGroup(RType::message::createEntity(_text_score->getId()));
+    _channel.sendGroup(RType::message::addComponent(_text_score->getId(), "Position", new Haze::Position(10, 10), sizeof(Haze::Position)));
+    auto elem_txt = new Haze::TextData();
+    std::strncpy(elem_txt->text, std::to_string(_score).c_str(), sizeof(elem_txt->text));
+    elem_txt->text[sizeof(elem_txt->text) - 1] = '\0';
+    elem_txt->color = Haze::Text::MAGENTA;
+    _dataGame.channel.sendGroup(RType::message::addComponent(_text_score->getId(), "Text", elem_txt, sizeof(Haze::TextData)));
 }
 
 void Rtype::start()
@@ -290,4 +311,14 @@ void Rtype::update()
     }
     if (playerToCleanup)
         _players.erase(std::remove(_players.begin(), _players.end(), nullptr), _players.end());
+
+    if (_score == 0) {
+        auto elem_txt = new Haze::TextData();
+        std::strncpy(elem_txt->text, std::to_string(_score).c_str(), sizeof(elem_txt->text));
+        elem_txt->text[sizeof(elem_txt->text) - 1] = '\0';
+        elem_txt->color = Haze::Text::MAGENTA;
+        _dataGame.channel.sendGroup(RType::message::addComponent(_text_score->getId(), "Text", elem_txt, sizeof(Haze::TextData)));
+        _score++;
+    }
+    // _entity = _dataGame.engine.createEntity();
 }

@@ -42,4 +42,5 @@ typedef struct dataGame {
     std::vector<std::unique_ptr<Explosion>> &explosions;
     std::vector<std::unique_ptr<Enemy>> &enemies;
     bool &map_moving;
+    int32_t &score;
 } DataGame;

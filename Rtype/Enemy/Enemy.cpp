@@ -147,6 +147,7 @@ void Enemy::build(EnemyData data_enemy, nlohmann::json mapData)
                         elem_sound->path[sizeof(elem_sound->path) - 1] = '\0';
                         _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Audio", elem_sound, sizeof(Haze::AudioData)));
                     }
+                    _dataGame.score += 100;
                     auto position = dynamic_cast<Haze::Position *>(_entity->getComponent("Position"));
                     _data.x = position->x;
                     _data.y = position->y;

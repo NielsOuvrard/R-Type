@@ -138,6 +138,7 @@ void Boss::build(std::string filePath)
                         elem_sound->path[sizeof(elem_sound->path) - 1] = '\0';
                         _dataGame.channel.sendGroup(RType::message::addComponent(_body->getId(), "Audio", elem_sound, sizeof(Haze::AudioData)));
                     }
+                    _dataGame.score += 1000;
                     _dataGame.channel.sendGroup(RType::message::addComponent(_tummy->getId(), "Audio", new Haze::AudioData{"assets/sounds/double_explo.wav"}, sizeof(Haze::AudioData)));
                     auto position = dynamic_cast<Haze::Position *>(_body->getComponent("Position"));
                     _data.x = position->x;

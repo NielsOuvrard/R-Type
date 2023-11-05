@@ -144,4 +144,6 @@ private:
     std::vector<Haze::Entity *> _entities;
 
     bool _running = false;
+    int32_t _score = 0;
+    Haze::Entity *_text_score = nullptr;
 };
