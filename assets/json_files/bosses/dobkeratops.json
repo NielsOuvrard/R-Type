@@ -5,6 +5,9 @@
   "path_sprite": "assets/sprites/boss.png",
   "tools_path_sprite": "assets/sprites/boss_tools.png",
   "tools_path_json": "assets/json_files/bosses/dobkeratops_tummy.json",
+  "sound_spawn": "assets/sounds/spawn_1.wav",
+  "sound_damage": "assets/sounds/damage_3.mp3",
+  "sound_death": "assets/sounds/death_1.wav",
   "hitbox": {
     "x": 80,
     "y": 5,

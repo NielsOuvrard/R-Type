@@ -23,6 +23,9 @@ void fill_data_from_boss(BossData &data, nlohmann::json jsonData)
     data.path_sprite = "";
     data.tools_path_sprite = "";
     data.tools_path_json = "";
+    data.sound_spawn = "";
+    data.sound_death = "";
+    data.sound_damage = "";
 
     if (jsonData.contains("hitbox")) {
         if (jsonData["hitbox"].contains("x"))
@@ -51,6 +54,15 @@ void fill_data_from_boss(BossData &data, nlohmann::json jsonData)
     }
     if (jsonData.contains("tools_path_json")) {
         data.tools_path_json = jsonData["tools_path_json"];
+    }
+    if (jsonData.contains("sound_spawn")) {
+        data.sound_spawn = jsonData["sound_spawn"];
+    }
+    if (jsonData.contains("sound_death")) {
+        data.sound_death = jsonData["sound_death"];
+    }
+    if (jsonData.contains("sound_damage")) {
+        data.sound_damage = jsonData["sound_damage"];
     }
 }
 
@@ -81,6 +93,15 @@ void Boss::build(std::string filePath)
     _missileCd.Activate();
 
     _body = _dataGame.engine.createEntity();
+
+    if (!_data.sound_spawn.empty()) {
+        std::cout << "\033[1;34mplay spawn sound\033[0m" << std::endl;
+        // create sound at the spawn
+        auto elem_sound = new Haze::AnimationData();
+        strncpy(elem_sound->path, _data.sound_spawn.c_str(), sizeof(elem_sound->path));
+        elem_sound->path[sizeof(elem_sound->path) - 1] = '\0';
+        _dataGame.channel.sendGroup(RType::message::addComponent(_body->getId(), "Audio", elem_sound, sizeof(Haze::AudioData)));
+    }
     _body->addComponent(new Haze::Position(WINDOW_WIDTH + SIZE_TILE + _data.x, _data.y));
     _body->addComponent(new Haze::Velocity(VELOCITY_WALL_X, VELOCITY_WALL_Y, 0.05));
     _body->addComponent(new Haze::Scale(UNIVERSAL_SCALE, UNIVERSAL_SCALE));
@@ -109,6 +130,14 @@ void Boss::build(std::string filePath)
                 }
                 _data.life -= damage->damage;
                 if (_data.life <= 0) {
+                    if (!_data.sound_death.empty()) {
+                        std::cout << "\033[1;34mplay death sound\033[0m" << std::endl;
+                        // create sound at the death
+                        auto elem_sound = new Haze::AnimationData();
+                        strncpy(elem_sound->path, _data.sound_death.c_str(), sizeof(elem_sound->path));
+                        elem_sound->path[sizeof(elem_sound->path) - 1] = '\0';
+                        _dataGame.channel.sendGroup(RType::message::addComponent(_body->getId(), "Audio", elem_sound, sizeof(Haze::AudioData)));
+                    }
                     _dataGame.channel.sendGroup(RType::message::addComponent(_tummy->getId(), "Audio", new Haze::AudioData{"assets/sounds/double_explo.wav"}, sizeof(Haze::AudioData)));
                     auto position = dynamic_cast<Haze::Position *>(_body->getComponent("Position"));
                     _data.x = position->x;
@@ -123,6 +152,13 @@ void Boss::build(std::string filePath)
 
                     this->_isDead = true;
                 } else {
+                    if (!_data.sound_damage.empty()) {
+                        // create sound at the death
+                        auto elem_sound = new Haze::AnimationData();
+                        strncpy(elem_sound->path, _data.sound_damage.c_str(), sizeof(elem_sound->path));
+                        elem_sound->path[sizeof(elem_sound->path) - 1] = '\0';
+                        _dataGame.channel.sendGroup(RType::message::addComponent(_body->getId(), "Audio", elem_sound, sizeof(Haze::AudioData)));
+                    }
                     _dataGame.channel.sendGroup(RType::message::addComponent(_tummy->getId(), "Audio", new Haze::AudioData{"assets/sounds/little_explo.wav"}, sizeof(Haze::AudioData)));
                     _data.life -= damage->damage;
                 }

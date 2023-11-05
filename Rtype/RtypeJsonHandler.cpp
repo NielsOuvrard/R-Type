@@ -140,6 +140,9 @@ void json_fill_BossData(BossData &data, nlohmann::json jsonData)
     data.path_sprite = "";
     data.hitBoxData = {};
     data.type = jsonData["type"];
+    data.sound_spawn = "";
+    data.sound_death = "";
+    data.sound_damage = "";
 
     if (jsonData.contains("damage")) {
         data.damage = jsonData["damage"];
@@ -159,6 +162,15 @@ void json_fill_BossData(BossData &data, nlohmann::json jsonData)
             data.hitBoxData.width = jsonData["hitbox"]["width"];
         if (jsonData["hitbox"].contains("height"))
             data.hitBoxData.height = jsonData["hitbox"]["height"];
+    }
+    if (jsonData.contains("sound_spawn")) {
+        data.sound_spawn = jsonData["sound_spawn"];
+    }
+    if (jsonData.contains("sound_death")) {
+        data.sound_death = jsonData["sound_death"];
+    }
+    if (jsonData.contains("sound_damage")) {
+        data.sound_damage = jsonData["sound_damage"];
     }
 }
 

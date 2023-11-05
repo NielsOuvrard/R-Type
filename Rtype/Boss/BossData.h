@@ -14,6 +14,9 @@ struct BossData { // ? maybe 2 types
     std::string tools_path_json;
     std::string path_sprite;///< The path or movement pattern of the boss.
     std::string path_json;  ///< Animation of the sprite
+    std::string sound_spawn;
+    std::string sound_death;
+    std::string sound_damage;
 
     HitBox hitBoxData;
 
