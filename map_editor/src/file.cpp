@@ -207,7 +207,7 @@ void event_handling(sf::RenderWindow &window, game_data &data, sf::View &view)
             sf::Vector2i mousePos = sf::Mouse::getPosition(window);
             // add enemy
             EnemyData new_enemy = data.enemies[data.id_enemy];
-            new_enemy.x = (mousePos.x / UNIVERSAL_SCALE) - (new_enemy.animation[0].width / 2);
+            new_enemy.x = ((mousePos.x + view.getCenter().x - (WINDOW_WIDTH / 2)) / UNIVERSAL_SCALE) - (new_enemy.animation[0].width / 2);
             new_enemy.y = (mousePos.y / UNIVERSAL_SCALE) - (new_enemy.animation[0].height / 2);
             std::cout << "x: " << new_enemy.x << " y: " << new_enemy.y << std::endl;
             new_enemy.type = data.id_enemy;
