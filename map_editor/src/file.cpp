@@ -87,7 +87,7 @@ void write_into_the_file(game_data &data)
     if (fileStream.is_open()) {
         fileStream << "{" << std::endl;
         fileStream << "  \"walls\": \""
-                   << "wall..."
+                   << data.paths_walls[data.id_wall]
                    << "\"," << std::endl;// TODO data.walls_paths[data.id_wall]
         fileStream << "  \"parallax\": \"" << data.parallax_path << "\"," << std::endl;
         fileStream << "  \"map\": [" << std::endl;
@@ -290,6 +290,7 @@ void load_walls(game_data &data)
                     texture_wall.loadFromFile(path_wall);
 
                     data.textures_walls.push_back(texture_wall);
+                    data.paths_walls.push_back(path_sprite_walls);
                     data.nmb_walls++;
 
                 } catch (nlohmann::json::parse_error &e) {

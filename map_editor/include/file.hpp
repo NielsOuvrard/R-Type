@@ -81,6 +81,7 @@ typedef struct game_data {
     int nmb_walls;
     std::vector<HitBox> wall_hitbox;
     std::vector<sf::Texture> textures_walls;
+    std::vector<std::string> paths_walls;
 
     ButtonElement button_save;
     ButtonElement button_enemy;
