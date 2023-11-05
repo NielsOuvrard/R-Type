@@ -87,8 +87,8 @@ void write_into_the_file(game_data &data)
         fileStream << "{" << std::endl;
         fileStream << "  \"walls\": \""
                    << "wall..."
-                   << "\"," << std::endl;                                                // TODO data.walls_paths[data.id_wall]
-        fileStream << "  \"parallax\": \"assets/sprites/space_night.jpg\"," << std::endl;// TODO
+                   << "\"," << std::endl;// TODO data.walls_paths[data.id_wall]
+        fileStream << "  \"parallax\": \"" << data.parallax_path << "\"," << std::endl;
         fileStream << "  \"map\": [" << std::endl;
         int i = 0;
         for (auto &tile: data.tiles) {
@@ -204,19 +204,27 @@ void event_handling(sf::RenderWindow &window, game_data &data, sf::View &view)
             // click in tool side
             if (mousePos.x > WINDOW_WIDTH - BUTTON_SIZE) {
                 if (mousePos.y > WINDOW_HEIGHT - BUTTON_SIZE) {
+
+                } else if (mousePos.y > WINDOW_HEIGHT - (BUTTON_SIZE * 2)) {
+
+                } else if (mousePos.y > WINDOW_HEIGHT - (BUTTON_SIZE * 3)) {
+                    // change wall
+                    data.id_wall++;
+                    if (data.id_wall >= data.nmb_walls)
+                        data.id_wall = 0;
+                } else if (mousePos.y > WINDOW_HEIGHT - (BUTTON_SIZE * 4)) {
+                    // delete enemy
+                    if (data.enemies_on_map.size() > 0)
+                        data.enemies_on_map.pop_back();
+                } else if (mousePos.y > WINDOW_HEIGHT - (BUTTON_SIZE * 5)) {
                     // change enemy
                     data.id_enemy++;
                     if (data.id_enemy >= data.nmb_enemies)
                         data.id_enemy = 0;
-                } else if (mousePos.y > WINDOW_HEIGHT - (BUTTON_SIZE * 2)) {
-                    // delete enemy
-                    if (data.enemies_on_map.size() > 0)
-                        data.enemies_on_map.pop_back();
-                } else if (mousePos.y > WINDOW_HEIGHT - (BUTTON_SIZE * 3)) {
-                    std::cout << "wall: " << data.id_wall << std::endl;
-                    data.id_wall++;
-                    if (data.id_wall >= data.nmb_walls)
-                        data.id_wall = 0;
+                } else if (mousePos.y > WINDOW_HEIGHT - (BUTTON_SIZE * 6)) {
+                    // save
+                    std::cout << "Saved" << std::endl;
+                    write_into_the_file(data);
                 }
                 return;
             }
@@ -392,10 +400,18 @@ int main(int argc, char **argv)
     view_tool.setViewport(sf::FloatRect(0, 0, 1.0f, 1.0f));
 
     // * create buttons
-    ButtonElement button_save = ButtonElement(WINDOW_WIDTH - BUTTON_SIZE, 0, BUTTON_SIZE, BUTTON_SIZE, "Save");
     sf::Font font;
     font.loadFromFile("../assets/fonts/font.ttf");
+
+    ButtonElement button_save = ButtonElement(WINDOW_WIDTH - BUTTON_SIZE, 0, BUTTON_SIZE, BUTTON_SIZE, "Save");
     button_save.setFont(font);
+    ButtonElement button_enemy = ButtonElement(WINDOW_WIDTH - BUTTON_SIZE, BUTTON_SIZE, BUTTON_SIZE, BUTTON_SIZE, "enemy");
+    button_enemy.setFont(font);
+    ButtonElement button_delete_enemy = ButtonElement(WINDOW_WIDTH - BUTTON_SIZE, BUTTON_SIZE * 2, BUTTON_SIZE, BUTTON_SIZE, "delete enemy");
+    button_delete_enemy.setFont(font);
+    ButtonElement button_wall = ButtonElement(WINDOW_WIDTH - BUTTON_SIZE, BUTTON_SIZE * 3, BUTTON_SIZE, BUTTON_SIZE, "wall");
+    button_wall.setFont(font);
+
 
     // * create enemy
     sf::Sprite enemy = sf::Sprite();
@@ -419,10 +435,13 @@ int main(int argc, char **argv)
         wall.setTexture(data.textures_walls[data.id_wall]);
         event_handling(window, data, view_map);
         button_save.handleEvent(sf::Event(), window);
-        if (button_save.isClicked()) {
-            std::cout << "Saved" << std::endl;
-            write_into_the_file(data);
-        }
+        button_enemy.handleEvent(sf::Event(), window);
+        button_delete_enemy.handleEvent(sf::Event(), window);
+        button_wall.handleEvent(sf::Event(), window);
+        // if (button_save.isClicked()) {
+        //     std::cout << "Saved" << std::endl;
+        //     write_into_the_file(data);
+        // }
         int i = 0;
         window.setView(view_map);
         window.draw(parallax);
@@ -461,16 +480,20 @@ int main(int argc, char **argv)
             enemy.setPosition(enemy_on_map.x * UNIVERSAL_SCALE, enemy_on_map.y * UNIVERSAL_SCALE);
             window.draw(enemy);
         }
+        window.draw(tool_side);
 
         window.setView(view_tool);
         button_save.render(window);
-        window.draw(tool_side);
+        button_enemy.render(window);
+        button_delete_enemy.render(window);
+        button_wall.render(window);
+
 
         enemy.setTexture(data.textures_enemy[data.id_enemy]);
         sf::IntRect rect = sf::IntRect(data.enemies[data.id_enemy].animation[0].x, data.enemies[data.id_enemy].animation[0].y, data.enemies[data.id_enemy].animation[0].width, data.enemies[data.id_enemy].animation[0].height);
         enemy.setTextureRect(rect);
         enemy.setOrigin(data.enemies[data.id_enemy].animation[0].width / 2, data.enemies[data.id_enemy].animation[0].height / 2);
-        enemy.setPosition(WINDOW_WIDTH - (BUTTON_SIZE / 2), WINDOW_HEIGHT / 2);
+        enemy.setPosition(WINDOW_WIDTH - (BUTTON_SIZE / 2), 160);
 
         window.draw(enemy);
 

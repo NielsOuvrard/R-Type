@@ -25,22 +25,17 @@ public:
     {
         _buttonShape = sf::RectangleShape(sf::Vector2f(width, height));
         _buttonShape.setPosition(x, y);
-        // _buttonShape.setRotation(rotation);
-        // _buttonShape.setOrigin(originX, originY);
         _buttonShape.setFillColor(_defaultColor);
 
         _buttonText = sf::Text();
         _buttonText.setString(text);
         _buttonText.setFillColor(_textColor);
-        _buttonText.setCharacterSize(24);
+        _buttonText.setCharacterSize(14);
 
         _buttonText.setStyle(sf::Text::Bold);
         _buttonText.setOutlineColor(sf::Color::Black);
 
-        // Center the text within the button
-        sf::FloatRect textBounds = _buttonText.getLocalBounds();
-        _buttonText.setOrigin(textBounds.left + textBounds.width / 4.0f, textBounds.top + textBounds.height / 4.0f);
-        _buttonText.setPosition(x + width / 4.0f, y + height / 4.0f);
+        _buttonText.setPosition(_buttonShape.getPosition().x + 10, _buttonShape.getPosition().y + 10);
     }
 
     void render(sf::RenderWindow &window) override
