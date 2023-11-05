@@ -24,6 +24,9 @@ void json_fill_EnemyData(EnemyData &data, nlohmann::json jsonData)
     data.explosion_type = 0;
     data.type = jsonData["type"];
     data.height = 0;
+    data.sound_spawn = "";
+    data.sound_death = "";
+    data.sound_damage = "";
 
     if (jsonData.contains("damage")) {
         data.damage = jsonData["damage"];
@@ -56,6 +59,15 @@ void json_fill_EnemyData(EnemyData &data, nlohmann::json jsonData)
     // if (jsonData.contains("animation") && jsonData["animation"].contains(0) && jsonData["animation"][0].contains("height")) {
     data.height = jsonData["animation"][0]["height"];
     // }
+    if (jsonData.contains("sound_spawn")) {
+        data.sound_spawn = jsonData["sound_spawn"];
+    }
+    if (jsonData.contains("sound_death")) {
+        data.sound_death = jsonData["sound_death"];
+    }
+    if (jsonData.contains("sound_damage")) {
+        data.sound_damage = jsonData["sound_damage"];
+    }
 }
 
 // type

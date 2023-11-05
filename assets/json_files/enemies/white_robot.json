@@ -5,6 +5,9 @@
   "shot_type": 3,
   "explosion_type": 1,
   "path_sprite": "assets/sprites/r-typesheet11.gif",
+  "sound_spawn": "assets/sounds/spawn_1.wav",
+  "sound_damage": "assets/sounds/damage_1.wav",
+  "sound_death": "assets/sounds/death_1.wav",
   "hitbox": {
     "x": 1,
     "y": 1,

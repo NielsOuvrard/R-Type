@@ -88,6 +88,13 @@ void Enemy::build(EnemyData data_enemy, nlohmann::json mapData)
     _entity = _dataGame.engine.createEntity();
     std::cout << "[" << _entity->getId() << "] Enemy Created" << std::endl;
 
+    if (!_data.sound_spawn.empty()) {
+        // create sound at the death
+        auto elem_sound = new Haze::AnimationData();
+        strncpy(elem_sound->path, _data.sound_spawn.c_str(), sizeof(elem_sound->path));
+        elem_sound->path[sizeof(elem_sound->path) - 1] = '\0';
+        _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Audio", elem_sound, sizeof(Haze::AudioData)));
+    }
 
     if (!_data.fly) {// TODO : flip Y axe
         // UNIVERSAL_SCALE * 7 because a tile is 7 height pixel
@@ -133,19 +140,31 @@ void Enemy::build(EnemyData data_enemy, nlohmann::json mapData)
                 }
                 _data.life -= damage->damage;
                 if (_data.life <= 0) {
+                    if (!_data.sound_death.empty()) {
+                        // create sound at the death
+                        auto elem_sound = new Haze::AnimationData();
+                        strncpy(elem_sound->path, _data.sound_death.c_str(), sizeof(elem_sound->path));
+                        elem_sound->path[sizeof(elem_sound->path) - 1] = '\0';
+                        _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Audio", elem_sound, sizeof(Haze::AudioData)));
+                    }
                     auto position = dynamic_cast<Haze::Position *>(_entity->getComponent("Position"));
                     _data.x = position->x;
                     _data.y = position->y;
                     std::cout << "enemy die by missile player\n";
                     _dataGame.channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
-                    _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Audio", new Haze::AudioData{"assets/sounds/double_explo.wav"}, sizeof(Haze::AudioData)));
                     _entity->addComponent(new Haze::Destroy());
                     _entity = nullptr;
                     this->_isDead = true;
                 } else {
+                    if (!_data.sound_damage.empty()) {
+                        // create sound at damage
+                        auto elem_sound = new Haze::AnimationData();
+                        strncpy(elem_sound->path, _data.sound_damage.c_str(), sizeof(elem_sound->path));
+                        elem_sound->path[sizeof(elem_sound->path) - 1] = '\0';
+                        _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Audio", elem_sound, sizeof(Haze::AudioData)));
+                    }
                     std::cout << "enemy damage by missile player: " << damage->damage << " hp: " << _data.life << "\n";
                     _data.life -= damage->damage;
-                    _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Audio", new Haze::AudioData{"assets/sounds/little_explo.wav"}, sizeof(Haze::AudioData)));
                 }
             }};
 
