@@ -17,11 +17,16 @@ void Chat::build()
     _children["title"] = std::make_shared<Text>(_engine, "Chat", "NotoMono.ttf", Haze::Text::colorHaze::WHITE, AxisPair{150, 30});
     _children["title"]->build();
 
-    _children["input"] = std::make_shared<TextInput>(_engine, "enter your message", AxisPair{30, 500}, AxisPair{0.6, 0.6});
+    _children["txt_img"] = std::make_shared<Image>(_engine, "assets/sprites/input.png", AxisPair{25, 510}, AxisPair{1, 1});
+    _children["txt_img"]->build();
+
+    _children["input"] = std::make_shared<TextInput>(_engine, "enter your message", AxisPair{38, 523}, AxisPair{0.6, 0.6});
     get<TextInput>("input")->limit = 40;
     _children["input"]->build();
+    get<TextInput>("input")->setHitbox(-13, -13, 770, 70);
+    get<TextInput>("input")->rm("HitboxDisplay");
 
-    _children["txt"] = std::make_shared<Text>(_engine, "", "NotoMono.ttf", Haze::Text::colorHaze::WHITE, AxisPair{50, 100}, AxisPair{0.6, 0.6});
+    _children["txt"] = std::make_shared<Text>(_engine, "", "NotoMono.ttf", Haze::Text::colorHaze::WHITE, AxisPair{30, 100}, AxisPair{0.6, 0.6});
     _children["txt"]->build();
 }
 
@@ -33,11 +38,28 @@ void Chat::update()
         std::stringstream ss;
         int i = 0;
         for (auto &chat: _history) {
-            if (i++ == 10) {
+            if (i++ == 19) {
                 break;
             }
 
-            ss << "[" << chat.sender << "]: " << chat.content << std::endl;
+            ss << chat.sender << ":";
+            std::istringstream iss(chat.content);
+            std::string word;
+            std::size_t count = chat.sender.length() + 2;
+            while (iss >> word) {
+                std::cout << "Count: " << count << "Word : " << word << std::endl;
+                if (count + word.length() > 43) {
+                    ss << std::endl;
+                    count = 0;
+                }
+                if (count > 0) {
+                    ss << " ";
+                    count++;
+                }
+                ss << word;
+                count += word.length();
+            }
+            ss << std::endl;
         }
         get<Text>("txt")->setValue(ss.str());
     }

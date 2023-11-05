@@ -257,7 +257,7 @@ void client::handleNewChat(network::message<lobby> &msg)
     msg >> sender >> content;
     auto &history = _elements["lobby"]->get<Chat>("chat")->_history;
     history.emplace_back(Chat::Message{sender, content});
-    while (history.size() > 10) {
+    while (history.size() > 19) {
         history.pop_front();
     }
 }
