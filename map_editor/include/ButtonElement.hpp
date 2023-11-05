@@ -67,8 +67,8 @@ private:
 
     sf::RectangleShape _buttonShape;
     sf::Text _buttonText;
-    bool _isClickedState;
-    bool _isHeldState;
+    bool _isClickedState = false;
+    bool _isHeldState = false;
 };
 
 void ButtonElement::handleEvent(sf::Event event, sf::RenderWindow &window)

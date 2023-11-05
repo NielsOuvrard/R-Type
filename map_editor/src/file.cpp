@@ -85,7 +85,9 @@ void write_into_the_file(game_data &data)
     std::ofstream fileStream(data.map_path);
     if (fileStream.is_open()) {
         fileStream << "{" << std::endl;
-        fileStream << "  \"walls\": \"" << data.walls_paths[data.id_wall] << "\"," << std::endl;
+        fileStream << "  \"walls\": \""
+                   << "wall..."
+                   << "\"," << std::endl;                                                // TODO data.walls_paths[data.id_wall]
         fileStream << "  \"parallax\": \"assets/sprites/space_night.jpg\"," << std::endl;// TODO
         fileStream << "  \"map\": [" << std::endl;
         int i = 0;
@@ -135,11 +137,6 @@ void event_handling(sf::RenderWindow &window, game_data &data, sf::View &view)
     while (window.pollEvent(event)) {
         if (event.type == sf::Event::Closed)
             window.close();
-        if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::A) {
-            data.id_wall++;
-            if (data.id_wall >= data.walls_paths.size())
-                data.id_wall = 0;
-        }
         if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::S) {
             write_into_the_file(data);
         }
@@ -194,7 +191,6 @@ void event_handling(sf::RenderWindow &window, game_data &data, sf::View &view)
             data.id_enemy++;
             if (data.id_enemy >= data.nmb_enemies)
                 data.id_enemy = 0;
-            data.update_enemies = true;
         }
         // if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::O) {
         //     view.move(-((SIZE_TILE / 2) * UNIVERSAL_SCALE), 0.0f);
@@ -205,60 +201,31 @@ void event_handling(sf::RenderWindow &window, game_data &data, sf::View &view)
         // mouse
         if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
             sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+            // click in tool side
+            if (mousePos.x > WINDOW_WIDTH - BUTTON_SIZE) {
+                if (mousePos.y > WINDOW_HEIGHT - BUTTON_SIZE) {
+                    // change enemy
+                    data.id_enemy++;
+                    if (data.id_enemy >= data.nmb_enemies)
+                        data.id_enemy = 0;
+                } else if (mousePos.y > WINDOW_HEIGHT - (BUTTON_SIZE * 2)) {
+                    // delete enemy
+                    if (data.enemies_on_map.size() > 0)
+                        data.enemies_on_map.pop_back();
+                } else if (mousePos.y > WINDOW_HEIGHT - (BUTTON_SIZE * 3)) {
+                    std::cout << "wall: " << data.id_wall << std::endl;
+                    data.id_wall++;
+                    if (data.id_wall >= data.nmb_walls)
+                        data.id_wall = 0;
+                }
+                return;
+            }
             // add enemy
             EnemyData new_enemy = data.enemies[data.id_enemy];
             new_enemy.x = ((mousePos.x + view.getCenter().x - (WINDOW_WIDTH / 2)) / UNIVERSAL_SCALE) - (new_enemy.animation[0].width / 2);
             new_enemy.y = (mousePos.y / UNIVERSAL_SCALE) - (new_enemy.animation[0].height / 2);
-            std::cout << "x: " << new_enemy.x << " y: " << new_enemy.y << std::endl;
             new_enemy.type = data.id_enemy;
             data.enemies_on_map.push_back(new_enemy);
-        }
-    }
-}
-
-void load_walls(game_data &data)
-{
-    const std::string directoryPath = "../assets/json_files/walls";
-
-    for (const auto &entry: std::filesystem::directory_iterator(directoryPath)) {
-        if (entry.is_regular_file() && entry.path().extension() == ".json") {
-            std::string filePath = entry.path().string();
-            data.walls_paths.push_back(filePath);
-        }
-    }
-}
-
-void load_enemies(game_data &data)
-{
-    const std::string directoryPath = "../assets/json_files/enemies";
-
-    for (const auto &entry: std::filesystem::directory_iterator(directoryPath)) {
-        if (entry.is_regular_file() && entry.path().extension() == ".json") {
-            std::string filePath = entry.path().string();
-            // data.enemies.push_back(filePath);
-            std::ifstream fileStream(filePath);
-            if (fileStream.is_open()) {
-                try {
-                    nlohmann::json jsonData;
-                    fileStream >> jsonData;
-                    EnemyData new_enemy_type;
-                    json_fill_EnemyData(new_enemy_type, jsonData);
-                    data.enemies.push_back(new_enemy_type);
-                    sf::Texture texture_enemy = sf::Texture();
-                    std::string path_enemy = "../" + new_enemy_type.path_sprite;
-                    texture_enemy.loadFromFile(path_enemy);
-                    data.textures.push_back(texture_enemy);
-                    data.nmb_enemies++;
-                } catch (nlohmann::json::parse_error &e) {
-                    std::cerr << "Error parsing JSON file: " << filePath << std::endl;
-                    std::cerr << e.what() << std::endl;
-                    return;
-                }
-                fileStream.close();
-            } else {
-                std::cerr << "Failed to open file: " << filePath << std::endl;
-                return;
-            }
         }
     }
 }
@@ -293,24 +260,108 @@ void fill_hitbox_wall(game_data &data, nlohmann::json jsonData)
     }
 }
 
-int main(int ac, char **av)
+void load_walls(game_data &data)
 {
-    char *map_path = NULL;// put here parallax path and walls path
-    if (av[1] != NULL)
-        map_path = strdup(av[1]);
-    else
-        map_path = strdup("map.json");
+    const std::string directoryPath = "../assets/json_files/walls";
+    data.nmb_walls = 0;
+    data.id_wall = 0;
+    for (const auto &entry: std::filesystem::directory_iterator(directoryPath)) {
+        if (entry.is_regular_file() && entry.path().extension() == ".json") {
+            std::string filePath = entry.path().string();
+            std::ifstream fileStream(filePath);
+            if (fileStream.is_open()) {
+                try {
+                    nlohmann::json jsonData;
+                    fileStream >> jsonData;
+                    std::string path_sprite_walls = jsonData["path_sprite"];
+                    fill_hitbox_wall(data, jsonData["animation"]);
 
+                    sf::Texture texture_wall = sf::Texture();
+                    std::string path_wall = "../" + path_sprite_walls;
+                    texture_wall.loadFromFile(path_wall);
+
+                    data.textures_walls.push_back(texture_wall);
+                    data.nmb_walls++;
+
+                } catch (nlohmann::json::parse_error &e) {
+                    std::cerr << "Error parsing JSON file: " << filePath << std::endl;
+                    std::cerr << e.what() << std::endl;
+                    return;
+                }
+                fileStream.close();
+            }
+        }
+    }
+
+    if (data.textures_walls.size() == 0)
+        exit(84);
+}
+
+void load_enemies(game_data &data)
+{
+    const std::string directoryPath = "../assets/json_files/enemies";
+
+    for (const auto &entry: std::filesystem::directory_iterator(directoryPath)) {
+        if (entry.is_regular_file() && entry.path().extension() == ".json") {
+            std::string filePath = entry.path().string();
+            std::ifstream fileStream(filePath);
+            if (fileStream.is_open()) {
+                try {
+                    nlohmann::json jsonData;
+                    fileStream >> jsonData;
+                    EnemyData new_enemy_type;
+                    json_fill_EnemyData(new_enemy_type, jsonData);
+                    data.enemies.push_back(new_enemy_type);
+                    sf::Texture texture_enemy = sf::Texture();
+                    std::string path_enemy = "../" + new_enemy_type.path_sprite;
+                    texture_enemy.loadFromFile(path_enemy);
+                    data.textures_enemy.push_back(texture_enemy);
+                    data.nmb_enemies++;
+                } catch (nlohmann::json::parse_error &e) {
+                    std::cerr << "Error parsing JSON file: " << filePath << std::endl;
+                    std::cerr << e.what() << std::endl;
+                    return;
+                }
+                fileStream.close();
+            } else {
+                std::cerr << "Failed to open file: " << filePath << std::endl;
+                return;
+            }
+        }
+    }
+}
+
+int main(int argc, char **argv)
+{
+    std::string map_path = "map.json";
+    std::string parallax_path = "assets/sprites/space.jpg";
+
+    for (int i = 1; i < argc; i++) {
+        std::string arg = argv[i];
+        if (arg == "-name" && i + 1 < argc) {
+            map_path = argv[i + 1];
+            i++;
+        } else if (arg == "-parallax" && i + 1 < argc) {
+            parallax_path = argv[i + 1];
+            i++;
+        } else {
+            std::cerr << "Unknown or incomplete option: " << arg << std::endl;
+            return 1;
+        }
+    }
+
+    // parallax
     game_data data;
     data.map_path = map_path;
-    data.id_wall = 0;
+    data.parallax_path = parallax_path;
+
     data.selected_tile = 0;
     data.selected_tile_is_top = true;
-    data.nmb_enemies = 0;
     data.id_enemy = 0;
-    // data.universal_scale = UNIVERSAL_SCALE;
+    data.nmb_enemies = 0;
+
     load_walls(data);
-    if (data.walls_paths.size() == 0) {
+    if (data.textures_walls.size() == 0) {
         std::cerr << "No walls found" << std::endl;
         return 84;
     }
@@ -320,21 +371,17 @@ int main(int ac, char **av)
         return 84;
     }
 
-    std::string path_sprite_walls = "";
-    std::ifstream fileStream(data.walls_paths[data.id_wall]);
-    if (fileStream.is_open()) {
-        try {
-            nlohmann::json jsonData;
-            fileStream >> jsonData;
-            path_sprite_walls = jsonData["path_sprite"];
-            fill_hitbox_wall(data, jsonData["animation"]);
-        } catch (nlohmann::json::parse_error &e) {
-            std::cerr << "Error parsing JSON file: " << data.walls_paths[data.id_wall] << std::endl;
-            std::cerr << e.what() << std::endl;
-            return 84;
-        }
-        fileStream.close();
-    }
+    // * create parallax
+    sf::Sprite parallax = sf::Sprite();
+    parallax.setScale(2, 2);
+    sf::Texture texture_parallax = sf::Texture();
+    std::string parallax_path_load = "../" + parallax_path;
+    texture_parallax.loadFromFile(parallax_path_load);
+    parallax.setTexture(texture_parallax);
+
+    // * create wall
+    sf::Sprite wall = sf::Sprite();
+    wall.setScale(UNIVERSAL_SCALE, UNIVERSAL_SCALE);
 
     // * create view_map
     sf::View view_map(sf::FloatRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT));
@@ -344,20 +391,11 @@ int main(int ac, char **av)
     sf::View view_tool(sf::FloatRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT));
     view_tool.setViewport(sf::FloatRect(0, 0, 1.0f, 1.0f));
 
-
-    // * create button
-    ButtonElement button = ButtonElement(WINDOW_WIDTH - BUTTON_SIZE, 0, BUTTON_SIZE, BUTTON_SIZE, "Save");
+    // * create buttons
+    ButtonElement button_save = ButtonElement(WINDOW_WIDTH - BUTTON_SIZE, 0, BUTTON_SIZE, BUTTON_SIZE, "Save");
     sf::Font font;
     font.loadFromFile("../assets/fonts/font.ttf");
-    button.setFont(font);
-
-    // * create wall
-    sf::Sprite wall = sf::Sprite();
-    sf::Texture texture_wall = sf::Texture();
-    std::string path_wall = "../" + path_sprite_walls;
-    texture_wall.loadFromFile(path_wall);
-    wall.setTexture(texture_wall);
-    wall.setScale(UNIVERSAL_SCALE, UNIVERSAL_SCALE);
+    button_save.setFont(font);
 
     // * create enemy
     sf::Sprite enemy = sf::Sprite();
@@ -376,12 +414,18 @@ int main(int ac, char **av)
     sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Map Editor");
     window.setFramerateLimit(60);
     while (window.isOpen()) {
-        data.update_enemies = false;
+        enemy.setOrigin(0, 0);
         window.clear(sf::Color::White);
-        button.handleEvent(sf::Event(), window);
+        wall.setTexture(data.textures_walls[data.id_wall]);
         event_handling(window, data, view_map);
+        button_save.handleEvent(sf::Event(), window);
+        if (button_save.isClicked()) {
+            std::cout << "Saved" << std::endl;
+            write_into_the_file(data);
+        }
         int i = 0;
         window.setView(view_map);
+        window.draw(parallax);
         for (auto &tile: data.tiles) {
             // data.wall_hitbox[i]
             sf::IntRect rect = sf::IntRect(tile.tile_top * data.wall_hitbox[tile.tile_top].width, 0, data.wall_hitbox[tile.tile_top].width, data.wall_hitbox[tile.tile_top].height);
@@ -411,7 +455,7 @@ int main(int ac, char **av)
             i++;
         }
         for (auto &enemy_on_map: data.enemies_on_map) {
-            enemy.setTexture(data.textures[enemy_on_map.type]);
+            enemy.setTexture(data.textures_enemy[enemy_on_map.type]);
             sf::IntRect rect = sf::IntRect(data.enemies[enemy_on_map.type].animation[0].x, data.enemies[enemy_on_map.type].animation[0].y, data.enemies[enemy_on_map.type].animation[0].width, data.enemies[enemy_on_map.type].animation[0].height);
             enemy.setTextureRect(rect);
             enemy.setPosition(enemy_on_map.x * UNIVERSAL_SCALE, enemy_on_map.y * UNIVERSAL_SCALE);
@@ -419,12 +463,15 @@ int main(int ac, char **av)
         }
 
         window.setView(view_tool);
-        button.render(window);
+        button_save.render(window);
         window.draw(tool_side);
-        enemy.setTexture(data.textures[data.id_enemy]);
+
+        enemy.setTexture(data.textures_enemy[data.id_enemy]);
         sf::IntRect rect = sf::IntRect(data.enemies[data.id_enemy].animation[0].x, data.enemies[data.id_enemy].animation[0].y, data.enemies[data.id_enemy].animation[0].width, data.enemies[data.id_enemy].animation[0].height);
         enemy.setTextureRect(rect);
-        enemy.setPosition(WINDOW_WIDTH - (BUTTON_SIZE / 2) - (data.enemies[data.id_enemy].animation[0].width / 2), WINDOW_HEIGHT / 2);
+        enemy.setOrigin(data.enemies[data.id_enemy].animation[0].width / 2, data.enemies[data.id_enemy].animation[0].height / 2);
+        enemy.setPosition(WINDOW_WIDTH - (BUTTON_SIZE / 2), WINDOW_HEIGHT / 2);
+
         window.draw(enemy);
 
         window.display();

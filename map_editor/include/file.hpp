@@ -56,20 +56,25 @@ typedef struct tile {
 } tile;
 
 typedef struct game_data {
-    std::vector<tile> tiles;
-    std::vector<HitBox> wall_hitbox;
-    char *map_path;
-    std::vector<std::string> walls_paths;
-    int id_wall;
+    std::string map_path;
+    std::string parallax_path;
+
+    // * tile
     int nmb_tiles;
-    // int x_shift;
     int selected_tile;
+    std::vector<tile> tiles;
     bool selected_tile_is_top;
-    std::vector<EnemyData> enemies;
-    std::vector<sf::Texture> textures;
-    int nmb_enemies;
-    bool update_enemies;
+
+    // * enemy
     int id_enemy;
+    int nmb_enemies;
+    std::vector<EnemyData> enemies;
     std::vector<EnemyData> enemies_on_map;
-    // float universal_scale;
+    std::vector<sf::Texture> textures_enemy;
+
+    // * wall
+    int id_wall;
+    int nmb_walls;
+    std::vector<HitBox> wall_hitbox;
+    std::vector<sf::Texture> textures_walls;
 } game_data;
