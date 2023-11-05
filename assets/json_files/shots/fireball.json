@@ -4,6 +4,7 @@
   "damage": 20,
   "velocity": 7,
   "bullet_drop": true,
+  "sound": "assets/sounds/fireball.wav",
   "bullet_drop_degree": 45,
   "laser": false,
   "hitbox": {

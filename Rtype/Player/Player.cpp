@@ -29,7 +29,6 @@ void Player::build()
                     auto position = dynamic_cast<Haze::Position *>(this->_entity->getComponent("Position"));
                     _missiles.emplace_back(std::make_unique<Shot>(_dataGame, _typeEntities, 1, 1, 0, "player"));
                     _missiles.back()->build(position->x + (20 * UNIVERSAL_SCALE), position->y);
-                    _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Audio", new Haze::AudioData{"assets/sounds/shot.ogg"}, sizeof(Haze::AudioData)));
                 }
                 if (IS_KEY_PRESSED(KEY_E) && _missileCd.IsReady()) {
                     _missileCd.Activate();
@@ -69,10 +68,12 @@ void Player::build()
                 std::cout << "hp = " << _hp << " - " << damage << " = " << _hp - damage << std::endl;
                 _hp -= 20;
                 if (_hp <= 0) {
+                    _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Audio", new Haze::AudioData{"assets/sounds/double_explo.wav"}, sizeof(Haze::AudioData)));
                     _dataGame.channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
                     _entity->addComponent(new Haze::Destroy());
                     _entity = nullptr;
                 } else {
+                    _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Audio", new Haze::AudioData{"assets/sounds/little_explo.wav"}, sizeof(Haze::AudioData)));
                     _hp -= damage;
                 }
             }};
@@ -86,10 +87,12 @@ void Player::build()
                 auto damage = dynamic_cast<Haze::Damage *>(_dataGame.engine.getEntity(b)->getComponent("Damage"));
                 _hp -= damage->damage;
                 if (_hp <= 0) {
+                    _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Audio", new Haze::AudioData{"assets/sounds/double_explo.wav"}, sizeof(Haze::AudioData)));
                     _dataGame.channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
                     _entity->addComponent(new Haze::Destroy());
                     _entity = nullptr;
                 } else {
+                    _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Audio", new Haze::AudioData{"assets/sounds/little_explo.wav"}, sizeof(Haze::AudioData)));
                     _hp -= damage->damage;
                 }
             }};
@@ -100,6 +103,7 @@ void Player::build()
                 if (!_entity) {
                     return;
                 }
+                _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Audio", new Haze::AudioData{"assets/sounds/double_explo.wav"}, sizeof(Haze::AudioData)));
                 _dataGame.channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
                 _entity->addComponent(new Haze::Destroy());
                 _entity = nullptr;

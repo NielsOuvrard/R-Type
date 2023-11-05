@@ -18,6 +18,7 @@ struct ShotData {
     bool bullet_drop;
     uint16_t bullet_drop_degree;
     bool no_animation;
+    std::string sound;
 
     // Todo: bool bonce;
     // Todo: bool laser;

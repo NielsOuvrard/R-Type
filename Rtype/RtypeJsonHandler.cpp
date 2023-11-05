@@ -83,6 +83,7 @@ void json_fill_ShotData(ShotData &data, nlohmann::json jsonData)
     data.bullet_drop = false;
     data.bullet_drop_degree = 0;
     data.no_animation = false;
+    data.sound = "";
 
     if (jsonData.contains("path_sprite")) {
         data.path_sprite = jsonData["path_sprite"];
@@ -109,6 +110,9 @@ void json_fill_ShotData(ShotData &data, nlohmann::json jsonData)
     }
     if (jsonData.contains("no_animation")) {
         data.no_animation = jsonData["no_animation"];
+    }
+    if (jsonData.contains("sound")) {
+        data.sound = jsonData["sound"];
     }
 }
 

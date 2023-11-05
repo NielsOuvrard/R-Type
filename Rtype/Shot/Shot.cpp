@@ -18,6 +18,14 @@ void Shot::build(float x, float y)
     _entity->addComponent(new Haze::Position(x, y));
     _entity->addComponent(new Haze::Position(x, y));
 
+    if (!_typeEntities.shots[_type].sound.empty()) {
+        // create sound at the launch
+        auto elem_sound = new Haze::AnimationData();
+        strncpy(elem_sound->path, _typeEntities.shots[_type].sound.c_str(), sizeof(elem_sound->path));
+        elem_sound->path[sizeof(elem_sound->path) - 1] = '\0';
+        _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Audio", elem_sound, sizeof(Haze::AudioData)));
+    }
+
     if (_typeEntities.shots[_type].bullet_drop) {
         float drop_degree = _typeEntities.shots[_type].bullet_drop_degree * (_vector_x >= 0 ? 1.0 : -1.0);
         _entity->addComponent(new Haze::BulletDrop((_vector_x * _typeEntities.shots[_type].velocity), drop_degree, 0.05));

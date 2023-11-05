@@ -109,11 +109,10 @@ void Boss::build(std::string filePath)
                 }
                 _data.life -= damage->damage;
                 if (_data.life <= 0) {
+                    _dataGame.channel.sendGroup(RType::message::addComponent(_tummy->getId(), "Audio", new Haze::AudioData{"assets/sounds/double_explo.wav"}, sizeof(Haze::AudioData)));
                     auto position = dynamic_cast<Haze::Position *>(_body->getComponent("Position"));
                     _data.x = position->x;
                     _data.y = position->y;
-                    std::cout << "boss die by missile player\n";
-
                     _dataGame.channel.sendGroup(RType::message::deleteEntity(_body->getId()));
                     _body->addComponent(new Haze::Destroy());
                     _body = nullptr;
@@ -124,7 +123,7 @@ void Boss::build(std::string filePath)
 
                     this->_isDead = true;
                 } else {
-                    std::cout << "enemy damage by missile player: " << damage->damage << " hp: " << _data.life << "\n";
+                    _dataGame.channel.sendGroup(RType::message::addComponent(_tummy->getId(), "Audio", new Haze::AudioData{"assets/sounds/little_explo.wav"}, sizeof(Haze::AudioData)));
                     _data.life -= damage->damage;
                 }
             }};
@@ -136,16 +135,7 @@ void Boss::build(std::string filePath)
                 if (!_body) {
                     return;
                 }
-                if (_data.life == -1) {// immortal
-                    return;
-                }
-                _dataGame.channel.sendGroup(RType::message::deleteEntity(_body->getId()));
-                _body->addComponent(new Haze::Destroy());
-                _body = nullptr;
-
-                _dataGame.channel.sendGroup(RType::message::deleteEntity(_tummy->getId()));
-                _tummy->addComponent(new Haze::Destroy());
-                _tummy = nullptr;
+                // nothing happened for the boss
             }};
     _body->addComponent(new Haze::Collision("enemy", boss_collisions));
     send();

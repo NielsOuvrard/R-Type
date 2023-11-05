@@ -5,6 +5,7 @@
   "velocity": 10,
   "bullet_drop": false,
   "laser": false,
+  "sound": "assets/sounds/shot.ogg",
   "hitbox": {
     "x": 0,
     "y": 6,
