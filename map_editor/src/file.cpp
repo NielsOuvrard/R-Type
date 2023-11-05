@@ -56,7 +56,7 @@ void json_fill_EnemyData(EnemyData &data, nlohmann::json jsonData)
     if (jsonData.contains("sound_damage")) {
         data.sound_damage = jsonData["sound_damage"];
     }
-    if (jsonData.contains("animation")) {
+    if (jsonData.contains("animation")) {// useless to put all the animation
         for (auto &animation: jsonData["animation"]) {
             HitBox tile_data;
             // * create enemy
@@ -88,28 +88,37 @@ void write_into_the_file(game_data &data)
         fileStream << "  \"walls\": \"" << data.walls_paths[data.id_wall] << "\"," << std::endl;
         fileStream << "  \"parallax\": \"assets/sprites/space_night.jpg\"," << std::endl;// TODO
         fileStream << "  \"map\": [" << std::endl;
+        int i = 0;
         for (auto &tile: data.tiles) {
             fileStream << "    {" << std::endl;
             fileStream << "      \"tile_top\": " << tile.tile_top << "," << std::endl;
             fileStream << "      \"tile_bottom\": " << tile.tile_bottom << (tile.enemies.size() > 0 ? "," : "") << std::endl;
-            if (tile.enemies.size() > 0) {
-                fileStream << "      \"enemies\": [" << std::endl;
-                for (auto &enemy: tile.enemies) {
+            bool enemy_found = false;
+            for (auto &enemy: data.enemies_on_map) {
+                if (enemy.x < (i * SIZE_TILE) + SIZE_TILE && enemy.x >= (i * SIZE_TILE)) {
+                    if (!enemy_found) {
+                        fileStream << "      \"enemies\": [" << std::endl;
+                        enemy_found = true;
+                    }
                     fileStream << "        {" << std::endl;
                     fileStream << "          \"type\": " << enemy.type << "," << std::endl;
                     fileStream << "          \"x\": " << enemy.x << "," << std::endl;
                     fileStream << "          \"y\": " << enemy.y << "," << std::endl;
-                    fileStream << "          \"velocity_x\": " << enemy.velocity_x << "," << std::endl;
-                    fileStream << "          \"move\": \"" << enemy.move << "\"," << std::endl;
-                    fileStream << "          \"move_time\": " << enemy.move_time << std::endl;
+                    fileStream << "          \"velocity_x\": " << 0 << "," << std::endl;// TODO true values
+                    fileStream << "          \"move\": \""
+                               << "linear"
+                               << "\"," << std::endl;
+                    fileStream << "          \"move_time\": " << 0.05 << std::endl;
                     fileStream << "        }," << std::endl;
                 }
-                fileStream << "      ]" << std::endl;
             }
+            if (enemy_found)
+                fileStream << "      ]" << std::endl;
             if (&tile != &data.tiles.back())
                 fileStream << "    }," << std::endl;
             else
                 fileStream << "    }" << std::endl;
+            i++;
         }
         fileStream << "  ]" << std::endl;
         fileStream << "}" << std::endl;
@@ -120,15 +129,12 @@ void write_into_the_file(game_data &data)
     }
 }
 
-bool event_handling(sf::RenderWindow &window, game_data &data)
+void event_handling(sf::RenderWindow &window, game_data &data)
 {
     sf::Event event;
-    bool change = false;
     while (window.pollEvent(event)) {
         if (event.type == sf::Event::Closed)
             window.close();
-        if (event.type == sf::Event::KeyPressed)
-            change = true;
         if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::A) {
             data.id_wall++;
             if (data.id_wall >= data.walls_paths.size())
@@ -154,11 +160,16 @@ bool event_handling(sf::RenderWindow &window, game_data &data)
             data.selected_tile--;
             if (data.selected_tile < 0)
                 data.selected_tile = data.tiles.size() - 1;
+            // if ((data.selected_tile + (data.x_shift * 2)) * SIZE_TILE * UNIVERSAL_SCALE < -(SIZE_TILE * UNIVERSAL_SCALE))
+            //     data.x_shift = -((data.selected_tile - (WINDOW_WIDTH / (SIZE_TILE * UNIVERSAL_SCALE))) * 2);
         }
         if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Right) {
             data.selected_tile++;
             if (data.selected_tile >= data.tiles.size())
                 data.selected_tile = 0;
+            // TODO
+            // if (data.selected_tile * SIZE_TILE * UNIVERSAL_SCALE > WINDOW_WIDTH)
+            //     data.x_shift = -((data.selected_tile - (WINDOW_WIDTH / (SIZE_TILE * UNIVERSAL_SCALE))) * 2);
         }
         if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Up) {
             data.selected_tile_is_top = !data.selected_tile_is_top;
@@ -190,27 +201,18 @@ bool event_handling(sf::RenderWindow &window, game_data &data)
         if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::U) {
             data.x_shift += 1;
         }
+        // mouse
+        if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+            sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+            // add enemy
+            EnemyData new_enemy = data.enemies[data.id_enemy];
+            new_enemy.x = (mousePos.x / UNIVERSAL_SCALE) - (new_enemy.animation[0].width / 2) + (data.x_shift * (SIZE_TILE / 2));
+            new_enemy.y = (mousePos.y / UNIVERSAL_SCALE) - (new_enemy.animation[0].height / 2);
+            std::cout << "x: " << new_enemy.x << " y: " << new_enemy.y << std::endl;
+            new_enemy.type = data.id_enemy;
+            data.enemies_on_map.push_back(new_enemy);
+        }
     }
-
-    return change;
-}
-
-// adapt screen size to pixel size
-
-char **get_lines(FILE *file)
-{
-    char **lines = NULL;
-    char buffer[1024];
-    int i = 0;
-
-    while (fgets(buffer, sizeof(buffer), file) != NULL) {
-        lines = (char **) realloc(lines, sizeof(char *) * (i + 1));
-        lines[i] = strdup(buffer);
-        i++;
-    }
-    lines = (char **) realloc(lines, sizeof(char *) * (i + 1));
-    lines[i] = NULL;
-    return lines;
 }
 
 void load_walls(game_data &data)
@@ -241,6 +243,10 @@ void load_enemies(game_data &data)
                     EnemyData new_enemy_type;
                     json_fill_EnemyData(new_enemy_type, jsonData);
                     data.enemies.push_back(new_enemy_type);
+                    sf::Texture texture_enemy = sf::Texture();
+                    std::string path_enemy = "../" + new_enemy_type.path_sprite;
+                    texture_enemy.loadFromFile(path_enemy);
+                    data.textures.push_back(texture_enemy);
                     data.nmb_enemies++;
                 } catch (nlohmann::json::parse_error &e) {
                     std::cerr << "Error parsing JSON file: " << filePath << std::endl;
@@ -346,14 +352,7 @@ int main(int ac, char **av)
 
     // * create enemy
     sf::Sprite enemy = sf::Sprite();
-    sf::Texture texture_enemy = sf::Texture();
-    std::string path_enemy = "../" + data.enemies[data.id_enemy].path_sprite;
-    texture_enemy.loadFromFile(path_enemy);
-    enemy.setTexture(texture_enemy);
     enemy.setScale(UNIVERSAL_SCALE, UNIVERSAL_SCALE);
-    sf::IntRect rect = sf::IntRect(data.enemies[data.id_enemy].animation[0].x, data.enemies[data.id_enemy].animation[0].y, data.enemies[data.id_enemy].animation[0].width, data.enemies[data.id_enemy].animation[0].height);
-    enemy.setTextureRect(rect);
-    enemy.setPosition(WINDOW_WIDTH - BUTTON_SIZE, WINDOW_HEIGHT / 2);
 
     tile new_tile = {};
     new_tile.tile_top = 0;
@@ -361,6 +360,9 @@ int main(int ac, char **av)
     data.tiles.push_back(new_tile);
 
     sf::RectangleShape tile_selected_cursor = sf::RectangleShape(sf::Vector2f(SIZE_TILE * UNIVERSAL_SCALE, SIZE_TILE * UNIVERSAL_SCALE));
+    sf::RectangleShape tool_side = sf::RectangleShape(sf::Vector2f(BUTTON_SIZE, WINDOW_HEIGHT));
+    tool_side.setPosition(WINDOW_WIDTH - BUTTON_SIZE, 0);
+    tool_side.setFillColor(sf::Color(0, 0, 0, 60));
 
     sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Map Editor");
     window.setFramerateLimit(60);
@@ -368,17 +370,7 @@ int main(int ac, char **av)
         data.update_enemies = false;
         window.clear(sf::Color::White);
         button.handleEvent(sf::Event(), window);
-        if (event_handling(window, data)) {
-            //     lines = get_lines(file);
-        }
-        if (data.update_enemies) {
-            path_enemy = "../" + data.enemies[data.id_enemy].path_sprite;
-            texture_enemy.loadFromFile(path_enemy);
-            enemy.setTexture(texture_enemy);
-            enemy.setScale(UNIVERSAL_SCALE, UNIVERSAL_SCALE);
-            rect = sf::IntRect(data.enemies[data.id_enemy].animation[0].x, data.enemies[data.id_enemy].animation[0].y, data.enemies[data.id_enemy].animation[0].width, data.enemies[data.id_enemy].animation[0].height);
-            enemy.setTextureRect(rect);
-        }
+        event_handling(window, data);
         int i = 0;
         for (auto &tile: data.tiles) {
             // data.wall_hitbox[i]
@@ -387,7 +379,6 @@ int main(int ac, char **av)
             wall.setScale(UNIVERSAL_SCALE, UNIVERSAL_SCALE);
             wall.setPosition((i * SIZE_TILE + (data.x_shift * (SIZE_TILE / 2))) * UNIVERSAL_SCALE, 0);
             window.draw(wall);
-
 
             rect = sf::IntRect(tile.tile_bottom * data.wall_hitbox[tile.tile_bottom].width, 0, data.wall_hitbox[tile.tile_bottom].width, data.wall_hitbox[tile.tile_bottom].height);
             wall.setTextureRect(rect);
@@ -410,8 +401,24 @@ int main(int ac, char **av)
 
             i++;
         }
+        for (auto &enemy_on_map: data.enemies_on_map) {
+            enemy.setTexture(data.textures[enemy_on_map.type]);
+            sf::IntRect rect = sf::IntRect(data.enemies[enemy_on_map.type].animation[0].x, data.enemies[enemy_on_map.type].animation[0].y, data.enemies[enemy_on_map.type].animation[0].width, data.enemies[enemy_on_map.type].animation[0].height);
+            enemy.setTextureRect(rect);
+            // new_enemy.x = (mousePos.x / UNIVERSAL_SCALE) - (new_enemy.animation[0].width / 2) + (data.x_shift * (SIZE_TILE / 2));
+            enemy.setPosition(((enemy_on_map.x + (data.x_shift * SIZE_TILE)) * UNIVERSAL_SCALE), enemy_on_map.y * UNIVERSAL_SCALE);
+            window.draw(enemy);
+        }
         button.render(window);
+
+        window.draw(tool_side);
+
+        enemy.setTexture(data.textures[data.id_enemy]);
+        sf::IntRect rect = sf::IntRect(data.enemies[data.id_enemy].animation[0].x, data.enemies[data.id_enemy].animation[0].y, data.enemies[data.id_enemy].animation[0].width, data.enemies[data.id_enemy].animation[0].height);
+        enemy.setTextureRect(rect);
+        enemy.setPosition(WINDOW_WIDTH - (BUTTON_SIZE / 2) - (data.enemies[data.id_enemy].animation[0].width / 2), WINDOW_HEIGHT / 2);
         window.draw(enemy);
+
         window.display();
     }
     return 0;

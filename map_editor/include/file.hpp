@@ -66,8 +66,10 @@ typedef struct game_data {
     int selected_tile;
     bool selected_tile_is_top;
     std::vector<EnemyData> enemies;
+    std::vector<sf::Texture> textures;
     int nmb_enemies;
     bool update_enemies;
     int id_enemy;
+    std::vector<EnemyData> enemies_on_map;
     // float universal_scale;
 } game_data;
