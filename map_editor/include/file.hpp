@@ -68,13 +68,24 @@ typedef struct game_data {
     // * enemy
     int id_enemy;
     int nmb_enemies;
+    int id_type_move_enemy;
+    int id_type_velocity_enemy;
     std::vector<EnemyData> enemies;
     std::vector<EnemyData> enemies_on_map;
     std::vector<sf::Texture> textures_enemy;
+    std::vector<std::string> types_move_enemy;
+    std::vector<int> types_velocity_enemy;
 
     // * wall
     int id_wall;
     int nmb_walls;
     std::vector<HitBox> wall_hitbox;
     std::vector<sf::Texture> textures_walls;
+
+    ButtonElement button_save;
+    ButtonElement button_enemy;
+    ButtonElement button_delete_enemy;
+    ButtonElement button_wall;
+    ButtonElement button_move_enemy;
+    ButtonElement button_velocity_enemy;
 } game_data;

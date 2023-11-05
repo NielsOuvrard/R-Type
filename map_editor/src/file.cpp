@@ -192,21 +192,23 @@ void event_handling(sf::RenderWindow &window, game_data &data, sf::View &view)
             if (data.id_enemy >= data.nmb_enemies)
                 data.id_enemy = 0;
         }
-        // if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::O) {
-        //     view.move(-((SIZE_TILE / 2) * UNIVERSAL_SCALE), 0.0f);
-        // }
-        // if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::U) {
-        //     view.move(((SIZE_TILE / 2) * UNIVERSAL_SCALE), 0.0f);
-        // }
         // mouse
         if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
             sf::Vector2i mousePos = sf::Mouse::getPosition(window);
             // click in tool side
             if (mousePos.x > WINDOW_WIDTH - BUTTON_SIZE) {
                 if (mousePos.y > WINDOW_HEIGHT - BUTTON_SIZE) {
-
+                    // change velocity enemy
+                    data.id_type_velocity_enemy++;
+                    if (data.id_type_velocity_enemy >= data.types_velocity_enemy.size())
+                        data.id_type_velocity_enemy = 0;
+                    data.button_velocity_enemy.setSubTextString(std::to_string(data.types_velocity_enemy[data.id_type_velocity_enemy]));
                 } else if (mousePos.y > WINDOW_HEIGHT - (BUTTON_SIZE * 2)) {
-
+                    // change move enemy
+                    data.id_type_move_enemy++;
+                    if (data.id_type_move_enemy >= data.types_move_enemy.size())
+                        data.id_type_move_enemy = 0;
+                    data.button_move_enemy.setSubTextString(data.types_move_enemy[data.id_type_move_enemy]);
                 } else if (mousePos.y > WINDOW_HEIGHT - (BUTTON_SIZE * 3)) {
                     // change wall
                     data.id_wall++;
@@ -367,6 +369,10 @@ int main(int argc, char **argv)
     data.selected_tile_is_top = true;
     data.id_enemy = 0;
     data.nmb_enemies = 0;
+    data.id_type_move_enemy = 0;
+    data.types_move_enemy = {"linear", "sinusoidal", "circular"};
+    data.id_type_velocity_enemy = 0;
+    data.types_velocity_enemy = {0, 2, 5, -2};
 
     load_walls(data);
     if (data.textures_walls.size() == 0) {
@@ -403,15 +409,21 @@ int main(int argc, char **argv)
     sf::Font font;
     font.loadFromFile("../assets/fonts/font.ttf");
 
-    ButtonElement button_save = ButtonElement(WINDOW_WIDTH - BUTTON_SIZE, 0, BUTTON_SIZE, BUTTON_SIZE, "Save");
-    button_save.setFont(font);
-    ButtonElement button_enemy = ButtonElement(WINDOW_WIDTH - BUTTON_SIZE, BUTTON_SIZE, BUTTON_SIZE, BUTTON_SIZE, "enemy");
-    button_enemy.setFont(font);
-    ButtonElement button_delete_enemy = ButtonElement(WINDOW_WIDTH - BUTTON_SIZE, BUTTON_SIZE * 2, BUTTON_SIZE, BUTTON_SIZE, "delete enemy");
-    button_delete_enemy.setFont(font);
-    ButtonElement button_wall = ButtonElement(WINDOW_WIDTH - BUTTON_SIZE, BUTTON_SIZE * 3, BUTTON_SIZE, BUTTON_SIZE, "wall");
-    button_wall.setFont(font);
-
+    data.button_save = ButtonElement(WINDOW_WIDTH - BUTTON_SIZE, 0, BUTTON_SIZE, BUTTON_SIZE, "Save");
+    data.button_save.setFont(font);
+    data.button_enemy = ButtonElement(WINDOW_WIDTH - BUTTON_SIZE, BUTTON_SIZE, BUTTON_SIZE, BUTTON_SIZE, "Enemy");
+    data.button_enemy.setFont(font);
+    data.button_delete_enemy = ButtonElement(WINDOW_WIDTH - BUTTON_SIZE, BUTTON_SIZE * 2, BUTTON_SIZE, BUTTON_SIZE, "Delete");
+    data.button_delete_enemy.setFont(font);
+    data.button_delete_enemy.setSubTextString("Enemy");
+    data.button_wall = ButtonElement(WINDOW_WIDTH - BUTTON_SIZE, BUTTON_SIZE * 3, BUTTON_SIZE, BUTTON_SIZE, "Wall");
+    data.button_wall.setFont(font);
+    data.button_move_enemy = ButtonElement(WINDOW_WIDTH - BUTTON_SIZE, BUTTON_SIZE * 4, BUTTON_SIZE, BUTTON_SIZE, "Move:");
+    data.button_move_enemy.setFont(font);
+    data.button_move_enemy.setSubTextString(data.types_move_enemy[data.id_type_move_enemy]);
+    data.button_velocity_enemy = ButtonElement(WINDOW_WIDTH - BUTTON_SIZE, BUTTON_SIZE * 5, BUTTON_SIZE, BUTTON_SIZE, "Velocity:");
+    data.button_velocity_enemy.setFont(font);
+    data.button_velocity_enemy.setSubTextString(std::to_string(data.types_velocity_enemy[data.id_type_velocity_enemy]));
 
     // * create enemy
     sf::Sprite enemy = sf::Sprite();
@@ -423,9 +435,7 @@ int main(int argc, char **argv)
     data.tiles.push_back(new_tile);
 
     sf::RectangleShape tile_selected_cursor = sf::RectangleShape(sf::Vector2f(SIZE_TILE * UNIVERSAL_SCALE, SIZE_TILE * UNIVERSAL_SCALE));
-    sf::RectangleShape tool_side = sf::RectangleShape(sf::Vector2f(BUTTON_SIZE, WINDOW_HEIGHT));
-    tool_side.setPosition(WINDOW_WIDTH - BUTTON_SIZE, 0);
-    tool_side.setFillColor(sf::Color(0, 0, 0, 60));
+
 
     sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Map Editor");
     window.setFramerateLimit(60);
@@ -434,17 +444,16 @@ int main(int argc, char **argv)
         window.clear(sf::Color::White);
         wall.setTexture(data.textures_walls[data.id_wall]);
         event_handling(window, data, view_map);
-        button_save.handleEvent(sf::Event(), window);
-        button_enemy.handleEvent(sf::Event(), window);
-        button_delete_enemy.handleEvent(sf::Event(), window);
-        button_wall.handleEvent(sf::Event(), window);
-        // if (button_save.isClicked()) {
-        //     std::cout << "Saved" << std::endl;
-        //     write_into_the_file(data);
-        // }
+        data.button_save.handleEvent(sf::Event(), window);
+        data.button_enemy.handleEvent(sf::Event(), window);
+        data.button_delete_enemy.handleEvent(sf::Event(), window);
+        data.button_wall.handleEvent(sf::Event(), window);
+        data.button_move_enemy.handleEvent(sf::Event(), window);
+        data.button_velocity_enemy.handleEvent(sf::Event(), window);
+
         int i = 0;
-        window.setView(view_map);
         window.draw(parallax);
+        window.setView(view_map);
         for (auto &tile: data.tiles) {
             // data.wall_hitbox[i]
             sf::IntRect rect = sf::IntRect(tile.tile_top * data.wall_hitbox[tile.tile_top].width, 0, data.wall_hitbox[tile.tile_top].width, data.wall_hitbox[tile.tile_top].height);
@@ -480,14 +489,13 @@ int main(int argc, char **argv)
             enemy.setPosition(enemy_on_map.x * UNIVERSAL_SCALE, enemy_on_map.y * UNIVERSAL_SCALE);
             window.draw(enemy);
         }
-        window.draw(tool_side);
-
         window.setView(view_tool);
-        button_save.render(window);
-        button_enemy.render(window);
-        button_delete_enemy.render(window);
-        button_wall.render(window);
-
+        data.button_save.render(window);
+        data.button_enemy.render(window);
+        data.button_delete_enemy.render(window);
+        data.button_wall.render(window);
+        data.button_move_enemy.render(window);
+        data.button_velocity_enemy.render(window);
 
         enemy.setTexture(data.textures_enemy[data.id_enemy]);
         sf::IntRect rect = sf::IntRect(data.enemies[data.id_enemy].animation[0].x, data.enemies[data.id_enemy].animation[0].y, data.enemies[data.id_enemy].animation[0].width, data.enemies[data.id_enemy].animation[0].height);

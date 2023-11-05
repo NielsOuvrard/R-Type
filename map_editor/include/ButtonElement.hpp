@@ -30,23 +30,41 @@ public:
         _buttonText = sf::Text();
         _buttonText.setString(text);
         _buttonText.setFillColor(_textColor);
-        _buttonText.setCharacterSize(14);
+        _buttonText.setCharacterSize(16);
+
+        _buttonSubText = sf::Text();
+        _buttonSubText.setString("");
+        _buttonSubText.setFillColor(_textColor);
+        _buttonSubText.setCharacterSize(14);
 
         _buttonText.setStyle(sf::Text::Bold);
         _buttonText.setOutlineColor(sf::Color::Black);
 
         _buttonText.setPosition(_buttonShape.getPosition().x + 10, _buttonShape.getPosition().y + 10);
+        _buttonSubText.setPosition(_buttonShape.getPosition().x + 10, _buttonShape.getPosition().y + 40);
     }
 
     void render(sf::RenderWindow &window) override
     {
         window.draw(_buttonShape);
         window.draw(_buttonText);
+        window.draw(_buttonSubText);
     }
 
     void setFont(const sf::Font &font)
     {
         _buttonText.setFont(font);
+        _buttonSubText.setFont(font);
+    }
+
+    void setTextString(const std::string &text)
+    {
+        _buttonText.setString(text);
+    }
+
+    void setSubTextString(const std::string &text)
+    {
+        _buttonSubText.setString(text);
     }
 
     void handleEvent(sf::Event event, sf::RenderWindow &window) override;
@@ -62,6 +80,7 @@ private:
 
     sf::RectangleShape _buttonShape;
     sf::Text _buttonText;
+    sf::Text _buttonSubText;
     bool _isClickedState = false;
     bool _isHeldState = false;
 };
