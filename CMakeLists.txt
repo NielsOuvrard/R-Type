@@ -36,7 +36,6 @@ FetchContent_Declare(
         GIT_REPOSITORY https://github.com/SFML/SFML.git
         GIT_TAG 2.6.0
 )
-
 FetchContent_MakeAvailable(sfml)
 
 # Fetching sdl2
@@ -44,9 +43,36 @@ FetchContent_Declare(
         sdl2
         GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
         GIT_TAG release-2.28.4
+        GIT_PROGRESS    TRUE
 )
-
 FetchContent_MakeAvailable(sdl2)
+
+FetchContent_Declare(
+        sdl2_image
+        GIT_REPOSITORY https://github.com/libsdl-org/SDL_image.git
+        GIT_TAG release-2.6.3
+        GIT_PROGRESS    TRUE
+)
+FetchContent_MakeAvailable(sdl2_image)
+
+FetchContent_Declare(
+        sdl2_ttf
+        GIT_REPOSITORY https://github.com/libsdl-org/SDL_ttf.git
+        GIT_TAG release-2.20.2
+        GIT_PROGRESS    TRUE
+)
+FetchContent_MakeAvailable(sdl2_ttf)
+
+if(NOT CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+        FetchContent_Declare(
+                sdl2_mixer
+                GIT_REPOSITORY https://github.com/libsdl-org/SDL_mixer.git
+                GIT_TAG release-2.6.3
+                GIT_PROGRESS    TRUE
+        )
+        FetchContent_MakeAvailable(sdl2_mixer)
+endif()
+
 
 add_subdirectory(Protocols)
 add_subdirectory(Network)
