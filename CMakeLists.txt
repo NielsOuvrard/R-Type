@@ -38,32 +38,32 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(sfml)
 
-# Fetching sdl2
-FetchContent_Declare(
-        sdl2
-        GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
-        GIT_TAG release-2.28.4
-        GIT_PROGRESS    TRUE
-)
-FetchContent_MakeAvailable(sdl2)
-
-FetchContent_Declare(
-        sdl2_image
-        GIT_REPOSITORY https://github.com/libsdl-org/SDL_image.git
-        GIT_TAG release-2.6.3
-        GIT_PROGRESS    TRUE
-)
-FetchContent_MakeAvailable(sdl2_image)
-
-FetchContent_Declare(
-        sdl2_ttf
-        GIT_REPOSITORY https://github.com/libsdl-org/SDL_ttf.git
-        GIT_TAG release-2.20.2
-        GIT_PROGRESS    TRUE
-)
-FetchContent_MakeAvailable(sdl2_ttf)
-
 if(NOT CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+        # Fetching sdl2
+        FetchContent_Declare(
+                sdl2
+                GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
+                GIT_TAG release-2.28.4
+                GIT_PROGRESS    TRUE
+        )
+        FetchContent_MakeAvailable(sdl2)
+
+        FetchContent_Declare(
+                sdl2_image
+                GIT_REPOSITORY https://github.com/libsdl-org/SDL_image.git
+                GIT_TAG release-2.6.3
+                GIT_PROGRESS    TRUE
+        )
+        FetchContent_MakeAvailable(sdl2_image)
+
+        FetchContent_Declare(
+                sdl2_ttf
+                GIT_REPOSITORY https://github.com/libsdl-org/SDL_ttf.git
+                GIT_TAG release-2.20.2
+                GIT_PROGRESS    TRUE
+        )
+        FetchContent_MakeAvailable(sdl2_ttf)
+
         FetchContent_Declare(
                 sdl2_mixer
                 GIT_REPOSITORY https://github.com/libsdl-org/SDL_mixer.git
