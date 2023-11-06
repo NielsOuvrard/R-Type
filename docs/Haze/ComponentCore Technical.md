@@ -1,5 +1,4 @@
 ## Component core:
-
 ```cpp
 #include "inputs.hpp"
 
@@ -33,7 +32,6 @@ struct Position : public Component
 	void show() const override { std::cout << "Position: " << x << ", " << y << std::endl; }
 };
 ```
-
 `Position` is used to set the position of the entity
 
 ```cpp
@@ -46,8 +44,7 @@ struct Scale : public Component
 	void show() const override { std::cout << "Scale: " << x << ", " << y << std::endl; }
 };
 ```
-
-`Scale` sets the scale of the entity. This is applied to the `Hitbox`
+`Scale` sets the scale of the entity. This is applied to the `Hitbox` 
 
 ```cpp
 struct Velocity : public Component
@@ -59,7 +56,6 @@ struct Velocity : public Component
 	void show() const override { std::cout << "Velocity: " << x << ", " << y << std::endl; }
 };
 ```
-
 `Velocity` is the movement applied to the entity every frame
 
 ```cpp
@@ -72,7 +68,6 @@ struct Move : public Component
 	void show() const override { std::cout << "Move: " << x << ", " << y << std::endl; }
 };
 ```
-
 `Move` is a movement applied only once to the entity, it is automatically destroyed after use
 
 ```cpp
@@ -84,7 +79,6 @@ struct Health : public Component
 	void show() const override { std::cout << "Health: " << health << std::endl; }
 };
 ```
-
 `Health` can be use to setup the health of an entity
 
 ```cpp
@@ -96,7 +90,6 @@ struct Damage : public Component
 	void show() const override { std::cout << "Damage: " << damage << std::endl; }
 };
 ```
-
 `Damage` can be used to setup the damage of an entity
 
 ```cpp
@@ -125,10 +118,8 @@ struct Collision : public Component
 	void show() const override { std::cout << "Collision: " << scene << std::endl; }
 };
 ```
-
 `Collision` is the component that will define the collision behavior of an entity.
 It takes :
-
 - a **scene** that will be use as an identification tag for a group of entity
 - and a map of **behavior** that will define what happens on collision between two entity of certain scene.
 
@@ -148,7 +139,6 @@ struct Hitbox : public Component
 	void show() const override { std::cout << "Hitbox: " << std::endl; }
 };
 ```
-
 `Hitbox` is used to set the hitbox of an entity
 it is defined as a vector of `intRect` which allows to have a hitbox composed of multiples rectangles.
 
@@ -162,7 +152,6 @@ struct LifeTime : public Component
 	void show() const override { std::cout << "LifeTime: " << lifeTime << std::endl; }
 };
 ```
-
 `LifeTime` can be used to set a lifetime limit for an entity
 This lifetime is expressed in tics.
 
@@ -176,9 +165,7 @@ struct OnKeyPressed : public Component
 	void show() const override { std::cout << "OnKeyPressed" << std::endl; }
 };
 ```
-
-`OnKeyPressed` can be used to set a **callback** to execute, with as an argument every simultaneous key pressed in the
-engine.
+`OnKeyPressed` can be used to set a **callback** to execute, with as an argument every simultaneous key pressed in the engine.
 The `size_t` **player** is the id of the inputs.
 The engine can have multiple list of inputs if used as a server.
 
@@ -192,9 +179,7 @@ struct OnKeyReleased : public Component
 	void show() const override { std::cout << "OnKeyReleased" << std::endl; }
 };
 ```
-
-`OnKeyReleased` can be used to set a **callback** to execute, with as an argument every simultaneous key released in the
-engine.
+`OnKeyReleased` can be used to set a **callback** to execute, with as an argument every simultaneous key released in the engine.
 The `size_t` **player** is the id of the inputs.
 The engine can have multiple list of inputs if used as a server.
 
@@ -208,9 +193,7 @@ struct OnMousePressed : public Component
 	void show() const override { std::cout << "OnMousePressed" << std::endl; }
 };
 ```
-
-`OnMousePressed` can be used to set a **callback** to execute every time the mouse is pressed and is intersecting the *
-*hitbox** of the entity.
+`OnMousePressed` can be used to set a **callback** to execute every time the mouse is pressed and is intersecting the **hitbox** of the entity.
 The `size_t` **player** is the id of the inputs.
 The engine can have multiple list of inputs if used as a server.
 
@@ -224,9 +207,7 @@ struct OnMouseReleased : public Component
 	void show() const override { std::cout << "OnMouseReleased" << std::endl; }
 };
 ```
-
-`OnMouseReleased` can be used to set a **callback** to execute every time the mouse is released and is intersecting the
-**hitbox** of the entity.
+`OnMouseReleased` can be used to set a **callback** to execute every time the mouse is released and is intersecting the **hitbox** of the entity.
 The `size_t` **player** is the id of the inputs.
 The engine can have multiple list of inputs if used as a server.
 
@@ -238,6 +219,5 @@ struct Hide : public Component
 	void show() const override { std::cout << "Hide" << std::endl; }
 };
 ```
-
 `Hide` is used to disable an entity.
 When in this state, the entity in not displayed nor can receive inputs or move. 
