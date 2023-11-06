@@ -1,43 +1,43 @@
 {
-    "type": 5,
-    "path_sprite": "assets/sprites/r-typesheet43.png",
-    "damage": 20,
-    "velocity": 10,
-    "bullet_drop": false,
-    "laser": false,
-    "sound": "assets/sounds/shot.ogg",
-    "hitbox": {
-      "x": 0,
-      "y": 0,
+  "type": 5,
+  "path_sprite": "assets/sprites/r-typesheet43.gif",
+  "damage": 20,
+  "velocity": 10,
+  "bullet_drop": false,
+  "laser": false,
+  "sound": "assets/sounds/shot.ogg",
+  "hitbox": {
+    "x": 0,
+    "y": 0,
+    "width": 7,
+    "height": 6
+  },
+  "animation_tics": 0.2,
+  "animation_type": "boomerang",
+  "animation": [
+    {
+      "x": 136,
+      "y": 6,
       "width": 7,
       "height": 6
     },
-    "animation_tics": 0.2,
-    "animation_type": "boomerang",
-    "animation": [
-      {
-        "x": 136,
-        "y": 6,
-        "width": 7,
-        "height": 6
-      },
-      {
-        "x": 153,
-        "y": 6,
-        "width": 7,
-        "height": 6
-      },
-      {
-        "x": 170,
-        "y": 6,
-        "width": 7,
-        "height": 6
-      },
-      {
-        "x": 188,
-        "y": 6,
-        "width": 7,
-        "height": 6
-      }
-    ]
-  }
+    {
+      "x": 153,
+      "y": 6,
+      "width": 7,
+      "height": 6
+    },
+    {
+      "x": 170,
+      "y": 6,
+      "width": 7,
+      "height": 6
+    },
+    {
+      "x": 188,
+      "y": 6,
+      "width": 7,
+      "height": 6
+    }
+  ]
+}
