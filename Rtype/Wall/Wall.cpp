@@ -45,6 +45,11 @@ void Wall::build(uint16_t frameIndex)
             0.1,
             [this](int a, int b) {
             }};
+    mapCollision["missile-enemy"] = {
+            Haze::Collision::LAMBDA,
+            0.1,
+            [this](int a, int b) {
+            }};
     mapCollision["missile"] = {
             Haze::Collision::LAMBDA,
             0.1,

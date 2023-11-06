@@ -80,8 +80,7 @@ void Enemy::build(EnemyData data_enemy, nlohmann::json mapData)
     if (_dataGame.map_moving) {
         _data.velocity_x += VELOCITY_WALL_X;
     }
-
-    std::chrono::milliseconds d((std::rand() % 10 + 5) * 1000);
+    std::chrono::milliseconds d((std::rand() % 10 + 20) * 100);
     _missileCd.setDuration(d);
 
     _missileCd.Activate();
@@ -228,9 +227,12 @@ void Enemy::update()
     // clears the destroyed missiles from the vector
     bool invalidShotExists = false;
     for (auto &missile: _missiles) {
+        if (!missile)
+            break;
         if (missile->_entity) {
             auto pos = dynamic_cast<Haze::Position *>(missile->_entity->getComponent("Position"));
-            if ((pos->x > WINDOW_WIDTH + 100 || pos->x < -100) || pos->y > WINDOW_HEIGHT + 100) {
+            // weird, crash : collision between enemy_shot and shot
+            if ((pos->x > WINDOW_WIDTH + 100 || pos->x < -200) || pos->y > WINDOW_HEIGHT + 100) {
                 std::cout << "\033[1;31mShot deleted\033[0m" << std::endl;
                 _dataGame.channel.sendGroup(RType::message::deleteEntity(missile->_entity->getId()));
                 missile->_entity->addComponent(new Haze::Destroy());
