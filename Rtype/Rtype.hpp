@@ -34,6 +34,8 @@
 #include <haze-graphics.hpp>// ? sure about this ?
 #include <iostream>
 
+#include "../Igame.hpp"
+
 /**
  * @class Rtype
  *
@@ -43,7 +45,7 @@
  * network communication, and rendering. It uses the Asio library for networking and other
  * components for game management.
  */
-class Rtype {
+class Rtype : public Igame{
 public:
     /**
      * @brief Constructs an instance of the Rtype class.
@@ -63,21 +65,21 @@ public:
      *
      * This function initiates the game loop and begins running the Rtype game.
      */
-    void start();
+    void start() override;
 
     /**
      * @brief Stops the Rtype game.
      *
      * This function stops the game loop and terminates the Rtype game.
      */
-    void stop();
+    void stop() override;
 
     /**
      * @brief Updates the game state.
      *
      * This function is responsible for updating the game's state, including entities, collisions, and more.
      */
-    void update();
+    void update() override;
 
     /**
      * @brief Callback function for handling received datagrams.
@@ -99,7 +101,7 @@ public:
      *
      * @return The local endpoint.
      */
-    [[nodiscard]] asio::ip::udp::endpoint getEndpoint() const;
+    [[nodiscard]] asio::ip::udp::endpoint getEndpoint() const override;
 
     /**
      * @brief Checks for inactive clients and performs necessary actions.

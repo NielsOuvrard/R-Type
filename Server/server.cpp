@@ -105,6 +105,7 @@ void server::onMessage(std::shared_ptr<network::connection<lobby>> from, network
                 _rooms[room_id]->toggleReady(from);
             }
             if (_rooms[room_id]->isOpen() && _rooms[room_id]->canStart(from)) {
+                //c est la
                 _threads[_threadCounter++] = std::thread([this, room_id]() {
                     Rtype rtype = Rtype(_context);
                     network::message<lobby> msg(lobby::data_channel);

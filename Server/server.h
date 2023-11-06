@@ -4,6 +4,7 @@
 
 #include "Room.h"
 #include "Rtype.hpp"
+#include "../Igame.hpp"
 #include "net_connection.h"
 #include "net_data_channel.h"
 #include "net_server.h"

@@ -1,0 +1,26 @@
+{
+    "type": 4,
+    "path_sprite": "assets/sprites/shot-enemy.png",
+    "damage": 20,
+    "velocity": 10,
+    "bullet_drop": false,
+    "laser": false,
+    "sound": "assets/sounds/shot.ogg",
+    "hitbox": {
+      "x": 0,
+      "y": 6,
+      "width": 16,
+      "height": 4
+    },
+    "no_animation": true,
+    "animation_tics": 0.2,
+    "animation_type": "boomerang",
+    "animation": [
+      {
+        "x": 0,
+        "y": 36,
+        "width": 50,
+        "height": 13
+      }
+    ]
+  }

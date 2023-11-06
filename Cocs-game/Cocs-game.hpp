@@ -18,20 +18,22 @@
 #include <ctime>
 #include <fstream>
 
-class Cocs_game
+#include "../Igame.hpp"
+
+class Cocs_game : public Igame
 {
 public:
     Cocs_game(asio::io_context &context);
     ~Cocs_game();
 
-    void start();
-    void stop();
-    void update();
+    void start() override;
+    void stop() override;
+    void update() override;
     void sendUpdate();
 
     void onReceive(udp::endpoint from, network::datagram<protocol::data> content);
     void sendEverything(udp::endpoint &to);
-    [[nodiscard]] asio::ip::udp::endpoint getEndpoint() const;
+    [[nodiscard]] asio::ip::udp::endpoint getEndpoint() const override;
 
     void updateMap();// TODO : map who generate itself and destroy itself
     void createMap();
