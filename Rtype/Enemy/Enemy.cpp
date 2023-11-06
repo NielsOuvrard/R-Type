@@ -150,6 +150,9 @@ void Enemy::build(EnemyData data_enemy, nlohmann::json mapData)
                     auto position = dynamic_cast<Haze::Position *>(_entity->getComponent("Position"));
                     _data.x = position->x;
                     _data.y = position->y;
+                    if (!_data.fly && _data.y < (WINDOW_HEIGHT / 2)) {
+                        _data.y -= 2 * _data.hitBoxData.height;
+                    }
                     std::cout << "enemy die by missile player\n";
                     _dataGame.channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
                     _entity->addComponent(new Haze::Destroy());
@@ -206,7 +209,7 @@ void Enemy::send()
     scale->x = UNIVERSAL_SCALE;
     scale->y = UNIVERSAL_SCALE * (reversed ? -1 : 1);
     _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Scale", scale, sizeof(Haze::ScaleData)));
-    _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Hitbox", new Haze::HitboxData{_data.hitBoxData.x, _data.hitBoxData.y, _data.hitBoxData.width, _data.hitBoxData.height}, sizeof(Haze::HitboxData)));
+    // _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Hitbox", new Haze::HitboxData{_data.hitBoxData.x, _data.hitBoxData.y, _data.hitBoxData.width, _data.hitBoxData.height}, sizeof(Haze::HitboxData)));
     // _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "HitboxDisplay", nullptr, 0));
 
     auto elem_sprite = new Haze::SpriteData();
