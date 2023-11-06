@@ -1,0 +1,31 @@
+{
+  "name": "rtype",
+  "version-string": "1.0.0",
+  "builtin-baseline": "d8079ecd674fe5632277d78d761333467955adb1",
+  "dependencies": [
+    {
+      "name": "sfml",
+      "version>=": "2.6.0#19"
+    },
+    {
+      "name": "asio",
+      "version>=": "1.28.2"
+    },
+    {
+      "name": "sdl2",
+      "version>=": "2.28.4#1"
+    },
+    {
+      "name": "sdl2-image",
+      "version>=": "2.6.3"
+    },
+    {
+      "name": "sdl2-mixer",
+      "version>=": "2.6.3#1"
+    },
+    {
+      "name": "sdl2-ttf",
+      "version>=": "2.20.2"
+    }
+  ]
+}

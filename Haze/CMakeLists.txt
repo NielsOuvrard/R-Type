@@ -58,23 +58,31 @@ target_include_directories(rtype_sfml PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/inc)
 target_include_directories(rtype_sfml PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/AssetManager)
 
 
-if(NOT CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-        set(
-                SDL_SOURCES
-                IDisplay/SdlDisplay.cpp
-        )
-        add_library(rtype_sdl SHARED ${SDL_SOURCES})
-        target_include_directories(rtype_sdl PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-        target_include_directories(rtype_sdl PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/IDisplay)
-        target_include_directories(rtype_sdl PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/inc)
-        target_include_directories(rtype_sdl PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/AssetManager)
-endif()
+if (NOT CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    set(
+            SDL_SOURCES
+            IDisplay/SdlDisplay.cpp
+    )
+    add_library(rtype_sdl SHARED ${SDL_SOURCES})
+    target_include_directories(rtype_sdl PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+    target_include_directories(rtype_sdl PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/IDisplay)
+    target_include_directories(rtype_sdl PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/inc)
+    target_include_directories(rtype_sdl PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/AssetManager)
+endif ()
 
 add_library(haze-graphics STATIC ${SOURCES_GRAPHICS})
 target_link_libraries(rtype_sfml PUBLIC sfml-graphics sfml-window sfml-system sfml-audio)
-if(NOT CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-        target_link_libraries(rtype_sdl PUBLIC SDL2 SDL2_image SDL2_ttf SDL2_mixer)
-endif()
+if (NOT CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    target_link_libraries(rtype_sdl
+            PRIVATE
+            $<TARGET_NAME_IF_EXISTS:SDL2::SDL2main>
+            $<IF:$<TARGET_EXISTS:SDL2::SDL2>,SDL2::SDL2,SDL2::SDL2-static>
+    )
+    target_link_libraries(rtype_sdl PRIVATE $<IF:$<TARGET_EXISTS:SDL2_image::SDL2_image>,SDL2_image::SDL2_image,SDL2_image::SDL2_image-static>)
+    target_link_libraries(rtype_sdl PRIVATE $<IF:$<TARGET_EXISTS:SDL2_mixer::SDL2_mixer>,SDL2_mixer::SDL2_mixer,SDL2_mixer::SDL2_mixer-static>)
+    target_link_libraries(rtype_sdl PRIVATE $<IF:$<TARGET_EXISTS:SDL2_ttf::SDL2_ttf>,SDL2_ttf::SDL2_ttf,SDL2_ttf::SDL2_ttf-static>)
+
+endif ()
 target_compile_definitions(haze-graphics PUBLIC USE_SFML=1)
 target_include_directories(haze-graphics PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/inc)
 target_include_directories(haze-graphics PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/System)
