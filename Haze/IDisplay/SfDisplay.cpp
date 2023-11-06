@@ -49,6 +49,9 @@ namespace Haze {
 
     IWindow *SfDisplay::createWindow(int width, int height, std::string title)
     {
+        std::cout << "Creating window " << width << " " << height << std::endl;
+        sf::RenderWindow window;
+        std::cout << "Creating window " << width << " " << height << std::endl;
         return new SfWindow(width, height, title);
     }
 
@@ -113,8 +116,13 @@ namespace Haze {
 namespace Haze {
     SfTexture::SfTexture(std::string path)
     {
-        if (!_texture.loadFromFile(path))
+        _texture = new sf::Texture();
+        if (!_texture->loadFromFile(path))
             std::cerr << "Error: could not load texture" << std::endl;
+    }
+
+    SfTexture::~SfTexture()
+    {
     }
 }// namespace Haze
 
