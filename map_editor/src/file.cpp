@@ -95,13 +95,15 @@ void write_into_the_file(game_data &data)
         for (auto &tile: data.tiles) {
             fileStream << "    {" << std::endl;
             fileStream << "      \"tile_top\": " << tile.tile_top << "," << std::endl;
-            fileStream << "      \"tile_bottom\": " << tile.tile_bottom << (tile.enemies.size() > 0 ? "," : "") << std::endl;
+            fileStream << "      \"tile_bottom\": " << tile.tile_bottom;
             bool enemy_found = false;
             for (auto &enemy: data.enemies_on_map) {
                 if (enemy.x < (i * SIZE_TILE) + SIZE_TILE && enemy.x >= (i * SIZE_TILE)) {
                     if (!enemy_found) {
-                        fileStream << "      \"enemies\": [" << std::endl;
+                        fileStream << ",\n      \"enemies\": [" << std::endl;
                         enemy_found = true;
+                    } else {
+                        fileStream << ",\n";
                     }
                     fileStream << "        {" << std::endl;
                     fileStream << "          \"type\": " << enemy.type << "," << std::endl;
@@ -110,9 +112,10 @@ void write_into_the_file(game_data &data)
                     fileStream << "          \"velocity_x\": " << data.types_velocity_enemy[data.id_type_velocity_enemy] << "," << std::endl;
                     fileStream << "          \"move\": \"" << data.types_move_enemy[data.id_type_move_enemy] << "\"," << std::endl;
                     fileStream << "          \"move_time\": " << 0.05 << std::endl;
-                    fileStream << "        }," << std::endl;
+                    fileStream << "        }";
                 }
             }
+            fileStream << std::endl;
             if (enemy_found)
                 fileStream << "      ]" << std::endl;
             if (&tile != &data.tiles.back())
@@ -307,6 +310,55 @@ void load_walls(game_data &data)
         exit(84);
 }
 
+void load_map(game_data &data)
+{
+    // open data.map_path
+    std::ifstream fileStream(data.map_path);
+    if (!fileStream.is_open()) {
+        std::cerr << "Failed to open file: " << data.map_path << std::endl;
+        return;
+    }
+    nlohmann::json jsonData;
+    fileStream >> jsonData;
+    // find if wall exist in data.walls_paths
+    if (jsonData.contains("walls")) {
+        std::string walls_path = jsonData["walls"];
+        for (int i = 0; i < data.paths_walls.size(); i++) {
+            if (data.paths_walls[i] == walls_path) {
+                data.id_wall = i;
+                break;
+            }
+        }
+    }
+    // find if parallax exist in data.parallax_path
+    if (jsonData.contains("parallax")) {
+        std::string parallax_path = jsonData["parallax"];
+        data.parallax_path = parallax_path;
+    }
+    // fill
+    for (auto &tile_found: jsonData["map"]) {
+        tile new_tile = {};
+        new_tile.tile_top = tile_found["tile_top"];
+        new_tile.tile_bottom = tile_found["tile_bottom"];
+        if (tile_found.contains("enemies")) {
+            for (auto &enemy: tile_found["enemies"]) {
+                EnemyData new_enemy = data.enemies[enemy["type"]];
+                new_enemy.x = enemy["x"];
+                new_enemy.y = enemy["y"];
+                new_enemy.id = enemy["type"];
+                data.enemies_on_map.push_back(new_enemy);
+            }
+        }
+        data.tiles.push_back(new_tile);
+    }
+}
+
+bool file_exist(const std::string &name)
+{
+    std::ifstream f(name.c_str());
+    return f.good();
+}
+
 void load_enemies(game_data &data)
 {
     const std::string directoryPath = "../assets/json_files/enemies";
@@ -385,6 +437,9 @@ int main(int argc, char **argv)
         return 84;
     }
 
+    if (file_exist(data.map_path))
+        load_map(data);
+
     // * create parallax
     sf::Sprite parallax = sf::Sprite();
     parallax.setScale(2, 2);
@@ -429,10 +484,8 @@ int main(int argc, char **argv)
     sf::Sprite enemy = sf::Sprite();
     enemy.setScale(UNIVERSAL_SCALE, UNIVERSAL_SCALE);
 
-    tile new_tile = {};
-    new_tile.tile_top = 0;
-    new_tile.tile_bottom = 0;
-    data.tiles.push_back(new_tile);
+    if (data.tiles.size() == 0)
+        data.tiles.push_back({0, 0});
 
     sf::RectangleShape tile_selected_cursor = sf::RectangleShape(sf::Vector2f(SIZE_TILE * UNIVERSAL_SCALE, SIZE_TILE * UNIVERSAL_SCALE));
 
