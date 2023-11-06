@@ -53,4 +53,5 @@ add_subdirectory(Network)
 add_subdirectory(Haze)
 add_subdirectory(Rtype)
 add_subdirectory(Server)
+add_subdirectory(Cocs-game)
 add_subdirectory(Client) # comment

@@ -16,4 +16,5 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
         haze-core
         Network
         rtype-game
+        Cocs-game
 )
