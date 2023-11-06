@@ -1,0 +1,42 @@
+{
+  "walls": "../assets/json_files/walls/ground_night.json",
+  "parallax": "assets/sprites/space_night.jpg",
+  "map": [
+    {
+      "tile_top": 0,
+      "tile_bottom": 0
+    },
+    {
+      "tile_top": 2,
+      "tile_bottom": 2
+    },
+    {
+      "tile_top": 3,
+      "tile_bottom": 3
+    },
+    {
+      "tile_top": 7,
+      "tile_bottom": 7
+    },
+    {
+      "tile_top": 0,
+      "tile_bottom": 6
+    },
+    {
+      "tile_top": 1,
+      "tile_bottom": 8
+    },
+    {
+      "tile_top": 7,
+      "tile_bottom": 4
+    },
+    {
+      "tile_top": 0,
+      "tile_bottom": 0
+    },
+    {
+      "tile_top": 2,
+      "tile_bottom": 1
+    }
+  ]
+}

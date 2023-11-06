@@ -91,12 +91,12 @@ namespace Haze {
             SpriteCroppedData *spriteCropped = reinterpret_cast<SpriteCroppedData *>(data.data());
             return new SpriteCropped(spriteCropped->id);
         }
-        if (type == "Text") {
-            TextData *text = reinterpret_cast<TextData *>(data.data());
-            return new Text(text->text, text->color);
-        }
         if (type == "HitboxDisplay") {
             return new HitboxDisplay;
+        }
+        if (type == "Text") {
+            TextData *text = reinterpret_cast<TextData *>(data.data());
+            return new Text(text->text, text->r, text->g, text->b, text->a, text->path);
         }
 #endif
         return nullptr;
