@@ -53,16 +53,11 @@ cmake --build build
 ```
 
 5. Execute the binaries
-   Server:
-
 ```
 ./build/r-type-server
 ```
-
-Client:
-
 ```
-./build/r-type-client
+./build/r-type-client [sfml/sdl]
 ```
 
 ## 📋 Documentation
