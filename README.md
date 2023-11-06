@@ -8,8 +8,8 @@ This version of R-Type is multiplayer and the game is developed using a custom e
 
 Before you begin, ensure you have met the following requirements:
 
-- SFML
-- Asio
+- cmake
+- git
 
 ## 🚀 Getting Started
 
@@ -21,19 +21,38 @@ To install and launch R-Type, follow these steps:
 git clone https://github.com/votre-utilisateur/haze-engine.git
 ```
 
-2. Create the build directory
+2. Download the dependenties
+
+> ## Linux/MacOS
+> ```
+> git clone https://github.com/Microsoft/vcpkg.git
+> ./vcpkg/bootstrap-vcpkg.sh
+> ./vcpkg/vcpkg install
+> ```
+
+> ## Windows
+> ```
+> git clone https://github.com/Microsoft/vcpkg.git
+> .\vcpkg\bootstrap-vcpkg.bat
+> .\vcpkg\vcpkg install
+> ```
+
+> [!warning]
+> These commands must be executed at the root of this project
+
+3. Create the build directory
 
 ```
 cmake -S . -B build
 ```
 
-3. Compile the project
+4. Compile the project
 
 ```
 cmake --build build
 ```
 
-4. Execute the binaries
+5. Execute the binaries
    Server:
 
 ```
@@ -48,9 +67,13 @@ Client:
 
 ## 📋 Documentation
 
-[Haze introduction](https://rclovis.github.io/R-Type-Documentation/Haze/ComponentArray/)
+[Haze introduction](https://rclovis.github.io/R-Type-Documentation/)
 
-[Protocol](https://rclovis.github.io/R-Type-Documentation/Protocol/Component%20Data/)
+[Game Engine](https://rclovis.github.io/R-Type-Documentation/Haze/Getting%20Started/)
+
+[Protocol](https://rclovis.github.io/R-Type-Documentation/Protocol/Protocol/)
+
+[Rtype](https://rclovis.github.io/R-Type-Documentation/Rtype/Create%20Enemy/)
 
 ## 👤 Credits
 
