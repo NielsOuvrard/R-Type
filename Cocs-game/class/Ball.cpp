@@ -86,6 +86,7 @@ void Ball::build()
                 auto velocity = dynamic_cast<Haze::Velocity *>(_entity->getComponent("Velocity"));
                 auto pos = dynamic_cast<Haze::Position *>(_entity->getComponent("Position"));
                 auto pos_p = dynamic_cast<Haze::Position *>(_engine.getEntity(b)->getComponent("Position"));
+                _channel.sendGroup(cocs_game::message::addComponent(_entity->getId(), "Audio", new Haze::AudioData{"assets/sounds/little_explo.wav"}, sizeof(Haze::AudioData)));
 
                 velocity->x = velocity->x * -1 + (((pos->x + 10)) - ( pos_p->x + 25)) / 10;
                 _entity->addComponent(new Haze::Velocity(velocity->x, velocity->y, velocity->tick * 0.95));

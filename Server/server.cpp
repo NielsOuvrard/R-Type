@@ -106,14 +106,14 @@ void server::onMessage(std::shared_ptr<network::connection<lobby>> from, network
             }
             if (_rooms[room_id]->isOpen() && _rooms[room_id]->canStart(from)) {
                 _threads[_threadCounter++] = std::thread([this, room_id]() {
-                    Rtype rtype = Rtype(_context);
+                    Cocs_game cocs_game = Cocs_game(_context);
                     network::message<lobby> msg(lobby::data_channel);
-                    msg << rtype.getEndpoint();
+                    msg << cocs_game.getEndpoint();
                     for (auto &[con, info]: _rooms[room_id]->getMembers()) {
                         messageClient(con, msg);
                     }
                     _rooms[room_id]->close();
-                    rtype.start();
+                    cocs_game.start();
                 });
             }
             break;

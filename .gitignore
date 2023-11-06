@@ -7,3 +7,6 @@ cmake-build-debug
 *.o
 .DS_Store
 *.dSYM
+vcpkg/
+vcpkg_installed/
+vcpkg

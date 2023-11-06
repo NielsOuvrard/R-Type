@@ -3,12 +3,13 @@
 //
 
 #include "Room.h"
-#include "Rtype.hpp"
+// #include "Rtype.hpp"
 #include "../Igame.hpp"
 #include "net_connection.h"
 #include "net_data_channel.h"
 #include "net_server.h"
 #include "protocols.h"
+#include "Cocs-game.hpp"
 
 class server : public network::server_interface<protocol::lobby> {
 public:
