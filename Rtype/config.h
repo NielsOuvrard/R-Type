@@ -24,7 +24,7 @@
 /**
  * @brief A universal scaling factor applied to various elements in the application.
  */
-#define UNIVERSAL_SCALE 3
+#define UNIVERSAL_SCALE 2
 
 /**
  * @brief The height of the application window.
