@@ -15,7 +15,7 @@ TextInput::TextInput(Haze::Engine &engine, std::string placeholder, AxisPair pos
 void TextInput::build()
 {
     buildEntity();
-    _entity->addComponent(new Haze::Text(_placeholder, 200, 200, 200, 100, _fontFile));
+    _entity->addComponent(new Haze::Text(_placeholder, 255, 255, 255, 100, _fontFile));
     _entity->addComponent(new Haze::HitboxDisplay);
     _entity->addComponent(new Haze::Hitbox({{-10, -5, 200, 50}}));
     _entity->addComponent(new Haze::OnMouseReleased([this](int id) {
@@ -25,18 +25,26 @@ void TextInput::build()
         if (!_focus || stroke.empty()) return;
         for (auto key: stroke) {
             if (key <= Haze::KEY_Z) {
-                _value += static_cast<char>(key + 'a' - 1);
+                if (limit < 0 || _value.size() < limit)
+                    _value += static_cast<char>(key + 'a' - 1);
             } else if (key <= Haze::NUMKEY_9) {
-                _value += static_cast<char>(key - Haze::NUMKEY_0 + '0');
+                if (limit < 0 || _value.size() < limit)
+                    _value += static_cast<char>(key - Haze::NUMKEY_0 + '0');
             } else if (key == Haze::KEY_DOT) {
-                _value += '.';
+                if (limit < 0 || _value.size() < limit)
+                    _value += '.';
             } else if (key == Haze::KEY_SPACE) {
-                _value += ' ';
+                if (limit < 0 || _value.size() < limit)
+                    _value += ' ';
             } else if (key == Haze::KEY_BACK) {
                 if (!_value.empty())
                     _value.pop_back();
             } else if (key == Haze::KEY_ESC) {
                 _focus = false;
+                break;
+            } else if (key == Haze::KEY_ENTER_INPUT) {
+                onSubmit(_value);
+                _value.clear();
                 break;
             }
         }
@@ -48,20 +56,23 @@ void TextInput::build()
 void TextInput::setValue(const std::string &newValue)
 {
     _value = newValue;
+    auto txt = comp<Haze::Text>("Text");
     if (_value.empty()) {
-        _entity->addComponent(new Haze::Text(_placeholder, 200, 200, 200, 100, _fontFile));
+        txt->text = _placeholder;
+        txt->textObj->setColor(255, 255, 255, 128);
     } else {
-        _entity->addComponent(new Haze::Text(_value, Haze::Text::colorHaze::WHITE, _fontFile));
+        txt->text = _value;
+        txt->textObj->setColor(255, 255, 255, 255);
     }
 }
 
 void TextInput::update()
 {
-    auto txt = dynamic_cast<Haze::Text *>(_entity->getComponent("Text"));
+    auto txt = comp<Haze::Text>("Text");
     if (_focus) {
         txt->text = _value + "|";
     } else {
-        txt->text = _value;
+        setValue(_value);
     }
 }
 

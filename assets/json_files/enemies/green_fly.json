@@ -1,0 +1,73 @@
+{
+    "type": 6,
+    "damage": 20,
+    "life": 50,
+    "shot_type": 2,
+    "explosion_type": 1,
+    "path_sprite": "assets/sprites/rtypesheet23.gif",
+    "hitbox": {
+      "x": 5,
+      "y": 5,
+      "width": 33,
+      "height": 22
+    },
+    "fly": true,
+    "animation_tics": 0.1,
+    "animation_type": "loop",
+    "animation": [
+      {
+        "x": 0,
+        "y": 0,
+        "width": 34,
+        "height": 33
+      },
+      {
+        "x": 32,
+        "y": 0,
+        "width": 34,
+        "height": 33
+      },
+      {
+        "x": 64,
+        "y": 0,
+        "width": 34,
+        "height": 33
+      },
+      {
+        "x": 96,
+        "y": 0,
+        "width": 34,
+        "height": 33
+      },
+      {
+        "x": 128,
+        "y": 0,
+        "width": 34,
+        "height": 33
+      },
+      {
+        "x": 160,
+        "y": 0,
+        "width": 34,
+        "height": 33
+      },
+      {
+        "x": 192,
+        "y": 0,
+        "width": 34,
+        "height": 33
+      },
+      {
+        "x": 224,
+        "y": 0,
+        "width": 34,
+        "height": 33
+      },
+      {
+        "x": 256,
+        "y": 0,
+        "width": 34,
+        "height": 33
+      }
+    ]
+  }
