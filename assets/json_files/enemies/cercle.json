@@ -1,0 +1,114 @@
+{
+    "type": 8,
+    "damage": 20,
+    "life": 50,
+    "explosion_type": 1,
+    "path_sprite": "assets/sprites/r-typesheet13.gif",
+    "hitbox": {
+      "x": 5,
+      "y": 5,
+      "width": 34,
+      "height": 31
+    },
+    "fly": true,
+    "animation_tics": 0.1,
+    "animation_type": "loop",
+    "animation": [
+      {
+        "x": 0,
+        "y": 0,
+        "width": 34,
+        "height": 31
+      },
+      {
+        "x": 33,
+        "y": 0,
+        "width": 34,
+        "height": 31
+      },
+      {
+        "x": 66,
+        "y": 0,
+        "width": 34,
+        "height": 31
+      },
+      {
+        "x": 99,
+        "y": 0,
+        "width": 34,
+        "height": 31
+      },
+      {
+        "x": 132,
+        "y": 0,
+        "width": 34,
+        "height": 31
+      },
+      {
+        "x": 165,
+        "y": 0,
+        "width": 34,
+        "height": 31
+      },
+      {
+        "x": 198,
+        "y": 0,
+        "width": 34,
+        "height": 31
+      },
+      {
+        "x": 231,
+        "y": 0,
+        "width": 34,
+        "height": 31
+      },
+      {
+        "x": 0,
+        "y": 33,
+        "width": 34,
+        "height": 31
+      },
+      {
+        "x": 33,
+        "y": 33,
+        "width": 34,
+        "height": 31
+      },
+      {
+        "x": 66,
+        "y": 33,
+        "width": 34,
+        "height": 31
+      },
+      {
+        "x": 99,
+        "y": 33,
+        "width": 34,
+        "height": 31
+      },
+      {
+        "x": 132,
+        "y": 33,
+        "width": 34,
+        "height": 31
+      },
+      {
+        "x": 165,
+        "y": 33,
+        "width": 34,
+        "height": 31
+      },
+      {
+        "x": 198,
+        "y": 33,
+        "width": 34,
+        "height": 31
+      },
+      {
+        "x": 231,
+        "y": 33,
+        "width": 34,
+        "height": 31
+      }
+    ]
+  }
