@@ -588,6 +588,7 @@ namespace Haze
         if (_texture == nullptr)
             std::cout << "ErrorTexture text: " << SDL_GetError() << std::endl;
         TTF_SizeText(_font->getFont(), _string.c_str(), &_rect.w, &_rect.h);
+        SDL_FreeSurface(surface);
     }
 
     void SdlText::setPosition(int x, int y)
@@ -599,18 +600,24 @@ namespace Haze
     void SdlText::setColor(IColor::colorEnum color)
     {
         _color = SdlColor::getColor(color);
+        if (_texture != nullptr)
+            SDL_DestroyTexture(_texture);
         _texture = SDL_CreateTextureFromSurface(renderer, TTF_RenderText_Solid(_font->getFont(), _string.c_str(), _color));
     }
 
     void SdlText::setColor(int r, int g, int b, int a)
     {
         _color = SdlColor::getColor(r, g, b, a);
+        if (_texture != nullptr)
+            SDL_DestroyTexture(_texture);
         _texture = SDL_CreateTextureFromSurface(renderer, TTF_RenderText_Solid(_font->getFont(), _string.c_str(), _color));
     }
 
     void SdlText::setString(std::string string)
     {
         _string = string;
+        if (_texture != nullptr)
+            SDL_DestroyTexture(_texture);
         _texture = SDL_CreateTextureFromSurface(renderer, TTF_RenderText_Solid(_font->getFont(), _string.c_str(), _color));
         TTF_SizeText(_font->getFont(), _string.c_str(), &_rect.w, &_rect.h);
 
