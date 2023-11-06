@@ -6,6 +6,7 @@
 #include "Image.h"
 #include "Text.h"
 #include "TextInput.h"
+#include <sstream>
 
 Chat::Chat(Haze::Engine &engine) : Element(engine) {}
 
