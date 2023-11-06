@@ -342,10 +342,20 @@ void load_map(game_data &data)
         new_tile.tile_bottom = tile_found["tile_bottom"];
         if (tile_found.contains("enemies")) {
             for (auto &enemy: tile_found["enemies"]) {
-                EnemyData new_enemy = data.enemies[enemy["type"]];
+                int id_enemy = 0;
+                // find if enemy exist in data.enemies
+                for (auto &found_enemy: data.enemies) {
+                    if (found_enemy.type == enemy["type"]) {
+                        break;
+                    }
+                    id_enemy++;
+                }
+                EnemyData new_enemy = data.enemies[id_enemy];
+                std::cout << "id_enemy: " << id_enemy << " " << new_enemy.type << std::endl;
+                new_enemy.id = id_enemy;
                 new_enemy.x = enemy["x"];
                 new_enemy.y = enemy["y"];
-                new_enemy.id = enemy["type"];
+                new_enemy.type = enemy["type"];
                 data.enemies_on_map.push_back(new_enemy);
             }
         }
