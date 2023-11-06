@@ -71,6 +71,7 @@ if (NOT CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 endif ()
 
 add_library(haze-graphics STATIC ${SOURCES_GRAPHICS})
+target_link_libraries(rtype_sfml PRIVATE OpenAL::OpenAL)
 target_link_libraries(rtype_sfml PUBLIC sfml-graphics sfml-window sfml-system sfml-audio)
 if (NOT CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     target_link_libraries(rtype_sdl
