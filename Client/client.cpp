@@ -79,13 +79,13 @@ void client::build()
                 send(msg);
                 _state = state::w_join;
             },
-            [this]() {
+            [this](uint8_t game_nb) {
                 if (_state != state::ok) return;
                 std::cout << "Create" << std::endl;
                 char name[32] = {0};
                 std::strncpy(name, _elements["login"]->get<TextInput>("name")->getValue().data(), 32);
                 net::message<lobby> msg(lobby::create_room);
-                msg << name;
+                msg << name << game_nb;
                 send(msg);
                 _state = state::w_cr_room;
             },
