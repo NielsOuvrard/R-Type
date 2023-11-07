@@ -156,7 +156,8 @@ void Enemy::build(EnemyData data_enemy, nlohmann::json mapData)
                     _dataGame.channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
                     _entity->addComponent(new Haze::Destroy());
                     _entity = nullptr;
-                    this->_isDead = true;
+                    _dataGame.explosions.emplace_back(std::make_unique<Explosion>(_dataGame, _typeEntities, _data.x, _data.y, _data.explosion_type));
+                    _dataGame.explosions.back()->build();
                 } else {
                     if (!_data.sound_damage.empty()) {
                         // create sound at damage

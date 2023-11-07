@@ -1,7 +1,7 @@
 {
   "type": 3,
   "path_sprite": "assets/sprites/r-typesheet2.gif",
-  "damage": 20,
+  "damage": 40,
   "velocity": 7,
   "bullet_drop": true,
   "sound": "assets/sounds/fireball.wav",

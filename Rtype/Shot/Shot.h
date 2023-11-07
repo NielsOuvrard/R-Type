@@ -6,6 +6,8 @@
 
 #include "../config.h"
 #include "../protocol.h"
+#include "Enemy/Enemy.h"
+#include "Explosion/Explosion.h"
 #include "GameStructures.h"
 #include "ShotData.h"
 #include <componentData.hpp>

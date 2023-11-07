@@ -14,7 +14,7 @@
     "width": 49,
     "height": 49
   },
-  "fly": true,
+  "fly": false,
   "animation_tics": 0.3,
   "animation_type": "loop",
   "animation": [
