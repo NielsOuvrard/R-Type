@@ -1,6 +1,6 @@
 {
   "walls": "assets/json_files/walls/ground_night.json",
-  "parallax": "assets/sprites/space_night.jpg",
+  "parallax": "assets/sprites/space_night.png",
   "map": [
     {
       "tile_top": 3,

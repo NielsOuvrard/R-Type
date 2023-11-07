@@ -31,7 +31,7 @@
 #include "../../Client/json.hpp"
 #include "ButtonElement.hpp"
 
-#define UNIVERSAL_SCALE 3
+#define UNIVERSAL_SCALE 2
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600

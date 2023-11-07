@@ -1,6 +1,6 @@
 {
   "walls": "assets/json_files/walls/ground.json",
-  "parallax": "assets/sprites/space.jpg",
+  "parallax": "assets/sprites/space.png",
   "map": [
     {
       "tile_top": 3,
@@ -11,7 +11,6 @@
       "tile_bottom": 0
     },
     {
-      zkezknzekj
       "tile_top": 5,
       "tile_bottom": 1
     },
@@ -36,6 +35,22 @@
       "tile_bottom": 6
     },
     {
+      "tile_top": 6,
+      "tile_bottom": 3
+    },
+    {
+      "tile_top": 7,
+      "tile_bottom": 4
+    },
+    {
+      "tile_top": 8,
+      "tile_bottom": 5
+    },
+    {
+      "tile_top": 9,
+      "tile_bottom": 6
+    },
+    {
       "tile_top": 5,
       "tile_bottom": 4
     },
@@ -47,39 +62,6 @@
       "tile_top": 7,
       "tile_bottom": 7,
       "enemies": [
-        {
-          "type": 2,
-          "x": 150,
-          "y": 225,
-          "velocity_x": 0,
-          "move_time": 0.05,
-          "move": "circular",
-          "move_radius": 200,
-          "move_x": 0.05,
-          "move_offset": 0
-        },
-        {
-          "type": 2,
-          "x": 150,
-          "y": 225,
-          "velocity_x": 0,
-          "move_time": 0.05,
-          "move": "circular",
-          "move_radius": 200,
-          "move_x": 0.05,
-          "move_offset": 0.5
-        },
-        {
-          "type": 2,
-          "x": 150,
-          "y": 225,
-          "velocity_x": 0,
-          "move_time": 0.05,
-          "move": "circular",
-          "move_radius": 200,
-          "move_x": 0.05,
-          "move_offset": 1
-        },
         {
           "type": 2,
           "x": 150,
@@ -167,6 +149,39 @@
           "move_radius": 200,
           "move_x": 0.05,
           "move_offset": 6
+        },
+        {
+          "type": 2,
+          "x": 150,
+          "y": 225,
+          "velocity_x": 0,
+          "move_time": 0.05,
+          "move": "circular",
+          "move_radius": 200,
+          "move_x": 0.05,
+          "move_offset": 6.5
+        },
+        {
+          "type": 2,
+          "x": 150,
+          "y": 225,
+          "velocity_x": 0,
+          "move_time": 0.05,
+          "move": "circular",
+          "move_radius": 200,
+          "move_x": 0.05,
+          "move_offset": 7
+        },
+        {
+          "type": 2,
+          "x": 150,
+          "y": 225,
+          "velocity_x": 0,
+          "move_time": 0.05,
+          "move": "circular",
+          "move_radius": 200,
+          "move_x": 0.05,
+          "move_offset": 7.5
         }
       ]
     },
@@ -297,7 +312,99 @@
     },
     {
       "tile_top": 8,
-      "tile_bottom": 5
+      "tile_bottom": 5,
+      "enemies": [
+        {
+          "type": 4,
+          "x": 24,
+          "y": 200,
+          "velocity_x": -2,
+          "move": "circular",
+          "move_radius": 100,
+          "move_x": 0.2,
+          "move_time": 0.1
+        }
+      ]
+    },
+    {
+      "tile_top": 8,
+      "tile_bottom": 5,
+      "enemies": [
+        {
+          "type": 5,
+          "x": 24,
+          "y": 200,
+          "velocity_x": -2,
+          "move": "circular",
+          "move_radius": 100,
+          "move_x": 0.2,
+          "move_time": 0.1
+        }
+      ]
+    },
+    {
+      "tile_top": 8,
+      "tile_bottom": 5,
+      "enemies": [
+        {
+          "type": 6,
+          "x": 24,
+          "y": 200,
+          "velocity_x": -2,
+          "move": "circular",
+          "move_radius": 100,
+          "move_x": 0.2,
+          "move_time": 0.1
+        }
+      ]
+    },
+    {
+      "tile_top": 8,
+      "tile_bottom": 5,
+      "enemies": [
+        {
+          "type": 7,
+          "x": 24,
+          "y": 200,
+          "velocity_x": -2,
+          "move": "circular",
+          "move_radius": 100,
+          "move_x": 0.2,
+          "move_time": 0.1
+        }
+      ]
+    },
+    {
+      "tile_top": 8,
+      "tile_bottom": 5,
+      "enemies": [
+        {
+          "type": 8,
+          "x": 24,
+          "y": 200,
+          "velocity_x": -2,
+          "move": "circular",
+          "move_radius": 100,
+          "move_x": 0.2,
+          "move_time": 0.1
+        }
+      ]
+    },
+    {
+      "tile_top": 8,
+      "tile_bottom": 5,
+      "enemies": [
+        {
+          "type": 9,
+          "x": 24,
+          "y": 200,
+          "velocity_x": -2,
+          "move": "circular",
+          "move_radius": 100,
+          "move_x": 0.2,
+          "move_time": 0.1
+        }
+      ]
     },
     {
       "tile_top": 8,

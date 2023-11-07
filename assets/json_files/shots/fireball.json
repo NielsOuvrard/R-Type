@@ -17,28 +17,28 @@
   "animation_type": "loop",
   "animation": [
     {
-      "x": 99,
-      "y": 118,
-      "width": 16,
-      "height": 14
+      "x": 228,
+      "y": 451,
+      "width": 18,
+      "height": 18
     },
     {
-      "x": 113,
-      "y": 118,
-      "width": 16,
-      "height": 14
+      "x": 246,
+      "y": 451,
+      "width": 18,
+      "height": 18
     },
     {
-      "x": 130,
-      "y": 118,
-      "width": 16,
-      "height": 14
+      "x": 264,
+      "y": 451,
+      "width": 18,
+      "height": 18
     },
     {
-      "x": 146,
-      "y": 118,
-      "width": 16,
-      "height": 14
+      "x": 282,
+      "y": 451,
+      "width": 18,
+      "height": 18
     }
   ]
 }
