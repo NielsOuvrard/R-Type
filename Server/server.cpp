@@ -91,7 +91,11 @@ void server::onMessage(std::shared_ptr<network::connection<lobby>> from, network
         }
         case lobby::create_room: {
             char nickname[32] = {0};
+            uint8_t game_nb;
+            msg >> game_nb;
             msg >> nickname;
+            std::cout << "Game nb: èèèèèèèèèèèèèèèèè" << game_nb << std::endl;
+            is_pong = game_nb == 2;
             _rooms[_roomCounter] = std::make_unique<Room>();
             _rooms[_roomCounter]->addConnection(from, nickname, Room::privileges::owner);
             res << _roomCounter;
