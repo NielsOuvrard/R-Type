@@ -40,7 +40,7 @@ void Shot::build(float x, float y)
                                              _typeEntities.shots[_type].hitBoxData.y,
                                              _typeEntities.shots[_type].hitBoxData.width,
                                              _typeEntities.shots[_type].hitBoxData.height}}));
-    _entity->addComponent(new Haze::Damage(20));
+    _entity->addComponent(new Haze::Damage(_typeEntities.shots[_type].damage));
 
 
     if (_sender == "player") {
@@ -52,6 +52,35 @@ void Shot::build(float x, float y)
                     if (!_entity) {
                         return;
                     }
+                    // ! WIP
+                    // int life_remaning = 0;
+                    // int heght_enemy = 0;
+                    // int width_enemy = 0;
+                    // int type_enemy_explosion = 0;
+                    // for (auto &enemy: _dataGame.enemies) {
+                    //     if (!enemy || !enemy->_entity)
+                    //         break;
+                    //     if (enemy->_entity->getId() == b) {
+                    //         life_remaning = enemy->_data.life;
+                    //         heght_enemy = _typeEntities.enemies[enemy->_data.type].hitBoxData.height;
+                    //         width_enemy = _typeEntities.enemies[enemy->_data.type].hitBoxData.width;
+                    //         type_enemy_explosion = _typeEntities.enemies[enemy->_data.type].explosion_type;
+                    //     }
+                    // }
+                    // auto damage = dynamic_cast<Haze::Damage *>(_dataGame.engine.getEntity(a)->getComponent("life"));
+                    // if (damage == nullptr) {
+                    //     return;
+                    // }
+                    // if (life_remaning - damage->damage < 0) {// dead
+                    //     auto position = dynamic_cast<Haze::Position *>(_entity->getComponent("Position"));
+                    //     _dataGame.explosions.emplace_back(std::make_unique<Explosion>(_dataGame, _typeEntities, position->x, position->y, type_enemy_explosion));
+                    //     _dataGame.explosions.back()->build();
+                    //     return;
+                    // } else {
+                    auto position = dynamic_cast<Haze::Position *>(_entity->getComponent("Position"));
+                    _dataGame.explosions.emplace_back(std::make_unique<Explosion>(_dataGame, _typeEntities, position->x, position->y, 3));
+                    _dataGame.explosions.back()->build();
+                    // }
                     _dataGame.channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
                     _entity->addComponent(new Haze::Destroy());
                     _entity = nullptr;
@@ -63,6 +92,10 @@ void Shot::build(float x, float y)
                     if (!_entity) {
                         return;
                     }
+                    auto position = dynamic_cast<Haze::Position *>(_entity->getComponent("Position"));
+                    _dataGame.explosions.emplace_back(std::make_unique<Explosion>(_dataGame, _typeEntities, position->x, position->y, 3));
+                    _dataGame.explosions.back()->build();
+
                     _dataGame.channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
                     _entity->addComponent(new Haze::Destroy());
                     _entity = nullptr;
@@ -77,6 +110,10 @@ void Shot::build(float x, float y)
                     if (!_entity) {
                         return;
                     }
+                    auto position = dynamic_cast<Haze::Position *>(_entity->getComponent("Position"));
+                    _dataGame.explosions.emplace_back(std::make_unique<Explosion>(_dataGame, _typeEntities, position->x, position->y, 3));
+                    _dataGame.explosions.back()->build();
+
                     _dataGame.channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
                     _entity->addComponent(new Haze::Destroy());
                     _entity = nullptr;
@@ -89,6 +126,10 @@ void Shot::build(float x, float y)
                     if (!_entity) {
                         return;
                     }
+                    auto position = dynamic_cast<Haze::Position *>(_entity->getComponent("Position"));
+                    _dataGame.explosions.emplace_back(std::make_unique<Explosion>(_dataGame, _typeEntities, position->x, position->y, 3));
+                    _dataGame.explosions.back()->build();
+
                     _dataGame.channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
                     _entity->addComponent(new Haze::Destroy());
                     _entity = nullptr;

@@ -1,66 +1,66 @@
 {
-    "type": 10,
-    "damage": 20,
-    "life": 50,
-    "explosion_type": 1,
-    "path_sprite": "assets/sprites/r-typesheet17.gif",
-    "hitbox": {
-      "x": 5,
-      "y": 5,
+  "type": 10,
+  "damage": 20,
+  "life": 120,
+  "explosion_type": 1,
+  "path_sprite": "assets/sprites/r-typesheet17.gif",
+  "hitbox": {
+    "x": 5,
+    "y": 5,
+    "width": 65,
+    "height": 132
+  },
+  "fly": true,
+  "animation_tics": 0.1,
+  "animation_type": "loop",
+  "animation": [
+    {
+      "x": 0,
+      "y": 0,
       "width": 65,
       "height": 132
     },
-    "fly": true,
-    "animation_tics": 0.1,
-    "animation_type": "loop",
-    "animation": [
-      {
-        "x": 0,
-        "y": 0,
-        "width": 65,
-        "height": 132
-      },
-      {
-        "x": 65,
-        "y": 0,
-        "width": 65,
-        "height": 132
-      },
-      {
-        "x": 130,
-        "y": 0,
-        "width": 65,
-        "height": 132
-      },
-      {
-        "x": 195,
-        "y": 0,
-        "width": 65,
-        "height": 132
-      },
-      {
-        "x": 260,
-        "y": 0,
-        "width": 65,
-        "height": 132
-      },
-      {
-        "x": 325,
-        "y": 0,
-        "width": 65,
-        "height": 132
-      },
-      {
-        "x": 390,
-        "y": 0,
-        "width": 65,
-        "height": 132
-      },
-      {
-        "x": 455,
-        "y": 0,
-        "width": 65,
-        "height": 132
-      }
-    ]
-  }
+    {
+      "x": 65,
+      "y": 0,
+      "width": 65,
+      "height": 132
+    },
+    {
+      "x": 130,
+      "y": 0,
+      "width": 65,
+      "height": 132
+    },
+    {
+      "x": 195,
+      "y": 0,
+      "width": 65,
+      "height": 132
+    },
+    {
+      "x": 260,
+      "y": 0,
+      "width": 65,
+      "height": 132
+    },
+    {
+      "x": 325,
+      "y": 0,
+      "width": 65,
+      "height": 132
+    },
+    {
+      "x": 390,
+      "y": 0,
+      "width": 65,
+      "height": 132
+    },
+    {
+      "x": 455,
+      "y": 0,
+      "width": 65,
+      "height": 132
+    }
+  ]
+}
