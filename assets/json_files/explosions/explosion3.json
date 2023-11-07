@@ -1,0 +1,38 @@
+{
+  "type": 3,
+  "path_sprite": "assets/sprites/r-typesheet43.gif",
+  "animation_tics": 0.1,
+  "animation_type": "loop_once",
+  "animation": [
+    {
+      "x": 114,
+      "y": 17,
+      "width": 17,
+      "height": 17
+    },
+    {
+      "x": 131,
+      "y": 17,
+      "width": 17,
+      "height": 17
+    },
+    {
+      "x": 148,
+      "y": 17,
+      "width": 17,
+      "height": 17
+    },
+    {
+      "x": 165,
+      "y": 17,
+      "width": 17,
+      "height": 17
+    },
+    {
+      "x": 182,
+      "y": 17,
+      "width": 17,
+      "height": 17
+    }
+  ]
+}

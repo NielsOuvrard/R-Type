@@ -156,7 +156,8 @@ void Enemy::build(EnemyData data_enemy, nlohmann::json mapData)
                     _dataGame.channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
                     _entity->addComponent(new Haze::Destroy());
                     _entity = nullptr;
-                    this->_isDead = true;
+                    _dataGame.explosions.emplace_back(std::make_unique<Explosion>(_dataGame, _typeEntities, _data.x, _data.y, _data.explosion_type));
+                    _dataGame.explosions.back()->build();
                 } else {
                     if (!_data.sound_damage.empty()) {
                         // create sound at damage
@@ -165,6 +166,12 @@ void Enemy::build(EnemyData data_enemy, nlohmann::json mapData)
                         elem_sound->path[sizeof(elem_sound->path) - 1] = '\0';
                         _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Audio", elem_sound, sizeof(Haze::AudioData)));
                     }
+                    auto position = dynamic_cast<Haze::Position *>(_entity->getComponent("Position"));
+                    _data.x = position->x;
+                    _data.y = position->y;
+                    _dataGame.explosions.emplace_back(std::make_unique<Explosion>(_dataGame, _typeEntities, _data.x, _data.y, 3));
+                    _dataGame.explosions.back()->build();
+                    //                    _dataGame.explosions.back()->send();
                     std::cout << "enemy damage by missile player: " << damage->damage << " hp: " << _data.life << "\n";
                     _data.life -= damage->damage;
                 }

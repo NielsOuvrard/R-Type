@@ -8,6 +8,7 @@
 #include "../protocol.h"
 #include "Cooldown/Cooldown.h"
 #include "EnemyData.h"
+#include "Explosion/Explosion.h"
 #include "GameStructures.h"
 #include "Map/Map.h"
 #include "Shot/Shot.h"
@@ -60,7 +61,6 @@ public:
     EnemyData _data = {};
 
     Haze::Entity *_entity = nullptr;///< The enemy entity.
-    bool _isDead = false;           ///< Indicates whether the enemy is dead.
 
     // ? other way maybe ?
     std::list<std::unique_ptr<Shot>> _missiles;///< List of missiles fired by the enemy.

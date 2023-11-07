@@ -219,28 +219,16 @@ void Rtype::update()
     /**
      * Enemy & Shots' cleanup cycle
      */
+    // could we avoid all of that
     bool enemyToCleanup = false;
+    for (auto &explo: _explosions) {
+        if (!explo->is_sended()) {
+            explo->send();
+        }
+    }
     for (auto &enemy: _enemies) {
         // Cleanup unreachable missiles
         enemy->update();
-        if (enemy->_isDead) {
-            // * create explosion
-
-            _explosions.emplace_back(std::make_unique<Explosion>(_dataGame, _typeEntities, enemy->_data.x, enemy->_data.y, enemy->_data.explosion_type));
-            _explosions.back()->build();
-            _explosions.back()->send();
-            std::cout << "Explosion created" << std::endl;
-            enemy->_isDead = false;
-        }
-        // Cleanup unreachable enemies
-        if (enemy->_entity) {
-            auto enemyPos = dynamic_cast<Haze::Position *>(enemy->_entity->getComponent("Position"));
-            if (enemyPos->x <= -50) {
-                _channel.sendGroup(RType::message::deleteEntity(enemy->_entity->getId()));
-                enemy->_entity->addComponent(new Haze::Destroy());
-                enemy->_entity = nullptr;
-            }
-        }
 
         // Cleanup enemy Instance if it contains nothing
         if (!enemy->_entity && enemy->_missiles.empty()) {

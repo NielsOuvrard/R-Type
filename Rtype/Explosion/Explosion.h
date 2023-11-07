@@ -46,6 +46,13 @@ public:
      */
     void destroy();
 
+    [[nodiscard]] bool is_sended()
+    {
+        bool value = _sended;
+        _sended = true;
+        return value;
+    }
+
     Haze::Entity *_entity = nullptr;///< The explosion entity.
     Cooldown _time_to_destroyCd{2s};///< Cooldown timer for destruction.
 
@@ -56,4 +63,5 @@ private:
     float _x;///< The x-coordinate of the explosion.
     float _y;///< The y-coordinate of the explosion.
     uint16_t _type;
+    bool _sended = false;
 };
