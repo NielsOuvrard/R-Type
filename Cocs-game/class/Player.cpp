@@ -6,13 +6,13 @@
 
 #define IS_KEY_PRESSED(key) (std::find(components.begin(), components.end(), Haze::InputType::key) != components.end())
 
-Player::Player(Haze::Engine &engine, network::data_channel<protocol::data> &channel, uint32_t id)
+Racket::Racket(Haze::Engine &engine, network::data_channel<protocol::data> &channel, uint32_t id)
     : _engine(engine), _channel(channel), _id(id)
 {
     // _scoreText = std::make_unique<element::TextInput>(engine, "0");
 }
 
-void Player::build()
+void Racket::build()
 {
     _entity = _engine.createEntity();
     _scoreEntity = _engine.createEntity();
@@ -56,7 +56,7 @@ void Player::build()
     send();
 }
 
-void Player::send()
+void Racket::send()
 {
     // TODO: Free allocated Data created with new
     auto pos = dynamic_cast<Haze::Position *>(_entity->getComponent("Position"));
@@ -81,20 +81,20 @@ void Player::send()
     _channel.sendGroup(cocs_game::message::addComponent(_scoreEntity->getId(), "Text", txt, sizeof(Haze::TextData)));
 }
 
-void Player::sendUpdate()
+void Racket::sendUpdate()
 {
     auto pos = dynamic_cast<Haze::Position *>(_entity->getComponent("Position"));
     _channel.sendGroup(cocs_game::message::addComponent(_entity->getId(), "Position", new Haze::PositionData{pos->x, pos->y}, sizeof(Haze::PositionData)));
     std::cout << "send update player" << std::endl;
 }
 
-void Player::changeScore()
+void Racket::changeScore()
 {
     _score++;
     send();
     std::cout << "Player " << _id << " score: " << _score << std::endl;
 }
 
-void Player::update()
+void Racket::update()
 {
 }

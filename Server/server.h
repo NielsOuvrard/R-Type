@@ -2,8 +2,10 @@
 // Created by erwan on 9/29/23.
 //
 
+#pragma once
+
 #include "Room.h"
-// #include "Rtype.hpp"
+#include "Rtype.hpp"
 #include "../Igame.hpp"
 #include "net_connection.h"
 #include "net_data_channel.h"
@@ -13,6 +15,7 @@
 
 class server : public network::server_interface<protocol::lobby> {
 public:
+    bool is_pong = false;
     explicit server(uint16_t port);
 
 protected:

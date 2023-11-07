@@ -7,9 +7,9 @@
 #include <chrono>
 #include <iostream>
 
-class Cooldown {
+class Coldown {
 public:
-    Cooldown(std::chrono::milliseconds duration);
+    Coldown(std::chrono::milliseconds duration);
     void setDuration(std::chrono::milliseconds duration);
     bool IsReady();
     void Activate();

@@ -92,7 +92,7 @@ void Cocs_game::onReceive(udp::endpoint from, network::datagram<protocol::data> 
         case protocol::data::join: {
             for (auto &player: _players) {
                 if (!player->_remote) {
-                    player->_remote = std::make_unique<Player::Remote>(from);
+                    player->_remote = std::make_unique<Racket::Remote>(from);
                     _channel.getGroup().insert(from);
                     sendEverything(from);
                 }
@@ -100,8 +100,8 @@ void Cocs_game::onReceive(udp::endpoint from, network::datagram<protocol::data> 
             if (_players.size() < 2) {
                 _channel.getGroup().insert(from);
                 sendEverything(from);
-                _players.emplace_back(std::make_unique<Player>(_engine, _channel, _players.size() + 1));
-                _players.back()->_remote = std::make_unique<Player::Remote>(from);
+                _players.emplace_back(std::make_unique<Racket>(_engine, _channel, _players.size() + 1));
+                _players.back()->_remote = std::make_unique<Racket::Remote>(from);
                 _players.back()->build();
             }
             return;

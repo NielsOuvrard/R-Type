@@ -106,14 +106,25 @@ void server::onMessage(std::shared_ptr<network::connection<lobby>> from, network
             }
             if (_rooms[room_id]->isOpen() && _rooms[room_id]->canStart(from)) {
                 _threads[_threadCounter++] = std::thread([this, room_id]() {
-                    Cocs_game cocs_game = Cocs_game(_context);
-                    network::message<lobby> msg(lobby::data_channel);
-                    msg << cocs_game.getEndpoint();
-                    for (auto &[con, info]: _rooms[room_id]->getMembers()) {
-                        messageClient(con, msg);
+                    if (!is_pong) {
+                        Rtype rtype = Rtype(_context);
+                        network::message<lobby> msg(lobby::data_channel);
+                        msg << rtype.getEndpoint();
+                        for (auto &[con, info]: _rooms[room_id]->getMembers()) {
+                            messageClient(con, msg);
+                        }
+                        _rooms[room_id]->close();
+                        rtype.start();
+                    } else {
+                        Cocs_game rtype = Cocs_game(_context);
+                        network::message<lobby> msg(lobby::data_channel);
+                        msg << rtype.getEndpoint();
+                        for (auto &[con, info]: _rooms[room_id]->getMembers()) {
+                            messageClient(con, msg);
+                        }
+                        _rooms[room_id]->close();
+                        rtype.start();
                     }
-                    _rooms[room_id]->close();
-                    cocs_game.start();
                 });
             }
             break;

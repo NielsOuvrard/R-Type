@@ -15,16 +15,16 @@
 using namespace asio::ip;
 using namespace std::chrono_literals;
 
-class Player {
+class Racket {
 public:
     struct Remote {
         asio::ip::udp::endpoint endpoint;
-        Cooldown activityCd{10s};
+        Coldown activityCd{10s};
 
         explicit Remote(udp::endpoint endpoint) : endpoint(std::move(endpoint)) { activityCd.Activate(); }
     };
 
-    Player(Haze::Engine &engine, network::data_channel<protocol::data> &channel, uint32_t id);
+    Racket(Haze::Engine &engine, network::data_channel<protocol::data> &channel, uint32_t id);
     void build();
     void update();
     void send();

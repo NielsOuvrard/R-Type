@@ -7,11 +7,11 @@
 
 #pragma once
 
+#include "Player.h"
 #include "data.h"
 #include "net_data_channel.h"
 #include "net_server.h"
 #include "protocol.h"
-#include "Player.h"
 #include "Ball.h"
 #include "Cooldown.h"
 #include <cstdlib>
@@ -46,8 +46,8 @@ private:
 
     bool _running;
     std::vector<Haze::Entity *> _entities;
-    std::vector<std::unique_ptr<Player>> _players;
-    std::unique_ptr<Player> player;
+    std::vector<std::unique_ptr<Racket>> _players;
+    std::unique_ptr<Racket> player;
     std::unique_ptr<Ball> _ball;
 };
 

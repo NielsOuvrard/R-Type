@@ -4,28 +4,28 @@
 
 #include "Cooldown.h"
 
-Cooldown::Cooldown(std::chrono::milliseconds duration)
+Coldown::Coldown(std::chrono::milliseconds duration)
     : _duration(duration)
 {
     Reset();
 }
 
-void Cooldown::Reset()
+void Coldown::Reset()
 {
     _lastActivation = std::chrono::steady_clock::time_point();
 }
 
-void Cooldown::Activate()
+void Coldown::Activate()
 {
     _lastActivation = std::chrono::steady_clock::now();
 }
 
-void Cooldown::setDuration(std::chrono::milliseconds duration)
+void Coldown::setDuration(std::chrono::milliseconds duration)
 {
     _duration = duration;
 }
 
-bool Cooldown::IsReady()
+bool Coldown::IsReady()
 {
     auto now = std::chrono::steady_clock::now();
     auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - _lastActivation);
