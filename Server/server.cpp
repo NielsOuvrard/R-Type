@@ -116,14 +116,14 @@ void server::onMessage(std::shared_ptr<network::connection<lobby>> from, network
                         _rooms[room_id]->close();
                         rtype.start();
                     } else {
-                        Cocs_game rtype = Cocs_game(_context);
+                        Cocs_game pong = Cocs_game(_context);
                         network::message<lobby> msg(lobby::data_channel);
-                        msg << rtype.getEndpoint();
+                        msg << pong.getEndpoint();
                         for (auto &[con, info]: _rooms[room_id]->getMembers()) {
                             messageClient(con, msg);
                         }
                         _rooms[room_id]->close();
-                        rtype.start();
+                        pong.start();
                     }
                 });
             }
