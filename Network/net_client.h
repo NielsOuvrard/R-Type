@@ -10,12 +10,14 @@ namespace network {
     public:
         client_interface() = default;
 
-        virtual ~client_interface() {
+        virtual ~client_interface()
+        {
             disconnect();
         }
 
     public:
-        bool connect(const std::string &ip, uint16_t port) {
+        bool connect(const std::string &ip, uint16_t port)
+        {
             try {
                 // creating the endpoint and connection
                 asio::ip::tcp::endpoint endpoint(asio::ip::make_address(ip), port);
@@ -23,7 +25,9 @@ namespace network {
                                                               asio::ip::tcp::socket(_context), _inbox);
 
                 _connection->connectToServer(endpoint);
-                _contextThread = std::thread([this]() { _context.run(); });
+                if (!_contextThread.joinable()) {
+                    _contextThread = std::thread([this]() { _context.run(); });
+                }
             } catch (std::exception &e) {
                 std::cerr << "Client Exception: " << e.what() << std::endl;
                 return false;
@@ -31,13 +35,15 @@ namespace network {
             return true;
         }
 
-        bool isConnected() {
+        bool isConnected()
+        {
             if (_connection)
                 return _connection->isConnected();
             return false;
         };
 
-        void disconnect() {
+        void disconnect()
+        {
             if (isConnected()) {
                 _connection->disconnect();
             }
@@ -49,12 +55,14 @@ namespace network {
         }
 
     public:
-        void send(const message<T> &msg) {
+        void send(const message<T> &msg)
+        {
             if (isConnected())
                 _connection->asyncSend(msg);
             else
                 std::cerr << "Not Connected\n";
         }
+
         ThreadSafeQueue<owned_message<T>> &getIncoming() { return _inbox; }
 
     protected:

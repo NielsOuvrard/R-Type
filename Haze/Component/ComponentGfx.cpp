@@ -8,9 +8,9 @@ namespace Haze {
         std::vector<IDisplay *> displayss;
         fs::path libpath = "Haze/lib/";
         for (const auto &entry: fs::directory_iterator(libpath)) {
-            //            if (entry.path().extension() == ".so") {
             if (entry.path().extension() == ".so" || entry.path().extension().string() == ".dylib") {
 
+                std::cout << "Loading " << std::endl;
                 displayLib.push_back(new DynLib(entry.path()));
             }
         }
@@ -19,7 +19,8 @@ namespace Haze {
         for (int i = 0; i < displayLib.size(); i++) {
             createDisplay = (createDisplay_t) displayLib[i]->sym("createDisplay");
             if (createDisplay != nullptr) {
-                displayss.push_back((IDisplay *) createDisplay());
+                IDisplay *display = createDisplay();
+                displayss.push_back(display);
             }
         }
         return displayss;

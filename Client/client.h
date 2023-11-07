@@ -20,6 +20,7 @@ public:
         : _engine(framerate, lib)
     {
     }
+
     ~client() override = default;
 
 public:
@@ -31,6 +32,7 @@ public:
 private:
     enum class state {
         ok,
+        w_hello,
         w_cr_room,
         w_rooms,
         w_room,

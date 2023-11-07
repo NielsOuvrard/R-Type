@@ -146,6 +146,8 @@ void server::onMessage(std::shared_ptr<network::connection<lobby>> from, network
 
 bool server::onClientConnection(std::shared_ptr<network::connection<lobby>> client)
 {
+    network::message<lobby> msg(lobby::ok);
+    messageClient(client, msg);
     return true;
 }
 

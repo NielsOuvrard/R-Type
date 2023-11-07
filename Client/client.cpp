@@ -57,9 +57,7 @@ void client::build()
         auto port = _elements["login"]->get<TextInput>("port")->getValue();
         if (name.empty() || ip.empty() || port.empty()) return;
         connect(ip, static_cast<uint16_t>(std::stoul(port)));
-        _elements["login"]->setHide(true);
-        _elements["lobbyList"]->setHide(false);
-        _selected = "lobbyList";
+        _state = state::w_hello;
     });
     _elements["login"]->build();
     _elements["login"]->get<TextInput>("name")->setValue("toto");
@@ -164,6 +162,13 @@ void client::emit()
 void client::handleOk(network::message<lobby> &msg)
 {
     switch (_state) {
+        case state::w_hello: {
+            _elements["login"]->setHide(true);
+            _elements["lobbyList"]->setHide(false);
+            _selected = "lobbyList";
+            _state = state::ok;
+            break;
+        }
         case state::w_start: {
             _state = state::ok;
             break;

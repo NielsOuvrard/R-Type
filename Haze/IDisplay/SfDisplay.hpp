@@ -65,13 +65,13 @@ namespace Haze {
 
     class SfTexture : public ITexture {
     private:
-        sf::Texture _texture;
+        sf::Texture *_texture;
 
     public:
         SfTexture(std::string path);
-        ~SfTexture() = default;
+        ~SfTexture();
 
-        sf::Texture *getTexture() { return &_texture; }
+        sf::Texture *getTexture() { return _texture; }
     };
 
     class SfSprite : public ISprite {
