@@ -14,6 +14,7 @@ Map::Map(DataGame dataGame, TypeEntities typeEntities)
 void Map::build()
 {
     loadMaps();
+    // _id_map = 0;
     createMap();
 }
 
@@ -31,8 +32,7 @@ void Map::loadMaps()
 
 void Map::createMap()
 {
-    _id_map = 1;
-
+    // _id_map++;
     bool map_filled = false;
     while (!map_filled) {
         if (_id_map >= _maps_paths.size())
@@ -109,6 +109,8 @@ void Map::createMap()
 void Map::update()
 {
     _dataGame.parallax->update();
+    if (_dataGame.walls.empty())
+        return;
     if (_dataGame.walls.front()->get_x_position() < -(SIZE_TILE * UNIVERSAL_SCALE * 2)) {// * tile = 3 * SIZE_TILE
         // destroy
         _dataGame.walls.front()->destroy();
