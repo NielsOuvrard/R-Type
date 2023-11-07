@@ -43,7 +43,7 @@ git clone https://github.com/votre-utilisateur/haze-engine.git
 3. Create the build directory
 
 ```
-cmake -S . -B build
+cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=./vcpkg/scripts/buildsystems/vcpkg.cmake
 ```
 
 4. Compile the project
@@ -53,16 +53,11 @@ cmake --build build
 ```
 
 5. Execute the binaries
-   Server:
-
 ```
 ./build/r-type-server
 ```
-
-Client:
-
 ```
-./build/r-type-client
+./build/r-type-client [sfml/sdl]
 ```
 
 ## 📋 Documentation
