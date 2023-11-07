@@ -6,7 +6,7 @@
 
 
 
-## WALL
+### WALL
 
 - void build(uint16_t frameIndex = 0);
 - void send();
@@ -14,40 +14,40 @@
 - void destroy();
 - [[nodiscard]] float get_x_position() const;
 
-## Shot
+### Shot
 
 - void build(float x, float y);
 - void send();
 - void stopVelocity();
 
-## Player
+### Player
 
 - void build();
 - void update();
 - void send();
 - void sendUpdate();
 
-## Parallax
+### Parallax
 
 - void build(std::string parallax_path);
 - void update();
 - void send();
 - void sendUpdate();
 
-## Map
+### Map
 
 - void update();
 - void build();
 - void loadMaps();
 - void createMap();
 
-## Explosion
+### Explosion
 
 - void build();
 - void send();
 - void destroy();
 
-## Enemy
+### Enemy
 
 - void build(EnemyData data, nlohmann::json mapData);
 - void send();
@@ -55,14 +55,14 @@
 - void update();
 - void stopVelocity();
 
-## Cooldown
+### Cooldown
 
 - void setDuration(std::chrono::milliseconds duration);
 - bool IsReady();
 - void Activate();
 - void Reset();
 
-## Boss
+### Boss
 
 - void build(std::string path);
 - void send();
