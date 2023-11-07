@@ -44,9 +44,8 @@ void Shot::build(float x, float y)
 
 
     if (_sender == "player") {
-        std::map<std::string, Haze::Collision::CollisionInfo> collision_enemy;
-
-        collision_enemy["enemy"] = {
+        std::map<std::string, Haze::Collision::CollisionInfo> collision;
+        collision["enemy"] = {
                 Haze::Collision::LAMBDA,
                 0.1,
                 [this](int a, int b) {
@@ -57,12 +56,21 @@ void Shot::build(float x, float y)
                     _entity->addComponent(new Haze::Destroy());
                     _entity = nullptr;
                 }};
-        _entity->addComponent(new Haze::Collision("missile", collision_enemy));
-
+        collision["wall"] = {
+                Haze::Collision::LAMBDA,
+                0.1,
+                [this](int a, int b) {
+                    if (!_entity) {
+                        return;
+                    }
+                    _dataGame.channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
+                    _entity->addComponent(new Haze::Destroy());
+                    _entity = nullptr;
+                }};
+        _entity->addComponent(new Haze::Collision("missile", collision));
     } else if (_sender == "enemy") {
-        std::map<std::string, Haze::Collision::CollisionInfo> collision_player;
-
-        collision_player["player"] = {
+        std::map<std::string, Haze::Collision::CollisionInfo> collision;
+        collision["player"] = {
                 Haze::Collision::LAMBDA,
                 0.1,
                 [this](int a, int b) {
@@ -73,9 +81,20 @@ void Shot::build(float x, float y)
                     _entity->addComponent(new Haze::Destroy());
                     _entity = nullptr;
                 }};
-        _entity->addComponent(new Haze::Collision("missile-enemy", collision_player));
-    }
 
+        collision["wall"] = {
+                Haze::Collision::LAMBDA,
+                0.1,
+                [this](int a, int b) {
+                    if (!_entity) {
+                        return;
+                    }
+                    _dataGame.channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
+                    _entity->addComponent(new Haze::Destroy());
+                    _entity = nullptr;
+                }};
+        _entity->addComponent(new Haze::Collision("missile-enemy", collision));
+    }
     send();
 }
 

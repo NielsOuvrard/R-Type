@@ -80,8 +80,7 @@ void Enemy::build(EnemyData data_enemy, nlohmann::json mapData)
     if (_dataGame.map_moving) {
         _data.velocity_x += VELOCITY_WALL_X;
     }
-
-    std::chrono::milliseconds d((std::rand() % 10 + 5) * 1000);
+    std::chrono::milliseconds d((std::rand() % 10 + 20) * 100);
     _missileCd.setDuration(d);
 
     _missileCd.Activate();
@@ -150,6 +149,9 @@ void Enemy::build(EnemyData data_enemy, nlohmann::json mapData)
                     auto position = dynamic_cast<Haze::Position *>(_entity->getComponent("Position"));
                     _data.x = position->x;
                     _data.y = position->y;
+                    if (!_data.fly && _data.y < (WINDOW_HEIGHT / 2)) {
+                        _data.y -= 2 * _data.hitBoxData.height;
+                    }
                     std::cout << "enemy die by missile player\n";
                     _dataGame.channel.sendGroup(RType::message::deleteEntity(_entity->getId()));
                     _entity->addComponent(new Haze::Destroy());
@@ -206,7 +208,7 @@ void Enemy::send()
     scale->x = UNIVERSAL_SCALE;
     scale->y = UNIVERSAL_SCALE * (reversed ? -1 : 1);
     _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Scale", scale, sizeof(Haze::ScaleData)));
-    _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Hitbox", new Haze::HitboxData{_data.hitBoxData.x, _data.hitBoxData.y, _data.hitBoxData.width, _data.hitBoxData.height}, sizeof(Haze::HitboxData)));
+    // _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "Hitbox", new Haze::HitboxData{_data.hitBoxData.x, _data.hitBoxData.y, _data.hitBoxData.width, _data.hitBoxData.height}, sizeof(Haze::HitboxData)));
     // _dataGame.channel.sendGroup(RType::message::addComponent(_entity->getId(), "HitboxDisplay", nullptr, 0));
 
     auto elem_sprite = new Haze::SpriteData();
@@ -225,9 +227,12 @@ void Enemy::update()
     // clears the destroyed missiles from the vector
     bool invalidShotExists = false;
     for (auto &missile: _missiles) {
+        if (!missile)
+            break;
         if (missile->_entity) {
             auto pos = dynamic_cast<Haze::Position *>(missile->_entity->getComponent("Position"));
-            if ((pos->x > WINDOW_WIDTH + 100 || pos->x < -100) || pos->y > WINDOW_HEIGHT + 100) {
+            // weird, crash : collision between enemy_shot and shot
+            if ((pos->x > WINDOW_WIDTH + 100 || pos->x < -200) || pos->y > WINDOW_HEIGHT + 100) {
                 std::cout << "\033[1;31mShot deleted\033[0m" << std::endl;
                 _dataGame.channel.sendGroup(RType::message::deleteEntity(missile->_entity->getId()));
                 missile->_entity->addComponent(new Haze::Destroy());

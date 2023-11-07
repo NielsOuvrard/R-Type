@@ -2,7 +2,7 @@
   "type": 1,
   "path_sprite": "assets/sprites/shot.png",
   "damage": 20,
-  "velocity": 10,
+  "velocity": 30,
   "bullet_drop": false,
   "laser": false,
   "sound": "assets/sounds/shot.ogg",

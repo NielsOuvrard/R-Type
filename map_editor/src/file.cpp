@@ -406,7 +406,7 @@ void load_enemies(game_data &data)
 int main(int argc, char **argv)
 {
     std::string map_path = "map.json";
-    std::string parallax_path = "assets/sprites/space.jpg";
+    std::string parallax_path = "assets/sprites/space.png";
 
     for (int i = 1; i < argc; i++) {
         std::string arg = argv[i];
