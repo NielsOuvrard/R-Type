@@ -252,17 +252,6 @@
           "move_radius": 240,
           "move_x": 0.05,
           "move_offset": 9
-        },
-        {
-          "type": 2,
-          "x": 150,
-          "y": 225,
-          "velocity_x": 0,
-          "move_time": 0.05,
-          "move": "circular",
-          "move_radius": 240,
-          "move_x": 0.05,
-          "move_offset": 9.5
         }
       ]
     },
@@ -400,7 +389,7 @@
           "x": 24,
           "y": 200,
           "velocity_x": -2,
-          "move": "circular",
+          "move": "linear",
           "move_radius": 100,
           "move_x": 0.2,
           "move_time": 0.1
@@ -416,7 +405,7 @@
           "x": 24,
           "y": 200,
           "velocity_x": -2,
-          "move": "circular",
+          "move": "linear",
           "move_radius": 100,
           "move_x": 0.2,
           "move_time": 0.1
@@ -432,7 +421,7 @@
           "x": 24,
           "y": 200,
           "velocity_x": -2,
-          "move": "circular",
+          "move": "linear",
           "move_radius": 100,
           "move_x": 0.2,
           "move_time": 0.1
@@ -448,7 +437,7 @@
           "x": 24,
           "y": 200,
           "velocity_x": -2,
-          "move": "circular",
+          "move": "linear",
           "move_radius": 100,
           "move_x": 0.2,
           "move_time": 0.1
@@ -464,7 +453,7 @@
           "x": 24,
           "y": 200,
           "velocity_x": -2,
-          "move": "circular",
+          "move": "linear",
           "move_radius": 100,
           "move_x": 0.2,
           "move_time": 0.1
@@ -480,12 +469,53 @@
           "x": 24,
           "y": 200,
           "velocity_x": -2,
-          "move": "circular",
+          "move": "linear",
           "move_radius": 100,
           "move_x": 0.2,
           "move_time": 0.1
         }
       ]
+    },
+    {
+      "tile_top": 8,
+      "tile_bottom": 5
+    },
+    {
+      "tile_top": 8,
+      "tile_bottom": 5
+    },
+    {
+      "tile_top": 8,
+      "tile_bottom": 5
+    },
+    {
+      "tile_top": 8,
+      "tile_bottom": 5
+    },
+    {
+      "tile_top": 8,
+      "tile_bottom": 5
+    },
+    {
+      "tile_top": 8,
+      "tile_bottom": 5
+    },
+    {
+      "tile_top": 8,
+      "tile_bottom": 5,
+      "boss": {
+        "x": 100,
+        "y": 0,
+        "type": 1
+      }
+    },
+    {
+      "tile_top": 8,
+      "tile_bottom": 5
+    },
+    {
+      "tile_top": 8,
+      "tile_bottom": 5
     },
     {
       "tile_top": 8,
