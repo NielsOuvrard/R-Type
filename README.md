@@ -43,7 +43,7 @@ git clone https://github.com/votre-utilisateur/haze-engine.git
 3. Create the build directory
 
 ```
-cmake -S . -B build
+cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=./vcpkg/scripts/buildsystems/vcpkg.cmake
 ```
 
 4. Compile the project
