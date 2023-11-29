@@ -30,13 +30,6 @@ git clone https://github.com/votre-utilisateur/haze-engine.git
 > ./vcpkg/vcpkg install
 > ```
 
-> ## Windows
-> ```
-> git clone https://github.com/Microsoft/vcpkg.git
-> .\vcpkg\bootstrap-vcpkg.bat
-> .\vcpkg\vcpkg install
-> ```
-
 > [!warning]
 > These commands must be executed at the root of this project
 
@@ -95,4 +88,4 @@ Click on the images below to visit the GitHub profiles of our awesome contributo
 ## 🛠️ Tools
 
 [![Built with CMake](https://img.shields.io/badge/Built%20with-CMake-1f425f.svg)](https://cmake.org/) [![Made with C++](https://img.shields.io/badge/Made%20with-C%2B%2B-9683EC.svg)](https://en.cppreference.com/w/cpp/17) [![Made with SFML](https://img.shields.io/badge/Made%20with-SFML-009688.svg)](https://www.sfml-dev.org/) [![Made with SDL2](https://img.shields.io/badge/Made%20with-SDL2-orange.svg)](https://libsdl.org/) [![Made with ASIO](https://img.shields.io/badge/Made%20with-ASIO-yellow.svg)](https://think-async.com/Asio/) [![Made with Vcpkg](https://img.shields.io/badge/Made%20with-Vcpkg-7056bf.svg)](https://vcpkg.io/)
-[![Linux](https://img.shields.io/badge/Linux-Supported-brightgreen.svg)](https://www.linux.org/) [![Windows](https://img.shields.io/badge/Windows-Supported-brightgreen.svg)](https://www.microsoft.com/en-us/windows) [![macOS](https://img.shields.io/badge/macOS-Supported-brightgreen.svg)](https://www.apple.com/macos) [![Documentation](https://img.shields.io/badge/Documentation-Yes-brightgreen.svg)](https://rclovis.github.io/R-Type-Documentation/)
+[![Linux](https://img.shields.io/badge/Linux-Supported-brightgreen.svg)](https://www.linux.org/) [![macOS](https://img.shields.io/badge/macOS-Supported-brightgreen.svg)](https://www.apple.com/macos) [![Documentation](https://img.shields.io/badge/Documentation-Yes-brightgreen.svg)](https://rclovis.github.io/R-Type-Documentation/)
